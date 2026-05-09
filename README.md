@@ -7,6 +7,8 @@ Book-site experience (Vite + React) with a small **BFF** (**Backend for Frontend
 - `figma-demo/` — SPA (multi-language), IPDEX market links, purchase & account flows wired to `/api/bff/*` when the BFF is running.
 - `figma-demo/bff/` — Express service: auth cookies, profile, NFT balances, primary/secondary checkout helpers.
 
+Documentation for **what belongs in this repo vs IPDEX** lives in **`docs/BOOKSITE_README.md`** (this repository only).
+
 ## Quick start
 
 ```bash
