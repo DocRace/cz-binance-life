@@ -20,7 +20,14 @@ export function loadBffEnv() {
   const COBRAND_ROOT = `${IPDEX_GATEWAY_PREFIX}${COBRAND}`.replace(/\/{2,}/g, '/') || COBRAND;
   const LISTING_FALLBACK = (process.env.BOOK_PRIMARY_LISTING_ID || '').trim();
 
-  return { IPDEX_CLIENT_ORIGIN, COBRAND_ROOT, APP_KEY, APP_SECRET, LISTING_FALLBACK };
+  return {
+    IPDEX_CLIENT_ORIGIN,
+    IPDEX_GATEWAY_PREFIX,
+    COBRAND_ROOT,
+    APP_KEY,
+    APP_SECRET,
+    LISTING_FALLBACK,
+  };
 }
 
 function cobrandPath(root, suffix) {
