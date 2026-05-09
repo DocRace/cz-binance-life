@@ -4,3 +4,5 @@ dist
 # Override locally — keep tracked `.env` as team defaults only if you intend to commit it
 .env.local
 .env.*.local
+# BFF secrets (created from .env.example + IPDEX dev keys)
+bff/.env
