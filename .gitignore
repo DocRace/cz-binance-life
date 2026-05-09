@@ -1,0 +1,19 @@
+# Dependencies & build
+node_modules/
+dist/
+*.local
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+bff/.env
+
+# Logs & OS
+npm-debug.log*
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp

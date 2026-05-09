@@ -1,0 +1,6 @@
+node_modules
+dist
+
+# Override locally — keep tracked `.env` as team defaults only if you intend to commit it
+.env.local
+.env.*.local

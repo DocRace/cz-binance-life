@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Serif+TC:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Orbitron:wght@400;500;600;700&display=swap');
+
+body {
+  font-family: 'Instrument Sans', 'Noto Sans TC', system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Cormorant Garamond', 'Noto Serif TC', serif;
+  font-weight: 500;
+}
+
+.font-display {
+  font-family: 'Cormorant Garamond', 'Noto Serif TC', serif;
+}
+
+.font-body {
+  font-family: 'Instrument Sans', 'Noto Sans TC', sans-serif;
+}
+
+.font-tech {
+  font-family: 'Orbitron', 'Instrument Sans', monospace;
+}
