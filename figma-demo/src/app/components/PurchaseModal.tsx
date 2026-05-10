@@ -11,7 +11,7 @@ import {
 } from "../../config/platform";
 import { buildBookPrimarySaleCheckoutUrl } from "../../ipdex/marketUrls";
 import { getPartnerApiPublicLabel } from "../../ipdex/partnerApi";
-import { bookBffJson } from "../../lib/bookBffClient";
+import { bookBffJson, bookBffIsTransportIssue } from "../../lib/bookBffClient";
 
 interface PurchaseModalProps {
   onClose: () => void;
@@ -58,6 +58,10 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
       try {
         const s = await bookBffJson<{ authenticated: boolean }>("/api/bff/auth/session");
         if (cancel) return;
+        if (bookBffIsTransportIssue(s)) {
+          setBffSessionOk(false);
+          return;
+        }
         setBffSessionOk(true);
         if (s.code === 0 && s.data?.authenticated) {
           if (!skipLogin) setStep("select");
@@ -84,7 +88,9 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
       if (out.code === 0) {
         setLoginSubStep("otp");
       } else {
-        setApiCheckoutError(out.message || t("purchase.bffAuthError"));
+        setApiCheckoutError(
+          bookBffIsTransportIssue(out) ? t("purchase.bffOffline") : out.message || t("purchase.bffAuthError"),
+        );
       }
     } catch {
       setApiCheckoutError(t("purchase.bffOffline"));
@@ -107,7 +113,9 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
       if (out.code === 0) {
         setStep("select");
       } else {
-        setApiCheckoutError(out.message || t("purchase.bffAuthError"));
+        setApiCheckoutError(
+          bookBffIsTransportIssue(out) ? t("purchase.bffOffline") : out.message || t("purchase.bffAuthError"),
+        );
       }
     } catch {
       setApiCheckoutError(t("purchase.bffOffline"));
@@ -156,7 +164,11 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
         return;
       }
 
-      setApiCheckoutError(out.message || t("purchase.primaryPurchaseFailed"));
+      setApiCheckoutError(
+        bookBffIsTransportIssue(out)
+          ? t("purchase.bffOffline")
+          : out.message || t("purchase.primaryPurchaseFailed"),
+      );
     } catch {
       if (checkoutUrl) {
         setLastPaymentMode("market");

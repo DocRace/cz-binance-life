@@ -20,16 +20,67 @@ export async function bookBffFetch(path: string, init: RequestInit = {}): Promis
 
 export type IpdexEnvelope<T> = { code: number; message: string; data: T | null };
 
+export type BookBffJsonResult<T> = IpdexEnvelope<T> & {
+  rawStatus: number;
+  /** Missing body or not JSON/HTML from proxy — usually BFF not running / wrong proxy. */
+  transportError?: boolean;
+};
+
 export async function bookBffJson<T>(
   path: string,
   init: RequestInit = {},
-): Promise<IpdexEnvelope<T> & { rawStatus: number }> {
+): Promise<BookBffJsonResult<T>> {
   const res = await bookBffFetch(path, init);
-  let body: IpdexEnvelope<T> = { code: -1, message: "empty", data: null };
-  try {
-    body = (await res.json()) as IpdexEnvelope<T>;
-  } catch {
-    body = { code: -1, message: "invalid_json", data: null };
+  const rawStatus = res.status;
+  const text = await res.text().catch(() => "");
+  const trimmed = text.trim();
+
+  if (!trimmed) {
+    return {
+      code: -1,
+      message: "empty",
+      data: null,
+      rawStatus,
+      transportError: true,
+    };
   }
-  return { ...body, rawStatus: res.status };
+
+  let parsedUnknown: unknown;
+  try {
+    parsedUnknown = JSON.parse(trimmed) as unknown;
+  } catch {
+    return {
+      code: -1,
+      message: "invalid_json",
+      data: null,
+      rawStatus,
+      transportError: true,
+    };
+  }
+
+  if (
+    typeof parsedUnknown !== "object" ||
+    parsedUnknown === null ||
+    typeof (parsedUnknown as Record<string, unknown>).code !== "number"
+  ) {
+    return {
+      code: -1,
+      message: "invalid_envelope",
+      data: null,
+      rawStatus,
+      transportError: true,
+    };
+  }
+
+  const body = parsedUnknown as IpdexEnvelope<T>;
+  return { ...body, rawStatus };
+}
+
+/** HTTP/proxy/network shape issue — callers should prefer `bffOffline` copy over raw `message`. */
+export function bookBffIsTransportIssue(out: {
+  transportError?: boolean;
+  rawStatus?: number;
+}): boolean {
+  const s = typeof out.rawStatus === "number" ? out.rawStatus : 0;
+  return Boolean(out.transportError || (s >= 502 && s <= 504));
 }

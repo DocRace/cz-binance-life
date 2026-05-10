@@ -13,7 +13,7 @@ import {
 import { useTranslation } from "react-i18next";
 import NFTBadge from "../components/NFTBadge";
 import RedeemBookModal from "../components/RedeemBookModal";
-import { bookBffJson } from "../../lib/bookBffClient";
+import { bookBffJson, bookBffIsTransportIssue } from "../../lib/bookBffClient";
 import { bookBffJsonWithRefresh } from "../../lib/bookBffWithRefresh";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -105,7 +105,7 @@ async function fetchBffPages(buildPath: (p: number) => string): Promise<Record<s
   const maxPages = 25;
   for (let p = 1; p <= maxPages; p++) {
     const r = await bookBffJsonWithRefresh<unknown>(buildPath(p));
-    if (r.code !== 0 || r.rawStatus >= 400) break;
+    if (r.code !== 0 || r.rawStatus >= 400 || bookBffIsTransportIssue(r)) break;
     const rows = asRecordList(r.data);
     if (!rows.length) break;
     merged.push(...rows);
@@ -203,7 +203,11 @@ export default function Account() {
           setIsLoggedIn(false);
           return;
         }
-        setLoadError(t("account.loadError"));
+        if (bookBffIsTransportIssue(me)) {
+          setLoadError(t("purchase.bffOffline"));
+        } else {
+          setLoadError(t("account.loadError"));
+        }
       }
 
       setDisplayNfts(nftRows.map(mapNftRow));
@@ -252,7 +256,12 @@ export default function Account() {
         body: JSON.stringify({ email }),
       });
       if (out.code === 0) setLoginSubStep("otp");
-      else setAuthError(out.message || t("purchase.bffAuthError"));
+      else
+        setAuthError(
+          bookBffIsTransportIssue(out)
+            ? t("purchase.bffOffline")
+            : out.message || t("purchase.bffAuthError"),
+        );
     } catch {
       setAuthError(t("purchase.bffOffline"));
     } finally {
@@ -276,7 +285,11 @@ export default function Account() {
         setLoginSubStep("email");
         setOtpInput("");
       } else {
-        setAuthError(out.message || t("purchase.bffAuthError"));
+        setAuthError(
+          bookBffIsTransportIssue(out)
+            ? t("purchase.bffOffline")
+            : out.message || t("purchase.bffAuthError"),
+        );
       }
     } catch {
       setAuthError(t("purchase.bffOffline"));
@@ -351,7 +364,11 @@ export default function Account() {
         if (url) window.open(url, "_blank", "noopener,noreferrer");
         await loadDashboard();
       } else {
-        setSecondaryFlash(out.message || t("account.secondaryError"));
+        setSecondaryFlash(
+          bookBffIsTransportIssue(out)
+            ? t("purchase.bffOffline")
+            : out.message || t("account.secondaryError"),
+        );
       }
     } catch {
       setSecondaryFlash(t("purchase.bffOffline"));
