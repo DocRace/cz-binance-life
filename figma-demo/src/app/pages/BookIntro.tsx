@@ -1,7 +1,8 @@
 import { motion } from "motion/react";
 import { Award, Users, Globe, BookOpen } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import bookCover from "../../imports/Gemini_Generated_Image_77551s77551s7755.png";
+import Book3DCover from "../components/Book3DCover";
+import bookCover from "../../assets/book-cover-hero.png";
 
 export default function BookIntro() {
   const { t } = useTranslation();
@@ -23,33 +24,27 @@ export default function BookIntro() {
         </p>
       </motion.div>
 
-      {/* Book Cover */}
+      {/* Book Cover — same interactive 3D treatment as home hero */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.2 }}
-        className="max-w-2xl mx-auto mb-20"
+        className="mx-auto mb-20 flex max-w-2xl flex-col items-center"
       >
-        <div className="relative">
-          <div className="absolute inset-0 bg-gold blur-3xl opacity-20" />
-          <motion.div
-            initial={{ rotateY: -15 }}
-            animate={{ rotateY: 0 }}
-            transition={{ duration: 1, delay: 0.4 }}
-            whileHover={{ scale: 1.05, rotateY: 5 }}
-            style={{ transformStyle: "preserve-3d" }}
-            className="relative flex flex-col items-center"
-          >
-            <img
+        <div className="relative w-full">
+          <div className="pointer-events-none absolute inset-0 bg-gold opacity-20 blur-3xl" aria-hidden />
+          <div className="relative z-10 flex justify-center pt-2">
+            <Book3DCover
               src={bookCover}
-              alt="Freedom of Money Book Cover"
-              className="w-80 md:w-96 h-auto shadow-2xl rounded-lg mb-6"
+              alt={`${t("home.title")} — ${t("book.version")}`}
+              showSyntheticDepth={false}
+              className="mx-auto"
             />
-            <div className="text-center">
-              <p className="text-muted-foreground text-lg">{t("book.publisher")}</p>
-              <p className="text-muted-foreground">{t("book.version")}</p>
-            </div>
-          </motion.div>
+          </div>
+        </div>
+        <div className="mt-2 text-center">
+          <p className="text-lg text-muted-foreground">{t("book.publisher")}</p>
+          <p className="text-muted-foreground">{t("book.version")}</p>
         </div>
       </motion.div>
 
@@ -125,12 +120,12 @@ export default function BookIntro() {
         })}
       </motion.div>
 
-      {/* Author Bio */}
+      {/* Author Bio — same width as Key Features grid above */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2 }}
-        className="max-w-4xl mx-auto"
+        className="mx-auto max-w-5xl"
       >
         <div className="p-8 rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm">
           <h2 className="font-display text-3xl mb-6">{t("book.authorTitle")}</h2>

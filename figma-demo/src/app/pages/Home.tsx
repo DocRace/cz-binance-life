@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router";
 import { motion } from "motion/react";
 import { Users, Calendar, ShoppingCart } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import ReservationModal from "../components/ReservationModal";
 import PurchaseModal from "../components/PurchaseModal";
 import Book3DCover from "../components/Book3DCover";
-import bookCover from "../../imports/Gemini_Generated_Image_77551s77551s7755.png";
+import bookCover from "../../assets/book-cover-hero.png";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -51,10 +52,18 @@ export default function Home() {
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             className="flex justify-center lg:justify-end order-2 lg:order-1 lg:pr-6"
           >
-            <Book3DCover
-              src={bookCover}
-              alt="《幣安人生》書籍封面 - Freedom of Money"
-            />
+            <Link
+              to="/book"
+              className="inline-flex max-w-full rounded-lg text-inherit no-underline outline-none transition-opacity hover:opacity-[0.97] focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              aria-label={`${t("nav.book")} — ${t("home.title")}`}
+            >
+              <Book3DCover
+                src={bookCover}
+                alt="《幣安人生》書籍封面 - Freedom of Money"
+                showSyntheticDepth={false}
+                navigable
+              />
+            </Link>
           </motion.div>
 
           <motion.div
@@ -180,7 +189,7 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto"
+          className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3 md:items-stretch md:gap-8"
         >
           {[
             {
@@ -207,13 +216,13 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.4 + feature.delay }}
-              className="group relative"
+              className="group relative flex h-full min-h-0 flex-col"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.04] to-transparent rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative px-8 py-9 rounded-sm border border-border/50 bg-card/20 hover:border-gold/25 transition-colors duration-500">
-                <div className="text-4xl mb-5 opacity-90">{feature.icon}</div>
-                <h3 className="font-display text-xl mb-2">{feature.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+              <div className="absolute inset-0 rounded-sm bg-gradient-to-br from-gold/[0.04] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              <div className="relative flex h-full min-h-0 flex-col rounded-sm border border-border/50 bg-card/20 px-8 py-9 transition-colors duration-500 hover:border-gold/25">
+                <div className="mb-5 shrink-0 text-4xl opacity-90">{feature.icon}</div>
+                <h3 className="mb-2 font-display text-xl">{feature.title}</h3>
+                <p className="min-h-0 flex-1 leading-relaxed text-muted-foreground">{feature.description}</p>
               </div>
             </motion.div>
           ))}

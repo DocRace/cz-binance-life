@@ -2,6 +2,35 @@ import { motion } from "motion/react";
 import { Sparkles, Target, Zap, Shield, Heart, TrendingUp, Eye, HandHeart } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+const ICON_BACKGROUNDS = ["gold", "light", "dark"] as const;
+type IconBackground = (typeof ICON_BACKGROUNDS)[number];
+
+function principleIconTone(tone: IconBackground) {
+  switch (tone) {
+    case "gold":
+      return {
+        iconBox: "border border-gold/35 bg-gold/12",
+        icon: "text-gold",
+        hoverSheen: "from-gold/25 via-gold/8 to-transparent",
+        card: "border-gold/30 bg-gold/[0.055] hover:border-gold/45",
+      };
+    case "light":
+      return {
+        iconBox: "border border-white/12 bg-white/[0.06]",
+        icon: "text-foreground",
+        hoverSheen: "from-white/12 via-white/[0.04] to-transparent",
+        card: "border-white/12 bg-white/[0.035] hover:border-white/22",
+      };
+    case "dark":
+      return {
+        iconBox: "border border-border/60 bg-black/55",
+        icon: "text-muted-foreground",
+        hoverSheen: "from-zinc-950/90 via-black/45 to-transparent",
+        card: "border-zinc-800/70 bg-zinc-950/55 hover:border-zinc-600/55",
+      };
+  }
+}
+
 export default function CZPrinciples() {
   const { t } = useTranslation();
   const principles = [
@@ -11,7 +40,6 @@ export default function CZPrinciples() {
       subtitle: t("principles.principle1Subtitle"),
       description: t("principles.principle1Desc"),
       quote: t("principles.principle1Quote"),
-      color: "from-gold to-gold-dark"
     },
     {
       icon: Zap,
@@ -19,7 +47,6 @@ export default function CZPrinciples() {
       subtitle: t("principles.principle2Subtitle"),
       description: t("principles.principle2Desc"),
       quote: t("principles.principle2Quote"),
-      color: "from-stone-400 to-stone-600"
     },
     {
       icon: Shield,
@@ -27,7 +54,6 @@ export default function CZPrinciples() {
       subtitle: t("principles.principle3Subtitle"),
       description: t("principles.principle3Desc"),
       quote: t("principles.principle3Quote"),
-      color: "from-stone-500 to-[#e5528d]"
     },
     {
       icon: Heart,
@@ -35,7 +61,6 @@ export default function CZPrinciples() {
       subtitle: t("principles.principle4Subtitle"),
       description: t("principles.principle4Desc"),
       quote: t("principles.principle4Quote"),
-      color: "from-stone-600 to-[#a855f7]"
     },
     {
       icon: TrendingUp,
@@ -43,7 +68,6 @@ export default function CZPrinciples() {
       subtitle: t("principles.principle5Subtitle"),
       description: t("principles.principle5Desc"),
       quote: t("principles.principle5Quote"),
-      color: "from-[#4ade80] to-[#22c55e]"
     },
     {
       icon: Eye,
@@ -51,7 +75,6 @@ export default function CZPrinciples() {
       subtitle: t("principles.principle6Subtitle"),
       description: t("principles.principle6Desc"),
       quote: t("principles.principle6Quote"),
-      color: "from-[#fbbf24] to-[#f59e0b]"
     },
     {
       icon: HandHeart,
@@ -59,7 +82,6 @@ export default function CZPrinciples() {
       subtitle: t("principles.principle7Subtitle"),
       description: t("principles.principle7Desc"),
       quote: t("principles.principle7Quote"),
-      color: "from-[#fb923c] to-[#f97316]"
     },
     {
       icon: Sparkles,
@@ -67,8 +89,7 @@ export default function CZPrinciples() {
       subtitle: t("principles.principle8Subtitle"),
       description: t("principles.principle8Desc"),
       quote: t("principles.principle8Quote"),
-      color: "from-[#ec4899] to-[#db2777]"
-    }
+    },
   ];
 
   return (
@@ -100,10 +121,12 @@ export default function CZPrinciples() {
       </motion.div>
 
       {/* Principles Grid */}
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto w-full max-w-7xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {principles.map((principle, index) => {
             const Icon = principle.icon;
+            const tone = ICON_BACKGROUNDS[index % ICON_BACKGROUNDS.length];
+            const tc = principleIconTone(tone);
             return (
               <motion.div
                 key={index}
@@ -112,15 +135,21 @@ export default function CZPrinciples() {
                 transition={{ delay: 0.1 * index, duration: 0.6 }}
                 className="group relative"
               >
-                {/* Background glow */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${principle.color} opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-500 rounded-3xl`} />
+                {/* Background glow — subtle, theme colors only */}
+                <div
+                  className={`pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br ${tc.hoverSheen} opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-[0.14]`}
+                />
 
                 {/* Card */}
-                <div className="relative h-full p-8 rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm hover:border-gold/30 transition-all duration-500">
+                <div
+                  className={`relative h-full rounded-2xl border p-8 backdrop-blur-sm transition-all duration-500 ${tc.card}`}
+                >
                   {/* Icon */}
                   <div className="mb-6">
-                    <div className={`inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br ${principle.color} items-center justify-center`}>
-                      <Icon className="w-8 h-8 text-white" />
+                    <div
+                      className={`inline-flex h-16 w-16 items-center justify-center rounded-2xl ${tc.iconBox}`}
+                    >
+                      <Icon className={`h-8 w-8 ${tc.icon}`} />
                     </div>
                   </div>
 
@@ -153,20 +182,22 @@ export default function CZPrinciples() {
                   </div>
                 </div>
 
-                {/* Hover effect border */}
-                <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${principle.color} opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none`} />
+                {/* Hover sheen on card edge */}
+                <div
+                  className={`pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br ${tc.hoverSheen} opacity-0 transition-opacity duration-500 group-hover:opacity-[0.06]`}
+                />
               </motion.div>
             );
           })}
         </div>
       </div>
 
-      {/* Submit Form Section */}
+      {/* Submit Form Section — same width as principles grid above */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
-        className="max-w-4xl mx-auto mt-20"
+        className="mx-auto mt-20 w-full max-w-7xl"
       >
         <div className="relative p-8 rounded-2xl overflow-hidden border border-gold/30">
           <div className="absolute inset-0 bg-gradient-to-r from-gold/5 via-stone-500/5 to-stone-400/5" />
@@ -181,7 +212,7 @@ export default function CZPrinciples() {
               </p>
             </div>
 
-            <form className="space-y-4 max-w-2xl mx-auto">
+            <form className="w-full space-y-4">
               <div>
                 <label className="block text-sm mb-2">{t("principles.formTitleLabel")}</label>
                 <input

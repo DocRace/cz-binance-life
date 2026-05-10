@@ -3,7 +3,7 @@ import { useState } from "react";
 import { BookOpen, Users, Sparkles, User, Home, Clock } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
-import BinanceLogo from "./BinanceLogo";
+import siteMark from "../../assets/site-mark.png";
 import LanguageSwitcher from "./LanguageSwitcher";
 import PlatformSettlementRibbon from "./PlatformSettlementRibbon";
 import {
@@ -66,11 +66,13 @@ export default function Layout() {
         <div className="container mx-auto px-4 py-3 sm:px-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
             <Link to="/" className="group flex min-w-0 max-w-full items-center gap-2 sm:gap-3 lg:max-w-[min(100%,22rem)] xl:max-w-md">
-              <div className="relative shrink-0">
-                <div className="absolute inset-0 bg-gold blur-xl opacity-50 group-hover:opacity-70 transition-opacity" />
-                <div className="relative w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-gold to-gold-dark rounded-lg flex items-center justify-center">
-                  <BinanceLogo className="w-6 h-6 sm:w-7 sm:h-7 text-primary-foreground" />
-                </div>
+              <div className="relative h-10 w-10 shrink-0 sm:h-12 sm:w-12">
+                <img
+                  src={siteMark}
+                  alt=""
+                  className="h-full w-full object-contain object-center"
+                  decoding="async"
+                />
               </div>
               <div className="min-w-0">
                 <h1 className="font-display text-sm leading-snug tracking-wide text-balance sm:text-base md:text-lg">{t("nav.siteTitle")}</h1>
