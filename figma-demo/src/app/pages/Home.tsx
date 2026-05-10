@@ -61,7 +61,7 @@ export default function Home() {
             initial={{ opacity: 0, x: 32 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="text-center lg:text-left order-1 lg:order-2 max-w-xl mx-auto lg:mx-0"
+            className="text-center lg:text-left order-1 lg:order-2 min-w-0 max-w-xl mx-auto lg:mx-0"
           >
             <motion.span
               initial={{ opacity: 0, y: 8 }}
@@ -111,16 +111,16 @@ export default function Home() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.85 }}
-              className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-4"
+              className="flex flex-col sm:flex-row flex-nowrap items-stretch sm:items-center justify-center lg:justify-start gap-3 sm:gap-4"
             >
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 onClick={() => setShowReservationModal(true)}
-                className="rounded-full border border-gold px-9 py-3.5 text-sm font-body font-medium text-foreground tracking-wide hover:bg-gold/10 transition-colors duration-300 flex items-center justify-center gap-2"
+                className="shrink-0 rounded-full border border-gold px-5 py-3.5 text-sm font-body font-medium tabular-nums tracking-wide text-foreground transition-colors duration-300 hover:bg-gold/10 flex items-center justify-center gap-2 whitespace-nowrap sm:px-7"
               >
-                <Calendar className="w-4 h-4 opacity-90" />
+                <Calendar className="h-4 w-4 shrink-0 opacity-90" />
                 {t("home.reserveButton")}
               </motion.button>
 
@@ -129,9 +129,9 @@ export default function Home() {
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 onClick={() => setShowPurchaseModal(true)}
-                className="rounded-full bg-gold/90 px-9 py-3.5 text-sm font-body font-medium text-primary-foreground tracking-wide hover:bg-gold transition-colors duration-300 flex items-center justify-center gap-2 shadow-sm"
+                className="shrink-0 rounded-full bg-gold/90 px-5 py-3.5 text-sm font-body font-medium tabular-nums tracking-wide text-primary-foreground transition-colors duration-300 hover:bg-gold flex items-center justify-center gap-2 whitespace-nowrap shadow-sm sm:px-7"
               >
-                <ShoppingCart className="w-4 h-4" />
+                <ShoppingCart className="h-4 w-4 shrink-0" />
                 {t("home.purchaseButton")}
               </motion.button>
 
@@ -140,7 +140,7 @@ export default function Home() {
                 whileTap={isLaunched ? { scale: 0.98 } : {}}
                 type="button"
                 className={`
-                  rounded-full px-9 py-3.5 text-sm font-body font-medium tracking-wide transition-colors duration-300 border
+                  shrink-0 rounded-full px-5 py-3.5 text-sm font-body font-medium tabular-nums leading-snug tracking-wide transition-colors duration-300 border whitespace-nowrap sm:px-7
                   ${isLaunched ? "cursor-pointer border-gold/60 text-gold hover:bg-gold/10" : "cursor-default border-border text-muted-foreground"}
                 `}
                 disabled={!isLaunched}
@@ -151,8 +151,8 @@ export default function Home() {
                 }}
               >
                 {isLaunched ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <Users className="w-4 h-4" />
+                  <span className="flex items-center justify-center gap-2 whitespace-nowrap">
+                    <Users className="h-4 w-4 shrink-0" />
                     {t("home.clubButton")}
                   </span>
                 ) : (

@@ -31,9 +31,9 @@ export default function PlatformSettlementRibbon({
       )}
     >
       <div className="pointer-events-none absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-gold/40 to-transparent" />
-      <p className="text-center text-[11px] sm:text-xs text-muted-foreground leading-snug tracking-wide flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+      <p className="mx-auto flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center text-[11px] leading-snug tracking-wide text-muted-foreground sm:text-xs">
         <Layers className="h-3.5 w-3.5 shrink-0 text-gold" aria-hidden />
-        <span>
+        <span className="min-w-0 max-w-full text-balance">
           {t("platform.settlementStack", {
             dex: IPDEX_PRODUCT_NAME,
             chain: DATADANCE_CHAIN_NAME,

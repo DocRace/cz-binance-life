@@ -63,23 +63,26 @@ export default function Layout() {
         transition={{ duration: 0.6 }}
         className="relative z-40 border-b border-border/50 backdrop-blur-xl bg-background/80"
       >
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-3 group">
-              <div className="relative">
+        <div className="container mx-auto px-4 py-3 sm:px-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
+            <Link to="/" className="group flex min-w-0 max-w-full items-center gap-2 sm:gap-3 lg:max-w-[min(100%,22rem)] xl:max-w-md">
+              <div className="relative shrink-0">
                 <div className="absolute inset-0 bg-gold blur-xl opacity-50 group-hover:opacity-70 transition-opacity" />
-                <div className="relative w-12 h-12 bg-gradient-to-br from-gold to-gold-dark rounded-lg flex items-center justify-center">
-                  <BinanceLogo className="w-7 h-7 text-primary-foreground" />
+                <div className="relative w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-gold to-gold-dark rounded-lg flex items-center justify-center">
+                  <BinanceLogo className="w-6 h-6 sm:w-7 sm:h-7 text-primary-foreground" />
                 </div>
               </div>
-              <div>
-                <h1 className="font-display tracking-wider">{t("nav.siteTitle")}</h1>
-                <p className="text-xs text-muted-foreground font-tech">{t("nav.siteSubtitle")}</p>
+              <div className="min-w-0">
+                <h1 className="font-display text-sm leading-snug tracking-wide text-balance sm:text-base md:text-lg">{t("nav.siteTitle")}</h1>
+                <p className="text-[10px] text-muted-foreground font-tech leading-snug text-balance sm:text-xs">{t("nav.siteSubtitle")}</p>
               </div>
             </Link>
 
-            <div className="hidden md:flex items-center gap-4">
-              <nav className="flex items-center gap-1">
+            <div className="hidden min-h-0 flex-1 items-center md:flex md:justify-end md:gap-2">
+              <nav
+                className="flex h-9 max-w-full items-center gap-0.5 overflow-x-auto rounded-full border border-border/40 bg-muted/35 p-1 shadow-inner backdrop-blur-md [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                aria-label={t("nav.menuLabel")}
+              >
                 {navItems.map((item) => {
                   const Icon = item.icon;
                   const isActive = location.pathname === item.path;
@@ -88,29 +91,31 @@ export default function Layout() {
                       key={item.path}
                       to={item.path}
                       className={`
-                        relative px-4 py-2 rounded-lg transition-all duration-300
+                        relative flex h-7 shrink-0 items-center rounded-full px-2.5 text-center text-sm transition-colors duration-300 lg:px-3 xl:px-3.5
                         ${isActive
-                          ? 'text-gold'
-                          : 'text-muted-foreground hover:text-foreground'
+                          ? "text-gold"
+                          : "text-muted-foreground hover:text-foreground"
                         }
                       `}
                     >
                       {isActive && (
                         <motion.div
                           layoutId="activeNav"
-                          className="absolute inset-0 bg-gold/10 border border-gold/30 rounded-lg"
+                          className="absolute inset-0 rounded-full bg-gold/12 ring-1 ring-gold/35"
                           transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                         />
                       )}
-                      <span className="relative flex items-center gap-2">
-                        <Icon className="w-4 h-4" />
-                        {item.label}
+                      <span className="relative flex items-center gap-1.5 leading-none xl:gap-2">
+                        <Icon className="h-3.5 w-3.5 shrink-0 text-current xl:h-4 xl:w-4" />
+                        <span className="whitespace-nowrap px-0.5">{item.label}</span>
                       </span>
                     </Link>
                   );
                 })}
               </nav>
-              <LanguageSwitcher />
+              <div className="shrink-0">
+                <LanguageSwitcher />
+              </div>
             </div>
 
             {/* Mobile navigation */}
@@ -147,14 +152,14 @@ export default function Layout() {
                   key={item.path}
                   to={item.path}
                   onClick={() => setMobileNavOpen(false)}
-                  className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors ${
+                  className={`flex min-w-0 items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors ${
                     isActive
                       ? "bg-gold/10 text-gold ring-1 ring-gold/30"
                       : "text-muted-foreground hover:bg-accent/60 hover:text-foreground"
                   }`}
                 >
-                  <Icon className="h-4 w-4" />
-                  {item.label}
+                  <Icon className="h-4 w-4 shrink-0" />
+                  <span className="min-w-0 flex-1 text-balance leading-snug">{item.label}</span>
                 </Link>
               );
             })}

@@ -1,9 +1,12 @@
-import { useMemo, useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useSpring } from "motion/react";
+import { useCallback, useEffect, useMemo, useReducer } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import {
+  Bitcoin,
   BookOpen,
   Briefcase,
+  ChevronLeft,
+  ChevronRight,
   Globe2,
   GraduationCap,
   Landmark,
@@ -11,9 +14,11 @@ import {
   Scale,
   Sparkles,
   TrendingUp,
-  Bitcoin,
   type LucideIcon,
 } from "lucide-react";
+
+import { TimelineXFeed } from "../components/TimelineXFeed";
+import { TimelineYouTubeArchive } from "../components/TimelineYouTubeArchive";
 
 type Era = "origin" | "markets" | "crypto" | "binance" | "horizon";
 
@@ -63,10 +68,54 @@ const ERA_UI: Record<
   },
 };
 
+/** Cover-flow / Flip-3D style offsets relative to centered focus index */
+function carouselTransform(d: number) {
+  const ad = Math.abs(d);
+  const sign = Math.sign(d) || 0;
+  /** Strong side tilt (Windows Flip 3D–like) blended with carousel stride */
+  const rotateY = -sign * (48 + Math.min(ad, 1) * 6);
+  const translateX = d * (ad <= 3 ? 200 : 180);
+  const translateZ =
+    -(ad ** 1.08) * 95 + (d === 0 ? 158 : Math.min(ad, 3) * 8 - ad * 6);
+  const scale = d === 0 ? 1.02 : Math.max(0.68, 0.93 - Math.min(ad, 5) * 0.07);
+  const opacity = ad > 4 ? 0 : Math.max(0.28, 1 - Math.min(ad, 4) * 0.17);
+  return { rotateY, translateX, translateZ, scale, opacity };
+}
+
+const CARD_HALF_PX = 205;
+
+type CarouselState = { focus: number; expandedOpen: boolean };
+type CarouselAction =
+  | { type: "prev" }
+  | { type: "next" }
+  | { type: "jump"; index: number }
+  | { type: "interact"; index: number };
+
+function createCarouselReducer(eventCount: number) {
+  const cap = Math.max(0, eventCount - 1);
+  return (state: CarouselState, action: CarouselAction): CarouselState => {
+    switch (action.type) {
+      case "prev":
+        return { focus: Math.max(0, state.focus - 1), expandedOpen: false };
+      case "next":
+        return { focus: Math.min(cap, state.focus + 1), expandedOpen: false };
+      case "jump":
+        return {
+          focus: Math.min(cap, Math.max(0, action.index)),
+          expandedOpen: false,
+        };
+      case "interact":
+        if (state.focus !== action.index)
+          return { focus: Math.min(cap, Math.max(0, action.index)), expandedOpen: false };
+        return { ...state, expandedOpen: !state.expandedOpen };
+      default:
+        return state;
+    }
+  };
+}
+
 export default function Timeline() {
   const { t } = useTranslation();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
   const reduceMotion = useReducedMotion();
 
   const events: TimelineEvent[] = useMemo(
@@ -206,28 +255,70 @@ export default function Timeline() {
     [],
   );
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start 0.1", "end 0.9"],
+  const total = events.length;
+
+  const carouselReducer = useMemo(() => createCarouselReducer(events.length), [events.length]);
+  const [carousel, carouselDispatch] = useReducer(carouselReducer, {
+    focus: 0,
+    expandedOpen: false,
   });
-  const lineProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  const focusedIndex = carousel.focus;
+  const expandedActive = carousel.expandedOpen;
+
+  const goPrev = useCallback(() => {
+    carouselDispatch({ type: "prev" });
+  }, []);
+
+  const goNext = useCallback(() => {
+    carouselDispatch({ type: "next" });
+  }, []);
+
+  const handleInteract = useCallback((index: number) => {
+    carouselDispatch({ type: "interact", index });
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        goPrev();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        goNext();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [goPrev, goNext]);
+
+  const scrollToSection = useCallback((id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
+  const swipeDrag = reduceMotion ? false : ("x" as const);
+  const onDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: { offset: { x: number }; velocity: { x: number } }) => {
+    const thresh = 48;
+    if (info.velocity.x > 220 || info.offset.x > thresh) goPrev();
+    else if (info.velocity.x < -220 || info.offset.x < -thresh) goNext();
+  };
+
+  const progressPct = `${((focusedIndex + 1) / total) * 100}%`;
 
   return (
-    <div ref={containerRef} className="relative min-h-screen overflow-x-hidden bg-[#070708] text-foreground">
-      {/* Ambient backdrop */}
+    <div className="relative min-h-screen overflow-x-hidden bg-[#070708] text-foreground">
       <div className="pointer-events-none fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_50%_-20%,rgba(212,175,55,0.14),transparent_55%),radial-gradient(ellipse_80%_50%_at_100%_50%,rgba(99,102,241,0.06),transparent_45%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent,transparent,rgba(0,0,0,0.45))]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent,transparent,rgba(0,0,0,0.52))]" />
         <div
-          className="absolute inset-0 opacity-[0.035]"
+          className="absolute inset-x-0 bottom-0 h-[42%]"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23fff' stroke-width='0.5'%3E%3Cpath d='M0 40h80M40 0v80'/%3E%3C/g%3E%3C/svg%3E")`,
+            background:
+              "radial-gradient(ellipse 80% 65% at 50% 100%,rgba(212,175,55,0.07),transparent 70%)",
           }}
         />
       </div>
 
-      {/* Hero */}
-      <header className="relative px-4 pb-16 pt-24 sm:px-6 lg:px-8">
+      <header className="relative px-4 pb-6 pt-14 max-sm:z-30 max-sm:bg-[#070708] sm:px-6 sm:pb-7 sm:pt-16 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
@@ -246,191 +337,234 @@ export default function Timeline() {
           <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
             {t("timeline.subtitle")}
           </p>
-          {/* Era chips */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
+          <p className="mx-auto mt-3 max-w-xl text-[11px] leading-relaxed text-muted-foreground/70">
+            {t("timeline.carouselHint")}
+          </p>
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-2">
             {[t("timeline.chipEra1"), t("timeline.chipEra2"), t("timeline.chipEra3"), t("timeline.chipEra4")].map(
               (label) => (
                 <span
                   key={label}
-                  className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-muted-foreground backdrop-blur-sm"
+                  className="max-w-full rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-center text-xs leading-tight text-balance text-muted-foreground backdrop-blur-sm"
                 >
                   {label}
                 </span>
               ),
             )}
           </div>
+
+          {/* “Now playing” timeline progress strip */}
+          <div className="mx-auto mt-8 h-1 max-w-xl overflow-hidden rounded-full bg-white/[0.08]">
+            <motion.div
+              className="h-full rounded-full bg-gradient-to-r from-gold via-amber-200 to-violet-400"
+              animate={{ width: progressPct }}
+              transition={{ type: "spring", stiffness: 420, damping: 40 }}
+            />
+          </div>
+          <div className="mt-2 text-center font-mono text-[10px] text-muted-foreground/80 tabular-nums">
+            {focusedIndex + 1} / {total}
+          </div>
         </motion.div>
       </header>
 
-      {/* Timeline — 3D perspective scene */}
+      <nav
+        className="sticky top-0 z-[200] border-b border-white/10 bg-[#070708]/95 backdrop-blur-md supports-[backdrop-filter]:bg-[#070708]/80"
+        aria-label={t("timeline.pageNavAria")}
+      >
+        <div className="mx-auto flex max-w-2xl flex-wrap items-center justify-center gap-1.5 px-3 py-2.5 sm:gap-2 sm:px-4">
+          <button
+            type="button"
+            onClick={() => scrollToSection("section-timeline-carousel")}
+            className="min-w-0 max-w-[calc(50%-0.2rem)] rounded-full border border-white/12 bg-white/[0.05] px-3 py-1.5 text-center text-xs font-medium leading-tight text-balance text-muted-foreground transition-colors hover:border-gold/35 hover:bg-white/[0.08] hover:text-white sm:max-w-none sm:px-4 sm:text-sm"
+          >
+            {t("timeline.navMilestones")}
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollToSection("section-timeline-youtube")}
+            className="min-w-0 max-w-[calc(50%-0.2rem)] rounded-full border border-white/12 bg-white/[0.05] px-3 py-1.5 text-center text-xs font-medium leading-tight text-balance text-muted-foreground transition-colors hover:border-gold/35 hover:bg-white/[0.08] hover:text-white sm:max-w-none sm:px-4 sm:text-sm"
+          >
+            {t("timeline.navVideos")}
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollToSection("section-timeline-x")}
+            className="min-w-0 max-w-[calc(50%-0.2rem)] rounded-full border border-white/12 bg-white/[0.05] px-3 py-1.5 text-center text-xs font-medium leading-tight text-balance text-muted-foreground transition-colors hover:border-gold/35 hover:bg-white/[0.08] hover:text-white sm:max-w-none sm:px-4 sm:text-sm"
+          >
+            {t("timeline.navPosts")}
+          </button>
+        </div>
+      </nav>
+
       <section
-        className="relative mx-auto max-w-6xl px-4 pb-28 sm:px-6 lg:px-8 [perspective:min(1400px,100vw)]"
-        style={{ perspectiveOrigin: "50% 0%" }}
+        className="relative z-0 mx-auto max-w-[1700px] px-4 pb-28 sm:px-6 lg:px-10"
+        style={{ perspectiveOrigin: "50% 40%" }}
       >
         <div
-          className="relative [transform-style:preserve-3d]"
-          style={{ transform: reduceMotion ? undefined : "rotateX(0.6deg)" }}
+          id="section-timeline-carousel"
+          className="scroll-mt-[4.75rem] sm:scroll-mt-[5.25rem]"
         >
-          {/* Center spine: faux cylinder + glow */}
-          <div className="pointer-events-none absolute left-5 top-0 z-0 hidden h-full w-20 -translate-x-1/2 md:left-1/2 md:block">
-            <div
-              className="absolute left-1/2 top-0 h-full w-[18px] -translate-x-1/2 rounded-full opacity-90"
-              style={{
-                background:
-                  "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(212,175,55,0.35) 35%, rgba(255,255,255,0.2) 50%, rgba(100,80,20,0.5) 72%, rgba(0,0,0,0.9) 100%)",
-                boxShadow:
-                  "inset 4px 0 12px rgba(255,220,160,0.15), inset -6px 0 14px rgba(0,0,0,0.6), 0 0 40px rgba(212,175,55,0.25)",
-                transform: reduceMotion ? undefined : "rotateX(12deg)",
-                transformOrigin: "center top",
-              }}
-            />
-            <div className="absolute left-1/2 top-0 h-full w-9 -translate-x-1/2 rounded-full bg-gradient-to-b from-gold/15 via-transparent to-violet-500/10 blur-xl" />
-          </div>
-          <motion.div
-            className="pointer-events-none absolute left-5 top-0 z-[1] hidden h-full w-[3px] origin-top md:left-1/2 md:block md:-translate-x-1/2"
+        {/* perspective shell — vista / flip-3d stage */}
+        <div
+          className="relative isolate mx-auto [perspective:min(1900px,110vw)] [transform-style:preserve-3d] max-sm:pt-2"
+          aria-label="timeline cover flow carousel"
+        >
+          {/* subtle stage floor */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-[78%] h-[260px] w-[160%] max-w-none -translate-x-1/2 rounded-[120%_120%_0_0]"
             style={{
-              scaleY: lineProgress,
-              background: "linear-gradient(180deg, rgba(212,175,55,0.95), rgba(167,139,250,0.45), transparent)",
-              boxShadow: "0 0 28px rgba(212,175,55,0.45), 0 0 2px rgba(255,255,255,0.4)",
-              transform: reduceMotion ? undefined : "translateZ(24px)",
+              transform: "translateX(-50%) rotateX(68deg)",
+              transformOrigin: "center top",
+              background:
+                "radial-gradient(ellipse 72% 100% at 50% -10%,rgba(212,175,55,0.16),transparent 58%), repeating-linear-gradient(90deg,rgba(255,255,255,0.04)_0,rgba(255,255,255,0.04)_1px,transparent 1px,transparent 92px)",
+              maskImage: "linear-gradient(to bottom, black 35%, transparent 100%)",
+              opacity: 0.42,
+              filter: "blur(0px)",
             }}
           />
 
-          <div className="relative z-[2] space-y-12 md:space-y-28">
+          <motion.div
+            className="relative flex min-h-[min(480px,calc(100vh-168px))] cursor-grab items-center justify-center touch-pan-y active:cursor-grabbing sm:min-h-[min(560px,calc(100vh-240px))] [transform-style:preserve-3d]"
+            drag={swipeDrag}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.12}
+            onDragEnd={onDragEnd}
+          >
             {events.map((event, index) => {
-              const Icon = event.icon;
+              const d = index - focusedIndex;
+              const { rotateY, translateX, translateZ, scale, opacity } = carouselTransform(d);
               const ui = ERA_UI[event.era];
-              const isLeft = index % 2 === 0;
-              const expanded = openIndex === index;
-              const card = (
-                <motion.div
-                  className="relative [transform-style:preserve-3d]"
+              const Icon = event.icon;
+              const isFocused = index === focusedIndex;
+              const expanded = expandedActive && isFocused;
+              const zIndex = Math.max(0, 40 - Math.abs(d) * 3 + (isFocused ? 120 : 0));
+
+              const transition = reduceMotion
+                ? { duration: 0.15 }
+                : { type: "spring" as const, stiffness: 420, damping: 38 };
+
+              return (
+                <motion.article
+                  key={event.yearKey}
                   initial={false}
-                  style={{ transformStyle: "preserve-3d" }}
-                  animate={
-                    reduceMotion
-                      ? {}
-                      : {
-                          rotateY: isLeft ? -5 : 5,
-                          rotateX: 0.5,
-                          z: 0,
-                        }
-                  }
-                  whileHover={
-                    reduceMotion
-                      ? {}
-                      : {
-                          rotateY: isLeft ? -7 : 7,
-                          z: 32,
-                          transition: { type: "spring", stiffness: 260, damping: 22 },
-                        }
-                  }
-                  transition={{ type: "spring", stiffness: 140, damping: 24 }}
+                  animate={{
+                    rotateY,
+                    x: translateX,
+                    translateZ,
+                    scale,
+                    opacity,
+                  }}
+                  transition={transition}
+                  className="absolute top-[36%] w-[min(calc(100vw-88px),420px)] [transform-style:preserve-3d] max-sm:top-[38%]"
+                  style={{
+                    left: "50%",
+                    marginLeft: -CARD_HALF_PX,
+                    transformOrigin: "center center",
+                    zIndex,
+                    pointerEvents: Math.abs(d) > 5 ? ("none" as const) : "auto",
+                  }}
                 >
-                  {/* depth stack behind card */}
-                  <div
-                    aria-hidden
-                    className={`pointer-events-none absolute -inset-1 -z-10 rounded-[1.05rem] border ${ui.border} bg-black/50 opacity-70 blur-[1px]`}
-                    style={{
-                      transform: "translateZ(-14px) translateY(10px) scale(0.98)",
-                    }}
-                  />
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute -inset-x-1 -bottom-4 top-1/2 -z-20 rounded-3xl bg-gradient-to-b from-transparent via-black/50 to-black/90 opacity-80"
-                    style={{ transform: "translateZ(-28px) rotateX(8deg)" }}
-                  />
-                  <CardPanel
+                  {/* Vista-style reflection */}
+                  {!reduceMotion ? (
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute inset-x-[8%] -bottom-[44%] h-[62%]"
+                      style={{
+                        transformOrigin: "top center",
+                        transform: "rotateX(58deg)",
+                        opacity: Math.max(0.05, 0.42 - Math.abs(d) * 0.11),
+                      }}
+                    >
+                      <div
+                        className="h-full w-full rounded-2xl border border-white/5 bg-black/65"
+                        style={{
+                          clipPath: "inset(0 0 0 0)",
+                          maskImage: "linear-gradient(to bottom,black 35%,transparent 70%)",
+                        }}
+                      />
+                    </div>
+                  ) : null}
+
+                  <CarouselCardChrome
                     event={event}
                     Icon={Icon}
                     ui={ui}
                     expanded={expanded}
-                    onToggle={() => setOpenIndex(expanded ? null : index)}
+                    isFocused={isFocused}
+                    delta={Math.abs(d)}
+                    onInteract={() => handleInteract(index)}
                     t={t}
                   />
-                </motion.div>
-              );
-              const node = (
-                <div className="flex justify-center pt-1 md:flex md:pt-2" style={{ transformStyle: "preserve-3d" }}>
-                  <motion.div
-                    whileHover={reduceMotion ? {} : { scale: 1.08, z: 36 }}
-                    className={`relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br shadow-xl ring-2 ring-black/50 ${ui.node}`}
-                    style={{
-                      boxShadow:
-                        "0 12px 24px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.12) inset, 8px 8px 20px rgba(212,175,55,0.15)",
-                      transform: reduceMotion ? undefined : "translateZ(48px) rotateX(-12deg)",
-                    }}
-                  >
-                    <span
-                      className="pointer-events-none absolute inset-[3px] rounded-full bg-gradient-to-br from-white/35 via-transparent to-transparent opacity-90"
-                      style={{ transform: "translateZ(2px)" }}
-                    />
-                    <span className="pointer-events-none absolute inset-0 rounded-full bg-white/10 blur-md" />
-                    <Icon className="relative h-7 w-7 text-white drop-shadow-lg" aria-hidden />
-                  </motion.div>
-                </div>
-              );
-
-              return (
-                <motion.article
-                  key={event.titleKey}
-                  initial={{ opacity: 0, y: 36 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.12 }}
-                  transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-                  className="timeline-event relative [transform-style:preserve-3d]"
-                  style={
-                    reduceMotion
-                      ? undefined
-                      : {
-                          transform: "translateZ(0px)",
-                        }
-                  }
-                >
-                  {/* Mobile: 3d-lite rail */}
-                  <div className="relative pl-6 md:hidden [perspective:800px]">
-                    <div
-                      className="absolute -left-[7px] top-8 h-4 w-4 rounded-full border-2 border-gold/50 bg-[#070708] shadow-[0_6px_16px_rgba(0,0,0,0.85),0_0_14px_rgba(212,175,55,0.45)]"
-                      style={{ transform: "translateZ(12px)" }}
-                    />
-                    <div
-                      className="absolute bottom-4 left-[5px] top-8 w-[3px] rounded-full bg-gradient-to-b from-gold/70 via-white/20 to-transparent opacity-90"
-                      style={{
-                        boxShadow: "inset -1px 0 2px rgba(255,255,255,0.2)",
-                        transform: "rotateY(-18deg)",
-                        transformOrigin: "left center",
-                      }}
-                    />
-                    {card}
-                  </div>
-
-                  {/* Desktop: alternating 3-col */}
-                  <div className="relative hidden md:grid md:grid-cols-[1fr_auto_1fr] md:items-start md:gap-8">
-                    {isLeft ? (
-                      <>
-                        <div className="min-w-0 pr-2 text-right">{card}</div>
-                        <div className="flex w-16 shrink-0 justify-center [transform-style:preserve-3d]">
-                          {node}
-                        </div>
-                        <div />
-                      </>
-                    ) : (
-                      <>
-                        <div />
-                        <div className="flex w-16 shrink-0 justify-center [transform-style:preserve-3d]">
-                          {node}
-                        </div>
-                        <div className="min-w-0 pl-2 text-left">{card}</div>
-                      </>
-                    )}
-                  </div>
                 </motion.article>
               );
             })}
+          </motion.div>
+
+          {/* Arrows */}
+          <div className="pointer-events-none absolute inset-x-0 top-[36%] z-[220] flex -translate-y-1/2 justify-between px-1 max-sm:top-[38%] sm:px-4 md:px-10">
+            <button
+              type="button"
+              disabled={focusedIndex <= 0}
+              onClick={goPrev}
+              className="pointer-events-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/65 text-white shadow-lg backdrop-blur-md transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-25"
+              aria-label="Previous milestone"
+            >
+              <ChevronLeft className="h-6 w-6" aria-hidden />
+            </button>
+            <button
+              type="button"
+              disabled={focusedIndex >= total - 1}
+              onClick={goNext}
+              className="pointer-events-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/65 text-white shadow-lg backdrop-blur-md transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-25"
+              aria-label="Next milestone"
+            >
+              <ChevronRight className="h-6 w-6" aria-hidden />
+            </button>
           </div>
         </div>
 
-        <p className="mx-auto mt-20 max-w-3xl text-center text-xs leading-relaxed text-muted-foreground/80">
+        {/* Coverflow strip */}
+        <div className="relative z-10 mt-10 flex justify-center gap-1.5 overflow-x-auto py-5 [scrollbar-width:thin] sm:mt-14">
+          {events.map((ev, idx) => {
+            const Icon = ev.icon;
+            const active = idx === focusedIndex;
+            return (
+              <button
+                key={ev.yearKey}
+                type="button"
+                className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border transition-colors ${
+                  active
+                    ? "border-gold/50 bg-gold/25 text-gold"
+                    : "border-white/10 bg-white/[0.04] text-muted-foreground hover:border-white/20 hover:bg-white/[0.08]"
+                }`}
+                onClick={() => {
+                  carouselDispatch({ type: "jump", index: idx });
+                }}
+                aria-current={active}
+              >
+                <Icon className="h-7 w-7" aria-hidden />
+              </button>
+            );
+          })}
+        </div>
+        </div>
+
+        <div
+          id="section-timeline-youtube"
+          className="scroll-mt-[4.5rem] pt-14 sm:scroll-mt-[5rem] sm:pt-20"
+        >
+          <TimelineYouTubeArchive />
+        </div>
+
+        <div
+          id="section-timeline-x"
+          className="scroll-mt-[4.5rem] pt-14 sm:scroll-mt-[5rem] sm:pt-20"
+        >
+          <TimelineXFeed />
+        </div>
+
+        <p className="mx-auto mt-16 max-w-3xl pb-24 text-center text-xs leading-relaxed text-muted-foreground/80 sm:mt-20">
           {t("timeline.disclaimer")}
         </p>
       </section>
@@ -438,31 +572,92 @@ export default function Timeline() {
   );
 }
 
-function CardPanel({
+/** Card body with outer shelf frame for cover-flow readability */
+function CarouselCardChrome({
   event,
   Icon,
   ui,
   expanded,
-  onToggle,
+  isFocused,
+  delta,
+  onInteract,
   t,
 }: {
   event: TimelineEvent;
   Icon: LucideIcon;
   ui: (typeof ERA_UI)["origin"];
   expanded: boolean;
-  onToggle: () => void;
+  isFocused: boolean;
+  delta: number;
+  onInteract: () => void;
   t: (k: string) => string;
 }) {
   return (
-    <motion.button
+    <div
+      className={`rounded-[28px] p-[2px] [transform-style:preserve-3d] ${
+        isFocused ? "shadow-[0_40px_100px_-30px_rgba(212,175,55,0.35)]" : "opacity-95"
+      }`}
+      style={{
+        background:
+          delta === 0
+            ? "linear-gradient(165deg,rgba(255,255,255,0.22),rgba(212,175,55,0.25),transparent 55%)"
+            : "linear-gradient(165deg,rgba(255,255,255,0.08),rgba(0,0,0,0.5))",
+      }}
+    >
+      <div className="rounded-[26px] border border-black/60 bg-[#0a0a0c]">
+        <CardPanelContent
+          event={event}
+          Icon={Icon}
+          ui={ui}
+          expanded={expanded}
+          isFocused={isFocused}
+          delta={delta}
+          onInteract={onInteract}
+          t={t}
+        />
+      </div>
+    </div>
+  );
+}
+
+function CardPanelContent({
+  event,
+  Icon,
+  ui,
+  expanded,
+  isFocused,
+  delta,
+  onInteract,
+  t,
+}: {
+  event: TimelineEvent;
+  Icon: LucideIcon;
+  ui: (typeof ERA_UI)["origin"];
+  expanded: boolean;
+  isFocused: boolean;
+  delta: number;
+  onInteract: () => void;
+  t: (k: string) => string;
+}) {
+  return (
+    <button
       type="button"
-      onClick={onToggle}
-      className={`group w-full text-left outline-none transition-all duration-300 focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#070708] ${expanded ? "scale-[1.01]" : "hover:scale-[1.01]"} `}
+      onClick={(e) => {
+        e.stopPropagation();
+        onInteract();
+      }}
+      className="group relative w-full text-left outline-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0c]"
     >
       <div
-        className={`relative overflow-hidden rounded-2xl border ${ui.border} bg-gradient-to-br from-white/[0.07] to-white/[0.02] p-6 shadow-[0_24px_55px_-18px_rgba(0,0,0,0.85)] backdrop-blur-xl transition-all duration-500 group-hover:border-white/25 group-hover:shadow-[0_32px_70px_-24px_rgba(212,175,55,0.18)]`}
-        style={{ transform: "translateZ(12px)", transformStyle: "preserve-3d" }}
+        className={`relative overflow-hidden rounded-[24px] border ${ui.border} bg-gradient-to-br from-white/[0.09] to-white/[0.02] p-5 sm:p-6 ${isFocused ? "ring-1 ring-white/10" : "hover:border-white/20"}`}
       >
+        {/* Mini tag when not focused */}
+        {!isFocused ? (
+          <span className="absolute right-4 top-4 rounded-full border border-white/10 bg-black/50 px-2 py-0.5 text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
+            {t("timeline.carouselFocusCue")}
+          </span>
+        ) : null}
+
         <div className={`pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full blur-3xl ${ui.gradient}`} />
         <div className="relative flex flex-col gap-3">
           <div className="flex flex-wrap items-start justify-between gap-2">
@@ -471,13 +666,17 @@ function CardPanel({
             >
               {t(event.yearKey)}
             </span>
-            <span className="rounded-md border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <span className="max-w-[min(100%,11rem)] text-balance break-words rounded-md border border-white/10 bg-black/35 px-2 py-0.5 text-left text-[10px] font-medium uppercase leading-tight tracking-wide text-muted-foreground sm:max-w-[min(100%,13rem)]">
               {t(event.locKey)}
             </span>
           </div>
-          <div className="flex items-start gap-3 md:items-center">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 md:hidden">
-              <Icon className="h-6 w-6 text-gold-light" aria-hidden />
+
+          <div className="flex items-start gap-3">
+            <div
+              className={`relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ring-2 ring-black/45 ${ui.node}`}
+            >
+              <span className="pointer-events-none absolute inset-0 rounded-2xl bg-white/[0.12] blur-sm" />
+              <Icon className="relative h-6 w-6 text-white" aria-hidden />
             </div>
             <div>
               <h2 className="font-display text-xl font-semibold leading-snug tracking-tight sm:text-2xl">
@@ -486,10 +685,11 @@ function CardPanel({
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t(event.descKey)}</p>
             </div>
           </div>
+
           <motion.div
             initial={false}
             animate={{ height: expanded ? "auto" : 0, opacity: expanded ? 1 : 0 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: expanded ? 0.36 : 0.22, ease: [0.22, 1, 0.36, 1] }}
             className="overflow-hidden"
           >
             <ul className="mt-3 space-y-2 border-t border-white/10 pt-4">
@@ -501,11 +701,15 @@ function CardPanel({
               ))}
             </ul>
           </motion.div>
-          <span className="mt-1 text-[11px] font-medium uppercase tracking-wider text-gold/70">
-            {expanded ? t("timeline.collapse") : t("timeline.expand")}
+          <span className={`mt-1 text-balance text-[11px] font-medium uppercase leading-snug tracking-wider ${isFocused ? "text-gold/80" : "text-muted-foreground/70"}`}>
+            {expanded
+              ? t("timeline.collapse")
+              : isFocused
+                ? t("timeline.expand")
+                : t("timeline.carouselTapCentreExpand")}
           </span>
         </div>
       </div>
-    </motion.button>
+    </button>
   );
 }

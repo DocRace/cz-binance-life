@@ -21,6 +21,8 @@ cd figma-demo && npm install && npm run dev
 
 See `figma-demo/.env.example` and `figma-demo/bff/.env.example` for variables.
 
+**Test / production deploy (Docker + subdomain):** see [`docs/DEPLOY_IPDEX_TEST_ENV.md`](docs/DEPLOY_IPDEX_TEST_ENV.md).
+
 ## Requirements
 
 - Node.js 18+ recommended.

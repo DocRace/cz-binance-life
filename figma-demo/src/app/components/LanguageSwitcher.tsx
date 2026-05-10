@@ -23,7 +23,6 @@ export default function LanguageSwitcher() {
   };
 
   const handleLanguageChange = (langCode: string) => {
-    console.log("Changing language to:", langCode);
     i18n.changeLanguage(langCode);
     setIsOpen(false);
   };
@@ -54,11 +53,11 @@ export default function LanguageSwitcher() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent/50 transition-colors cursor-pointer"
-        style={{ pointerEvents: 'auto' }}
+        className="inline-flex h-9 min-h-9 max-w-[11rem] cursor-pointer items-center gap-2 rounded-full border border-border/40 bg-muted/35 px-3 text-sm shadow-inner backdrop-blur-md transition-colors hover:bg-muted/50 sm:px-3.5"
+        style={{ pointerEvents: "auto" }}
       >
         <Globe className="w-4 h-4" />
-        <span className="text-sm">{getCurrentLanguage().label}</span>
+        <span className="truncate text-left text-sm">{getCurrentLanguage().label}</span>
       </button>
 
       {isOpen && (

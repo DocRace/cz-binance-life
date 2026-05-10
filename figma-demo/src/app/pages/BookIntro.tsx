@@ -79,7 +79,7 @@ export default function BookIntro() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
-        className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-20"
+        className="grid grid-cols-1 md:grid-cols-2 md:items-stretch gap-8 max-w-5xl mx-auto mb-20"
       >
         {[
           {
@@ -110,15 +110,15 @@ export default function BookIntro() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 + index * 0.1 }}
-              className="group relative"
+              className="group relative flex h-full min-h-0 flex-col"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-gold/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative p-6 rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm">
-                <div className="w-12 h-12 mb-4 rounded-xl bg-gold/20 flex items-center justify-center">
-                  <Icon className="w-6 h-6 text-gold" />
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gold/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              <div className="relative flex h-full min-h-0 flex-col rounded-2xl border border-border/50 bg-card/30 p-6 backdrop-blur-sm">
+                <div className="mb-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gold/20">
+                  <Icon className="h-6 w-6 text-gold" />
                 </div>
-                <h3 className="font-display text-xl mb-2">{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.description}</p>
+                <h3 className="mb-2 font-display text-xl">{feature.title}</h3>
+                <p className="min-h-0 flex-1 text-muted-foreground leading-relaxed">{feature.description}</p>
               </div>
             </motion.div>
           );
