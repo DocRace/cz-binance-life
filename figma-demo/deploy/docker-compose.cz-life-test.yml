@@ -1,0 +1,51 @@
+name: cz-booksite
+
+# Book site: SPA + BFF + edge nginx on port 80.
+#
+# On the server:
+#   cd figma-demo/deploy
+#   cp bff.env.example bff.env   # fill secrets
+#   cp .env.spa.example .env.spa # optional; edit VITE_* for your test market URLs
+#   docker compose -f docker-compose.cz-life-test.yml --env-file .env.spa up -d --build
+#
+# Browser should use same host for UI + /api/bff → set VITE_BOOK_BFF_URL empty at build.
+
+services:
+  spa:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      args:
+        VITE_IPDEX_MARKET_URL: ${VITE_IPDEX_MARKET_URL:-}
+        VITE_IPDEX_URL: ${VITE_IPDEX_URL:-}
+        VITE_IPDEX_BOOK_PRIMARY_SALE_ID: ${VITE_IPDEX_BOOK_PRIMARY_SALE_ID:-}
+        VITE_IPDEX_BOOK_PRIMARY_LISTING_ID: ${VITE_IPDEX_BOOK_PRIMARY_LISTING_ID:-}
+        VITE_IPDEX_CLIENT_API_ORIGIN: ${VITE_IPDEX_CLIENT_API_ORIGIN:-https://ipdex-v1-dev.ipdex.vip}
+        VITE_IPDEX_SOCIAL_X_URL: ${VITE_IPDEX_SOCIAL_X_URL:-}
+        VITE_IPDEX_SOCIAL_FACEBOOK_URL: ${VITE_IPDEX_SOCIAL_FACEBOOK_URL:-}
+        VITE_DATADANCE_EXPLORER_URL: ${VITE_DATADANCE_EXPLORER_URL:-https://scan.datadance.ai}
+        VITE_BOOK_BFF_URL: ""
+    expose:
+      - "80"
+    restart: unless-stopped
+
+  bff:
+    build:
+      context: ../bff
+      dockerfile: Dockerfile
+    env_file:
+      - bff.env
+    expose:
+      - "8787"
+    restart: unless-stopped
+
+  edge:
+    image: nginx:1.27-alpine
+    depends_on:
+      - spa
+      - bff
+    ports:
+      - "${BOOKSITE_EDGE_PUBLISH:-80}:80"
+    volumes:
+      - ./nginx.edge-bff.compose.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
