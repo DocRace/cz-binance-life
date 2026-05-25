@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
 import { Clapperboard, ExternalLink, Mic, Youtube } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/app/components/ui/utils";
+import { passesTimelineFeaturedFilter, type CuratorMeta } from "@/app/components/TimelineXFeed";
 
 type Localized = { "zh-TW": string; en: string };
 
@@ -12,6 +13,7 @@ export type CZYoutubeArchiveItem = {
   kind: "video" | "short" | "podcast";
   title: Localized;
   source: Localized;
+  curator?: CuratorMeta;
 };
 
 type ArchiveSection = {
@@ -25,6 +27,21 @@ type ArchiveDoc = {
   sections: ArchiveSection[];
   extras: CZYoutubeArchiveItem[];
 };
+
+type YtFilterMode = "featured" | "all";
+
+function filterYoutubeDoc(doc: ArchiveDoc, mode: YtFilterMode): ArchiveDoc {
+  if (mode === "all") return doc;
+  const filterItem = (it: CZYoutubeArchiveItem) => passesTimelineFeaturedFilter(it.curator);
+  const sections = doc.sections
+    .map((s) => ({
+      ...s,
+      items: s.items.filter(filterItem),
+    }))
+    .filter((s) => s.items.length > 0);
+  const extras = (doc.extras || []).filter(filterItem);
+  return { ...doc, sections, extras };
+}
 
 function pickLocalized(b: Localized, lng: string): string {
   if (lng === "zh-TW" || lng.startsWith("zh")) return b["zh-TW"] || b.en;
@@ -109,6 +126,7 @@ function VideoCard({
 export function TimelineYouTubeArchive() {
   const { t, i18n } = useTranslation();
   const [data, setData] = useState<ArchiveDoc | null | undefined>(undefined);
+  const [filterMode, setFilterMode] = useState<YtFilterMode>("featured");
   const lng = i18n.language;
 
   useEffect(() => {
@@ -128,6 +146,27 @@ export function TimelineYouTubeArchive() {
     };
   }, []);
 
+  const filtered = useMemo(
+    () => (data ? filterYoutubeDoc(data, filterMode) : null),
+    [data, filterMode],
+  );
+
+  const ytTotalCount = useMemo(() => {
+    if (!data) return 0;
+    let n = 0;
+    for (const s of data.sections) n += s.items.length;
+    n += data.extras?.length ?? 0;
+    return n;
+  }, [data]);
+
+  const ytShownCount = useMemo(() => {
+    if (!filtered) return 0;
+    let n = 0;
+    for (const s of filtered.sections) n += s.items.length;
+    n += filtered.extras?.length ?? 0;
+    return n;
+  }, [filtered]);
+
   if (data === undefined) {
     return (
       <section className="relative mx-auto max-w-6xl px-4 pb-6 sm:px-6 lg:px-10" aria-busy="true">
@@ -142,6 +181,25 @@ export function TimelineYouTubeArchive() {
         <p className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-6 text-center text-sm text-muted-foreground">
           {t("timeline.ytMissing")}
         </p>
+      </section>
+    );
+  }
+
+  if (!filtered || (!filtered.sections?.length && !(filtered.extras?.length))) {
+    return (
+      <section className="relative mx-auto max-w-6xl px-4 pb-6 sm:px-6 lg:px-10">
+        <p className="rounded-xl border border-amber-500/25 bg-amber-500/5 px-4 py-6 text-center text-sm text-muted-foreground">
+          {t("timeline.ytFilterEmpty")}
+        </p>
+        <div className="mt-4 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setFilterMode("all")}
+            className="rounded-full border border-gold/40 bg-gold/10 px-5 py-2 text-sm font-medium text-gold hover:bg-gold/15"
+          >
+            {t("timeline.filterAll")}
+          </button>
+        </div>
       </section>
     );
   }
@@ -185,10 +243,42 @@ export function TimelineYouTubeArchive() {
         <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
           {t("timeline.ytArchiveSubtitle")}
         </p>
+        <p className="mx-auto mt-3 max-w-xl text-[11px] leading-relaxed text-muted-foreground/85">
+          {t("timeline.filterCuratorNote")}
+        </p>
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+          <button
+            type="button"
+            onClick={() => setFilterMode("featured")}
+            className={`rounded-full border px-4 py-1.5 text-xs font-medium transition-colors sm:text-sm ${
+              filterMode === "featured"
+                ? "border-gold/50 bg-gold/15 text-gold"
+                : "border-white/15 bg-white/[0.04] text-muted-foreground hover:border-white/25"
+            }`}
+          >
+            {t("timeline.filterFeatured")}
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilterMode("all")}
+            className={`rounded-full border px-4 py-1.5 text-xs font-medium transition-colors sm:text-sm ${
+              filterMode === "all"
+                ? "border-gold/50 bg-gold/15 text-gold"
+                : "border-white/15 bg-white/[0.04] text-muted-foreground hover:border-white/25"
+            }`}
+          >
+            {t("timeline.filterAll")}
+          </button>
+        </div>
+        {filterMode === "featured" ? (
+          <p className="mt-2 font-mono text-[11px] text-muted-foreground/80">
+            {t("timeline.ytCountFiltered", { shown: ytShownCount, total: ytTotalCount })}
+          </p>
+        ) : null}
       </motion.div>
 
       <div className="space-y-20 sm:space-y-24">
-        {data.sections.map((section) => (
+        {filtered.sections.map((section) => (
           <div key={section.id}>
             <h3 className="mb-5 border-b border-white/10 pb-2 font-display text-lg font-semibold text-white/90 sm:text-xl">
               {t(section.titleKey)}
@@ -207,13 +297,13 @@ export function TimelineYouTubeArchive() {
           </div>
         ))}
 
-        {data.extras?.length ? (
+        {filtered.extras?.length ? (
           <div>
             <h3 className="mb-5 border-b border-white/10 pb-2 font-display text-lg font-semibold text-white/90 sm:text-xl">
               {t("timeline.ytExtrasTitle")}
             </h3>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {data.extras.map((item) => (
+              {filtered.extras.map((item) => (
                 <VideoCard
                   key={`extra-${item.youtubeId}-${item.url}`}
                   item={item}

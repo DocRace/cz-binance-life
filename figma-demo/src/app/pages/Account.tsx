@@ -11,88 +11,26 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router";
 import NFTBadge from "../components/NFTBadge";
+import PurchaseModal from "../components/PurchaseModal";
 import RedeemBookModal from "../components/RedeemBookModal";
 import { bookBffJson, bookBffIsTransportIssue } from "../../lib/bookBffClient";
 import { bookBffJsonWithRefresh } from "../../lib/bookBffWithRefresh";
+import { getBookNftRedemptionRuleId } from "../../config/platform";
+import {
+  asRecordList,
+  BOOK_NFT_COLLECTION_UUID_RE,
+  type DisplayNft,
+  fetchNftBffPagesMerged,
+  isRedeemEligible,
+  mapNftRow,
+  strField,
+} from "../../lib/bookAccountNftApi";
+import { buildClubRedeemPostJsonPayload, localizedBookRedeemFailureMessage, logClubRedeemResponseIfDebugging } from "../../lib/bookRedeemClient";
+import { toast } from "sonner";
 
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
-function asRecordList(data: unknown): Record<string, unknown>[] {
-  if (data == null) return [];
-  if (Array.isArray(data)) return data as Record<string, unknown>[];
-  if (typeof data === "object") {
-    const o = data as Record<string, unknown>;
-    for (const k of ["list", "items", "records", "balances", "nftList", "nfts", "rows"]) {
-      const v = o[k];
-      if (Array.isArray(v)) return v as Record<string, unknown>[];
-    }
-  }
-  return [];
-}
-
-function strField(row: Record<string, unknown>, keys: string[]): string {
-  for (const k of keys) {
-    const v = row[k];
-    if (v !== undefined && v !== null && `${v}`.trim() !== "") return `${v}`;
-  }
-  return "";
-}
-
-function classifyNft(row: Record<string, unknown>): {
-  badge: "original" | "redeemed" | "principle";
-  principleName?: string;
-} {
-  const hay =
-    `${strField(row, ["name", "nftName", "title"])} ${strField(row, ["collectionName", "collection"])} ${strField(
-      row,
-      ["type", "nftType", "category"],
-    )}`.toLowerCase();
-  if (hay.includes("principle") || hay.includes("原則")) {
-    const name = strField(row, ["name", "nftName", "title"]) || "Principle";
-    return { badge: "principle", principleName: name };
-  }
-  if (
-    hay.includes("redeem") ||
-    hay.includes("attendance") ||
-    hay.includes("memorial") ||
-    hay.includes("到場") ||
-    hay.includes("commemorative")
-  ) {
-    return { badge: "redeemed" };
-  }
-  return { badge: "original" };
-}
-
-const principleColors = ["gold", "cyan", "purple"] as const;
-
-type DisplayNft = {
-  key: string;
-  tokenId: string;
-  badge: "original" | "redeemed" | "principle";
-  dateLabel: string;
-  principleName?: string;
-  principleColor?: "gold" | "cyan" | "purple";
-  originalTokenId?: string;
-};
-
-function mapNftRow(row: Record<string, unknown>, index: number): DisplayNft {
-  const tokenId =
-    strField(row, ["tokenId", "token_id", "tokenID", "id", "nftId"]) || `item-${index}`;
-  const classified = classifyNft(row);
-  const dateRaw = strField(row, ["createdAt", "purchasedAt", "mintedAt", "updatedAt"]).slice(0, 10);
-  const principleColor =
-    classified.badge === "principle" ? principleColors[index % principleColors.length] : undefined;
-  return {
-    key: `${tokenId}-${index}`,
-    tokenId,
-    badge: classified.badge,
-    dateLabel: dateRaw || "—",
-    principleName: classified.principleName,
-    principleColor,
-    originalTokenId: strField(row, ["originalTokenId", "parentTokenId"]),
-  };
-}
+const UUID_RE = BOOK_NFT_COLLECTION_UUID_RE;
 
 function parseOrder(row: Record<string, unknown>): { orderId: string; payUrl?: string } {
   const orderId = strField(row, ["orderId", "order_id", "id"]);
@@ -148,7 +86,10 @@ export default function Account() {
   const [showEventConfirm, setShowEventConfirm] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<number | null>(null);
   const [showRedeemModal, setShowRedeemModal] = useState(false);
-  const [redeemTokenId, setRedeemTokenId] = useState<string>("");
+  const [redeemTarget, setRedeemTarget] = useState<{ tokenId: string; collectionId: string } | null>(null);
+  const [redeemBusy, setRedeemBusy] = useState(false);
+  const [redeemError, setRedeemError] = useState<string | null>(null);
+  const [purchaseOpen, setPurchaseOpen] = useState(false);
 
   const [orderBusyId, setOrderBusyId] = useState<string | null>(null);
 
@@ -188,7 +129,7 @@ export default function Account() {
     try {
       const [me, nftRows, ordRows] = await Promise.all([
         bookBffJsonWithRefresh<Record<string, unknown>>("/api/bff/me"),
-        fetchBffPages((p) => `/api/bff/nfts/${p}`),
+        fetchNftBffPagesMerged((p) => `/api/bff/nfts/${p}`),
         fetchBffPages((p) => `/api/bff/orders/pending/${p}`),
       ]);
 
@@ -226,6 +167,10 @@ export default function Account() {
       try {
         const s = await bookBffJson<{ authenticated: boolean }>("/api/bff/auth/session");
         if (cancel) return;
+        if (bookBffIsTransportIssue(s)) {
+          setAuthError(t("purchase.bffOffline"));
+          return;
+        }
         if (s.code === 0 && s.data?.authenticated) {
           setIsLoggedIn(true);
         }
@@ -317,14 +262,58 @@ export default function Account() {
     }, 3000);
   };
 
-  const handleRedeemClick = (tokenId: string) => {
-    setRedeemTokenId(tokenId);
+  const handleRedeemClick = (nft: DisplayNft) => {
+    setRedeemError(null);
+    if (!isRedeemEligible(nft) || !nft.collectionId) return;
+    setRedeemTarget({ tokenId: nft.tokenId, collectionId: nft.collectionId });
     setShowRedeemModal(true);
   };
 
-  const handleConfirmRedeem = () => {
-    setShowRedeemModal(false);
-    alert(t("account.redeemSuccess"));
+  const handleConfirmRedeem = async (staffCode: string) => {
+    const target = redeemTarget;
+    const code = staffCode.trim();
+    if (!target || code.length < 4) return;
+    setRedeemBusy(true);
+    setRedeemError(null);
+    const idempotencyKey =
+      typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    try {
+      const out = await bookBffJsonWithRefresh<Record<string, unknown>>("/api/bff/club/redeem", {
+        method: "POST",
+        body: JSON.stringify(
+          buildClubRedeemPostJsonPayload({
+            staffCode: code,
+            sourceCollectionId: target.collectionId,
+            sourceTokenId: target.tokenId,
+            idempotencyKey,
+            redemptionRuleId: getBookNftRedemptionRuleId(),
+          }),
+        ),
+      });
+
+      if (out.code === 0) {
+        setShowRedeemModal(false);
+        setRedeemTarget(null);
+        toast.success(t("account.redeemSuccessToast"));
+        await loadDashboard();
+        return;
+      }
+
+      logClubRedeemResponseIfDebugging("[book-site] POST /api/bff/club/redeem ← response", out);
+      setRedeemError(localizedBookRedeemFailureMessage(t, out));
+    } finally {
+      setRedeemBusy(false);
+    }
+  };
+
+  const handleCloseRedeem = () => {
+    if (!redeemBusy) {
+      setShowRedeemModal(false);
+      setRedeemTarget(null);
+      setRedeemError(null);
+    }
   };
 
   const handleCancelPayment = async (orderId: string) => {
@@ -411,6 +400,7 @@ export default function Account() {
                 <NFTBadge
                   tokenId={nft.tokenId}
                   type={nft.badge}
+                  stubTicket={Boolean(nft.attendanceStub)}
                   size="md"
                   animated={true}
                   principleName={nft.principleName}
@@ -427,10 +417,10 @@ export default function Account() {
                     <div className="p-2 rounded-lg bg-gold/10 text-center">
                       <span className="text-xs text-gold">✓ {t("account.reservedOk")}</span>
                     </div>
-                    {opts.showRedeem && (
+                    {opts.showRedeem && isRedeemEligible(nft) && (
                       <button
                         type="button"
-                        onClick={() => handleRedeemClick(nft.tokenId)}
+                        onClick={() => handleRedeemClick(nft)}
                         className="w-full mt-2 py-2 rounded-lg border border-gold/50 text-gold hover:bg-gold/10 transition-colors text-sm"
                       >
                         {t("account.redeemDemoCta")}
@@ -444,6 +434,11 @@ export default function Account() {
                       <span className="text-muted-foreground">{t("account.redeemDate")}</span>
                       <span className="font-tech">{nft.dateLabel}</span>
                     </div>
+                    {nft.attendanceStub ? (
+                      <p className="mt-2 text-xs text-muted-foreground text-center leading-snug">
+                        {t("account.stubAttendanceExplanation")}
+                      </p>
+                    ) : null}
                     {nft.originalTokenId ? (
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">{t("account.linkOriginalBadge", { id: nft.originalTokenId })}</span>
@@ -560,6 +555,20 @@ export default function Account() {
             )}
           </motion.div>
 
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.25 }}
+          >
+            <button
+              type="button"
+              onClick={() => setPurchaseOpen(true)}
+              className="w-full py-3 rounded-xl border border-gold/50 text-gold hover:bg-gold/10 transition-colors text-sm font-medium"
+            >
+              {t("account.buyBadgeNft")}
+            </button>
+          </motion.div>
+
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -590,13 +599,28 @@ export default function Account() {
               </p>
             )}
           </div>
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="px-4 py-2 rounded-lg border border-border hover:border-gold/50 hover:bg-accent/50 transition-all duration-300 self-start"
-          >
-            {t("account.logout")}
-          </button>
+          <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 self-start sm:self-auto">
+            <Link
+              to="/account/redeem"
+              className="inline-flex px-4 py-2 rounded-lg border border-gold/50 text-gold text-sm font-medium hover:bg-gold/10 transition-colors text-center justify-center"
+            >
+              {t("account.redeemPageNavCta")}
+            </Link>
+            <button
+              type="button"
+              onClick={() => setPurchaseOpen(true)}
+              className="px-4 py-2 rounded-lg bg-gold/90 text-primary-foreground text-sm font-medium hover:bg-gold transition-colors"
+            >
+              {t("account.buyBadgeNft")}
+            </button>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="px-4 py-2 rounded-lg border border-border hover:border-gold/50 hover:bg-accent/50 transition-all duration-300"
+            >
+              {t("account.logout")}
+            </button>
+          </div>
         </div>
       </motion.div>
 
@@ -804,13 +828,17 @@ export default function Account() {
       {renderNftSection(t("account.nftAttendance"), grouped.redeemed, { delayBase: 0.75 })}
       {renderNftSection(t("account.nftPrinciple"), grouped.principle, { delayBase: 0.85 })}
 
-      {showRedeemModal && (
+      {showRedeemModal && redeemTarget && (
         <RedeemBookModal
-          onClose={() => setShowRedeemModal(false)}
+          onClose={handleCloseRedeem}
           onConfirm={handleConfirmRedeem}
-          tokenId={redeemTokenId}
+          busy={redeemBusy}
+          externalError={redeemError}
+          tokenId={redeemTarget.tokenId}
+          seriesId={redeemTarget.collectionId}
         />
       )}
+      {purchaseOpen ? <PurchaseModal onClose={() => setPurchaseOpen(false)} /> : null}
     </div>
   );
 }

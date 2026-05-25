@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ExternalLink, Mail, Minus, Plus, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -8,6 +8,8 @@ import {
   DATADANCE_CHAIN_NAME,
   IPDEX_PRODUCT_NAME,
   getBookPrimaryListingId,
+  getBookPrimaryPriceHkdHint,
+  getBookPrimarySaleId,
 } from "../../config/platform";
 import { buildBookPrimarySaleCheckoutUrl } from "../../ipdex/marketUrls";
 import { getPartnerApiPublicLabel } from "../../ipdex/partnerApi";
@@ -27,6 +29,125 @@ interface PrimaryPurchaseData {
   paymentUrl?: string;
 }
 
+type PrimarySaleListingRow = Record<string, unknown>;
+
+type PrimarySaleHints = {
+  listingId: string;
+  /** HK$ per unit from listing `c_price_hkd` (stored in cents on IPDEX). */
+  unitPriceHkd?: number;
+  /** From `c_per_user_limit` when present. */
+  perUserPurchaseCap?: number;
+};
+
+/** See `primarySalesStatus.js` / `listingStatus.js` in ipdex-backend (PRIMARY_* 一级发售 activity + listing). */
+const PRIMARY_SALES_STATUS = {
+  NOT_STARTED: 0,
+  ACTIVE: 1,
+  SOLD_OUT: 2,
+  EXPIRED: 3,
+  DELISTED: 4,
+} as const;
+
+type PrimarySaleUnavailableReason =
+  | "soldOut"
+  | "expired"
+  | "delisted"
+  | "notStarted";
+
+function unknownToNum(v: unknown): number | undefined {
+  if (typeof v === "bigint") return Number(v);
+  if (typeof v === "number" && Number.isFinite(v)) return v;
+  if (typeof v === "string") {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : undefined;
+  }
+  return undefined;
+}
+
+/** When non-null, Stripe / opening the market deeplink cannot succeed — IPDEX considers the sale inactive. */
+function derivePrimarySaleUnavailable(data: unknown): PrimarySaleUnavailableReason | null {
+  if (data == null || typeof data !== "object") return null;
+  const o = data as { sales?: PrimarySaleListingRow; listing?: PrimarySaleListingRow };
+  const sales = o.sales;
+  const listing = o.listing;
+  const ss = sales ? unknownToNum(sales.c_status) : undefined;
+  const ls = listing ? unknownToNum(listing.c_status) : undefined;
+
+  const fromStatusCode = (s: number): PrimarySaleUnavailableReason | null => {
+    switch (s) {
+      case PRIMARY_SALES_STATUS.SOLD_OUT:
+        return "soldOut";
+      case PRIMARY_SALES_STATUS.EXPIRED:
+        return "expired";
+      case PRIMARY_SALES_STATUS.DELISTED:
+        return "delisted";
+      case PRIMARY_SALES_STATUS.NOT_STARTED:
+        return "notStarted";
+      default:
+        return null;
+    }
+  };
+
+  const blockFromSales = ss !== undefined ? fromStatusCode(ss) : null;
+  const blockFromListing = ls !== undefined ? fromStatusCode(ls) : null;
+  if (blockFromSales) return blockFromSales;
+  if (blockFromListing) return blockFromListing;
+
+  const qty = listing ? unknownToNum(listing.c_quantity) : undefined;
+  const sold = listing ? unknownToNum(listing.c_sold_quantity) : undefined;
+  const frozen = (listing ? unknownToNum(listing.c_frozen_quantity) : undefined) ?? 0;
+  if (
+    qty != null &&
+    sold != null &&
+    (ss === PRIMARY_SALES_STATUS.ACTIVE || ls === PRIMARY_SALES_STATUS.ACTIVE) &&
+    qty - sold - frozen <= 0
+  ) {
+    return "soldOut";
+  }
+
+  return null;
+}
+
+function extractListingUuidFromPrimarySalePayload(data: unknown): string {
+  if (data == null || typeof data !== "object") return "";
+  const listing = (data as { listing?: PrimarySaleListingRow }).listing;
+  if (listing == null || typeof listing !== "object") return "";
+  const raw = listing.c_listing_id ?? listing.c_listingId;
+  const s = typeof raw === "string" ? raw.trim() : `${raw ?? ""}`.trim();
+  return s;
+}
+
+function extractPrimarySaleHints(data: unknown): PrimarySaleHints {
+  const listingId = extractListingUuidFromPrimarySalePayload(data);
+  const hints: PrimarySaleHints = { listingId };
+  if (data == null || typeof data !== "object") return hints;
+  const listing = (data as { listing?: PrimarySaleListingRow }).listing;
+  if (listing == null || typeof listing !== "object") return hints;
+
+  const rawCents = listing.c_price_hkd ?? listing.price_hkd ?? listing.priceHkd;
+  const cents =
+    typeof rawCents === "bigint"
+      ? Number(rawCents)
+      : typeof rawCents === "number"
+        ? rawCents
+        : Number(`${rawCents ?? ""}`);
+  if (Number.isFinite(cents) && cents > 0) {
+    hints.unitPriceHkd = Math.round((cents / 100) * 100) / 100;
+  }
+
+  const lim = listing.c_per_user_limit ?? listing.per_user_limit ?? listing.perUserLimit;
+  const cap =
+    typeof lim === "bigint"
+      ? Number(lim)
+      : typeof lim === "number"
+        ? lim
+        : Number(`${lim ?? ""}`);
+  if (Number.isFinite(cap) && cap >= 1 && cap <= 999) {
+    hints.perUserPurchaseCap = Math.floor(cap);
+  }
+  return hints;
+}
+
 export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseModalProps) {
   const { t } = useTranslation();
   const [step, setStep] = useState<Step>(skipLogin ? "select" : "login");
@@ -41,8 +162,15 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
   const [apiCheckoutError, setApiCheckoutError] = useState<string | null>(null);
   const [checkoutBusy, setCheckoutBusy] = useState(false);
   const [lastPaymentMode, setLastPaymentMode] = useState<PaymentMode | null>(null);
+  const [saleResolvedListingId, setSaleResolvedListingId] = useState<string | null>(null);
+  const [saleListingFetchState, setSaleListingFetchState] = useState<"idle" | "loading" | "ok" | "fail">("idle");
+  const [primarySaleUnavailable, setPrimarySaleUnavailable] = useState<PrimarySaleUnavailableReason | null>(null);
 
-  const pricePerNFT = 99;
+  const envPriceBaseline = useMemo(() => getBookPrimaryPriceHkdHint() ?? 100, []);
+  const [unitPriceHkd, setUnitPriceHkd] = useState<number>(() => envPriceBaseline);
+  const [quantityCap, setQuantityCap] = useState(10);
+
+  const pricePerNFT = unitPriceHkd;
   const totalPrice = quantity * pricePerNFT;
 
   const checkoutUrl = useMemo(
@@ -50,7 +178,73 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
     [quantity],
   );
 
-  const listingConfigured = Boolean(getBookPrimaryListingId().trim());
+  const envListingId = useMemo(() => getBookPrimaryListingId().trim(), []);
+  const primarySaleId = useMemo(() => getBookPrimarySaleId().trim(), []);
+  /** BFF checkout can succeed with env listing id, or by resolving listing from primary-sale id. */
+  const canPurchaseViaBff = Boolean(envListingId || primarySaleId);
+
+  const fetchPrimarySaleHints = useCallback(async (): Promise<PrimarySaleHints> => {
+    const sid = getBookPrimarySaleId().trim();
+    if (!sid) return { listingId: "" };
+    const out = await bookBffJson<unknown>(
+      `/api/bff/market/primary-sales/${encodeURIComponent(sid)}`,
+    );
+    if (out.code !== 0 || bookBffIsTransportIssue(out) || !out.data) return { listingId: "" };
+    return extractPrimarySaleHints(out.data);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void (async () => {
+      if (!primarySaleId) {
+        setPrimarySaleUnavailable(null);
+        if (envListingId) {
+          setSaleResolvedListingId(envListingId);
+          setSaleListingFetchState("ok");
+        } else {
+          setSaleResolvedListingId(null);
+          setSaleListingFetchState("idle");
+        }
+        return;
+      }
+
+      if (!envListingId) setSaleListingFetchState("loading");
+      const out = await bookBffJson<unknown>(
+        `/api/bff/market/primary-sales/${encodeURIComponent(primarySaleId)}`,
+      );
+      if (cancelled) return;
+
+      const hints =
+        out.code === 0 && !bookBffIsTransportIssue(out) && out.data ? extractPrimarySaleHints(out.data) : { listingId: "" };
+
+      if (out.code === 0 && !bookBffIsTransportIssue(out) && out.data) {
+        setPrimarySaleUnavailable(derivePrimarySaleUnavailable(out.data));
+      } else {
+        setPrimarySaleUnavailable(null);
+      }
+
+      const resolvedListing = envListingId || hints.listingId || null;
+      if (resolvedListing) {
+        setSaleResolvedListingId(resolvedListing);
+        setSaleListingFetchState("ok");
+      } else {
+        setSaleResolvedListingId(null);
+        setSaleListingFetchState("fail");
+      }
+
+      if (hints.unitPriceHkd != null) setUnitPriceHkd(hints.unitPriceHkd);
+      if (hints.perUserPurchaseCap != null) setQuantityCap(hints.perUserPurchaseCap);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [envListingId, primarySaleId]);
+
+  useEffect(() => {
+    setQuantity((q) => Math.min(Math.max(1, q), quantityCap));
+  }, [quantityCap]);
 
   useEffect(() => {
     let cancel = false;
@@ -137,7 +331,16 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
       const body: { quantity: number; listingId?: string } = {
         quantity: Math.floor(quantity),
       };
-      const lid = getBookPrimaryListingId().trim();
+      let lid = envListingId || (saleResolvedListingId || "").trim();
+      if (!lid && primarySaleId) {
+        const h = await fetchPrimarySaleHints();
+        if (h.listingId) {
+          lid = h.listingId;
+          setSaleResolvedListingId(h.listingId);
+        }
+        if (h.unitPriceHkd != null) setUnitPriceHkd(h.unitPriceHkd);
+        if (h.perUserPurchaseCap != null) setQuantityCap(h.perUserPurchaseCap);
+      }
       if (lid) body.listingId = lid;
 
       const out = await bookBffJson<PrimaryPurchaseData>("/api/bff/orders/primary", {
@@ -154,6 +357,7 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
 
       if (
         checkoutUrl &&
+        !primarySaleUnavailable &&
         (out.message?.includes("listingId") ||
           out.message?.includes("BOOK_PRIMARY_LISTING_ID") ||
           out.code !== 0)
@@ -165,17 +369,23 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
       }
 
       setApiCheckoutError(
-        bookBffIsTransportIssue(out)
-          ? t("purchase.bffOffline")
-          : out.message || t("purchase.primaryPurchaseFailed"),
+        primarySaleUnavailable
+          ? t(`purchase.primarySaleUnavailable.${primarySaleUnavailable}`)
+          : bookBffIsTransportIssue(out)
+            ? t("purchase.bffOffline")
+            : out.message || t("purchase.primaryPurchaseFailed"),
       );
     } catch {
-      if (checkoutUrl) {
+      if (checkoutUrl && !primarySaleUnavailable) {
         setLastPaymentMode("market");
         window.open(checkoutUrl, "_blank", "noopener,noreferrer");
         setStep("success");
       } else {
-        setApiCheckoutError(t("purchase.bffOffline"));
+        setApiCheckoutError(
+          primarySaleUnavailable
+            ? t(`purchase.primarySaleUnavailable.${primarySaleUnavailable}`)
+            : t("purchase.bffOffline"),
+        );
       }
     } finally {
       setCheckoutBusy(false);
@@ -187,7 +397,10 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
   };
 
   const checkoutDisabled =
-    checkoutBusy || (bffSessionOk === false && !checkoutUrl && !listingConfigured);
+    checkoutBusy ||
+    primarySaleUnavailable !== null ||
+    (bffSessionOk === false && !checkoutUrl && !canPurchaseViaBff) ||
+    (!!primarySaleId && !envListingId && saleListingFetchState === "loading");
 
   return (
     <AnimatePresence>
@@ -310,6 +523,14 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
                 <p className="text-xs text-muted-foreground mt-3 leading-relaxed">
                   {t("purchase.ipdexPriceNote")}
                 </p>
+                {primarySaleUnavailable ? (
+                  <p
+                    className="text-xs text-amber-500/95 text-center mt-4 leading-relaxed whitespace-pre-line"
+                    role="alert"
+                  >
+                    {t(`purchase.primarySaleUnavailable.${primarySaleUnavailable}`)}
+                  </p>
+                ) : null}
               </div>
 
               <div className="mb-8">
@@ -329,9 +550,9 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
 
                   <button
                     type="button"
-                    onClick={() => setQuantity(Math.min(10, quantity + 1))}
+                    onClick={() => setQuantity(Math.min(quantityCap, quantity + 1))}
                     className="p-3 rounded-xl border border-border hover:border-gold/50 hover:bg-accent/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={quantity >= 10}
+                    disabled={quantity >= quantityCap}
                   >
                     <Plus className="w-5 h-5" />
                   </button>
@@ -356,8 +577,9 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
 
               <button
                 type="button"
+                disabled={primarySaleUnavailable !== null}
                 onClick={handleConfirmPurchase}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-gold to-gold-dark hover:from-gold-light hover:to-gold transition-all duration-300"
+                className="w-full py-4 rounded-xl bg-gradient-to-r from-gold to-gold-dark hover:from-gold-light hover:to-gold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="text-primary-foreground font-medium">{t("purchase.confirmPurchase")}</span>
               </button>
@@ -401,6 +623,15 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
                 </p>
               </div>
 
+              {primarySaleUnavailable ? (
+                <p
+                  className="mb-4 text-xs text-amber-500/95 text-center leading-relaxed whitespace-pre-line"
+                  role="alert"
+                >
+                  {t(`purchase.primarySaleUnavailable.${primarySaleUnavailable}`)}
+                </p>
+              ) : null}
+
               <button
                 type="button"
                 disabled={checkoutDisabled}
@@ -417,7 +648,13 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
                 <p className="text-xs text-amber-500/95 text-center mt-4">{t("purchase.bffOffline")}</p>
               ) : null}
 
-              {!listingConfigured ? (
+              {primarySaleId && saleListingFetchState === "loading" ? (
+                <p className="text-xs text-muted-foreground text-center mt-3">{t("purchase.resolvingListing")}</p>
+              ) : null}
+              {primarySaleId && saleListingFetchState === "fail" && !envListingId ? (
+                <p className="text-xs text-amber-500/90 text-center mt-3">{t("purchase.listingResolveFailed")}</p>
+              ) : null}
+              {!canPurchaseViaBff && checkoutUrl ? (
                 <p className="text-xs text-muted-foreground text-center mt-3">
                   {t("purchase.listingFallbackHint")}
                 </p>

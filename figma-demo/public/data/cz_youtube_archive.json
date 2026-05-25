@@ -9,50 +9,127 @@
           "youtubeId": "lI3OL9tO6Mo",
           "url": "https://www.youtube.com/watch?v=lI3OL9tO6Mo",
           "kind": "video",
-          "title": { "zh-TW": "趙長鵬在上海介紹初創公司幣安", "en": "Introducing Binance in Shanghai" },
-          "source": { "zh-TW": "2017 · 早期記錄", "en": "2017 · Early footage" }
+          "title": {
+            "zh-TW": "趙長鵬在上海介紹初創公司幣安",
+            "en": "Introducing Binance in Shanghai"
+          },
+          "source": {
+            "zh-TW": "2017 · 早期記錄",
+            "en": "2017 · Early footage"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.66,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "-wtqDL351lY",
           "url": "https://www.youtube.com/watch?v=-wtqDL351lY",
           "kind": "video",
-          "title": { "zh-TW": "CNBC 專訪：CZ——加密貨幣領域最有權勢的人", "en": "CNBC: CZ — among the most powerful in crypto" },
-          "source": { "zh-TW": "2018 · CNBC", "en": "2018 · CNBC" }
+          "title": {
+            "zh-TW": "CNBC 專訪：CZ——加密貨幣領域最有權勢的人",
+            "en": "CNBC: CZ — among the most powerful in crypto"
+          },
+          "source": {
+            "zh-TW": "2018 · CNBC",
+            "en": "2018 · CNBC"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.66,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "WMZDGGdLttI",
           "url": "https://www.youtube.com/watch?v=WMZDGGdLttI",
           "kind": "video",
-          "title": { "zh-TW": "Delta Summit 2018 — CZ 區塊鏈訪談（馬耳他）", "en": "Delta Summit 2018 — CZ on blockchain (Malta)" },
-          "source": { "zh-TW": "2018 · Delta Summit", "en": "2018 · Delta Summit" }
+          "title": {
+            "zh-TW": "Delta Summit 2018 — CZ 區塊鏈訪談（馬耳他）",
+            "en": "Delta Summit 2018 — CZ on blockchain (Malta)"
+          },
+          "source": {
+            "zh-TW": "2018 · Delta Summit",
+            "en": "2018 · Delta Summit"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.66,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "ittW96qUoKM",
           "url": "https://www.youtube.com/watch?v=ittW96qUoKM",
           "kind": "video",
-          "title": { "zh-TW": "成功之聲：CZ 敦促企業家堅持構建（Forbes Asia）", "en": "Voices of Success: CZ urges builders to persist (Forbes Asia)" },
-          "source": { "zh-TW": "2019 · Forbes Asia", "en": "2019 · Forbes Asia" }
+          "title": {
+            "zh-TW": "成功之聲：CZ 敦促企業家堅持構建（Forbes Asia）",
+            "en": "Voices of Success: CZ urges builders to persist (Forbes Asia)"
+          },
+          "source": {
+            "zh-TW": "2019 · Forbes Asia",
+            "en": "2019 · Forbes Asia"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.66,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "EnchfT80XV0",
           "url": "https://www.youtube.com/watch?v=EnchfT80XV0",
           "kind": "video",
-          "title": { "zh-TW": "幣安二週年直播 AMA（與 CZ）", "en": "Binance 2nd anniversary live AMA with CZ" },
-          "source": { "zh-TW": "2019 · Binance", "en": "2019 · Binance" }
+          "title": {
+            "zh-TW": "幣安二週年直播 AMA（與 CZ）",
+            "en": "Binance 2nd anniversary live AMA with CZ"
+          },
+          "source": {
+            "zh-TW": "2019 · Binance",
+            "en": "2019 · Binance"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.66,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "-CAtInmbX58",
           "url": "https://www.youtube.com/watch?v=-CAtInmbX58",
           "kind": "video",
-          "title": { "zh-TW": "幣安二週年紀錄片：交換世界（Exchange The World）", "en": "Binance documentary: Exchange The World" },
-          "source": { "zh-TW": "2019 · Binance", "en": "2019 · Binance" }
+          "title": {
+            "zh-TW": "幣安二週年紀錄片：交換世界（Exchange The World）",
+            "en": "Binance documentary: Exchange The World"
+          },
+          "source": {
+            "zh-TW": "2019 · Binance",
+            "en": "2019 · Binance"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.66,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "Kdql6pvGTE8",
           "url": "https://www.youtube.com/watch?v=Kdql6pvGTE8",
           "kind": "video",
-          "title": { "zh-TW": "幣安 Live AMA：CZ 第 2 場直播訪談（3 月 5 日）", "en": "Binance Live AMA: CZ — 2nd session (Mar 5)" },
-          "source": { "zh-TW": "2019 · Binance", "en": "2019 · Binance" }
+          "title": {
+            "zh-TW": "幣安 Live AMA：CZ 第 2 場直播訪談（3 月 5 日）",
+            "en": "Binance Live AMA: CZ — 2nd session (Mar 5)"
+          },
+          "source": {
+            "zh-TW": "2019 · Binance",
+            "en": "2019 · Binance"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.66,
+            "method": "heuristic"
+          }
         }
       ]
     },
@@ -64,50 +141,127 @@
           "youtubeId": "1xhIlP7m0QE",
           "url": "https://www.youtube.com/watch?v=1xhIlP7m0QE",
           "kind": "video",
-          "title": { "zh-TW": "深度訪談：CZ 談 DeFi、BSC 與未來", "en": "In depth: CZ on DeFi, BSC, and what’s next" },
-          "source": { "zh-TW": "2020 · Industry interview", "en": "2020 · Industry interview" }
+          "title": {
+            "zh-TW": "深度訪談：CZ 談 DeFi、BSC 與未來",
+            "en": "In depth: CZ on DeFi, BSC, and what’s next"
+          },
+          "source": {
+            "zh-TW": "2020 · Industry interview",
+            "en": "2020 · Industry interview"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.66,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "-1D3Arvu0Gg",
           "url": "https://www.youtube.com/watch?v=-1D3Arvu0Gg",
           "kind": "video",
-          "title": { "zh-TW": "為什麼加密交易所將長期存在：CZ 面對面訪談", "en": "Why crypto exchanges are here to stay — face to face with CZ" },
-          "source": { "zh-TW": "2021 · CNA Insider", "en": "2021 · CNA Insider" }
+          "title": {
+            "zh-TW": "為什麼加密交易所將長期存在：CZ 面對面訪談",
+            "en": "Why crypto exchanges are here to stay — face to face with CZ"
+          },
+          "source": {
+            "zh-TW": "2021 · CNA Insider",
+            "en": "2021 · CNA Insider"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.66,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "24zMM_6eBYY",
           "url": "https://www.youtube.com/watch?v=24zMM_6eBYY",
           "kind": "video",
-          "title": { "zh-TW": "Ethereal Summit：CZ 談 BNB 飆升與去中心化哲學", "en": "Ethereal Summit: CZ on BNB and decentralization" },
-          "source": { "zh-TW": "2021 · Decrypt", "en": "2021 · Decrypt" }
+          "title": {
+            "zh-TW": "Ethereal Summit：CZ 談 BNB 飆升與去中心化哲學",
+            "en": "Ethereal Summit: CZ on BNB and decentralization"
+          },
+          "source": {
+            "zh-TW": "2021 · Decrypt",
+            "en": "2021 · Decrypt"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.66,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "hMG8Agq-Ov0",
           "url": "https://www.youtube.com/watch?v=hMG8Agq-Ov0",
           "kind": "video",
-          "title": { "zh-TW": "CNBC TechCheck：CZ 談 Web 3.0 與入股《福布斯》", "en": "CNBC TechCheck: CZ on Web3 and Forbes stake" },
-          "source": { "zh-TW": "2022 · CNBC", "en": "2022 · CNBC" }
+          "title": {
+            "zh-TW": "CNBC TechCheck：CZ 談 Web 3.0 與入股《福布斯》",
+            "en": "CNBC TechCheck: CZ on Web3 and Forbes stake"
+          },
+          "source": {
+            "zh-TW": "2022 · CNBC",
+            "en": "2022 · CNBC"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.66,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "15-If80jvwI",
           "url": "https://www.youtube.com/watch?v=15-If80jvwI",
           "kind": "video",
-          "title": { "zh-TW": "CZ Unfiltered：社區熱點無過濾訪談", "en": "CZ Unfiltered — community Q&A" },
-          "source": { "zh-TW": "2022 · Binance", "en": "2022 · Binance" }
+          "title": {
+            "zh-TW": "CZ Unfiltered：社區熱點無過濾訪談",
+            "en": "CZ Unfiltered — community Q&A"
+          },
+          "source": {
+            "zh-TW": "2022 · Binance",
+            "en": "2022 · Binance"
+          },
+          "curator": {
+            "tier": "highlight",
+            "score": 0.76,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "z5z6wZ9IbE8",
           "url": "https://www.youtube.com/watch?v=z5z6wZ9IbE8",
           "kind": "video",
-          "title": { "zh-TW": "CNBC Squawk Box：CZ 談 FTX 崩潰及行業影響", "en": "CNBC Squawk Box: CZ on FTX and the industry" },
-          "source": { "zh-TW": "2022 · CNBC", "en": "2022 · CNBC" }
+          "title": {
+            "zh-TW": "CNBC Squawk Box：CZ 談 FTX 崩潰及行業影響",
+            "en": "CNBC Squawk Box: CZ on FTX and the industry"
+          },
+          "source": {
+            "zh-TW": "2022 · CNBC",
+            "en": "2022 · CNBC"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.66,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "VuUG6H-_IJU",
           "url": "https://www.youtube.com/watch?v=VuUG6H-_IJU",
           "kind": "video",
-          "title": { "zh-TW": "CZ 在巴黎幣安區塊鏈週閉幕 AMA", "en": "CZ — closing AMA at Paris Blockchain Week" },
-          "source": { "zh-TW": "2022 · Binance", "en": "2022 · Binance" }
+          "title": {
+            "zh-TW": "CZ 在巴黎幣安區塊鏈週閉幕 AMA",
+            "en": "CZ — closing AMA at Paris Blockchain Week"
+          },
+          "source": {
+            "zh-TW": "2022 · Binance",
+            "en": "2022 · Binance"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.66,
+            "method": "heuristic"
+          }
         }
       ]
     },
@@ -119,57 +273,145 @@
           "youtubeId": "m7BcJUNM3Uc",
           "url": "https://www.youtube.com/watch?v=m7BcJUNM3Uc",
           "kind": "video",
-          "title": { "zh-TW": "認罪協議後宣布辭去 CEO（Bloomberg TV）", "en": "Resigning as CEO after plea agreement — Bloomberg TV" },
-          "source": { "zh-TW": "2023 · Bloomberg TV", "en": "2023 · Bloomberg TV" }
+          "title": {
+            "zh-TW": "認罪協議後宣布辭去 CEO（Bloomberg TV）",
+            "en": "Resigning as CEO after plea agreement — Bloomberg TV"
+          },
+          "source": {
+            "zh-TW": "2023 · Bloomberg TV",
+            "en": "2023 · Bloomberg TV"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.52,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "vQwXgxJxwnw",
           "url": "https://www.youtube.com/watch?v=vQwXgxJxwnw",
           "kind": "video",
-          "title": { "zh-TW": "All-In Summit：CZ 深度對話（生平回顧）", "en": "All-In Summit: long-form conversation with CZ" },
-          "source": { "zh-TW": "2024 · All-In Summit", "en": "2024 · All-In Summit" }
+          "title": {
+            "zh-TW": "All-In Summit：CZ 深度對話（生平回顧）",
+            "en": "All-In Summit: long-form conversation with CZ"
+          },
+          "source": {
+            "zh-TW": "2024 · All-In Summit",
+            "en": "2024 · All-In Summit"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.66,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "gFWPsVRQafg",
           "url": "https://www.youtube.com/watch?v=gFWPsVRQafg",
           "kind": "video",
-          "title": { "zh-TW": "出獄後首次公開專訪：獄中生活與 Giggle Academy", "en": "First interview after release — prison, Giggle Academy" },
-          "source": { "zh-TW": "2024 · Altcoin Daily", "en": "2024 · Altcoin Daily" }
+          "title": {
+            "zh-TW": "出獄後首次公開專訪：獄中生活與 Giggle Academy",
+            "en": "First interview after release — prison, Giggle Academy"
+          },
+          "source": {
+            "zh-TW": "2024 · Altcoin Daily",
+            "en": "2024 · Altcoin Daily"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.52,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "Lu4iHx6Nz0A",
           "url": "https://www.youtube.com/watch?v=Lu4iHx6Nz0A",
           "kind": "video",
-          "title": { "zh-TW": "CNBC Squawk Box：CZ 談監獄時光與加密未來", "en": "CNBC Squawk Box: CZ on time inside and crypto’s future" },
-          "source": { "zh-TW": "2025 · CNBC", "en": "2025 · CNBC" }
+          "title": {
+            "zh-TW": "CNBC Squawk Box：CZ 談監獄時光與加密未來",
+            "en": "CNBC Squawk Box: CZ on time inside and crypto’s future"
+          },
+          "source": {
+            "zh-TW": "2025 · CNBC",
+            "en": "2025 · CNBC"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.66,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "HoHXNrx1TAo",
           "url": "https://www.youtube.com/watch?v=HoHXNrx1TAo",
           "kind": "video",
-          "title": { "zh-TW": "2026 加密普及展望：機構與散戶（BBW 2025）", "en": "Adoption outlook — institutions & retail (BBW 2025)" },
-          "source": { "zh-TW": "2025 · BBW", "en": "2025 · BBW" }
+          "title": {
+            "zh-TW": "2026 加密普及展望：機構與散戶（BBW 2025）",
+            "en": "Adoption outlook — institutions & retail (BBW 2025)"
+          },
+          "source": {
+            "zh-TW": "2025 · BBW",
+            "en": "2025 · BBW"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.62,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "K3y_mJYS34M",
           "url": "https://www.youtube.com/watch?v=K3y_mJYS34M",
           "kind": "video",
-          "title": { "zh-TW": "CZ 談《金錢自由》與未來：Unfiltered AMA", "en": "Freedom of Money & what’s next — Unfiltered AMA" },
-          "source": { "zh-TW": "2026 · Binance Square", "en": "2026 · Binance Square" }
+          "title": {
+            "zh-TW": "CZ 談《金錢自由》與未來：Unfiltered AMA",
+            "en": "Freedom of Money & what’s next — Unfiltered AMA"
+          },
+          "source": {
+            "zh-TW": "2026 · Binance Square",
+            "en": "2026 · Binance Square"
+          },
+          "curator": {
+            "tier": "highlight",
+            "score": 0.76,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "FImugb78BP4",
           "url": "https://www.youtube.com/watch?v=FImugb78BP4",
           "kind": "video",
-          "title": { "zh-TW": "TBPN Live：CZ 講述另一面故事", "en": "Technical Brother: CZ on the other side of his story" },
-          "source": { "zh-TW": "2026 · TBPN Live", "en": "2026 · TBPN Live" }
+          "title": {
+            "zh-TW": "TBPN Live：CZ 講述另一面故事",
+            "en": "Technical Brother: CZ on the other side of his story"
+          },
+          "source": {
+            "zh-TW": "2026 · TBPN Live",
+            "en": "2026 · TBPN Live"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.66,
+            "method": "heuristic"
+          }
         },
         {
           "youtubeId": "-pqa3BQ5uFU",
           "url": "https://www.youtube.com/watch?v=-pqa3BQ5uFU",
           "kind": "video",
-          "title": { "zh-TW": "杜拜區塊鏈週：CZ 歡迎辭與行業願景", "en": "Dubai Blockchain Week — welcome & vision" },
-          "source": { "zh-TW": "2024–2025 · Binance", "en": "2024–2025 · Binance" }
+          "title": {
+            "zh-TW": "杜拜區塊鏈週：CZ 歡迎辭與行業願景",
+            "en": "Dubai Blockchain Week — welcome & vision"
+          },
+          "source": {
+            "zh-TW": "2024–2025 · Binance",
+            "en": "2024–2025 · Binance"
+          },
+          "curator": {
+            "tier": "standard",
+            "score": 0.66,
+            "method": "heuristic"
+          }
         }
       ]
     }
@@ -179,29 +421,73 @@
       "youtubeId": "Oz2oCapXXeY",
       "url": "https://music.youtube.com/podcast/Oz2oCapXXeY",
       "kind": "podcast",
-      "title": { "zh-TW": "CZ AMA: Facts Over FUD（2026 年 1 月）", "en": "CZ AMA: Facts Over FUD (Jan 2026)" },
-      "source": { "zh-TW": "YouTube Music / Podcast", "en": "YouTube Music / Podcast" }
+      "title": {
+        "zh-TW": "CZ AMA: Facts Over FUD（2026 年 1 月）",
+        "en": "CZ AMA: Facts Over FUD (Jan 2026)"
+      },
+      "source": {
+        "zh-TW": "YouTube Music / Podcast",
+        "en": "YouTube Music / Podcast"
+      },
+      "curator": {
+        "tier": "standard",
+        "score": 0.66,
+        "method": "heuristic"
+      }
     },
     {
       "youtubeId": "2t5iC5OXaz4",
       "url": "https://www.youtube.com/watch?v=2t5iC5OXaz4",
       "kind": "video",
-      "title": { "zh-TW": "幣安 6 週年：CZ 致辭", "en": "Binance 6th anniversary message from CZ" },
-      "source": { "zh-TW": "Binance", "en": "Binance" }
+      "title": {
+        "zh-TW": "幣安 6 週年：CZ 致辭",
+        "en": "Binance 6th anniversary message from CZ"
+      },
+      "source": {
+        "zh-TW": "Binance",
+        "en": "Binance"
+      },
+      "curator": {
+        "tier": "standard",
+        "score": 0.66,
+        "method": "heuristic"
+      }
     },
     {
       "youtubeId": "lHQ9HjaW7Bk",
       "url": "https://www.youtube.com/watch?v=lHQ9HjaW7Bk",
       "kind": "video",
-      "title": { "zh-TW": "CZ 首次造訪第比利斯與社群見面", "en": "CZ’s first visit to Tbilisi — community meetup" },
-      "source": { "zh-TW": "Binance / Community", "en": "Binance / Community" }
+      "title": {
+        "zh-TW": "CZ 首次造訪第比利斯與社群見面",
+        "en": "CZ’s first visit to Tbilisi — community meetup"
+      },
+      "source": {
+        "zh-TW": "Binance / Community",
+        "en": "Binance / Community"
+      },
+      "curator": {
+        "tier": "highlight",
+        "score": 0.76,
+        "method": "heuristic"
+      }
     },
     {
       "youtubeId": "WR__SkxQ9r0",
       "url": "https://www.youtube.com/shorts/WR__SkxQ9r0",
       "kind": "short",
-      "title": { "zh-TW": "CZ 談赦免程序（Shorts）", "en": "CZ on the pardon process (Shorts)" },
-      "source": { "zh-TW": "YouTube Shorts", "en": "YouTube Shorts" }
+      "title": {
+        "zh-TW": "CZ 談赦免程序（Shorts）",
+        "en": "CZ on the pardon process (Shorts)"
+      },
+      "source": {
+        "zh-TW": "YouTube Shorts",
+        "en": "YouTube Shorts"
+      },
+      "curator": {
+        "tier": "standard",
+        "score": 0.66,
+        "method": "heuristic"
+      }
     }
   ]
 }

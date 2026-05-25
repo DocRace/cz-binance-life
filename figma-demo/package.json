@@ -6,6 +6,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
+    "dev:with-bff": "bash scripts/dev-with-bff.sh",
     "bff": "npm run start --prefix bff",
     "bff:dev": "npm run dev --prefix bff"
   },

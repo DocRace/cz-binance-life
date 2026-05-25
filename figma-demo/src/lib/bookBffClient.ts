@@ -30,7 +30,19 @@ export async function bookBffJson<T>(
   path: string,
   init: RequestInit = {},
 ): Promise<BookBffJsonResult<T>> {
-  const res = await bookBffFetch(path, init);
+  let res;
+  try {
+    res = await bookBffFetch(path, init);
+  } catch {
+    return {
+      code: -1,
+      message: "fetch_failed",
+      data: null,
+      rawStatus: 0,
+      transportError: true,
+    };
+  }
+
   const rawStatus = res.status;
   const text = await res.text().catch(() => "");
   const trimmed = text.trim();

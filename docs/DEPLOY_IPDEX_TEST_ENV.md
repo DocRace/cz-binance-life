@@ -17,6 +17,39 @@ Pick a subdomain under your test zone, for example **`cz-life-test.ipdex.vip`** 
 
 Point it to the ingress/load balancer that terminates TLS and forwards to the SPA (and optionally BFF).
 
+## Reference: Freedom of Money ↔ IPDEX test (`ipdex-admin-v1-dev`)
+
+Current smoke pair (**replace when admin rotates**):
+
+| Meaning | UUID |
+|---------|------|
+| **Book voucher** NFT collection «CZ NFT Test 2» | `a0344152-4a6a-424e-8918-b476e834e8d7` |
+| Primary activity **«CZ NFT Sell 2»** (`/collection/sales/:id`) | `bada09ad-3a04-41e0-99ab-c882ee977663` |
+| Default **listing** for `POST /ip/primary/purchase` / BFF checkout | `a6d4e2eb-1c33-4569-b988-333656580ea3` (HK$ 299 on dev DB) |
+
+| Env (SPA / Compose) | Value |
+|---------------------|--------|
+| `VITE_IPDEX_MARKET_URL` | `https://ipdex-v1-dev.ipdex.vip` |
+| `VITE_IPDEX_BOOK_PRIMARY_SALE_ID` | `bada09ad-3a04-41e0-99ab-c882ee977663` |
+| `VITE_IPDEX_BOOK_PRIMARY_LISTING_ID` | `a6d4e2eb-1c33-4569-b988-333656580ea3` |
+| `BOOK_PRIMARY_LISTING_ID` (BFF) | same as listing id above |
+
+**On-site NFT redeem** (`/account/redeem`): when multiple rules are enabled, set **`VITE_IPDEX_NFT_REDEMPTION_RULE_ID`** to the admin rule («CZ NFT Redeem 2»): **`1b56d531-7e14-446b-9830-5ce95d3f265f`** (eligible source collection = **`a0344152-4a6a-424e-8918-b476e834e8d7`**).
+
+Optional for Account UI (**stub payouts** — same UUID as rule payout series «CZ Stub NFT Test 2»):
+
+| `VITE_IPDEX_BOOK_ATTEND_STUB_SERIES_ID` | `7e93048f-120b-4a42-9b0b-4bc6311404bd` |
+
+**Partner / BOOK_CLUB (Client Service `.env`):** redemption mint stub inventory tracks primary **«CZ NFT Stub Sell 2»** — activity **`9396376c-96c7-48be-a54a-421c68db5a9a`**, listing **`4a7f1ee2-c688-47f6-a6e8-006175a2684e`**, stub collection **`7e93048f-120b-4a42-9b0b-4bc6311404bd`**. Rotate these in backend env when ops creates a new stub sale.
+
+**Checklist:** same-origin `/api/bff` nginx route; **`BOOK_PRIMARY_LISTING_ID`** avoids empty-body checkout when the SPA omits `listingId`; **`envListingId` overrides** resolver — always bump **both** SPA sale + listing IDs (or clear listing env and rely on BFF primary-sale GET). After rotation, redeploy SPA + reload BFF.
+
+### Client Service prerequisites (Singapore dev host)
+
+Partner-facing book-site façade uses **`verificationAppAuth`**. The Client process **`loadEnv('.env.market.server')`** must include **`VERIFICATION_APP_KEY` / `VERIFICATION_APP_SECRET`** (or **`VERIFICATION_APP_KEYS`**) matching **`IPDEX_PARTNER_APP_KEY` / `IPDEX_PARTNER_APP_SECRET`** in `~/cz-booksite-bff/.env`. Without these, **`/api/bff/auth/send-code`** will stay at **`{"code":-10011}`** upstream.
+
+After IPDEX rotates the smoke partner secret, patch **both** Client + BFF `.env`, then `pm2 restart client-dev cz-booksite-bff`.
+
 ## 1. Build SPA image
 
 From `figma-demo/`:

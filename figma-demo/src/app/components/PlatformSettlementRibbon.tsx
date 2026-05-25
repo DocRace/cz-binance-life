@@ -1,12 +1,7 @@
-import { Layers } from "lucide-react";
+import { Layers, SquareArrowOutUpRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "./ui/utils";
-import {
-  DATADANCE_CHAIN_ID,
-  DATADANCE_CHAIN_NAME,
-  getDatadanceExplorerUrl,
-  IPDEX_PRODUCT_NAME,
-} from "../../config/platform";
+import { getDatadanceSiteUrl } from "../../config/platform";
 
 type Variant = "default" | "subtle";
 
@@ -18,7 +13,7 @@ export default function PlatformSettlementRibbon({
   variant?: Variant;
 }) {
   const { t } = useTranslation();
-  const explorer = getDatadanceExplorerUrl();
+  const datadanceHref = getDatadanceSiteUrl();
 
   return (
     <div
@@ -33,23 +28,14 @@ export default function PlatformSettlementRibbon({
       <div className="pointer-events-none absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-gold/40 to-transparent" />
       <p className="mx-auto flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center text-[11px] leading-snug tracking-wide text-muted-foreground sm:text-xs">
         <Layers className="h-3.5 w-3.5 shrink-0 text-gold" aria-hidden />
-        <span className="min-w-0 max-w-full text-balance">
-          {t("platform.settlementStack", {
-            dex: IPDEX_PRODUCT_NAME,
-            chain: DATADANCE_CHAIN_NAME,
-            chainId: DATADANCE_CHAIN_ID,
-          })}
-        </span>
-        <span className="text-muted-foreground/50 hidden sm:inline" aria-hidden>
-          ·
-        </span>
         <a
-          href={explorer}
+          href={datadanceHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="font-tech text-[11px] text-stone-400/85 hover:text-stone-400 hover:underline underline-offset-2 shrink-0"
+          className="inline-flex min-w-0 max-w-full items-center gap-1 font-tech text-[11px] text-muted-foreground hover:text-gold/90 transition-colors"
         >
-          {t("platform.chainExplorer")}
+          <span className="text-balance">{t("platform.poweredByDataDanceChain")}</span>
+          <SquareArrowOutUpRight className="h-3 w-3 shrink-0 opacity-90" aria-hidden />
         </a>
       </p>
     </div>

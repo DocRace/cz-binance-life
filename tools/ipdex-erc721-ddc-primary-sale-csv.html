@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IPDEX ERC-721 (DDC) primary sale — NFT CSV generator</title>
+    <style>
+      :root {
+        color-scheme: dark light;
+        --bg: #0f1115;
+        --panel: #161a22;
+        --border: #2a3140;
+        --text: #e8eaef;
+        --muted: #9aa3b2;
+        --accent: #c9a227;
+        --err: #f87171;
+        --ok: #34d399;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 2rem 1.25rem 3rem;
+      }
+      h1 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0 0 0.35rem;
+      }
+      .sub {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin: 0 0 1.5rem;
+      }
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.25rem 1.35rem;
+        margin-bottom: 1rem;
+      }
+      label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--muted);
+        margin-top: 0.85rem;
+      }
+      label:first-of-type {
+        margin-top: 0;
+      }
+      input[type="text"],
+      input[type="number"],
+      textarea {
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: 0.35rem;
+        padding: 0.55rem 0.65rem;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: #0b0d12;
+        color: var(--text);
+        font-size: 0.95rem;
+      }
+      textarea {
+        min-height: 100px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.82rem;
+      }
+      .row2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+      @media (max-width: 640px) {
+        .row2 {
+          grid-template-columns: 1fr;
+        }
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+        margin-top: 1.25rem;
+      }
+      button {
+        cursor: pointer;
+        border: none;
+        border-radius: 10px;
+        padding: 0.65rem 1.1rem;
+        font-weight: 600;
+        font-size: 0.95rem;
+        background: linear-gradient(135deg, #d4af37, #a67c00);
+        color: #111;
+      }
+      button:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .hint {
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin-top: 0.35rem;
+      }
+      .err {
+        color: var(--err);
+        font-size: 0.85rem;
+        margin-top: 0.75rem;
+        white-space: pre-wrap;
+      }
+      .ok {
+        color: var(--ok);
+        font-size: 0.85rem;
+        margin-top: 0.75rem;
+      }
+      pre.preview {
+        margin: 0.75rem 0 0;
+        padding: 0.75rem;
+        border-radius: 8px;
+        background: #0b0d12;
+        border: 1px solid var(--border);
+        font-size: 0.72rem;
+        overflow: auto;
+        max-height: 220px;
+      }
+      code {
+        font-size: 0.85em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>IPDEX ERC-721 (DDC) primary sale — NFT CSV generator</h1>
+      <p class="sub">
+        Generates a UTF-8 CSV compatible with Admin <code>POST /api/v1/create/primary/sale</code> NFT upload (<code>parseNfts</code>):
+        one row per minted ERC-721 unit, <code>supply</code> always <code>1</code>, <code>tokenId</code> as plain decimal (no leading zeros).
+        Open this file locally in a browser (double-click or <code>file://</code>); nothing is uploaded.
+      </p>
+
+      <div class="panel">
+        <div class="row2">
+          <div>
+            <label for="count">Number of rows (= primary sale ERC-721 units)</label>
+            <input id="count" type="number" min="1" max="50000" value="1000" />
+            <p class="hint">Backend checks: <code>sum(supply) + c_circulating_supply ≤ c_total_supply</code> on the collection.</p>
+          </div>
+          <div>
+            <label for="startId">Start <code>tokenId</code> (decimal, first ID)</label>
+            <input id="startId" type="text" value="10" inputmode="numeric" />
+            <p class="hint">Each next row increments by 1. Must satisfy IPDEX <code>isUint256String</code>.</p>
+          </div>
+        </div>
+
+        <label for="nameTpl">Name template</label>
+        <input id="nameTpl" type="text" value="CZ NFT Test #{{tokenId}}" />
+        <p class="hint">Placeholders: <code>{{tokenId}}</code>, <code>{{index}}</code> (0-based row index).</p>
+
+        <label for="desc">Description (shared)</label>
+        <textarea id="desc" rows="2">CZ Test NFT — generated row for ERC-721 primary listing.</textarea>
+
+        <label for="image">Image URL (must pass Admin URL validation)</label>
+        <input
+          id="image"
+          type="text"
+          value="https://ipdex-v1-dev.ipdex.vip/static/nft/placeholder/ipdex/test/cover.png"
+        />
+
+        <label for="metaTpl">
+          Metadata JSON template (optional)
+          <span style="font-weight: 400">— leave blank to auto-fill name/description/image per row.</span>
+        </label>
+        <textarea id="metaTpl" rows="6" placeholder='Optional. Example placeholders in strings: "{{name}}" "{{tokenId}}" "{{description}}" "{{image}}"'></textarea>
+        <p class="hint">
+          If empty, rows use <code>{"name","description","image","attributes":[]}</code> aligned with typical OpenSea-style JSON.<br />
+          If you provide JSON, only <strong>string values</strong> are scanned for placeholders.
+        </p>
+
+        <div class="actions">
+          <button type="button" id="btnDl">Generate &amp; download CSV</button>
+          <button type="button" id="btnPreview" style="background:#2a3140;color:var(--text)">Preview first 3 rows</button>
+        </div>
+        <div id="msg"></div>
+        <pre id="preview" class="preview" hidden></pre>
+      </div>
+
+      <div class="panel" style="border-style: dashed">
+        <strong>Notes</strong>
+        <ul style="margin:0.5rem 0 0 1rem;color:var(--muted);font-size:0.85rem">
+          <li>ERC-721: never put edition size in <code>supply</code>; use multiple rows instead.</li>
+          <li>Very large CSVs (&gt;~20k rows) can be heavy in the browser; prefer batches or Node if needed.</li>
+          <li>To embed this UX inside IPDEX Admin, port the same logic into that SPA and call the identical CSV column layout.</li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        /** @see ipdex-backend basicValidator:isUint256String */
+        function isUint256DecimalString(str) {
+          const s = String(str).trim();
+          if (!/^(0|[1-9][0-9]*)$/.test(s)) return false;
+          try {
+            const value = BigInt(s);
+            const MAX = (1n << 256n) - 1n;
+            return value >= 0n && value <= MAX;
+          } catch {
+            return false;
+          }
+        }
+
+        function csvEscape(field) {
+          const s = field == null ? "" : String(field);
+          if (/[",\r\n]/.test(s)) {
+            return '"' + s.replace(/"/g, '""') + '"';
+          }
+          return s;
+        }
+
+        function applyTpl(tpl, ctx) {
+          return String(tpl).replace(/\{\{\s*(\w+)\s*\}\}/g, (_, k) => (k in ctx ? String(ctx[k]) : ""));
+        }
+
+        /** Only replace placeholders in JSON string leaf values (simple recursive walk). */
+        function deepReplacePlaceholders(value, ctx) {
+          if (typeof value === "string") return applyTpl(value, ctx);
+          if (Array.isArray(value)) return value.map((v) => deepReplacePlaceholders(v, ctx));
+          if (value && typeof value === "object") {
+            const out = {};
+            for (const [k, v] of Object.entries(value)) {
+              out[k] = deepReplacePlaceholders(v, ctx);
+            }
+            return out;
+          }
+          return value;
+        }
+
+        function buildDefaultMetadata(name, description, image) {
+          return {
+            name,
+            description,
+            image,
+            attributes: [],
+          };
+        }
+
+        function buildCsv({ count, startIdStr, nameTpl, description, imageUrl, metaTplRaw }) {
+          if (!Number.isFinite(count) || count < 1 || count > 50000) {
+            throw new Error("Row count must be between 1 and 50000.");
+          }
+          if (!isUint256DecimalString(startIdStr)) {
+            throw new Error('Start tokenId must be a valid uint256 decimal string (no leading zeros unless "0").');
+          }
+          let cursor = BigInt(startIdStr.trim());
+          const MAX = (1n << 256n) - 1n;
+
+          let metaTemplateObj = null;
+          if (metaTplRaw.trim()) {
+            try {
+              metaTemplateObj = JSON.parse(metaTplRaw);
+            } catch (e) {
+              throw new Error("Metadata template is not valid JSON: " + (e && e.message));
+            }
+          }
+
+          const lines = ["tokenId,supply,name,description,image,metadata"];
+          for (let i = 0; i < count; i++) {
+            const tokenId = cursor.toString();
+            if (cursor > MAX) {
+              throw new Error("tokenId overflow uint256 at row " + (i + 1));
+            }
+            const ctx = {
+              tokenId,
+              index: String(i),
+              name: applyTpl(nameTpl, { tokenId, index: String(i) }),
+              description,
+              image: imageUrl,
+            };
+            const name = ctx.name;
+
+            let metaObj;
+            if (metaTemplateObj === null) {
+              metaObj = buildDefaultMetadata(name, description, imageUrl);
+            } else {
+              metaObj = deepReplacePlaceholders(JSON.parse(JSON.stringify(metaTemplateObj)), ctx);
+            }
+            const metaStr = JSON.stringify(metaObj);
+
+            lines.push(
+              [
+                csvEscape(tokenId),
+                csvEscape("1"),
+                csvEscape(name),
+                csvEscape(description),
+                csvEscape(imageUrl),
+                csvEscape(metaStr),
+              ].join(",")
+            );
+
+            cursor += 1n;
+          }
+          return lines.join("\r\n") + "\r\n";
+        }
+
+        const $ = (id) => document.getElementById(id);
+
+        $("btnDl").addEventListener("click", () => {
+          $("msg").textContent = "";
+          $("preview").hidden = true;
+          try {
+            const count = parseInt($("count").value, 10);
+            const csv = buildCsv({
+              count,
+              startIdStr: $("startId").value,
+              nameTpl: $("nameTpl").value || "{{tokenId}}",
+              description: $("desc").value || "",
+              imageUrl: $("image").value.trim(),
+              metaTplRaw: $("metaTpl").value || "",
+            });
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download =
+              "ipdex-erc721-primary-nfts-" +
+              new Date().toISOString().slice(0, 10) +
+              "-" +
+              Math.random().toString(36).slice(2, 8) +
+              ".csv";
+            document.body.appendChild(a);
+            a.click();
+            URL.revokeObjectURL(a.href);
+            a.remove();
+            $("msg").innerHTML =
+              '<span class="ok">Ready — downloaded. Sum of supplies = row count × 1.</span>';
+          } catch (e) {
+            $("msg").innerHTML = '<div class="err">' + String(e.message || e) + "</div>";
+          }
+        });
+
+        $("btnPreview").addEventListener("click", () => {
+          $("msg").textContent = "";
+          const prev = $("preview");
+          try {
+            const count = Math.min(3, parseInt($("count").value, 10) || 3);
+            const csv = buildCsv({
+              count,
+              startIdStr: $("startId").value,
+              nameTpl: $("nameTpl").value || "{{tokenId}}",
+              description: $("desc").value || "",
+              imageUrl: $("image").value.trim(),
+              metaTplRaw: $("metaTpl").value || "",
+            });
+            prev.textContent = csv;
+            prev.hidden = false;
+          } catch (e) {
+            prev.hidden = true;
+            $("msg").innerHTML = '<div class="err">' + String(e.message || e) + "</div>";
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

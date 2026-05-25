@@ -50,6 +50,10 @@ export async function ipdexFacadeFetch(env, opts) {
   if (accessToken) {
     headers.Authorization = `Bearer ${accessToken}`;
   }
+  const idempotencyKey = `${opts.idempotencyKey ?? ''}`.trim();
+  if (idempotencyKey) {
+    headers['X-Idempotency-Key'] = idempotencyKey.slice(0, 128);
+  }
 
   let reqBody = undefined;
   const methodUp = method.toUpperCase();

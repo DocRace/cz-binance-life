@@ -6,6 +6,7 @@ import BookClub from "./pages/BookClub";
 import CZPrinciples from "./pages/CZPrinciples";
 import Timeline from "./pages/Timeline";
 import Account from "./pages/Account";
+import AccountRedeem from "./pages/AccountRedeem";
 import NotFound from "./pages/NotFound";
 
 export const router = createBrowserRouter([
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
       { path: "club", Component: BookClub },
       { path: "principles", Component: CZPrinciples },
       { path: "timeline", Component: Timeline },
+      { path: "account/redeem", Component: AccountRedeem },
       { path: "account", Component: Account },
       { path: "*", Component: NotFound },
     ],

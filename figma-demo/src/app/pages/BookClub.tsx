@@ -1,13 +1,129 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { Users, MessageCircle, Calendar, BookOpen, Video, Trophy } from "lucide-react";
+import { Users, MessageCircle, Calendar, BookOpen, Video, Trophy, Sparkles, ExternalLink, ShoppingBag } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import EventRegistrationModal from "../components/EventRegistrationModal";
+import PurchaseModal from "../components/PurchaseModal";
+
+type BookClubStory = {
+  id: string;
+  kind?: string;
+  author_display: string;
+  author_avatar_url?: string;
+  headline: string;
+  body: string;
+  url?: string;
+  created_at?: string;
+  curator?: { tier: string; score: number; method: string };
+};
+
+function ClubStoryAvatar({ story }: { story: BookClubStory }) {
+  const handleGuess = story.author_display
+    .replace(/^@/, "")
+    .trim()
+    .split(/[\s·|,]/)[0]
+    .trim();
+  const candidates = [
+    story.author_avatar_url?.trim(),
+    handleGuess && /^[A-Za-z0-9_]{1,30}$/.test(handleGuess)
+      ? `https://unavatar.io/x/${encodeURIComponent(handleGuess)}`
+      : "",
+  ].filter(Boolean) as string[];
+
+  const [idx, setIdx] = useState(0);
+
+  useEffect(() => {
+    setIdx(0);
+  }, [story.id, story.author_avatar_url, story.author_display]);
+
+  if (idx >= candidates.length) {
+    return (
+      <div
+        className="flex size-11 shrink-0 items-center justify-center rounded-full border border-gold/20 bg-gold/10"
+        aria-hidden
+      >
+        <Users className="size-5 text-gold/70" />
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={candidates[idx]}
+      alt=""
+      width={44}
+      height={44}
+      loading="lazy"
+      decoding="async"
+      referrerPolicy="no-referrer"
+      className="size-11 shrink-0 rounded-full border border-gold/25 object-cover bg-card/40"
+      onError={() => setIdx((k) => k + 1)}
+    />
+  );
+}
+
+type BookClubStoriesDoc = {
+  format_version?: number;
+  stories?: BookClubStory[];
+};
+
+/** True for rows sourced from X (including legacy JSON with id tw-<tweetId> only). */
+function isTwitterStoryRow(story: BookClubStory): boolean {
+  if (story.kind === "twitter") return true;
+  if (story.kind === "community") return false;
+  return /^tw-\d+$/.test(story.id);
+}
+
+/** Canonical link to the post on X for Twitter-sourced rows. */
+function resolveTwitterPostUrl(story: BookClubStory): string | undefined {
+  const raw = story.url?.trim();
+  if (raw) {
+    const low = raw.toLowerCase();
+    if (
+      (low.includes("x.com/") || low.includes("twitter.com/")) &&
+      (low.includes("/status/") || low.includes("/i/web/status/"))
+    ) {
+      return raw
+        .replace(/twitter\.com/gi, "x.com")
+        .replace(/mobile\.x\.com/gi, "x.com");
+    }
+  }
+  if (isTwitterStoryRow(story) && /^tw-\d+$/.test(story.id)) {
+    return `https://x.com/i/web/status/${story.id.slice(3)}`;
+  }
+  return undefined;
+}
 
 export default function BookClub() {
   const { t } = useTranslation();
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+  const [purchaseOpen, setPurchaseOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<string>("");
+  const [communityStories, setCommunityStories] = useState<BookClubStory[] | null>(undefined);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/data/book_club_stories.json", { cache: "no-store" });
+        if (!res.ok) throw new Error(String(res.status));
+        const doc = (await res.json()) as BookClubStoriesDoc;
+        const rows = Array.isArray(doc.stories) ? doc.stories : [];
+        const positive = rows.filter((s) => {
+          const t = s.curator?.tier;
+          const sc = s.curator?.score ?? 0.55;
+          if (t === "exclude") return false;
+          return sc >= 0.42;
+        });
+        if (!cancelled) setCommunityStories(positive);
+      } catch {
+        if (!cancelled) setCommunityStories([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleRegister = (eventTitle: string) => {
     setSelectedEvent(eventTitle);
@@ -28,28 +144,104 @@ export default function BookClub() {
             {t("club.title")}
           </span>
         </h1>
-        <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+        <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
           {t("club.subtitle")}
         </p>
-      </motion.div>
-
-      {/* Hero Image/Illustration */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.2 }}
-        className="max-w-4xl mx-auto mb-20"
-      >
-        <div className="relative aspect-[16/9] rounded-3xl overflow-hidden border border-gold/30 bg-gradient-to-br from-card to-background">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center">
-              <Users className="w-24 h-24 mx-auto mb-6 text-gold" />
-              <h2 className="font-display text-3xl mb-2">{t("home.feature3Title")}</h2>
-              <p className="text-muted-foreground"><span className="text-gold font-tech">2,856</span> {t("club.memberCount")}</p>
-            </div>
-          </div>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+          <a
+            href="https://t.me/BinanceBookClub"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-gold/90 px-8 py-3.5 text-sm font-body font-medium tracking-wide text-primary-foreground shadow-sm transition-colors hover:bg-gold"
+          >
+            {t("club.joinClubCta")}
+          </a>
+          <button
+            type="button"
+            onClick={() => setPurchaseOpen(true)}
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-gold/60 px-8 py-3.5 text-sm font-body font-medium tracking-wide text-gold hover:bg-gold/10 transition-colors"
+          >
+            <ShoppingBag className="h-4 w-4" aria-hidden />
+            {t("club.buyBadgeCta")}
+          </button>
         </div>
       </motion.div>
+
+      {/* Community stories (UGC / Binance-positive, curated) */}
+      {communityStories !== undefined ? (
+        <motion.section
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12 }}
+          className="max-w-5xl mx-auto mb-20 px-2"
+          aria-labelledby="club-stories-heading"
+        >
+          <div className="mb-6 flex flex-col items-center text-center">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.16em] text-gold/90">
+              <Sparkles className="size-3.5" aria-hidden />
+              {t("club.storiesKicker")}
+            </div>
+            <h2 id="club-stories-heading" className="font-display text-3xl md:text-4xl mb-3">
+              <span className="bg-gradient-to-r from-gold to-amber-200 bg-clip-text text-transparent">
+                {t("club.storiesTitle")}
+              </span>
+            </h2>
+            <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed">
+              {t("club.storiesSubtitle")}
+            </p>
+          </div>
+          {communityStories.length === 0 ? (
+            <p className="rounded-2xl border border-white/10 bg-card/20 px-4 py-8 text-center text-sm text-muted-foreground">
+              {t("club.storiesEmpty")}
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {communityStories.map((story, idx) => {
+                const externalUrl = isTwitterStoryRow(story)
+                    ? resolveTwitterPostUrl(story)
+                    : story.url?.trim() || undefined;
+                const linkLabel = isTwitterStoryRow(story)
+                    ? t("club.storiesOpenX")
+                    : t("club.storiesOpen");
+                return (
+                <motion.article
+                  key={story.id}
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.08 + idx * 0.05 }}
+                  className="flex flex-col rounded-2xl border border-border/60 bg-card/35 p-5 backdrop-blur-sm hover:border-gold/25 transition-colors"
+                >
+                  <div className="mb-3 flex items-center gap-3">
+                    <ClubStoryAvatar story={story} />
+                    <p className="font-mono text-[11px] leading-snug text-gold/85">{story.author_display}</p>
+                  </div>
+                  <h3 className="font-display text-lg font-semibold leading-snug text-white mb-2">
+                    {story.headline}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed flex-1 whitespace-pre-wrap">
+                    {story.body}
+                  </p>
+                  {externalUrl ? (
+                    <a
+                      href={externalUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-sky-400 hover:text-sky-300"
+                    >
+                      {linkLabel}
+                      <ExternalLink className="size-3" aria-hidden />
+                    </a>
+                  ) : null}
+                </motion.article>
+              );
+              })}
+            </div>
+          )}
+          <p className="mt-8 text-center text-[11px] leading-relaxed text-muted-foreground/75 max-w-3xl mx-auto">
+            {t("club.storiesDisclaimer")}
+          </p>
+        </motion.section>
+      ) : null}
 
       {/* Club Benefits */}
       <motion.div
@@ -237,6 +429,7 @@ export default function BookClub() {
         eventTitle={selectedEvent}
       />
     )}
+    {purchaseOpen ? <PurchaseModal onClose={() => setPurchaseOpen(false)} /> : null}
     </>
   );
 }

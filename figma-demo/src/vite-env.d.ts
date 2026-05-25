@@ -9,14 +9,25 @@ interface ImportMetaEnv {
   readonly VITE_IPDEX_BOOK_PRIMARY_SALE_ID?: string;
   /** Primary listing UUID for Client Service `POST /ip/primary/purchase` (not the market SPA `/collection/sales/:id` slug). */
   readonly VITE_IPDEX_BOOK_PRIMARY_LISTING_ID?: string;
+  /** Optional HK$ unit price hint for checkout UI until sale detail resolves (whole dollars, e.g. `100`). */
+  readonly VITE_IPDEX_BOOK_PRIMARY_PRICE_HKD?: string;
   /** Public Client Service origin (display / future APIs), e.g. https://your-client-api.example — no trailing slash. */
   readonly VITE_IPDEX_CLIENT_API_ORIGIN?: string;
   readonly VITE_IPDEX_SOCIAL_X_URL?: string;
   readonly VITE_IPDEX_SOCIAL_FACEBOOK_URL?: string;
   /** DataDance block explorer origin, default handled in code if unset. */
   readonly VITE_DATADANCE_EXPLORER_URL?: string;
-  /** Optional absolute BFF origin (no trailing slash). Empty = same-origin /api/bff (use Vite proxy in dev). */
-  readonly VITE_BOOK_BFF_URL?: string;
+  /** DataDance marketing site (footer “Powered by” link), default https://datadance.ai */
+  readonly VITE_DATADANCE_SITE_URL?: string;
+  /** When multiple redemption rules are enabled, set this to the admin rule UUID (passed to `/club/redeem`). */
+  readonly VITE_IPDEX_NFT_REDEMPTION_RULE_ID?: string;
+  /**
+   * Payout/stub NFT series UUID(s) for on-site redemption (comma/space/semicolon separated).
+   * Holders never see a "Redeem" CTA — these are commemorative stubs after redemption, not vouchers.
+   */
+  readonly VITE_IPDEX_BOOK_ATTEND_STUB_SERIES_IDS?: string;
+  /** Same as plural form; single-series convenience. */
+  readonly VITE_IPDEX_BOOK_ATTEND_STUB_SERIES_ID?: string;
 }
 
 interface ImportMeta {

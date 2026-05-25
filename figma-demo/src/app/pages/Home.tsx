@@ -1,44 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router";
 import { motion } from "motion/react";
-import { Users, Calendar, ShoppingCart } from "lucide-react";
+import { Users, Calendar } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import ReservationModal from "../components/ReservationModal";
-import PurchaseModal from "../components/PurchaseModal";
 import Book3DCover from "../components/Book3DCover";
 import bookCover from "../../assets/book-cover-hero.png";
 
 export default function Home() {
   const { t } = useTranslation();
   const [showReservationModal, setShowReservationModal] = useState(false);
-  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
-  // Book club launch date: May 1, 2026
-  const launchDate = new Date("2026-05-01T00:00:00").getTime();
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = launchDate - now;
-
-      if (distance > 0) {
-        setTimeRemaining({
-          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((distance % (1000 * 60)) / 1000)
-        });
-      } else {
-        setTimeRemaining({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-      }
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [launchDate]);
-
-  const isLaunched = timeRemaining.days === 0 && timeRemaining.hours === 0 &&
-                     timeRemaining.minutes === 0 && timeRemaining.seconds === 0;
 
   return (
     <>
@@ -133,53 +104,13 @@ export default function Home() {
                 {t("home.reserveButton")}
               </motion.button>
 
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="button"
-                onClick={() => setShowPurchaseModal(true)}
-                className="shrink-0 rounded-full bg-gold/90 px-5 py-3.5 text-sm font-body font-medium tabular-nums tracking-wide text-primary-foreground transition-colors duration-300 hover:bg-gold flex items-center justify-center gap-2 whitespace-nowrap shadow-sm sm:px-7"
+              <Link
+                to="/club"
+                className="inline-flex shrink-0 rounded-full bg-gold/90 px-5 py-3.5 text-sm font-body font-medium tabular-nums tracking-wide text-primary-foreground transition-colors duration-300 hover:bg-gold items-center justify-center gap-2 whitespace-nowrap shadow-sm no-underline sm:px-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
-                <ShoppingCart className="h-4 w-4 shrink-0" />
-                {t("home.purchaseButton")}
-              </motion.button>
-
-              <motion.button
-                whileHover={isLaunched ? { scale: 1.02 } : {}}
-                whileTap={isLaunched ? { scale: 0.98 } : {}}
-                type="button"
-                className={`
-                  shrink-0 rounded-full px-5 py-3.5 text-sm font-body font-medium tabular-nums leading-snug tracking-wide transition-colors duration-300 border whitespace-nowrap sm:px-7
-                  ${isLaunched ? "cursor-pointer border-gold/60 text-gold hover:bg-gold/10" : "cursor-default border-border text-muted-foreground"}
-                `}
-                disabled={!isLaunched}
-                onClick={() => {
-                  if (isLaunched) {
-                    window.location.href = "/club";
-                  }
-                }}
-              >
-                {isLaunched ? (
-                  <span className="flex items-center justify-center gap-2 whitespace-nowrap">
-                    <Users className="h-4 w-4 shrink-0" />
-                    {t("home.clubButton")}
-                  </span>
-                ) : (
-                  <span className="flex flex-col items-center gap-1">
-                    <span className="flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-muted-foreground/90">
-                      <Calendar className="w-3.5 h-3.5" />
-                      {t("home.countdownLabel")}
-                    </span>
-                    <span className="font-tech text-base tabular-nums">
-                      {timeRemaining.days}
-                      {t("home.stat1Unit") || "天"}{" "}
-                      {String(timeRemaining.hours).padStart(2, "0")}:
-                      {String(timeRemaining.minutes).padStart(2, "0")}:
-                      {String(timeRemaining.seconds).padStart(2, "0")}
-                    </span>
-                  </span>
-                )}
-              </motion.button>
+                <Users className="h-4 w-4 shrink-0" />
+                {t("home.joinClubButton")}
+              </Link>
             </motion.div>
           </motion.div>
         </div>
@@ -189,27 +120,27 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
-          className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3 md:items-stretch md:gap-8"
+          className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 md:items-stretch md:gap-8"
         >
           {[
             {
               title: t("home.feature1Title"),
               description: t("home.feature1Desc"),
               icon: "🎫",
-              delay: 0
+              delay: 0,
             },
             {
               title: t("home.feature2Title"),
               description: t("home.feature2Desc"),
-              icon: "🏅",
-              delay: 0.1
+              icon: "🎟️",
+              delay: 0.08,
             },
             {
               title: t("home.feature3Title"),
               description: t("home.feature3Desc"),
-              icon: "👥",
-              delay: 0.2
-            }
+              icon: "🏅",
+              delay: 0.16,
+            },
           ].map((feature, index) => (
             <motion.div
               key={index}
@@ -242,11 +173,10 @@ export default function Home() {
             {t("home.journeyDesc")}
           </p>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
             {[
               { label: t("home.stat1Label"), value: "3,247", unit: t("home.stat1Unit") },
               { label: t("home.stat2Label"), value: "1,923", unit: t("home.stat2Unit") },
-              { label: t("home.stat3Label"), value: "2,856", unit: t("home.stat3Unit") },
               { label: t("home.stat4Label"), value: "5,170", unit: t("home.stat4Unit") }
             ].map((stat, index) => (
               <motion.div
@@ -269,10 +199,6 @@ export default function Home() {
         <ReservationModal onClose={() => setShowReservationModal(false)} />
       )}
 
-      {/* Purchase Modal */}
-      {showPurchaseModal && (
-        <PurchaseModal onClose={() => setShowPurchaseModal(false)} />
-      )}
     </>
   );
 }

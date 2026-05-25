@@ -5,6 +5,13 @@ import { useTranslation } from "react-i18next";
 import { Dialog, DialogContent, DialogTitle } from "@/app/components/ui/dialog";
 import { cn } from "@/app/components/ui/utils";
 
+export type CuratorMeta = {
+  tier: "highlight" | "standard" | "exclude";
+  score: number;
+  method: "heuristic" | "openai";
+  reason_en?: string;
+};
+
 export type CZTweetRecord = {
   tweet_format_version?: number;
   tweet_id: string;
@@ -26,6 +33,7 @@ export type CZTweetRecord = {
   media_count?: number;
   media?: Array<{ type: string; url: string; video_url?: string }>;
   card_thumbnail_url?: string;
+  curator?: CuratorMeta;
 };
 
 /** width/height — outside band use object-cover in a fixed-height frame */
@@ -175,6 +183,14 @@ function TweetInlineVideo({
   );
 }
 
+export function passesTimelineFeaturedFilter(
+  curator: CuratorMeta | null | undefined,
+): boolean {
+  if (!curator) return true;
+  if (curator.tier === "exclude") return false;
+  return curator.score >= 0.42;
+}
+
 function formatTweetDate(raw: string | null | undefined): string {
   if (!raw) return "";
   try {
@@ -218,11 +234,14 @@ function TweetBadges({ tweet }: { tweet: CZTweetRecord }) {
   );
 }
 
+type FilterMode = "featured" | "all";
+
 export function TimelineXFeed() {
   const { t } = useTranslation();
   const [rows, setRows] = useState<CZTweetRecord[] | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [previewSrc, setPreviewSrc] = useState<string | null>(null);
+  const [filterMode, setFilterMode] = useState<FilterMode>("featured");
 
   useEffect(() => {
     let cancelled = false;
@@ -247,10 +266,19 @@ export function TimelineXFeed() {
     };
   }, []);
 
+  const visibleRows = useMemo(() => {
+    if (!rows) return [];
+    if (filterMode === "all") return rows;
+    return rows.filter((r) => passesTimelineFeaturedFilter(r.curator));
+  }, [rows, filterMode]);
+
   const countLabel = useMemo(() => {
     if (!rows) return "";
+    if (filterMode === "featured") {
+      return t("timeline.xFeedCountFiltered", { shown: visibleRows.length, total: rows.length });
+    }
     return t("timeline.xFeedCount", { count: rows.length });
-  }, [rows, t]);
+  }, [rows, visibleRows.length, filterMode, t]);
 
   const zoomHint = t("timeline.xFeedZoomHint");
   const previewTitle = t("timeline.xFeedImagePreview");
@@ -278,6 +306,36 @@ export function TimelineXFeed() {
 
   if (rows.length === 0) {
     return null;
+  }
+
+  if (visibleRows.length === 0) {
+    return (
+      <section
+        className="relative mx-auto max-w-3xl px-4 pb-16 pt-2 sm:px-6 sm:pb-20 lg:px-10"
+        aria-labelledby="timeline-x-heading"
+      >
+        <h2
+          id="timeline-x-heading"
+          className="font-display text-center text-2xl font-semibold tracking-tight text-white sm:text-3xl"
+        >
+          <span className="bg-gradient-to-br from-[#f4e4bc] via-gold to-[#a67c2d] bg-clip-text text-transparent">
+            {t("timeline.xFeedTitle")}
+          </span>
+        </h2>
+        <p className="mx-auto mt-6 max-w-lg rounded-xl border border-amber-500/25 bg-amber-500/5 px-4 py-5 text-center text-sm text-muted-foreground">
+          {t("timeline.xFeedFilterEmpty")}
+        </p>
+        <div className="mt-6 flex justify-center gap-2">
+          <button
+            type="button"
+            onClick={() => setFilterMode("all")}
+            className="rounded-full border border-gold/40 bg-gold/10 px-5 py-2 text-sm font-medium text-gold hover:bg-gold/15"
+          >
+            {t("timeline.filterAll")}
+          </button>
+        </div>
+      </section>
+    );
   }
 
   return (
@@ -312,6 +370,33 @@ export function TimelineXFeed() {
           </span>
         </h2>
         <p className="mt-2 text-xs text-muted-foreground sm:text-sm">{t("timeline.xFeedSubtitle")}</p>
+        <p className="mx-auto mt-3 max-w-xl text-[11px] leading-relaxed text-muted-foreground/85">
+          {t("timeline.filterCuratorNote")}
+        </p>
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+          <button
+            type="button"
+            onClick={() => setFilterMode("featured")}
+            className={`rounded-full border px-4 py-1.5 text-xs font-medium transition-colors sm:text-sm ${
+              filterMode === "featured"
+                ? "border-gold/50 bg-gold/15 text-gold"
+                : "border-white/15 bg-white/[0.04] text-muted-foreground hover:border-white/25"
+            }`}
+          >
+            {t("timeline.filterFeatured")}
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilterMode("all")}
+            className={`rounded-full border px-4 py-1.5 text-xs font-medium transition-colors sm:text-sm ${
+              filterMode === "all"
+                ? "border-gold/50 bg-gold/15 text-gold"
+                : "border-white/15 bg-white/[0.04] text-muted-foreground hover:border-white/25"
+            }`}
+          >
+            {t("timeline.filterAll")}
+          </button>
+        </div>
         <p className="mt-1 font-mono text-[11px] text-muted-foreground/80">{countLabel}</p>
       </motion.div>
 
@@ -320,7 +405,7 @@ export function TimelineXFeed() {
           aria-hidden
           className="pointer-events-none absolute bottom-6 left-[15px] top-6 w-px bg-gradient-to-b from-gold/45 via-gold/25 to-transparent sm:left-[15px]"
         />
-        {rows.map((tweet, idx) => {
+        {visibleRows.map((tweet, idx) => {
           const href =
             tweet.url ||
             `https://x.com/${tweet.author_screen_name ?? "cz_binance"}/status/${tweet.tweet_id}`;

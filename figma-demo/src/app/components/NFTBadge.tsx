@@ -1,15 +1,27 @@
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 
 interface NFTBadgeProps {
   tokenId: string;
   type: "original" | "redeemed" | "principle";
+  /** Attendance NFT minted after on-site redemption (stub / ticket root)—distinct label vs generic “attendance commemorative”. */
+  stubTicket?: boolean;
   size?: "sm" | "md" | "lg";
   animated?: boolean;
   principleName?: string;
   principleColor?: "gold" | "cyan" | "purple" | "green" | "pink";
 }
 
-export default function NFTBadge({ tokenId, type, size = "md", animated = true, principleName, principleColor = "cyan" }: NFTBadgeProps) {
+export default function NFTBadge({
+  tokenId,
+  type,
+  stubTicket = false,
+  size = "md",
+  animated = true,
+  principleName,
+  principleColor = "cyan",
+}: NFTBadgeProps) {
+  const { t } = useTranslation();
   const sizeClasses = {
     sm: "w-32 h-40",
     md: "w-48 h-60",
@@ -31,26 +43,33 @@ export default function NFTBadge({ tokenId, type, size = "md", animated = true, 
       ? principleGradients[principleColor]
       : "from-muted via-card to-muted";
 
+  const stubMode = type === "redeemed" && stubTicket;
   const badgeType =
     type === "original"
-      ? "RESERVATION"
+      ? t("nftBadge.typeReservation")
       : type === "principle"
-      ? "PRINCIPLE"
-      : "ATTENDANCE";
+        ? t("nftBadge.typePrinciple")
+        : stubMode
+          ? t("nftBadge.typeStub")
+          : t("nftBadge.typeAttendance");
 
   const badgeTitle =
     type === "original"
-      ? "讀書活動"
+      ? t("nftBadge.titleReservation")
       : type === "principle"
-      ? "CZ原則"
-      : "到場紀念";
+        ? t("nftBadge.titlePrinciple")
+        : stubMode
+          ? t("nftBadge.titleStub")
+          : t("nftBadge.titleAttendance");
 
   const badgeSubtitle =
     type === "original"
-      ? "預約徽章"
+      ? t("nftBadge.subtitleReservation")
       : type === "principle"
-      ? principleName || "原則徽章"
-      : "到場徽章";
+        ? principleName || t("nftBadge.subtitlePrincipleFallback")
+        : stubMode
+          ? t("nftBadge.subtitleStub")
+          : t("nftBadge.subtitleAttendance");
 
   const BadgeContent = (
     <div className={`${sizeClasses[size]} relative rounded-2xl overflow-hidden`}>
@@ -117,8 +136,8 @@ export default function NFTBadge({ tokenId, type, size = "md", animated = true, 
           </div>
           <div className="h-px bg-white/20 mb-2" />
           <div className="flex items-center justify-between text-xs">
-            <span className="opacity-70">幣安人生</span>
-            <span className="font-tech opacity-70">NFT</span>
+            <span className="opacity-70">{t("nftBadge.seriesFooter")}</span>
+            <span className="font-tech opacity-70">{t("nftBadge.nftChip")}</span>
           </div>
         </div>
       </div>

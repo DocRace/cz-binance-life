@@ -7,5 +7,10 @@
 
   Run `npm i` to install the dependencies.
 
-  Run `npm run dev` to start the development server.
+  - **SPA only**: `npm run dev` — UI only; **login and `/api/bff` need the BFF running**.
+  - **Recommended local**: `npm run dev:with-bff` — starts the BFF on **8787** and Vite (proxy `/api/bff` in `vite.config.ts`).
+  - **Two terminals**: `npm run bff:dev` (from repo root; needs `bff/.env` from `bff/.env.example`) and `npm run dev`.
+
+  On **cz-life-test** / production, keep **`VITE_BOOK_BFF_URL` empty** so the browser calls same-origin `/api/bff` (nginx routes to the BFF).
+
   

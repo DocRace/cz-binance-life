@@ -36,6 +36,14 @@ function cookieBase() {
   };
 }
 
+/** When IPDEX returns a JSON envelope, use 400 for business errors — only unknown/missing body ⇒ 502 (so SPA treats 502–504 as transport). */
+function httpStatusFromIpdexEnvelope(out) {
+  const j = out.json;
+  if (j && typeof j.code === 'number' && j.code === 0) return 200;
+  if (j && typeof j.code === 'number') return 400;
+  return 502;
+}
+
 async function boot() {
   const env = loadBffEnv();
   if (!env.IPDEX_CLIENT_ORIGIN || !env.APP_KEY || !env.APP_SECRET) {
@@ -52,12 +60,16 @@ async function boot() {
       origin: parseOrigins(),
       credentials: true,
       methods: ['GET', 'POST', 'OPTIONS'],
-      allowedHeaders: ['Content-Type'],
+      allowedHeaders: ['Content-Type', 'X-Idempotency-Key'],
     }),
   );
 
+  const healthPayload = { ok: true, service: 'cz-booksite-bff' };
   app.get('/healthz', (_req, res) => {
-    res.json({ ok: true, service: 'cz-booksite-bff' });
+    res.json(healthPayload);
+  });
+  app.get('/api/bff/healthz', (_req, res) => {
+    res.json(healthPayload);
   });
 
   app.post('/api/bff/auth/send-code', async (req, res) => {
@@ -70,7 +82,9 @@ async function boot() {
       suffixPath: '/send-login-code',
       body: { email },
     });
-    res.status(out.json?.code === 0 ? 200 : 502).json(out.json);
+    res.status(httpStatusFromIpdexEnvelope(out)).json(
+      out.json ?? { code: -1, message: 'upstream_bad_response', data: null },
+    );
   });
 
   app.post('/api/bff/auth/login', async (req, res) => {
@@ -257,6 +271,48 @@ async function boot() {
       suffixPath: '/market/user/cancel/payment',
       body: { orderId },
       accessToken,
+    });
+    res.status(out.json?.code === 0 ? 200 : 400).json(out.json);
+  });
+
+  app.post('/api/bff/club/redeem', async (req, res) => {
+    const accessToken = bearer(req);
+    if (!accessToken) return res.status(401).json({ code: -10005, message: 'Unauthorized', data: null });
+
+    const staffRaw = `${req.body?.staffCode ?? ''}`;
+    const staffCode = staffRaw.trim();
+    const redemptionRuleId = `${req.body?.redemptionRuleId ?? ''}`.trim();
+    const sourceCollectionId = `${req.body?.sourceCollectionId ?? ''}`.trim();
+    const sourceTokenId = `${req.body?.sourceTokenId ?? ''}`.trim();
+    let idempotencyKey = `${req.headers['x-idempotency-key'] ?? ''}`.trim();
+    if (!idempotencyKey) idempotencyKey = `${req.body?.idempotencyKey ?? ''}`.trim();
+
+    if (
+      staffCode.length < 4
+      || !uuidLike(sourceCollectionId)
+      || !sourceTokenId
+      || sourceTokenId.length > 80
+      || idempotencyKey.length < 16
+    ) {
+      return res.status(400).json({ code: -10001, message: 'missing_or_invalid_body', data: null });
+    }
+
+    if (redemptionRuleId.length && !uuidLike(redemptionRuleId)) {
+      return res.status(400).json({ code: -10001, message: 'Invalid redemptionRuleId', data: null });
+    }
+
+    const out = await ipdexFacadeFetch(env, {
+      method: 'POST',
+      suffixPath: '/club/redeem',
+      body: {
+        staffCode,
+        ...(redemptionRuleId.length ? { redemptionRuleId } : {}),
+        sourceCollectionId,
+        sourceTokenId,
+        idempotencyKey,
+      },
+      accessToken,
+      idempotencyKey,
     });
     res.status(out.json?.code === 0 ? 200 : 400).json(out.json);
   });

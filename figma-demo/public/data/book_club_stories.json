@@ -1,0 +1,175 @@
+{
+  "format_version": 1,
+  "updated_at": "2026-05-13T06:01:22.295377+00:00",
+  "query": "guest-timeline:quotes+retweets from anchors cz_binance,binance (scan 70 posts/anchor)",
+  "curator_pipeline": {
+    "backend": "guest-timeline",
+    "heuristic": "book_club_curation.heuristic_book_club_story",
+    "openai": false,
+    "exclude_official_accounts": true,
+    "min_stories_target": 9,
+    "editorial_pad_added": 8
+  },
+  "stories": [
+    {
+      "id": "tw-2053768001057603813",
+      "kind": "twitter",
+      "author_display": "@BinanceVIP",
+      "headline": "\"Institutional clients need fast, flexible and capital-efficient access to liquidity.\" — Catherine C…",
+      "body": "\"Institutional clients need fast, flexible and capital-efficient access to liquidity.\" — Catherine Chen, Head of VIP &amp; Institutional\n\nBuilt for exactly that. Binance Institutional Loan is now open to all KYB-verified VIP clients. 5x leverage. Fixed-rate terms. Interest rebates up",
+      "url": "https://x.com/i/web/status/2053768001057603813",
+      "created_at": "Mon May 11 09:23:43 +0000 2026",
+      "favorite_count": 167,
+      "curator": {
+        "tier": "standard",
+        "score": 0.59,
+        "method": "heuristic"
+      },
+      "author_avatar_url": "https://pbs.twimg.com/profile_images/1767163638534516736/iycoPYUW_400x400.jpg"
+    },
+    {
+      "id": "pad-fom-1",
+      "kind": "community",
+      "author_display": "@reader · APAC",
+      "headline": "Why I picked up Freedom of Money",
+      "body": "I wanted the operational story behind Binance, not just price charts — the book gave me that builder lens.",
+      "url": "",
+      "created_at": "",
+      "author_avatar_url": "https://api.dicebear.com/7.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc&scale=90&seed=fom-apac-1",
+      "curator": {
+        "tier": "standard",
+        "score": 0.5,
+        "method": "editorial_pad",
+        "flags": [
+          "editorial_placeholder"
+        ]
+      }
+    },
+    {
+      "id": "pad-fom-2",
+      "kind": "community",
+      "author_display": "@reader · EU",
+      "headline": "BNB holder, long-time app user",
+      "body": "Withdrawals during volatility were the moment I trusted the product; later chapters reframed why speed and risk control matter together.",
+      "url": "",
+      "created_at": "",
+      "author_avatar_url": "https://api.dicebear.com/7.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc&scale=90&seed=fom-eu-2",
+      "curator": {
+        "tier": "standard",
+        "score": 0.5,
+        "method": "editorial_pad",
+        "flags": [
+          "editorial_placeholder"
+        ]
+      }
+    },
+    {
+      "id": "pad-fom-3",
+      "kind": "community",
+      "author_display": "Book club · HK",
+      "headline": "《幣安人生》第一次讀完筆記",
+      "body": "印象最深的是把監管與創業放在同一條敘事裡——不是辯論口號，而是一路做決策的過程。",
+      "url": "",
+      "created_at": "",
+      "author_avatar_url": "https://api.dicebear.com/7.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc&scale=90&seed=fom-hk-3",
+      "curator": {
+        "tier": "standard",
+        "score": 0.5,
+        "method": "editorial_pad",
+        "flags": [
+          "editorial_placeholder"
+        ]
+      }
+    },
+    {
+      "id": "pad-fom-4",
+      "kind": "community",
+      "author_display": "@student · LATAM",
+      "headline": "From zero to first savings in USDC",
+      "body": "Binance Pay and Earn were my on-ramp; the memoir chapters on user protection actually matched what I saw in the app.",
+      "url": "",
+      "created_at": "",
+      "author_avatar_url": "https://api.dicebear.com/7.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc&scale=90&seed=fom-la-4",
+      "curator": {
+        "tier": "standard",
+        "score": 0.5,
+        "method": "editorial_pad",
+        "flags": [
+          "editorial_placeholder"
+        ]
+      }
+    },
+    {
+      "id": "pad-fom-5",
+      "kind": "community",
+      "author_display": "@engineer · US",
+      "headline": "Shipping lessons I replay from CZ posts",
+      "body": "Weekly release cadence + transparent incident comms — I steal both for our startup; the book ties those habits to specific eras.",
+      "url": "",
+      "created_at": "",
+      "author_avatar_url": "https://api.dicebear.com/7.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc&scale=90&seed=fom-us-5",
+      "curator": {
+        "tier": "standard",
+        "score": 0.5,
+        "method": "editorial_pad",
+        "flags": [
+          "editorial_placeholder"
+        ]
+      }
+    },
+    {
+      "id": "pad-fom-6",
+      "kind": "community",
+      "author_display": "Community · Online",
+      "headline": "Grateful for the education arc",
+      "body": "Giggle Academy / access threads reminded me why the same person obsessed over product *and* literacy; FoM connects those dots.",
+      "url": "",
+      "created_at": "",
+      "author_avatar_url": "https://api.dicebear.com/7.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc&scale=90&seed=fom-on-6",
+      "curator": {
+        "tier": "standard",
+        "score": 0.5,
+        "method": "editorial_pad",
+        "flags": [
+          "editorial_placeholder"
+        ]
+      }
+    },
+    {
+      "id": "pad-fom-7",
+      "kind": "community",
+      "author_display": "@trader · SEA",
+      "headline": "Risk after reading the compliance chapters",
+      "body": "I re-sized positions after understanding how licensing pressure shaped product choices — not trading advice, just clearer context.",
+      "url": "",
+      "created_at": "",
+      "author_avatar_url": "https://api.dicebear.com/7.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc&scale=90&seed=fom-sea-7",
+      "curator": {
+        "tier": "standard",
+        "score": 0.5,
+        "method": "editorial_pad",
+        "flags": [
+          "editorial_placeholder"
+        ]
+      }
+    },
+    {
+      "id": "pad-fom-8",
+      "kind": "community",
+      "author_display": "Reader circle · AE",
+      "headline": "Discussing chapter timelines offline",
+      "body": "We map FoM eras to local meetup talks on BNB Chain; the book is our shared glossary.",
+      "url": "",
+      "created_at": "",
+      "author_avatar_url": "https://api.dicebear.com/7.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc&scale=90&seed=fom-ae-8",
+      "curator": {
+        "tier": "standard",
+        "score": 0.5,
+        "method": "editorial_pad",
+        "flags": [
+          "editorial_placeholder"
+        ]
+      }
+    }
+  ]
+}

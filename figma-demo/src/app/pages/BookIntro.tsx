@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Award, Users, Globe, BookOpen } from "lucide-react";
+import { Award, BookOpen, Globe, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import Book3DCover from "../components/Book3DCover";
 import bookCover from "../../assets/book-cover-hero.png";
@@ -65,6 +65,9 @@ export default function BookIntro() {
           </p>
           <p className="text-muted-foreground leading-relaxed mb-4">
             {t("book.content3")}
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            {t("book.content4")}
           </p>
         </div>
       </motion.div>
