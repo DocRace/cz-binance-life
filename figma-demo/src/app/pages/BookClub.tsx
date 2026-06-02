@@ -74,23 +74,31 @@ function isTwitterStoryRow(story: BookClubStory): boolean {
   return /^tw-\d+$/.test(story.id);
 }
 
-/** Canonical link to the post on X for Twitter-sourced rows. */
-function resolveTwitterPostUrl(story: BookClubStory): string | undefined {
+/** External story link — sheet hyperlinks (X/Telegram/etc.), legacy tweet ids, or profile fallback. */
+/** X/oEmbed text is one block; prefer longer field when legacy JSON still has both. */
+function storyDisplayText(story: BookClubStory): string {
+  const body = `${story.body ?? ""}`.trim();
+  const headline = `${story.headline ?? ""}`.trim();
+  if (!body) return headline;
+  if (!headline) return body;
+  return body.length >= headline.length ? body : headline;
+}
+
+function resolveStoryExternalUrl(story: BookClubStory): string | undefined {
   const raw = story.url?.trim();
-  if (raw) {
-    const low = raw.toLowerCase();
-    if (
-      (low.includes("x.com/") || low.includes("twitter.com/")) &&
-      (low.includes("/status/") || low.includes("/i/web/status/"))
-    ) {
+  if (raw && /^https?:\/\//i.test(raw)) {
+    if (/x\.com|twitter\.com/i.test(raw)) {
       return raw
         .replace(/twitter\.com/gi, "x.com")
         .replace(/mobile\.x\.com/gi, "x.com");
     }
+    return raw;
   }
   if (isTwitterStoryRow(story) && /^tw-\d+$/.test(story.id)) {
     return `https://x.com/i/web/status/${story.id.slice(3)}`;
   }
+  const handle = story.author_display.match(/@([A-Za-z0-9_]{1,30})/)?.[1];
+  if (handle) return `https://x.com/${handle}`;
   return undefined;
 }
 
@@ -195,12 +203,12 @@ export default function BookClub() {
               {t("club.storiesEmpty")}
             </p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 [&>*]:min-w-0">
               {communityStories.map((story, idx) => {
-                const externalUrl = isTwitterStoryRow(story)
-                    ? resolveTwitterPostUrl(story)
-                    : story.url?.trim() || undefined;
-                const linkLabel = isTwitterStoryRow(story)
+                const externalUrl = resolveStoryExternalUrl(story);
+                const displayText = storyDisplayText(story);
+                const linkLabel =
+                  externalUrl && /x\.com|twitter\.com/i.test(externalUrl)
                     ? t("club.storiesOpenX")
                     : t("club.storiesOpen");
                 return (
@@ -209,18 +217,19 @@ export default function BookClub() {
                   initial={{ opacity: 0, y: 14 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.08 + idx * 0.05 }}
-                  className="flex flex-col rounded-2xl border border-border/60 bg-card/35 p-5 backdrop-blur-sm hover:border-gold/25 transition-colors"
+                  className="flex min-w-0 flex-col rounded-2xl border border-border/60 bg-card/35 p-5 backdrop-blur-sm hover:border-gold/25 transition-colors"
                 >
-                  <div className="mb-3 flex items-center gap-3">
+                  <div className="mb-3 flex min-w-0 items-center gap-3">
                     <ClubStoryAvatar story={story} />
-                    <p className="font-mono text-[11px] leading-snug text-gold/85">{story.author_display}</p>
+                    <p className="min-w-0 flex-1 font-mono text-[11px] leading-snug text-gold/85 wrap-anywhere">
+                      {story.author_display}
+                    </p>
                   </div>
-                  <h3 className="font-display text-lg font-semibold leading-snug text-white mb-2">
-                    {story.headline}
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed flex-1 whitespace-pre-wrap">
-                    {story.body}
-                  </p>
+                  {displayText ? (
+                    <p className="font-display text-base font-medium leading-relaxed text-white/95 flex-1 whitespace-pre-wrap wrap-anywhere">
+                      {displayText}
+                    </p>
+                  ) : null}
                   {externalUrl ? (
                     <a
                       href={externalUrl}

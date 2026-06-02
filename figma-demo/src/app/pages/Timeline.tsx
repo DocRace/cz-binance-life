@@ -17,7 +17,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { TimelineXFeed } from "../components/TimelineXFeed";
 import { TimelineYouTubeArchive } from "../components/TimelineYouTubeArchive";
 
 type Era = "origin" | "markets" | "crypto" | "binance" | "horizon";
@@ -386,13 +385,6 @@ export default function Timeline() {
           >
             {t("timeline.navVideos")}
           </button>
-          <button
-            type="button"
-            onClick={() => scrollToSection("section-timeline-x")}
-            className="min-w-0 max-w-[calc(50%-0.2rem)] rounded-full border border-white/12 bg-white/[0.05] px-3 py-1.5 text-center text-xs font-medium leading-tight text-balance text-muted-foreground transition-colors hover:border-gold/35 hover:bg-white/[0.08] hover:text-white sm:max-w-none sm:px-4 sm:text-sm"
-          >
-            {t("timeline.navPosts")}
-          </button>
         </div>
       </nav>
 
@@ -555,13 +547,6 @@ export default function Timeline() {
           className="scroll-mt-[4.5rem] pt-14 sm:scroll-mt-[5rem] sm:pt-20"
         >
           <TimelineYouTubeArchive />
-        </div>
-
-        <div
-          id="section-timeline-x"
-          className="scroll-mt-[4.5rem] pt-14 sm:scroll-mt-[5rem] sm:pt-20"
-        >
-          <TimelineXFeed />
         </div>
 
         <p className="mx-auto mt-16 max-w-3xl pb-24 text-center text-xs leading-relaxed text-muted-foreground/80 sm:mt-20">

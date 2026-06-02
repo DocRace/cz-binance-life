@@ -555,20 +555,6 @@ export default function Account() {
             )}
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.25 }}
-          >
-            <button
-              type="button"
-              onClick={() => setPurchaseOpen(true)}
-              className="w-full py-3 rounded-xl border border-gold/50 text-gold hover:bg-gold/10 transition-colors text-sm font-medium"
-            >
-              {t("account.buyBadgeNft")}
-            </button>
-          </motion.div>
-
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

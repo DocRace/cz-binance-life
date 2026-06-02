@@ -439,7 +439,7 @@ export function TimelineXFeed() {
                     <ExternalLink className="h-3 w-3" aria-hidden />
                   </a>
                 </div>
-                <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-relaxed text-white/90">
+                <p className="mt-3 whitespace-pre-wrap wrap-anywhere text-sm leading-relaxed text-white/90">
                   {tweet.text ?? ""}
                 </p>
                 {tweet.media && tweet.media.length > 0 ? (

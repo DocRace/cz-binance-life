@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { motion } from "motion/react";
-import { Users, Calendar } from "lucide-react";
+import { Users, ShoppingBag } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import ReservationModal from "../components/ReservationModal";
+import PurchaseModal from "../components/PurchaseModal";
 import Book3DCover from "../components/Book3DCover";
 import bookCover from "../../assets/book-cover-hero.png";
 
 export default function Home() {
   const { t } = useTranslation();
-  const [showReservationModal, setShowReservationModal] = useState(false);
+  const [purchaseOpen, setPurchaseOpen] = useState(false);
 
   return (
     <>
@@ -97,10 +97,10 @@ export default function Home() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="button"
-                onClick={() => setShowReservationModal(true)}
+                onClick={() => setPurchaseOpen(true)}
                 className="shrink-0 rounded-full border border-gold px-5 py-3.5 text-sm font-body font-medium tabular-nums tracking-wide text-foreground transition-colors duration-300 hover:bg-gold/10 flex items-center justify-center gap-2 whitespace-nowrap sm:px-7"
               >
-                <Calendar className="h-4 w-4 shrink-0 opacity-90" />
+                <ShoppingBag className="h-4 w-4 shrink-0 opacity-90" />
                 {t("home.reserveButton")}
               </motion.button>
 
@@ -194,10 +194,7 @@ export default function Home() {
         </motion.div>
       </div>
 
-      {/* Reservation Modal */}
-      {showReservationModal && (
-        <ReservationModal onClose={() => setShowReservationModal(false)} />
-      )}
+      {purchaseOpen ? <PurchaseModal onClose={() => setPurchaseOpen(false)} /> : null}
 
     </>
   );

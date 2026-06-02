@@ -187,3 +187,11 @@
     line-height: 1.5;
   }
 }
+
+/* Long hex (0x… contract addresses, UUIDs) may wrap mid-token instead of overflowing. */
+@layer utilities {
+  .wrap-anywhere {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}

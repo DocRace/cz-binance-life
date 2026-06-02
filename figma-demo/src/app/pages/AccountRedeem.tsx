@@ -193,7 +193,7 @@ export default function AccountRedeem() {
                 >
                   <NFTBadge tokenId={nft.tokenId} type="original" size="sm" animated={false} />
                   <div className="flex-1 min-w-0">
-                    <div className="font-tech text-xs text-muted-foreground truncate">{nft.tokenId}</div>
+                    <div className="font-tech text-xs text-muted-foreground wrap-anywhere">{nft.tokenId}</div>
                     <div className="text-sm">{t("account.redeemChooseThisVoucher")}</div>
                   </div>
                   <span className="text-gold text-xs shrink-0">›</span>

@@ -1,174 +1,782 @@
 {
-  "format_version": 1,
-  "updated_at": "2026-05-13T06:01:22.295377+00:00",
-  "query": "guest-timeline:quotes+retweets from anchors cz_binance,binance (scan 70 posts/anchor)",
+  "format_version": 2,
+  "updated_at": "2026-06-02T15:03:58.401083+00:00",
+  "query": "local-xlsx + X oEmbed post text for status hyperlinks",
+  "source_file": "Internal-币安人生书友会拟合作KOL名单.xlsx",
   "curator_pipeline": {
-    "backend": "guest-timeline",
-    "heuristic": "book_club_curation.heuristic_book_club_story",
+    "backend": "import_book_club_kol_stories.py",
+    "heuristic": "reason_column_or_oembed_text",
     "openai": false,
-    "exclude_official_accounts": true,
-    "min_stories_target": 9,
-    "editorial_pad_added": 8
+    "exclude_official_accounts": false,
+    "min_stories_target": 51,
+    "oembed_fetched": 50,
+    "oembed_failed": 1,
+    "live_text_note": "Status hyperlinks use X oEmbed + vxtwitter fallback (articles / link-only posts)."
   },
   "stories": [
     {
-      "id": "tw-2053768001057603813",
+      "id": "tw-2043659608292757607",
       "kind": "twitter",
-      "author_display": "@BinanceVIP",
-      "headline": "\"Institutional clients need fast, flexible and capital-efficient access to liquidity.\" — Catherine C…",
-      "body": "\"Institutional clients need fast, flexible and capital-efficient access to liquidity.\" — Catherine Chen, Head of VIP &amp; Institutional\n\nBuilt for exactly that. Binance Institutional Loan is now open to all KYB-verified VIP clients. 5x leverage. Fixed-rate terms. Interest rebates up",
-      "url": "https://x.com/i/web/status/2053768001057603813",
-      "created_at": "Mon May 11 09:23:43 +0000 2026",
-      "favorite_count": 167,
+      "author_display": "KK · @longwinsk",
+      "headline": "这本书我也读得很慢，本来想读完再写几句的。看到这段，很有同感：“我无法快速读完这本书，对于我来说，需要一些时间。并不是我有阅读障碍，而是跟随书本脚步的同时，无数记忆碎片不断涌现在我眼前….”，忍不住转发，顺便谈几点感受。 与Elon…",
+      "body": "",
+      "url": "https://x.com/longwinsk/status/2043659608292757607",
+      "created_at": "April 13, 2026",
+      "author_avatar_url": "https://unavatar.io/x/longwinsk",
       "curator": {
         "tier": "standard",
-        "score": 0.59,
-        "method": "heuristic"
-      },
-      "author_avatar_url": "https://pbs.twimg.com/profile_images/1767163638534516736/iycoPYUW_400x400.jpg"
-    },
-    {
-      "id": "pad-fom-1",
-      "kind": "community",
-      "author_display": "@reader · APAC",
-      "headline": "Why I picked up Freedom of Money",
-      "body": "I wanted the operational story behind Binance, not just price charts — the book gave me that builder lens.",
-      "url": "",
-      "created_at": "",
-      "author_avatar_url": "https://api.dicebear.com/7.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc&scale=90&seed=fom-apac-1",
-      "curator": {
-        "tier": "standard",
-        "score": 0.5,
-        "method": "editorial_pad",
-        "flags": [
-          "editorial_placeholder"
-        ]
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
       }
     },
     {
-      "id": "pad-fom-2",
-      "kind": "community",
-      "author_display": "@reader · EU",
-      "headline": "BNB holder, long-time app user",
-      "body": "Withdrawals during volatility were the moment I trusted the product; later chapters reframed why speed and risk control matter together.",
-      "url": "",
+      "id": "kol-a6189348f4c5",
+      "kind": "twitter",
+      "author_display": "Freedom of Money Art · @FOMA_BSC",
+      "headline": "A loyal fan of CZ turned excerpts from his book Freedom of Money into digital art to share his stories with more people.",
+      "body": "",
+      "url": "https://x.com/FOMA_BSC",
       "created_at": "",
-      "author_avatar_url": "https://api.dicebear.com/7.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc&scale=90&seed=fom-eu-2",
+      "author_avatar_url": "https://unavatar.io/x/FOMA_BSC",
       "curator": {
         "tier": "standard",
-        "score": 0.5,
-        "method": "editorial_pad",
-        "flags": [
-          "editorial_placeholder"
-        ]
+        "score": 0.85,
+        "method": "kol_x_profile_bio"
       }
     },
     {
-      "id": "pad-fom-3",
-      "kind": "community",
-      "author_display": "Book club · HK",
-      "headline": "《幣安人生》第一次讀完筆記",
-      "body": "印象最深的是把監管與創業放在同一條敘事裡——不是辯論口號，而是一路做決策的過程。",
-      "url": "",
-      "created_at": "",
-      "author_avatar_url": "https://api.dicebear.com/7.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc&scale=90&seed=fom-hk-3",
+      "id": "tw-2043366229524861098",
+      "kind": "twitter",
+      "author_display": "Sure5J吴米 · @Sure5J",
+      "headline": "非典型币安天使 眼中的《币安人生》\n\n有句话我记了多年，对我一直很有帮助。\n 问：「人生走到谷底怎么办？」 \n答：「继续走，就能出来。」\n                                                                    ———CZ《Freedom of Money》\nSo… the",
+      "body": "",
+      "url": "https://x.com/Sure5J/status/2043366229524861098",
+      "created_at": "Sun Apr 12 16:30:47 +0000 2026",
+      "author_avatar_url": "https://unavatar.io/x/Sure5J",
       "curator": {
         "tier": "standard",
-        "score": 0.5,
-        "method": "editorial_pad",
-        "flags": [
-          "editorial_placeholder"
-        ]
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
       }
     },
     {
-      "id": "pad-fom-4",
-      "kind": "community",
-      "author_display": "@student · LATAM",
-      "headline": "From zero to first savings in USDC",
-      "body": "Binance Pay and Earn were my on-ramp; the memoir chapters on user protection actually matched what I saw in the app.",
-      "url": "",
-      "created_at": "",
-      "author_avatar_url": "https://api.dicebear.com/7.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc&scale=90&seed=fom-la-4",
+      "id": "tw-2046456475988742613",
+      "kind": "twitter",
+      "author_display": "Lanng · @LanngCrypto",
+      "headline": "前几天才说想要《幣安人生》实体书，这几天在香港参会的朋友就去币安活动上给我抢到了一本。好朋友们下次别光抢书，各家的周边也给我领一包回来，夏天到了想穿新衣服",
+      "body": "",
+      "url": "https://x.com/LanngCrypto/status/2046456475988742613",
+      "created_at": "April 21, 2026",
+      "author_avatar_url": "https://unavatar.io/x/LanngCrypto",
       "curator": {
         "tier": "standard",
-        "score": 0.5,
-        "method": "editorial_pad",
-        "flags": [
-          "editorial_placeholder"
-        ]
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
       }
     },
     {
-      "id": "pad-fom-5",
-      "kind": "community",
-      "author_display": "@engineer · US",
-      "headline": "Shipping lessons I replay from CZ posts",
-      "body": "Weekly release cadence + transparent incident comms — I steal both for our startup; the book ties those habits to specific eras.",
-      "url": "",
-      "created_at": "",
-      "author_avatar_url": "https://api.dicebear.com/7.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc&scale=90&seed=fom-us-5",
+      "id": "tw-2048327105235280083",
+      "kind": "twitter",
+      "author_display": "BITWU.ETH · @Bitwux",
+      "headline": "读 CZ 的《币安人生》监狱生活这几页，让我这个“过来人”看得很沉默！\n\n从 HK 回来后一直在看 CZ 的新书，",
+      "body": "",
+      "url": "https://x.com/Bitwux/status/2048327105235280083",
+      "created_at": "Sun Apr 26 09:03:32 +0000 2026",
+      "author_avatar_url": "https://unavatar.io/x/Bitwux",
       "curator": {
         "tier": "standard",
-        "score": 0.5,
-        "method": "editorial_pad",
-        "flags": [
-          "editorial_placeholder"
-        ]
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
       }
     },
     {
-      "id": "pad-fom-6",
-      "kind": "community",
-      "author_display": "Community · Online",
-      "headline": "Grateful for the education arc",
-      "body": "Giggle Academy / access threads reminded me why the same person obsessed over product *and* literacy; FoM connects those dots.",
-      "url": "",
-      "created_at": "",
-      "author_avatar_url": "https://api.dicebear.com/7.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc&scale=90&seed=fom-on-6",
+      "id": "tw-2053020159443366261",
+      "kind": "twitter",
+      "author_display": "Miko.A · @web4miko",
+      "headline": "最近在321群友黄周 那里购买了5本《币安人生》.拿到手后送朋友一本。朋友后面跟我说买到盗版书了。虽然不影响阅读，但是印刷质量确实越看越有点瑕疵。 对于出现盗版书的情况，CZ …",
+      "body": "",
+      "url": "https://x.com/web4miko/status/2053020159443366261",
+      "created_at": "May 9, 2026",
+      "author_avatar_url": "https://unavatar.io/x/web4miko",
       "curator": {
         "tier": "standard",
-        "score": 0.5,
-        "method": "editorial_pad",
-        "flags": [
-          "editorial_placeholder"
-        ]
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
       }
     },
     {
-      "id": "pad-fom-7",
-      "kind": "community",
-      "author_display": "@trader · SEA",
-      "headline": "Risk after reading the compliance chapters",
-      "body": "I re-sized positions after understanding how licensing pressure shaped product choices — not trading advice, just clearer context.",
-      "url": "",
-      "created_at": "",
-      "author_avatar_url": "https://api.dicebear.com/7.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc&scale=90&seed=fom-sea-7",
+      "id": "tw-2050839554517774702",
+      "kind": "twitter",
+      "author_display": "黄周 · @Web32049",
+      "headline": "传播币安文化，享币安人生！ 《币安人生》赠书活动！",
+      "body": "",
+      "url": "https://x.com/Web32049/status/2050839554517774702",
+      "created_at": "May 3, 2026",
+      "author_avatar_url": "https://unavatar.io/x/Web32049",
       "curator": {
         "tier": "standard",
-        "score": 0.5,
-        "method": "editorial_pad",
-        "flags": [
-          "editorial_placeholder"
-        ]
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
       }
     },
     {
-      "id": "pad-fom-8",
-      "kind": "community",
-      "author_display": "Reader circle · AE",
-      "headline": "Discussing chapter timelines offline",
-      "body": "We map FoM eras to local meetup talks on BNB Chain; the book is our shared glossary.",
-      "url": "",
-      "created_at": "",
-      "author_avatar_url": "https://api.dicebear.com/7.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc&scale=90&seed=fom-ae-8",
+      "id": "tw-2060397207380201482",
+      "kind": "twitter",
+      "author_display": "Wick李🔶 BNB · @SuperL9",
+      "headline": "是的，这就是freedom of money具象化的意义。从一开始我就说这个不只是书名，而是cz创建币安的意义，币安的核心是freedom of money，不是表面的希望大家金钱自由。而是通过金钱自由去改变世界，改变人类的生活。更高维度的一个内核意义。包括我在香港问一姐她是如何理解freedom of…",
+      "body": "",
+      "url": "https://x.com/SuperL9/status/2060397207380201482",
+      "created_at": "May 29, 2026",
+      "author_avatar_url": "https://unavatar.io/x/SuperL9",
       "curator": {
         "tier": "standard",
-        "score": 0.5,
-        "method": "editorial_pad",
-        "flags": [
-          "editorial_placeholder"
-        ]
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2060243867388252610",
+      "kind": "twitter",
+      "author_display": "扑街仔🔶 BNB · @_pogai_",
+      "headline": "认真思考了一下 说的要把用户从3亿做到30亿 就是从单纯玩虚拟货币的3亿用户做到玩股票，玩期货，玩债券等各种金融产品和衍生品的人都纳入成为 的用户，一切上链，上的BNB链 这些是全球各地的人，讲着不同的语言，使用不同的金钱…",
+      "body": "",
+      "url": "https://x.com/_pogai_/status/2060243867388252610",
+      "created_at": "May 29, 2026",
+      "author_avatar_url": "https://unavatar.io/x/_pogai_",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2060586699479236904",
+      "kind": "twitter",
+      "author_display": "Jackson🔶BNB · @BN_People",
+      "headline": ". 最近重读《币安人生》，其中「长期主义」让我感触最深。 您写到：真正的成功从来不是短期的爆发，而是把正确的事情重复做很多年。时间会过滤掉大部分噪音，只给那些真正坚持的人复利。 这句话像一记重锤敲醒了我。…",
+      "body": "",
+      "url": "https://x.com/BN_People/status/2060586699479236904",
+      "created_at": "May 30, 2026",
+      "author_avatar_url": "https://unavatar.io/x/BN_People",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2060263460097999008",
+      "kind": "twitter",
+      "author_display": "PP · @0xphilo",
+      "headline": "我之前一直认为加密货币的第一课是自由，而不是知识与美德 而在币安我看到的第一课却是责任 从没电的农村到点亮了3亿人的交易所 最近《财富》杂志出了一个榜单——全球最具影响力商界女性。 这榜单评了29年，年年都是苹果、摩根这些老牌大公司的女boss。…",
+      "body": "",
+      "url": "https://x.com/0xphilo/status/2060263460097999008",
+      "created_at": "May 29, 2026",
+      "author_avatar_url": "https://unavatar.io/x/0xphilo",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2060290855119069251",
+      "kind": "twitter",
+      "author_display": "俺瑶瑶a · @anyaoyaoa",
+      "headline": "看完大表哥的书之后陷入思考了🤔 大表哥 的故事表面上是在讲一个加密创业者的成功，但更让我在意的，是他面对不确定性的态度。 大多数人追求稳定，而CZ的人生关键选择，几乎都发生在最不确定的时候。从程序员到进入区块链，再到all…",
+      "body": "",
+      "url": "https://x.com/anyaoyaoa/status/2060290855119069251",
+      "created_at": "May 29, 2026",
+      "author_avatar_url": "https://unavatar.io/x/anyaoyaoa",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2060273726336188691",
+      "kind": "twitter",
+      "author_display": "中财神🔶 BNB（熊猫头版） · @mars420690",
+      "headline": "真希望在我年轻的时候就读到《币安人生》这本书。 倒不是奢望读完这本书，就能复刻CZ的人生轨迹，也不指望仅凭它抓住时代风口，一夜扭转自身命运。而是书中藏着无数年少时无人提点我的人生道理。…",
+      "body": "",
+      "url": "https://x.com/mars420690/status/2060273726336188691",
+      "created_at": "May 29, 2026",
+      "author_avatar_url": "https://unavatar.io/x/mars420690",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2055516019637285300",
+      "kind": "twitter",
+      "author_display": "Supers🔶 BNB · @Supers6061",
+      "headline": "终于如愿拿到了带有 一姐亲笔签名的《币安人生》实体书了！ 拿着这本书，心里挺有感慨，也多了几分感动！ 还记得看表哥推文说，一姐问，怎么好多人都来找她给这本书签名啊 表哥表示，直言这本书的序言，比书本身内容还要好看（懂的都懂）😍…",
+      "body": "",
+      "url": "https://x.com/Supers6061/status/2055516019637285300",
+      "created_at": "May 16, 2026",
+      "author_avatar_url": "https://unavatar.io/x/Supers6061",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2060244643003183479",
+      "kind": "twitter",
+      "author_display": "李呆妹🔶BNB · @LiDaimei_",
+      "headline": "整本书看下来， 最让我头皮发麻的， 是表哥他近乎变态的乐观。 他在书中反复强调自己“很幸运”： 核心员工被挖走？他说很幸运， 这刚好帮我筛选掉了那些只看重钱、不看重用户的投机者。 投资人临时跳票？他说很幸运， 误打误撞让股权牢牢掌控在了自己手里. 甚至去坐牢4个月？他依然觉得很幸运，…",
+      "body": "",
+      "url": "https://x.com/LiDaimei_/status/2060244643003183479",
+      "created_at": "May 29, 2026",
+      "author_avatar_url": "https://unavatar.io/x/LiDaimei_",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2049457143431233903",
+      "kind": "twitter",
+      "author_display": "DOGE教父 · @DOGEbaby6666",
+      "headline": "花了2天时间熬大夜看完了赵长鹏的自传回忆录《币安人生》。很久没有这么短时间读完一本书了。 整本书读下来，有两处内容令我印象深刻：一是何一为本书写下的序言，二是CZ贯穿始终的极简生活态度与谦卑本心。⁰⁰作为深耕行业多年、并肩同行的核心伙伴， …",
+      "body": "",
+      "url": "https://x.com/DOGEbaby6666/status/2049457143431233903",
+      "created_at": "April 29, 2026",
+      "author_avatar_url": "https://unavatar.io/x/DOGEbaby6666",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2056043513163481580",
+      "kind": "twitter",
+      "author_display": "十相自在安生 · @sakakimay1995",
+      "headline": "有cz 有何一 有英文书 有币安人生 叙事太顶级了 0x6750ca15f0772fe54d594aef6c6c4ac997fd4444",
+      "body": "",
+      "url": "https://x.com/sakakimay1995/status/2056043513163481580",
+      "created_at": "May 17, 2026",
+      "author_avatar_url": "https://unavatar.io/x/sakakimay1995",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2043655922501951797",
+      "kind": "twitter",
+      "author_display": "Alpha小金宝 · @alphaxiaojinbao",
+      "headline": "我终于把《币安人生》读完了。 之所以用“终于”，不是因为它难读，也不是因为不吸引人，而是因为我熬了两个大夜，一口气读完的。 说句很直白的话：大家别学我熬夜，身体更重要。但这本书，确实有一种让人停不下来的力量。…",
+      "body": "",
+      "url": "https://x.com/alphaxiaojinbao/status/2043655922501951797",
+      "created_at": "April 13, 2026",
+      "author_avatar_url": "https://unavatar.io/x/alphaxiaojinbao",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2043340670136729891",
+      "kind": "twitter",
+      "author_display": "BNB🔶蛙蛙 · @jiamibtc",
+      "headline": "花了两天把 的《币安人生》看完了。 推特上这两天全是读后感，有人熬鸡汤，有人谈玄学，但我一个在圈内做交易、踩过无数坑的老韭菜看完，只记住了一个词：代价。 在这个圈子，赚钱不难，难的是出事的时候你敢不敢扛代价。 书里写 2019 年币安被黑客盗了 7000…",
+      "body": "",
+      "url": "https://x.com/jiamibtc/status/2043340670136729891",
+      "created_at": "April 12, 2026",
+      "author_avatar_url": "https://unavatar.io/x/jiamibtc",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2060347247204942213",
+      "kind": "twitter",
+      "author_display": "柴郡🔔｜Crypto+AI Plus · @0xCheshire",
+      "headline": "恭喜一姐 入选《财富》2026 年度全球最具影响力商界女性榜单，成为首位进入这份全球排名的加密原生高管！ 一姐一直都是不走寻常路。 出生在四川农村，后来做过电视主持人，进入科技行业，再到 2017 年联合创立币安。 这反而让她的故事更加传奇。 我很喜欢她的“首席客服官”这个说法。…",
+      "body": "",
+      "url": "https://x.com/0xCheshire/status/2060347247204942213",
+      "created_at": "May 29, 2026",
+      "author_avatar_url": "https://unavatar.io/x/0xCheshire",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2056652772016279818",
+      "kind": "twitter",
+      "author_display": "林克Clean · @CryptoSociety42",
+      "headline": "拿到了！目所能及的现货都给扫了。 《经济一周》这期用了比较大的篇幅讲Web3。 跑了两家书店买到了实体书。 只要198，《币安人生》带回家！",
+      "body": "",
+      "url": "https://x.com/CryptoSociety42/status/2056652772016279818",
+      "created_at": "May 19, 2026",
+      "author_avatar_url": "https://unavatar.io/x/CryptoSociety42",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2051956508985049181",
+      "kind": "twitter",
+      "author_display": "🐹_Leslie鼠鼠 · @LeslieLi92210",
+      "headline": "进圈三个月的05后读《币安人生》：在CZ的旷野里，看见自己的Web3之路（上） “韧性”，是贯穿这本传记的底色。 五一假期，有幸拜读了黄周寄来的纸质书，借由 CZ…",
+      "body": "",
+      "url": "https://x.com/LeslieLi92210/status/2051956508985049181",
+      "created_at": "May 6, 2026",
+      "author_avatar_url": "https://unavatar.io/x/LeslieLi92210",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2043202419862180176",
+      "kind": "twitter",
+      "author_display": "UKong🥷🪃 · @CryptoUKong",
+      "headline": "刚把CZ这本《币安人生》翻完，合上书的时候天都快亮了，脑子里乱糟糟的，全是碎片，就想随便写写，想到哪说到哪。 我算是币圈老油条了，2017年那波牛市就进场，那时候币安刚起来，我还在小交易所被割过几次，后来听朋友说币安体验好、手续费低，就转了过去。…",
+      "body": "",
+      "url": "https://x.com/CryptoUKong/status/2043202419862180176",
+      "created_at": "April 12, 2026",
+      "author_avatar_url": "https://unavatar.io/x/CryptoUKong",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2059165159948771562",
+      "kind": "twitter",
+      "author_display": "小鱼Daisy🔶BNB · @vvxiaoyu8888",
+      "headline": "Fourmeme总是能给大家出乎意料的惊喜～～ 大表哥 的亲笔签名《币安人生》已经陆续给中奖的小伙伴们寄出啦！！ 话说还有吗，鱼也想要亲签书🤩",
+      "body": "",
+      "url": "https://x.com/vvxiaoyu8888/status/2059165159948771562",
+      "created_at": "May 26, 2026",
+      "author_avatar_url": "https://unavatar.io/x/vvxiaoyu8888",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2057313903709937756",
+      "kind": "twitter",
+      "author_display": "小鱼🔶BNB · @Xiaoyu_184CM",
+      "headline": "上周我把（币安人生）的实体书送给了码农. 第二天和我说，他用了一个通宵把整本书看完了，前半篇他也深有感触，后半篇他说见识了美国司法的流氓政策，本来想去看世界杯的，现在不想去了.我和他说了你和一姐最近的状况，他说还是他的生活比较自由. 向你们问好。",
+      "body": "",
+      "url": "https://x.com/Xiaoyu_184CM/status/2057313903709937756",
+      "created_at": "May 21, 2026",
+      "author_avatar_url": "https://unavatar.io/x/Xiaoyu_184CM",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2058047139805331640",
+      "kind": "twitter",
+      "author_display": "DeFi小矿工 · @DeFi8362",
+      "headline": "淘宝上面可以买 的《币安人生》了",
+      "body": "",
+      "url": "https://x.com/DeFi8362/status/2058047139805331640",
+      "created_at": "May 23, 2026",
+      "author_avatar_url": "https://unavatar.io/x/DeFi8362",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2044364467627295091",
+      "kind": "twitter",
+      "author_display": "Mr.Bai 白先生 · @Baisircrypto",
+      "headline": "虽然 回调了， 但是我也抽空读完了 的《币安人生》！ 当我合上这本书，我试图回忆里面所有我能复述的细节！ 比如CZ的那句：“人生就像打牌，摸到什么牌我们没有选择，重要的是打好这副牌。” 在2017年7月14日， 正式上线。…",
+      "body": "",
+      "url": "https://x.com/Baisircrypto/status/2044364467627295091",
+      "created_at": "April 15, 2026",
+      "author_avatar_url": "https://unavatar.io/x/Baisircrypto",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2057698323054973299",
+      "kind": "twitter",
+      "author_display": "币圈福利哥 · @yyds123888",
+      "headline": "CZ大表哥的书，我在天猫买到了。 打开天猫app搜：币安人生，第一个出现的店就是，直接下单，我已经买到了，兄弟们快冲！",
+      "body": "",
+      "url": "https://x.com/yyds123888/status/2057698323054973299",
+      "created_at": "May 22, 2026",
+      "author_avatar_url": "https://unavatar.io/x/yyds123888",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2044809092276085108",
+      "kind": "twitter",
+      "author_display": "0xEgg · @0xEggg",
+      "headline": "有没有dev 把币安人生这本书 发一个nft 一页=一张nft 反正现在流行文艺复兴",
+      "body": "",
+      "url": "https://x.com/0xEggg/status/2044809092276085108",
+      "created_at": "April 16, 2026",
+      "author_avatar_url": "https://unavatar.io/x/0xEggg",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2052933659758674410",
+      "kind": "twitter",
+      "author_display": "阳成Crypto · @ChanceYawn",
+      "headline": "我敢肯定freedom of Money 很快会到50M-60M，达到币安人生高点的10%一点也不过分！ 1.市值一直保持在10M，按照MEME的尿性，不拉盘早应该慢慢归零了，现在该卖的都卖了，不想卖的都在等上平台，平台不上他们也不会卖了 2. CZ应该还有更大的线下书会，后续还有书友会等等长尾效应…",
+      "body": "",
+      "url": "https://x.com/ChanceYawn/status/2052933659758674410",
+      "created_at": "May 9, 2026",
+      "author_avatar_url": "https://unavatar.io/x/ChanceYawn",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2060172667312058389",
+      "kind": "twitter",
+      "author_display": "沧海老张 · @PengjianZ5710",
+      "headline": "最近总算是开始阅读《币安人生》。 咱不聊个人，只看文章内容，读到这一段有感而发。 任何时候家族不在权力的中心，做出的成绩都会被抹杀，特别是异军突起的新领域，最后都会成为政治的垫脚石。 这也不难想象为什么马斯克急于火星开发？ 这剧本换演了几千年还是老样子。 亘古不变，远远流传。",
+      "body": "",
+      "url": "https://x.com/PengjianZ5710/status/2060172667312058389",
+      "created_at": "May 29, 2026",
+      "author_avatar_url": "https://unavatar.io/x/PengjianZ5710",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2052050142178787614",
+      "kind": "twitter",
+      "author_display": "莓莓 · @Meimeibtcc",
+      "headline": "太开心啦太开心啦❗️❗️❗️ 惦记《币安人生》好久了，电子版前前后后认认真真看了三遍，一直特别想买一本实体书收藏。 犹豫了好久，最后还是在闲鱼花1500拿下了一本。虽然说不是CZ 亲笔签名的有点可惜，但这本书本来就很稀缺，既能慢慢品读，又很有收藏价值！…",
+      "body": "",
+      "url": "https://x.com/Meimeibtcc/status/2052050142178787614",
+      "created_at": "May 6, 2026",
+      "author_avatar_url": "https://unavatar.io/x/Meimeibtcc",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2052328727862976912",
+      "kind": "twitter",
+      "author_display": "Crypto美羊羊 · @Crypto777888",
+      "headline": "花了整整两个晚上，一字一句读完了《币安人生》。 说实话，合上书的那一刻，我的眼眶有点热，不是因为书里的情节有多煽情，而是因为我突然回头看了一眼现在的自己。…",
+      "body": "",
+      "url": "https://x.com/Crypto777888/status/2052328727862976912",
+      "created_at": "May 7, 2026",
+      "author_avatar_url": "https://unavatar.io/x/Crypto777888",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2055354410545680637",
+      "kind": "twitter",
+      "author_display": "Levi 🔶BNB · @Levi_1203",
+      "headline": "熬夜读《币安人生》，第三天！ 最近每天失眠睡不着觉，最好的解决方案就是读书，今天最有感触的莫过于铁窗写书 CZ 现在大家都叫赵总，他说：这辈子最魔幻、最特殊的一段经历，就是在联邦监狱里，一字一句写完这本《币安人生》。…",
+      "body": "",
+      "url": "https://x.com/Levi_1203/status/2055354410545680637",
+      "created_at": "May 15, 2026",
+      "author_avatar_url": "https://unavatar.io/x/Levi_1203",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2058169431646482432",
+      "kind": "twitter",
+      "author_display": "韩跑跑 · @HanPaoao",
+      "headline": "这是哪个道友做的币安人生视频？",
+      "body": "",
+      "url": "https://x.com/HanPaoao/status/2058169431646482432",
+      "created_at": "May 23, 2026",
+      "author_avatar_url": "https://unavatar.io/x/HanPaoao",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2044442064189108339",
+      "kind": "twitter",
+      "author_display": "Annie 所长 · @web3annie",
+      "headline": "CZ ：对meme文化是支持但保持距离的 自曝新书《Freedom of Money》的中文命名确实参考了币安人生 memecoin 他只是觉得有意思、贴切，拿来用一下，但别当我在带货 市场是自由的，你要对自己负责 BNB Chain、Binance 生态是支持 meme 文化的，支持基础设施建设 💪",
+      "body": "",
+      "url": "https://x.com/web3annie/status/2044442064189108339",
+      "created_at": "April 15, 2026",
+      "author_avatar_url": "https://unavatar.io/x/web3annie",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2044614696461099082",
+      "kind": "twitter",
+      "author_display": "CryptoCat|猫姐 · @Crypto_Cat888",
+      "headline": "CZ昨晚直播抽奖，让在评论区打出 CZ新书名字，正确答案要么是：币安人生，要么是 freedom of money 结果评论区清一色的答案“CZ新书” 更离谱的来了，回答 “CZ新书”的还中奖了 到底谁是唐人？我今天陷入了深深的自我怀疑",
+      "body": "",
+      "url": "https://x.com/Crypto_Cat888/status/2044614696461099082",
+      "created_at": "April 16, 2026",
+      "author_avatar_url": "https://unavatar.io/x/Crypto_Cat888",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2057982788218044420",
+      "kind": "twitter",
+      "author_display": "南瓜大大 · @nanguakk",
+      "headline": "网友写币安人生读后感并配图 成功钩到了cz的转发，这也是建设的一种方式。 稳定在2M，成交量就几十W，也没放量，这是很好的状态，一切才刚刚开始。 目前没有像样的社区建设，市值还在低位30w、40w徘徊。…",
+      "body": "",
+      "url": "https://x.com/nanguakk/status/2057982788218044420",
+      "created_at": "May 23, 2026",
+      "author_avatar_url": "https://unavatar.io/x/nanguakk",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2044077909347053838",
+      "kind": "twitter",
+      "author_display": "baby · @liuxiaoling933",
+      "headline": "4天前我在刷小红书时，看到一位网友发布了一条关于《币安人生》封面截图，有一位网名为XX的朋友留言，有电子版吗？麻烦发一下，缘分就这样开始了 我给这位XX网友取得联系，真奇妙，我们竟然来自同一个城市，而且距离很近，我把电子版发给了这位网友，可能因为深处一个城市，我们聊天氛围还不错。…",
+      "body": "",
+      "url": "https://x.com/liuxiaoling933/status/2044077909347053838",
+      "created_at": "April 14, 2026",
+      "author_avatar_url": "https://unavatar.io/x/liuxiaoling933",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2058086621426409698",
+      "kind": "twitter",
+      "author_display": "MILK爱吃饭 · @NFTMILK",
+      "headline": "分享我的读书方法: 用 做读书笔记 我把书中有趣的内容记录下来 让AI帮我解读和分析 这样就不用在书上划线了 日后想复习也能随时随地翻看 效率高很多 🥰 我其实没读完 的<币安人生> 因为骨子里觉得好书还是纸质版更有仪式感 电子书只适合阅读网文小说打发时间…",
+      "body": "",
+      "url": "https://x.com/NFTMILK/status/2058086621426409698",
+      "created_at": "May 23, 2026",
+      "author_avatar_url": "https://unavatar.io/x/NFTMILK",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2045433108221358132",
+      "kind": "twitter",
+      "author_display": "加密小师妹|Monica · @Monica_xiaoM",
+      "headline": "四天时间，成本不到2000，三个小伙伴从学习到成片， 从内容到视频素材全程AI制作。 精选了表哥 新书《币安人生》中两个我个人最喜欢的重要时刻进行还原。 两个夜晚，两个关键节点。 这本书让我理解了一件事：坚持不是因为看到了希望，是因为还没有理由停下来。…",
+      "body": "",
+      "url": "https://x.com/Monica_xiaoM/status/2045433108221358132",
+      "created_at": "April 18, 2026",
+      "author_avatar_url": "https://unavatar.io/x/Monica_xiaoM",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2059471268995612944",
+      "kind": "twitter",
+      "author_display": "比特神 · @btcbtcshen",
+      "headline": "CZ《币安人生》读书笔记 ·第九天，花几天时间精读，顺手摘了70条语录 厉害的人尊重时间，也充分利用时间。 哪怕是在牢狱中，也会利用时间，整理了自己的回忆录。 花了几天时间精读，顺便摘录里面的语录。 —关于时间与专注 1. 到场是成功的八成（CZ《币安人生》读书笔记系列 ·…",
+      "body": "",
+      "url": "https://x.com/btcbtcshen/status/2059471268995612944",
+      "created_at": "May 27, 2026",
+      "author_avatar_url": "https://unavatar.io/x/btcbtcshen",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2058205880777322599",
+      "kind": "twitter",
+      "author_display": "企鹅豆🐬 · @btc1349",
+      "headline": "币安老板CZ现在看到关于《Freedom of Money》的好内容就转发、点赞，已经进入极度痴狂状态。作为首富还能有如此纯粹的精神共情，真的太罕见了。 更让我羡慕的是，他和他妻子Yi He同心双双转发置顶。这份罕见的夫妻同频，足以看出Freedom of…",
+      "body": "",
+      "url": "https://x.com/btc1349/status/2058205880777322599",
+      "created_at": "May 23, 2026",
+      "author_avatar_url": "https://unavatar.io/x/btc1349",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2053271964832412071",
+      "kind": "twitter",
+      "author_display": "Trader壹身武艺｜🔶BNB| BTC最严厉的父亲🕊️ · @0xTraderYi",
+      "headline": "刚读完CZ大表哥的币安人生 说几点让我后背发凉的细节， 说实话它和我预想的“成功学鸡汤”完全不同。 说几个让我印象最深的： 1. 与美国司法部的秘密谈判书里详细写了整个谈判过程。CZ说，最紧张的时候，他不知道自己第二天会不会被直接带走。…",
+      "body": "",
+      "url": "https://x.com/0xTraderYi/status/2053271964832412071",
+      "created_at": "May 10, 2026",
+      "author_avatar_url": "https://unavatar.io/x/0xTraderYi",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2058255005682188318",
+      "kind": "twitter",
+      "author_display": "Crypto🔶大宇 · @four_xyg",
+      "headline": "上海滩里，许文强从乡下空手闯十里洋场，凭脑子、韧性和一腔孤勇，在乱世中护住兄弟、守住底线。 今天的币圈，何尝不是新的上海滩。 CZ从农村土屋、无自来水的生活起步，移民加拿大打工，一手创办 面对监管风暴、牢狱考验，他始终把保护用户放在第一位。 《Freedom of Money》…",
+      "body": "",
+      "url": "https://x.com/four_xyg/status/2058255005682188318",
+      "created_at": "May 23, 2026",
+      "author_avatar_url": "https://unavatar.io/x/four_xyg",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2043594139607216594",
+      "kind": "twitter",
+      "author_display": "0xWangXK🔶BNB · @0xWangXKK",
+      "headline": "共建概念的深入探讨：从《币安人生》脚注到BNB Chain的哲学内核 “Build N Build”（共建）这个词，在CZ新书《币安人生》（Freedom of Money）里只出现在第72条「放鬆和娛樂」的脚注[2]，却像一颗种子瞬间点燃整个社区。 书中原文极简却精准： BNB Chain（「Build N…",
+      "body": "",
+      "url": "https://x.com/0xWangXKK/status/2043594139607216594",
+      "created_at": "April 13, 2026",
+      "author_avatar_url": "https://unavatar.io/x/0xWangXKK",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2057807441451155792",
+      "kind": "twitter",
+      "author_display": "小本🔸BNB · @BTDC666",
+      "headline": "《Freedom of Money Art》 把《币安人生》书中的每一页做成NFT，并给NFT加分红赋能。现在还计划把它做成漫画短剧。短剧发布 CZ 大大大大概率会关注到。 埋伏 0x03a0a8700fa3809c6c2d637babd841296da57777",
+      "body": "",
+      "url": "https://x.com/BTDC666/status/2057807441451155792",
+      "created_at": "May 22, 2026",
+      "author_avatar_url": "https://unavatar.io/x/BTDC666",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2058646742795739284",
+      "kind": "twitter",
+      "author_display": "JIO JIO · @jiaojiaojio",
+      "headline": "把书中内容做成语音版并听完了发表书评",
+      "body": "",
+      "url": "https://x.com/jiaojiaojio/status/2058646742795739284",
+      "created_at": "",
+      "author_avatar_url": "https://unavatar.io/x/jiaojiaojio",
+      "curator": {
+        "tier": "standard",
+        "score": 0.75,
+        "method": "kol_sheet_reason_fallback_fetch_failed"
+      }
+    },
+    {
+      "id": "tw-2045213496154239030",
+      "kind": "twitter",
+      "author_display": "佐佐木星野丨Hoshino University🎓 · @hoshino_sasaki",
+      "headline": "《GODS》币安人生版，纯属娱乐版😆 讲述了CZ从在温哥华麦当劳打工，再到一步步成为加密帝国币安CEO，再到为了让币安能够继续在全球运营，主动自首并缴纳巨额罚款后接受了4个月的监禁的故事。 此作品献给 ，预祝新书《Freedom Of…",
+      "body": "",
+      "url": "https://x.com/hoshino_sasaki/status/2045213496154239030",
+      "created_at": "April 17, 2026",
+      "author_avatar_url": "https://unavatar.io/x/hoshino_sasaki",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2045039518869586107",
+      "kind": "twitter",
+      "author_display": "siri.eth | KarenZ · @KarenZh30739159",
+      "headline": "《币安人生》词频榜：16 万字跑完，留下这 10 组词\n\n从词频看《币安人生》：他最在意的，都在这里。\n撰文&整理：KarenZ，Foresight News\n一本书中，词频是一张诚实的热力图。什么被反复提起，什么就真正重要。\n笔者使用 Claude 对全书约 16",
+      "body": "",
+      "url": "https://x.com/KarenZh30739159/status/2045039518869586107",
+      "created_at": "Fri Apr 17 07:19:50 +0000 2026",
+      "author_avatar_url": "https://unavatar.io/x/KarenZh30739159",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
+      }
+    },
+    {
+      "id": "tw-2058780470658421195",
+      "kind": "twitter",
+      "author_display": "北讲区块链 · @NFTfafafa",
+      "headline": "任何链都需要Meme代表精神 ETH是Shib、Pepe BSC是币安人生 Sol是Bome、Trump Xlayer是Xdog Base是哪个？？",
+      "body": "",
+      "url": "https://x.com/NFTfafafa/status/2058780470658421195",
+      "created_at": "May 25, 2026",
+      "author_avatar_url": "https://unavatar.io/x/NFTfafafa",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
       }
     }
   ]

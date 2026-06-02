@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Users, Sparkles, User, Home, Clock, SquareArrowOutUpRight } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
-import siteMark from "../../assets/site-mark.png";
+import bookCover from "../../assets/book-cover-hero.png";
 import LanguageSwitcher from "./LanguageSwitcher";
 import PlatformSettlementRibbon from "./PlatformSettlementRibbon";
 import {
@@ -66,11 +66,11 @@ export default function Layout() {
         className="relative z-40 border-b border-border/50 backdrop-blur-xl bg-background/80"
       >
         <div className="container mx-auto px-4 py-3 sm:px-6">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
-            <Link to="/" className="group flex min-w-0 max-w-full items-center gap-2 sm:gap-3 lg:max-w-[min(100%,22rem)] xl:max-w-md">
+          <div className="flex items-center justify-between gap-3">
+            <Link to="/" className="group flex min-w-0 flex-1 items-center gap-2 sm:gap-3 lg:max-w-[min(100%,22rem)] xl:max-w-md">
               <div className="relative h-10 w-10 shrink-0 sm:h-12 sm:w-12">
                 <img
-                  src={siteMark}
+                  src={bookCover}
                   alt=""
                   className="h-full w-full object-contain object-center"
                   decoding="async"
@@ -122,15 +122,14 @@ export default function Layout() {
               </div>
             </div>
 
-            {/* Mobile navigation */}
             <button
               type="button"
-              className="md:hidden p-2 text-muted-foreground hover:text-foreground"
+              className="md:hidden shrink-0 -mr-1 p-2 text-muted-foreground hover:text-foreground"
               aria-label={t("nav.openMenu")}
               aria-expanded={mobileNavOpen}
               onClick={() => setMobileNavOpen(true)}
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
