@@ -4,12 +4,15 @@ import { motion } from "motion/react";
 import { Users, ShoppingBag } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PurchaseModal from "../components/PurchaseModal";
+import AirdropClaimModal from "../components/AirdropClaimModal";
+import MembershipTiers from "../components/MembershipTiers";
 import Book3DCover from "../components/Book3DCover";
 import bookCover from "../../assets/book-cover-hero.png";
 
 export default function Home() {
   const { t } = useTranslation();
   const [purchaseOpen, setPurchaseOpen] = useState(false);
+  const [airdropOpen, setAirdropOpen] = useState(false);
 
   return (
     <>
@@ -115,6 +118,12 @@ export default function Home() {
           </motion.div>
         </div>
 
+        <MembershipTiers
+          onPremiumClick={() => setPurchaseOpen(true)}
+          onStandardClick={() => setAirdropOpen(true)}
+          className="mb-28 md:mb-36"
+        />
+
         {/* Features Grid */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -195,6 +204,7 @@ export default function Home() {
       </div>
 
       {purchaseOpen ? <PurchaseModal onClose={() => setPurchaseOpen(false)} /> : null}
+      {airdropOpen ? <AirdropClaimModal onClose={() => setAirdropOpen(false)} /> : null}
 
     </>
   );

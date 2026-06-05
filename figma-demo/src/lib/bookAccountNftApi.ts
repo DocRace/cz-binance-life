@@ -4,12 +4,22 @@
 import { normalizeRedeemSourceTokenId } from "./bookRedeemClient";
 import { bookBffJsonWithRefresh } from "./bookBffWithRefresh";
 import { bookBffIsTransportIssue } from "./bookBffClient";
-import { getAttendanceStubCollectionIdSet } from "../config/platform";
+import {
+  getAttendanceStubCollectionIdSet,
+  isPremiumVoucherCollectionId,
+  isStandardMembershipCollectionId,
+} from "../config/platform";
 
 export const BOOK_NFT_COLLECTION_UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-/** Merge paging envelope `rows` with optional parallel `details` (IPDEX NFT balances). */
+function balanceDetailKey(row: Record<string, unknown>): string {
+  const tid = strField(row, ["c_token_id", "tokenId", "token_id"]);
+  const cid = strField(row, ["c_collection_id", "collectionId", "collection_id"]);
+  return tid && cid ? `${tid}_${cid}` : "";
+}
+
+/** Merge paging envelope `rows` with `details` keyed by token+collection (IPDEX profile pattern). */
 export function nftRowsMergedFromPageEnvelope(data: unknown): Record<string, unknown>[] {
   if (data == null || typeof data !== "object") return [];
   const o = data as Record<string, unknown>;
@@ -17,16 +27,32 @@ export function nftRowsMergedFromPageEnvelope(data: unknown): Record<string, unk
   if (!Array.isArray(rows)) return asRecordList(data);
   const detRaw = o.details;
   const details = Array.isArray(detRaw) ? detRaw : [];
+
+  const detailMap = new Map<string, Record<string, unknown>>();
+  for (const d of details) {
+    if (typeof d !== "object" || d === null) continue;
+    const rec = d as Record<string, unknown>;
+    const key = balanceDetailKey(rec);
+    if (key) detailMap.set(key, rec);
+  }
+
   const out: Record<string, unknown>[] = [];
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i];
-    const d = details[i];
-    if (typeof row === "object" && row !== null) {
-      out.push({
-        ...(row as Record<string, unknown>),
-        ...(typeof d === "object" && d !== null ? (d as Record<string, unknown>) : {}),
-      });
-    }
+    if (typeof row !== "object" || row === null) continue;
+    const r = row as Record<string, unknown>;
+    const key = balanceDetailKey(r);
+    const byKey = key ? detailMap.get(key) : undefined;
+    const byIndex =
+      !byKey && typeof details[i] === "object" && details[i] !== null
+        ? (details[i] as Record<string, unknown>)
+        : undefined;
+    const detail = byKey ?? byIndex;
+    out.push({
+      ...r,
+      ...(detail ?? {}),
+      ...(detail ? { detail } : {}),
+    });
   }
   return out.length ? out : asRecordList(data);
 }
@@ -118,6 +144,79 @@ export function pickNftBalanceCollectionId(row: Record<string, unknown>): string
   return "";
 }
 
+function metadataImageUrl(meta: unknown): string {
+  if (meta == null) return "";
+  if (typeof meta === "string") {
+    try {
+      return metadataImageUrl(JSON.parse(meta));
+    } catch {
+      return "";
+    }
+  }
+  if (typeof meta === "object" && !Array.isArray(meta)) {
+    const img = (meta as Record<string, unknown>).image;
+    return typeof img === "string" && img.trim() ? img.trim() : "";
+  }
+  return "";
+}
+
+function nestedRecord(row: Record<string, unknown>, keys: string[]): Record<string, unknown> | null {
+  for (const k of keys) {
+    const v = row[k];
+    if (typeof v === "object" && v !== null && !Array.isArray(v)) return v as Record<string, unknown>;
+  }
+  return null;
+}
+
+/** Token or collection artwork URL from merged nft-balance row + details. */
+export function pickNftImageUrl(row: Record<string, unknown>): string {
+  const keys = [
+    "c_image",
+    "image",
+    "imageUrl",
+    "image_url",
+    "tokenImage",
+    "nftImage",
+    "cover",
+    "c_cover",
+    "salesCover",
+    "c_sales_cover",
+  ];
+  for (const sub of nftRowVariants(row)) {
+    const s = strField(sub, keys);
+    if (s) return s;
+    const fromMeta = metadataImageUrl(sub.c_metadata ?? sub.metadata);
+    if (fromMeta) return fromMeta;
+  }
+  const collection = nestedRecord(row, ["c_collection", "collection", "collectionInfo"]);
+  if (collection) {
+    const cover = strField(collection, ["c_cover", "c_image", "cover", "image"]);
+    if (cover) return cover;
+  }
+  return "";
+}
+
+export function pickNftDisplayName(row: Record<string, unknown>): string {
+  for (const sub of nftRowVariants(row)) {
+    const s = strField(sub, ["c_name", "name", "nftName", "title"]);
+    if (s) return s;
+  }
+  return "";
+}
+
+export function pickNftCollectionName(row: Record<string, unknown>): string {
+  const collection = nestedRecord(row, ["c_collection", "collection", "collectionInfo"]);
+  if (collection) {
+    const s = strField(collection, ["c_name", "name", "collectionName"]);
+    if (s) return s;
+  }
+  for (const sub of nftRowVariants(row)) {
+    const s = strField(sub, ["collectionName", "seriesName", "c_collection_name"]);
+    if (s) return s;
+  }
+  return "";
+}
+
 function earliestDateIsoPrefix(row: Record<string, unknown>): string {
   const keys = ["createdAt", "purchasedAt", "mintedAt", "updatedAt"];
   for (const sub of nftRowVariants(row)) {
@@ -162,19 +261,47 @@ export function classifyNft(row: Record<string, unknown>): {
 
 const principleColors = ["gold", "cyan", "purple"] as const;
 
+export type MembershipTier = "premium" | "standard";
+
 export type DisplayNft = {
   key: string;
   tokenId: string;
   /** IPDEX collection UUID (required for `/club/redeem`). */
   collectionId?: string;
   badge: "original" | "redeemed" | "principle";
+  /** Paid voucher vs free standard commemorative — drives Account redeem UI. */
+  membershipTier?: MembershipTier;
   /** When true, NFT is payout/stub series from env — commemorative attendance, never a redeemable voucher. */
   attendanceStub?: boolean;
   dateLabel: string;
+  imageUrl?: string;
+  name?: string;
+  collectionName?: string;
   principleName?: string;
   principleColor?: "gold" | "cyan" | "purple";
   originalTokenId?: string;
 };
+
+/** Premium account section: paid vouchers + post-redeem attendance stubs (not free standard). */
+export function isPremiumAccountNft(nft: DisplayNft): boolean {
+  if (nft.badge === "principle") return false;
+  if (isStandardMembershipNft(nft)) return false;
+  if (nft.attendanceStub) return true;
+  if (nft.badge === "redeemed") return true;
+  return nft.badge === "original";
+}
+
+export function isPremiumAttendanceStub(nft: DisplayNft): boolean {
+  return Boolean(nft.attendanceStub) || (nft.badge === "redeemed" && !isPremiumVoucherNft(nft));
+}
+
+export function isStandardMembershipNft(nft: DisplayNft): boolean {
+  return nft.membershipTier === "standard" || isStandardMembershipCollectionId(nft.collectionId);
+}
+
+export function isPremiumVoucherNft(nft: DisplayNft): boolean {
+  return nft.membershipTier === "premium" || isPremiumVoucherCollectionId(nft.collectionId);
+}
 
 /** Placeholder when the nft-balance row did not expose a chain token id (must not POST to `/club/redeem`). */
 export function isSyntheticNftBalanceToken(tokenId: string): boolean {
@@ -184,7 +311,13 @@ export function isSyntheticNftBalanceToken(tokenId: string): boolean {
 export function isRedeemEligible(nft: DisplayNft): boolean {
   const cid = (nft.collectionId || "").trim();
   if (isSyntheticNftBalanceToken(nft.tokenId)) return false;
-  return nft.badge === "original" && cid.length > 0 && BOOK_NFT_COLLECTION_UUID_RE.test(cid);
+  if (isStandardMembershipNft(nft)) return false;
+  return (
+    nft.badge === "original" &&
+    isPremiumVoucherNft(nft) &&
+    cid.length > 0 &&
+    BOOK_NFT_COLLECTION_UUID_RE.test(cid)
+  );
 }
 
 export function mapNftRow(row: Record<string, unknown>, index: number): DisplayNft {
@@ -205,16 +338,37 @@ export function mapNftRow(row: Record<string, unknown>, index: number): DisplayN
   const dateRaw = earliestDateIsoPrefix(row);
   const principleColor =
     badge === "principle" ? principleColors[index % principleColors.length] : undefined;
+  const collectionId = (() => {
+    const c = pickNftBalanceCollectionId(row).trim();
+    return c !== "" ? c : undefined;
+  })();
+  const membershipTier: MembershipTier | undefined = (() => {
+    if (!collectionId) return attendanceStub ? "premium" : undefined;
+    if (isStandardMembershipCollectionId(collectionId)) return badge === "original" ? "standard" : undefined;
+    if (isPremiumVoucherCollectionId(collectionId)) return "premium";
+    if (attendanceStub) return "premium";
+    return undefined;
+  })();
   return {
     key: `${tokenId}-${index}`,
     tokenId,
-    collectionId: (() => {
-      const c = pickNftBalanceCollectionId(row).trim();
-      return c !== "" ? c : undefined;
-    })(),
+    collectionId,
+    membershipTier,
     badge,
     attendanceStub,
     dateLabel: dateRaw || "—",
+    imageUrl: (() => {
+      const img = pickNftImageUrl(row).trim();
+      return img !== "" ? img : undefined;
+    })(),
+    name: (() => {
+      const n = pickNftDisplayName(row).trim();
+      return n !== "" ? n : undefined;
+    })(),
+    collectionName: (() => {
+      const n = pickNftCollectionName(row).trim();
+      return n !== "" ? n : undefined;
+    })(),
     principleName: classified.principleName,
     principleColor,
     originalTokenId: pickFirstAcrossVariants(row, ["originalTokenId", "parentTokenId"]),
@@ -250,4 +404,24 @@ export async function fetchNftBffPagesMerged(buildPath: (p: number) => string): 
     if (rows.length < 12) break;
   }
   return merged;
+}
+
+export type NftDetailBundle = {
+  balance: Record<string, unknown> | null;
+  info: Record<string, unknown> | null;
+};
+
+export async function fetchNftDetailBundle(
+  collectionId: string,
+  tokenId: string,
+): Promise<NftDetailBundle | null> {
+  const cid = collectionId.trim();
+  const tid = tokenId.trim();
+  if (!cid || !tid || isSyntheticNftBalanceToken(tid)) return null;
+
+  const r = await bookBffJsonWithRefresh<NftDetailBundle>(
+    `/api/bff/nft/${encodeURIComponent(cid)}/${encodeURIComponent(tid)}`,
+  );
+  if (r.code !== 0 || bookBffIsTransportIssue(r) || !r.data) return null;
+  return r.data;
 }

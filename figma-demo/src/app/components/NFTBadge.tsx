@@ -4,6 +4,11 @@ import { useTranslation } from "react-i18next";
 interface NFTBadgeProps {
   tokenId: string;
   type: "original" | "redeemed" | "principle";
+  /** Token or collection artwork from IPDEX nft-balance / token detail. */
+  imageUrl?: string;
+  displayName?: string;
+  /** Free STANDARD tier — commemorative member badge, not a redeemable premium voucher. */
+  standardMember?: boolean;
   /** Attendance NFT minted after on-site redemption (stub / ticket root)—distinct label vs generic “attendance commemorative”. */
   stubTicket?: boolean;
   size?: "sm" | "md" | "lg";
@@ -15,6 +20,9 @@ interface NFTBadgeProps {
 export default function NFTBadge({
   tokenId,
   type,
+  imageUrl,
+  displayName,
+  standardMember = false,
   stubTicket = false,
   size = "md",
   animated = true,
@@ -36,48 +44,66 @@ export default function NFTBadge({
     pink: "from-stone-500 via-stone-400 to-stone-600",
   };
 
+  const standardMode = type === "original" && standardMember;
   const bgGradient =
-    type === "original"
-      ? "from-gold via-gold-light to-gold-dark"
-      : type === "principle"
-      ? principleGradients[principleColor]
-      : "from-muted via-card to-muted";
+    standardMode
+      ? "from-stone-500 via-stone-600 to-stone-800"
+      : type === "original"
+        ? "from-gold via-gold-light to-gold-dark"
+        : type === "principle"
+          ? principleGradients[principleColor]
+          : "from-muted via-card to-muted";
 
   const stubMode = type === "redeemed" && stubTicket;
   const badgeType =
-    type === "original"
-      ? t("nftBadge.typeReservation")
-      : type === "principle"
-        ? t("nftBadge.typePrinciple")
-        : stubMode
-          ? t("nftBadge.typeStub")
-          : t("nftBadge.typeAttendance");
+    standardMode
+      ? t("nftBadge.typeStandard")
+      : type === "original"
+        ? t("nftBadge.typeReservation")
+        : type === "principle"
+          ? t("nftBadge.typePrinciple")
+          : stubMode
+            ? t("nftBadge.typeStub")
+            : t("nftBadge.typeAttendance");
 
   const badgeTitle =
-    type === "original"
-      ? t("nftBadge.titleReservation")
-      : type === "principle"
-        ? t("nftBadge.titlePrinciple")
-        : stubMode
-          ? t("nftBadge.titleStub")
-          : t("nftBadge.titleAttendance");
+    standardMode
+      ? t("nftBadge.titleStandard")
+      : type === "original"
+        ? t("nftBadge.titleReservation")
+        : type === "principle"
+          ? t("nftBadge.titlePrinciple")
+          : stubMode
+            ? t("nftBadge.titleStub")
+            : t("nftBadge.titleAttendance");
 
   const badgeSubtitle =
-    type === "original"
-      ? t("nftBadge.subtitleReservation")
-      : type === "principle"
-        ? principleName || t("nftBadge.subtitlePrincipleFallback")
-        : stubMode
-          ? t("nftBadge.subtitleStub")
-          : t("nftBadge.subtitleAttendance");
+    standardMode
+      ? t("nftBadge.subtitleStandard")
+      : type === "original"
+        ? t("nftBadge.subtitleReservation")
+        : type === "principle"
+          ? principleName || t("nftBadge.subtitlePrincipleFallback")
+          : stubMode
+            ? t("nftBadge.subtitleStub")
+            : t("nftBadge.subtitleAttendance");
+
+  const artUrl = imageUrl?.trim() || "";
+  const hasArt = artUrl.length > 0;
 
   const BadgeContent = (
     <div className={`${sizeClasses[size]} relative rounded-2xl overflow-hidden`}>
-      {/* Background gradient */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${bgGradient}`} />
+      {hasArt ? (
+        <>
+          <img src={artUrl} alt={displayName || badgeTitle} className="absolute inset-0 h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/10" />
+        </>
+      ) : (
+        <div className={`absolute inset-0 bg-gradient-to-br ${bgGradient}`} />
+      )}
 
       {/* Hexagon pattern */}
-      <div className="absolute inset-0 opacity-10">
+      <div className={`absolute inset-0 ${hasArt ? "opacity-[0.07]" : "opacity-10"}`}>
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id={`hexagons-${tokenId}`} x="0" y="0" width="50" height="43.4" patternUnits="userSpaceOnUse">
@@ -88,64 +114,48 @@ export default function NFTBadge({
         </svg>
       </div>
 
-      {/* Glow effect */}
-      {type !== "redeemed" && (
+      {!hasArt && type !== "redeemed" ? (
         <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/5 to-white/20" />
-      )}
+      ) : null}
 
-      {/* Content */}
-      <div className="relative h-full p-6 flex flex-col justify-between">
-        {/* Top section */}
+      <div className="relative h-full p-4 flex flex-col justify-between text-white">
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-tech opacity-70">
-              {badgeType}
-            </span>
-            <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" />
-              </svg>
-            </div>
+          <div className="flex items-center justify-between mb-2 gap-2">
+            <span className="text-[10px] font-tech uppercase opacity-80">{badgeType}</span>
           </div>
-
-          <h3 className="font-display text-lg mb-1">
-            {badgeTitle}
+          <h3 className="font-display text-base leading-snug line-clamp-2 mb-0.5">
+            {displayName?.trim() || badgeTitle}
           </h3>
-          <p className="text-xs opacity-70">
-            {badgeSubtitle}
-          </p>
+          <p className="text-[10px] opacity-75 line-clamp-2">{badgeSubtitle}</p>
         </div>
 
-        {/* Middle section - Book icon */}
-        <div className="flex items-center justify-center">
-          <div className={`relative ${size === 'lg' ? 'w-24 h-24' : size === 'md' ? 'w-20 h-20' : 'w-16 h-16'}`}>
-            <div className="absolute inset-0 bg-white/20 backdrop-blur-sm rounded-xl transform rotate-6" />
-            <div className="absolute inset-0 bg-white/30 backdrop-blur-sm rounded-xl flex items-center justify-center">
-              <svg className={`${size === 'lg' ? 'w-12 h-12' : size === 'md' ? 'w-10 h-10' : 'w-8 h-8'}`} viewBox="0 0 24 24" fill="currentColor">
-                <path d="M4 6h16v12H4z" opacity="0.3"/>
-                <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
-              </svg>
+        {!hasArt ? (
+          <div className="flex items-center justify-center py-2">
+            <div className={`relative ${size === "lg" ? "w-24 h-24" : size === "md" ? "w-20 h-20" : "w-16 h-16"}`}>
+              <div className="absolute inset-0 bg-white/20 backdrop-blur-sm rounded-xl transform rotate-6" />
+              <div className="absolute inset-0 bg-white/30 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                <svg className={`${size === "lg" ? "w-12 h-12" : size === "md" ? "w-10 h-10" : "w-8 h-8"}`} viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M4 6h16v12H4z" opacity="0.3" />
+                  <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" />
+                </svg>
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex-1 min-h-[8px]" />
+        )}
 
-        {/* Bottom section */}
         <div>
-          <div className="text-center mb-2">
-            <p className="text-2xl font-tech tracking-wider">#{tokenId}</p>
-          </div>
-          <div className="h-px bg-white/20 mb-2" />
-          <div className="flex items-center justify-between text-xs">
-            <span className="opacity-70">{t("nftBadge.seriesFooter")}</span>
-            <span className="font-tech opacity-70">{t("nftBadge.nftChip")}</span>
+          <p className="text-center text-lg font-tech tracking-wider mb-1">#{tokenId}</p>
+          <div className="h-px bg-white/25 mb-1.5" />
+          <div className="flex items-center justify-between text-[10px] opacity-75">
+            <span>{t("nftBadge.seriesFooter")}</span>
+            <span className="font-tech">{t("nftBadge.nftChip")}</span>
           </div>
         </div>
       </div>
 
-      {/* Border glow */}
-      {type !== "redeemed" && (
-        <div className="absolute inset-0 rounded-2xl border-2 border-white/20" />
-      )}
+      <div className="absolute inset-0 rounded-2xl border border-white/20 pointer-events-none" />
     </div>
   );
 

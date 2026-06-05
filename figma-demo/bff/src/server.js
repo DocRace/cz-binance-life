@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
-import { loadBffEnv, ipdexFacadeFetch } from './ipdexClient.js';
+import { loadBffEnv, ipdexFacadeFetch, ipdexPublicApiFetch } from './ipdexClient.js';
 
 const PORT = Number(process.env.BFF_PORT || 8787);
 const AT_COOKIE = 'bff_ipdex_at';
@@ -25,6 +25,14 @@ function pageInt(s) {
   const n = parseInt(`${s}`, 10);
   if (!Number.isFinite(n) || n < 1) return null;
   return n;
+}
+
+const AIRDROP_PUBLIC_CODE_RE = /^[a-zA-Z0-9_-]{4,64}$/;
+
+function resolveAirdropPublicCode(raw, fallback) {
+  const code = `${raw ?? ''}`.trim() || `${fallback ?? ''}`.trim();
+  if (!AIRDROP_PUBLIC_CODE_RE.test(code)) return null;
+  return code;
 }
 
 function cookieBase() {
@@ -170,6 +178,51 @@ async function boot() {
     res.status(out.json?.code === 0 ? 200 : 400).json(out.json);
   });
 
+  app.get('/api/bff/nft/:collectionId/:tokenId', async (req, res) => {
+    const accessToken = bearer(req);
+    if (!accessToken) return res.status(401).json({ code: -10005, message: 'Unauthorized', data: null });
+
+    const collectionId = `${req.params.collectionId ?? ''}`.trim();
+    const tokenId = `${req.params.tokenId ?? ''}`.trim();
+    if (!uuidLike(collectionId)) {
+      return res.status(400).json({ code: -10001, message: 'Invalid collectionId', data: null });
+    }
+    if (!tokenId) {
+      return res.status(400).json({ code: -10001, message: 'Invalid tokenId', data: null });
+    }
+
+    const encC = encodeURIComponent(collectionId);
+    const encT = encodeURIComponent(tokenId);
+
+    const [balanceOut, infoOut] = await Promise.all([
+      ipdexPublicApiFetch(env, {
+        apiPath: `/user/nft/balance/${encC}/${encT}`,
+        accessToken,
+      }),
+      ipdexPublicApiFetch(env, {
+        apiPath: `/nft/${encC}/${encT}`,
+        accessToken,
+      }),
+    ]);
+
+    const balance = balanceOut.json?.code === 0 ? balanceOut.json.data : null;
+    const info = infoOut.json?.code === 0 ? infoOut.json.data : null;
+
+    if (!balance && !info) {
+      return res.status(502).json({
+        code: -1,
+        message: balanceOut.json?.message || infoOut.json?.message || 'upstream_bad_response',
+        data: null,
+      });
+    }
+
+    return res.json({
+      code: 0,
+      message: '',
+      data: { balance, info },
+    });
+  });
+
   app.get('/api/bff/nfts/:page', async (req, res) => {
     const accessToken = bearer(req);
     if (!accessToken) return res.status(401).json({ code: -10005, message: 'Unauthorized', data: null });
@@ -273,6 +326,71 @@ async function boot() {
       accessToken,
     });
     res.status(out.json?.code === 0 ? 200 : 400).json(out.json);
+  });
+
+  app.get('/api/bff/airdrop/campaign', async (req, res) => {
+    const publicCode = resolveAirdropPublicCode(req.query?.publicCode, env.AIRDROP_PUBLIC_CODE);
+    if (!publicCode) {
+      return res.status(400).json({
+        code: -10001,
+        message: 'publicCode_required_configure_BOOK_STANDARD_AIRDROP_PUBLIC_CODE',
+        data: null,
+      });
+    }
+    const out = await ipdexFacadeFetch(env, {
+      method: 'GET',
+      suffixPath: `/airdrop/campaign/${encodeURIComponent(publicCode)}`,
+    });
+    res.status(httpStatusFromIpdexEnvelope(out)).json(
+      out.json ?? { code: -1, message: 'upstream_bad_response', data: null },
+    );
+  });
+
+  app.get('/api/bff/airdrop/my-claim', async (req, res) => {
+    const accessToken = bearer(req);
+    if (!accessToken) return res.status(401).json({ code: -10005, message: 'Unauthorized', data: null });
+
+    const publicCode = resolveAirdropPublicCode(req.query?.publicCode, env.AIRDROP_PUBLIC_CODE);
+    if (!publicCode) {
+      return res.status(400).json({
+        code: -10001,
+        message: 'publicCode_required_configure_BOOK_STANDARD_AIRDROP_PUBLIC_CODE',
+        data: null,
+      });
+    }
+
+    const out = await ipdexFacadeFetch(env, {
+      method: 'GET',
+      suffixPath: `/airdrop/campaign/${encodeURIComponent(publicCode)}/my-claim`,
+      accessToken,
+    });
+    res.status(httpStatusFromIpdexEnvelope(out)).json(
+      out.json ?? { code: -1, message: 'upstream_bad_response', data: null },
+    );
+  });
+
+  app.post('/api/bff/airdrop/claim', async (req, res) => {
+    const accessToken = bearer(req);
+    if (!accessToken) return res.status(401).json({ code: -10005, message: 'Unauthorized', data: null });
+
+    const publicCode = resolveAirdropPublicCode(req.body?.publicCode, env.AIRDROP_PUBLIC_CODE);
+    if (!publicCode) {
+      return res.status(400).json({
+        code: -10001,
+        message: 'publicCode_required_configure_BOOK_STANDARD_AIRDROP_PUBLIC_CODE',
+        data: null,
+      });
+    }
+
+    const out = await ipdexFacadeFetch(env, {
+      method: 'POST',
+      suffixPath: `/airdrop/campaign/${encodeURIComponent(publicCode)}/claim`,
+      body: {},
+      accessToken,
+    });
+    res.status(httpStatusFromIpdexEnvelope(out)).json(
+      out.json ?? { code: -1, message: 'upstream_bad_response', data: null },
+    );
   });
 
   app.post('/api/bff/club/redeem', async (req, res) => {

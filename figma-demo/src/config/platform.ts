@@ -59,6 +59,60 @@ export function getBookNftRedemptionRuleId(): string {
   return envString("VITE_IPDEX_NFT_REDEMPTION_RULE_ID");
 }
 
+/** Standard (free) tier — IPDEX airdrop campaign `publicCode` (Admin → Airdrop campaign). */
+export function getBookStandardAirdropPublicCode(): string {
+  return envString("VITE_IPDEX_BOOK_STANDARD_AIRDROP_PUBLIC_CODE");
+}
+
+/** Expected collection UUID for the free-tier series (sanity check after campaign load). */
+export function getBookStandardCollectionId(): string {
+  const fromEnv = envString("VITE_IPDEX_BOOK_STANDARD_COLLECTION_ID");
+  if (fromEnv) return fromEnv;
+  return "b8b65708-7a66-4547-9041-b7a47d3d2c90";
+}
+
+let standardCollectionMemo: string | undefined;
+let premiumVoucherCollectionMemo: ReadonlySet<string> | undefined;
+
+function normalizeCollectionUuid(id: string): string {
+  return `${id}`.trim().toLowerCase();
+}
+
+/** Free STANDARD tier series — commemorative only, no on-site redeem. */
+export function getBookStandardCollectionIdNormalized(): string {
+  if (!standardCollectionMemo) {
+    standardCollectionMemo = normalizeCollectionUuid(getBookStandardCollectionId());
+  }
+  return standardCollectionMemo;
+}
+
+export function isStandardMembershipCollectionId(collectionId?: string): boolean {
+  const c = normalizeCollectionUuid(`${collectionId ?? ""}`);
+  return c !== "" && c === getBookStandardCollectionIdNormalized();
+}
+
+/**
+ * Paid PREMIUM voucher series UUID(s) — eligible for `/club/redeem` when held as source NFT.
+ * Comma / semicolon / whitespace separated; defaults to «CZ NFT Test 2» on dev.
+ */
+export function getBookPremiumVoucherCollectionIdSet(): ReadonlySet<string> {
+  if (premiumVoucherCollectionMemo) return premiumVoucherCollectionMemo;
+  const out = new Set<string>();
+  const raw = envString("VITE_IPDEX_BOOK_PREMIUM_COLLECTION_ID");
+  if (raw.trim()) {
+    pushUuidFragmentsIntoSet(raw.split(/[\s,;]+/).filter(Boolean), out);
+  } else {
+    out.add("a0344152-4a6a-424e-8918-b476e834e8d7");
+  }
+  premiumVoucherCollectionMemo = out;
+  return premiumVoucherCollectionMemo;
+}
+
+export function isPremiumVoucherCollectionId(collectionId?: string): boolean {
+  const c = normalizeCollectionUuid(`${collectionId ?? ""}`);
+  return c !== "" && getBookPremiumVoucherCollectionIdSet().has(c);
+}
+
 /** IPDEX NFT series UUID v1–v5 (aligned with `BOOK_NFT_COLLECTION_UUID_RE` in `bookAccountNftApi.ts`). */
 const BOOK_COLLECTION_UUID_V1_TO_V5_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;

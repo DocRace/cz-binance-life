@@ -191,65 +191,6 @@ export default function CZPrinciples() {
           })}
         </div>
       </div>
-
-      {/* Submit Form Section — same width as principles grid above */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="mx-auto mt-20 w-full max-w-7xl"
-      >
-        <div className="relative p-8 rounded-2xl overflow-hidden border border-gold/30">
-          <div className="absolute inset-0 bg-gradient-to-r from-gold/5 via-stone-500/5 to-stone-400/5" />
-          <div className="relative">
-            <div className="text-center mb-6">
-              <Sparkles className="w-12 h-12 mx-auto mb-4 text-gold" />
-              <h2 className="font-display text-2xl mb-3">{t("principles.shareTitle")}</h2>
-              <p className="text-muted-foreground">
-                {t("principles.shareDesc")}
-                <br />
-                {t("principles.shareDesc2")}
-              </p>
-            </div>
-
-            <form className="w-full space-y-4">
-              <div>
-                <label className="block text-sm mb-2">{t("principles.formTitleLabel")}</label>
-                <input
-                  type="text"
-                  placeholder={t("principles.formTitlePlaceholder")}
-                  className="w-full px-4 py-3 rounded-xl bg-input-background border border-border focus:border-gold/50 focus:outline-none transition-colors"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm mb-2">{t("principles.formDescLabel")}</label>
-                <textarea
-                  rows={4}
-                  placeholder={t("principles.formDescPlaceholder")}
-                  className="w-full px-4 py-3 rounded-xl bg-input-background border border-border focus:border-gold/50 focus:outline-none transition-colors resize-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm mb-2">{t("principles.formEmailLabel")}</label>
-                <input
-                  type="email"
-                  placeholder={t("principles.formEmailPlaceholder")}
-                  className="w-full px-4 py-3 rounded-xl bg-input-background border border-border focus:border-gold/50 focus:outline-none transition-colors"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-gold to-gold-dark hover:from-gold-light hover:to-gold transition-all duration-300"
-              >
-                <span className="text-primary-foreground font-medium">{t("principles.submitButton")}</span>
-              </button>
-            </form>
-          </div>
-        </div>
-      </motion.div>
     </div>
   );
 }

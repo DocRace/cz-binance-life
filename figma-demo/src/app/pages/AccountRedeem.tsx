@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router";
-import { Loader2 } from "lucide-react";
+import { ArrowLeft, ChevronRight, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import NFTBadge from "../components/NFTBadge";
 import RedeemStaffPanel from "../components/RedeemStaffPanel";
@@ -148,16 +148,25 @@ export default function AccountRedeem() {
   }
 
   return (
-    <div className="container mx-auto px-6 py-10 md:py-16 max-w-lg">
+    <div className="container mx-auto px-6 py-10 md:py-16 max-w-5xl">
       <nav className="mb-8">
-        <Link to="/account" className="text-sm text-gold hover:underline font-medium">
-          ← {t("account.redeemBack")}
+        <Link
+          to="/account"
+          className="inline-flex items-center gap-2 text-sm text-gold hover:text-gold-light font-medium transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 shrink-0" aria-hidden />
+          {t("account.redeemBack")}
         </Link>
       </nav>
 
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-        <h1 className="font-display text-3xl mb-3">{t("account.redeemPageTitle")}</h1>
-        <p className="text-muted-foreground text-sm leading-relaxed">{t("account.redeemPageIntro")}</p>
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
+        <p className="text-xs font-medium uppercase tracking-[0.16em] text-gold/90 mb-2">
+          {t("account.redeemPageNavCta")}
+        </p>
+        <h1 className="font-display text-3xl md:text-4xl mb-3">{t("account.redeemPageTitle")}</h1>
+        <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-2xl">
+          {t("account.redeemPageIntro")}
+        </p>
       </motion.div>
 
       {loadError ? (
@@ -178,29 +187,61 @@ export default function AccountRedeem() {
       ) : null}
 
       {!pick && eligible.length > 0 ? (
-        <div className="space-y-4 mb-12">
-          <h2 className="font-display text-xl text-foreground">{t("account.redeemPickSectionTitle")}</h2>
-          <ul className="space-y-3">
-            {eligible.map((nft) => (
-              <li key={nft.key}>
+        <div className="mb-12">
+          <div className="flex items-center justify-between gap-3 mb-6">
+            <h2 className="font-display text-xl text-foreground">{t("account.redeemPickSectionTitle")}</h2>
+            <span className="text-sm text-muted-foreground">
+              {t("account.badgeCount", { count: eligible.length })}
+            </span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {eligible.map((nft, index) => (
+              <motion.div
+                key={nft.key}
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.05 + index * 0.05 }}
+                className="flex flex-col items-center w-full max-w-[280px] mx-auto"
+              >
                 <button
                   type="button"
                   onClick={() => {
                     setRedeemError(null);
                     setPick(nft);
                   }}
-                  className="w-full flex items-center gap-4 p-4 rounded-xl border border-border/60 bg-card/40 hover:border-gold/40 hover:bg-card/70 transition-colors text-left"
+                  className="group w-full flex flex-col items-center rounded-2xl border border-border/60 bg-card/30 p-4 hover:border-gold/45 hover:bg-card/50 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/50"
                 >
-                  <NFTBadge tokenId={nft.tokenId} type="original" size="sm" animated={false} />
-                  <div className="flex-1 min-w-0">
-                    <div className="font-tech text-xs text-muted-foreground wrap-anywhere">{nft.tokenId}</div>
-                    <div className="text-sm">{t("account.redeemChooseThisVoucher")}</div>
+                  <div className="mb-4 flex justify-center w-full transition-transform group-hover:scale-[1.02]">
+                    <NFTBadge
+                      tokenId={nft.tokenId}
+                      type="original"
+                      imageUrl={nft.imageUrl}
+                      displayName={nft.name}
+                      size="md"
+                      animated={false}
+                    />
                   </div>
-                  <span className="text-gold text-xs shrink-0">›</span>
+                  <div className="w-full space-y-2 text-left">
+                    {nft.name ? (
+                      <p className="text-sm font-medium text-foreground line-clamp-2">{nft.name}</p>
+                    ) : null}
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">{t("account.reservedDate")}</span>
+                      <span className="font-tech">{nft.dateLabel}</span>
+                    </div>
+                    <div className="p-2 rounded-lg bg-gold/10 text-center">
+                      <span className="text-xs text-gold">✓ {t("account.reservedOk")}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-snug">{t("account.premiumVoucherNote")}</p>
+                    <div className="flex items-center justify-center gap-1 pt-1 text-sm text-gold font-medium">
+                      {t("account.redeemChooseThisVoucher")}
+                      <ChevronRight className="w-4 h-4 shrink-0" aria-hidden />
+                    </div>
+                  </div>
                 </button>
-              </li>
+              </motion.div>
             ))}
-          </ul>
+          </div>
         </div>
       ) : null}
 
@@ -209,7 +250,7 @@ export default function AccountRedeem() {
           layout
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="rounded-2xl border border-border bg-card shadow-lg overflow-hidden"
+          className="max-w-lg mx-auto rounded-2xl border border-border bg-card/40 shadow-lg overflow-hidden"
         >
           <div className="border-b border-border/60 px-4 py-3 flex items-center justify-between gap-3 bg-accent/25">
             <span className="text-xs uppercase tracking-wide text-muted-foreground">{t("account.redeemSelectedLabel")}</span>
@@ -220,15 +261,31 @@ export default function AccountRedeem() {
                 setPick(null);
                 setRedeemError(null);
               }}
-              className="text-xs text-gold hover:underline disabled:opacity-40"
+              className="inline-flex items-center gap-1 text-xs text-gold hover:underline disabled:opacity-40"
             >
+              <ArrowLeft className="w-3.5 h-3.5" aria-hidden />
               {t("account.redeemPickAnother")}
             </button>
           </div>
+          <div className="flex justify-center pt-6 px-4">
+            <NFTBadge
+              tokenId={pick.tokenId}
+              type="original"
+              imageUrl={pick.imageUrl}
+              displayName={pick.name}
+              size="md"
+              animated={false}
+            />
+          </div>
+          {pick.name ? (
+            <p className="text-center text-sm font-medium px-6 pb-2">{pick.name}</p>
+          ) : null}
           <RedeemStaffPanel
             dense
             tokenId={pick.tokenId}
             seriesId={pick.collectionId}
+            imageUrl={pick.imageUrl}
+            displayName={pick.name}
             busy={redeemBusy}
             externalError={redeemError}
             onConfirm={confirmRedeem}

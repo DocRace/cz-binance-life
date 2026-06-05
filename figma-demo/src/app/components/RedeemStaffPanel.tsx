@@ -9,6 +9,8 @@ interface RedeemStaffPanelProps {
   tokenId: string;
   /** Source series UUID submitted with redeem — should match an eligible rule collection in admin. */
   seriesId?: string;
+  imageUrl?: string;
+  displayName?: string;
   /** Explains redemption to the holder; omit for concise staff-phone copy (`redeemModalBodyStaff`). */
   description?: string;
   busy?: boolean;
@@ -51,16 +53,22 @@ export default function RedeemStaffPanel({
 
   return (
     <div className={`${padding} text-center`}>
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-        className="w-20 h-20 mx-auto mb-6 rounded-full bg-gold/20 flex items-center justify-center"
-      >
-        <AlertTriangle className="w-10 h-10 text-gold" />
-      </motion.div>
+      {dense && imageUrl?.trim() ? (
+        <div className="sr-only">{displayName || tokenId}</div>
+      ) : (
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
+          className="w-20 h-20 mx-auto mb-6 rounded-full bg-gold/20 flex items-center justify-center"
+        >
+          <AlertTriangle className="w-10 h-10 text-gold" />
+        </motion.div>
+      )}
 
-      <h2 className="font-display text-2xl mb-4">{t("account.redeemModalTitle")}</h2>
+      <h2 className={`font-display text-2xl mb-4 ${dense && imageUrl ? "mt-2" : ""}`}>
+        {t("account.redeemModalTitle")}
+      </h2>
       <p className="text-muted-foreground mb-4 text-sm leading-relaxed md:text-base">
         {description ?? t("account.redeemModalBodyStaff")}
       </p>

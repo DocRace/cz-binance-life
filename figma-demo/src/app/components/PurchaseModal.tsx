@@ -4,15 +4,12 @@ import { ExternalLink, Mail, Minus, Plus, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PlatformSettlementRibbon from "./PlatformSettlementRibbon";
 import {
-  DATADANCE_CHAIN_ID,
   DATADANCE_CHAIN_NAME,
   IPDEX_PRODUCT_NAME,
   getBookPrimaryListingId,
   getBookPrimaryPriceHkdHint,
   getBookPrimarySaleId,
 } from "../../config/platform";
-import { buildBookPrimarySaleCheckoutUrl } from "../../ipdex/marketUrls";
-import { getPartnerApiPublicLabel } from "../../ipdex/partnerApi";
 import { bookBffJson, bookBffIsTransportIssue } from "../../lib/bookBffClient";
 
 interface PurchaseModalProps {
@@ -20,9 +17,28 @@ interface PurchaseModalProps {
   skipLogin?: boolean;
 }
 
-type Step = "login" | "select" | "checkout" | "success";
+type Step = "login" | "select" | "success";
 
-type PaymentMode = "bff" | "market";
+const ORDER_ERROR_UNPAID = -20008;
+
+function isStripeCheckoutUrl(url: string): boolean {
+  return /^https?:\/\/([^/]+\.)?stripe\.com\//i.test(url.trim());
+}
+
+/** Reserve a tab while the user gesture is active; navigate after async checkout. */
+function reservePaymentTab(): Window | null {
+  return window.open("about:blank", "_blank", "noopener,noreferrer");
+}
+
+function navigatePaymentTab(tab: Window | null, paymentUrl: string): void {
+  const url = paymentUrl.trim();
+  if (!url) return;
+  if (tab && !tab.closed) {
+    tab.location.href = url;
+    return;
+  }
+  window.location.assign(url);
+}
 
 interface PrimaryPurchaseData {
   orderId?: string;
@@ -161,7 +177,7 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
 
   const [apiCheckoutError, setApiCheckoutError] = useState<string | null>(null);
   const [checkoutBusy, setCheckoutBusy] = useState(false);
-  const [lastPaymentMode, setLastPaymentMode] = useState<PaymentMode | null>(null);
+  const [lastPaymentUrl, setLastPaymentUrl] = useState<string | null>(null);
   const [saleResolvedListingId, setSaleResolvedListingId] = useState<string | null>(null);
   const [saleListingFetchState, setSaleListingFetchState] = useState<"idle" | "loading" | "ok" | "fail">("idle");
   const [primarySaleUnavailable, setPrimarySaleUnavailable] = useState<PrimarySaleUnavailableReason | null>(null);
@@ -172,11 +188,6 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
 
   const pricePerNFT = unitPriceHkd;
   const totalPrice = quantity * pricePerNFT;
-
-  const checkoutUrl = useMemo(
-    () => buildBookPrimarySaleCheckoutUrl(quantity),
-    [quantity],
-  );
 
   const envListingId = useMemo(() => getBookPrimaryListingId().trim(), []);
   const primarySaleId = useMemo(() => getBookPrimarySaleId().trim(), []);
@@ -318,14 +329,24 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
     }
   };
 
-  const handleConfirmPurchase = () => {
-    setApiCheckoutError(null);
-    setStep("checkout");
+  const resolvePurchaseError = (out: {
+    code: number;
+    message?: string;
+  }): string => {
+    if (out.code === ORDER_ERROR_UNPAID || out.message?.toLowerCase().includes("unpaid")) {
+      return t("purchase.unpaidOrderBlocksCheckout");
+    }
+    if (primarySaleUnavailable) {
+      return t(`purchase.primarySaleUnavailable.${primarySaleUnavailable}`);
+    }
+    return out.message || t("purchase.primaryPurchaseFailed");
   };
 
   const handleCheckout = async () => {
     setApiCheckoutError(null);
     setCheckoutBusy(true);
+    setLastPaymentUrl(null);
+    const paymentTab = reservePaymentTab();
 
     try {
       const body: { quantity: number; listingId?: string } = {
@@ -348,58 +369,41 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
         body: JSON.stringify(body),
       });
 
-      if (out.code === 0 && out.data?.paymentUrl) {
-        setLastPaymentMode("bff");
-        window.open(out.data.paymentUrl, "_blank", "noopener,noreferrer");
+      const paymentUrl = out.data?.paymentUrl?.trim() ?? "";
+      if (out.code === 0 && paymentUrl) {
+        if (!isStripeCheckoutUrl(paymentUrl)) {
+          paymentTab?.close();
+          setApiCheckoutError(t("purchase.invalidPaymentUrl"));
+          return;
+        }
+        setLastPaymentUrl(paymentUrl);
+        navigatePaymentTab(paymentTab, paymentUrl);
         setStep("success");
         return;
       }
 
-      if (
-        checkoutUrl &&
-        !primarySaleUnavailable &&
-        (out.message?.includes("listingId") ||
-          out.message?.includes("BOOK_PRIMARY_LISTING_ID") ||
-          out.code !== 0)
-      ) {
-        setLastPaymentMode("market");
-        window.open(checkoutUrl, "_blank", "noopener,noreferrer");
-        setStep("success");
-        return;
-      }
-
+      paymentTab?.close();
       setApiCheckoutError(
-        primarySaleUnavailable
-          ? t(`purchase.primarySaleUnavailable.${primarySaleUnavailable}`)
-          : bookBffIsTransportIssue(out)
-            ? t("purchase.bffOffline")
-            : out.message || t("purchase.primaryPurchaseFailed"),
+        bookBffIsTransportIssue(out) ? t("purchase.bffOffline") : resolvePurchaseError(out),
       );
     } catch {
-      if (checkoutUrl && !primarySaleUnavailable) {
-        setLastPaymentMode("market");
-        window.open(checkoutUrl, "_blank", "noopener,noreferrer");
-        setStep("success");
-      } else {
-        setApiCheckoutError(
-          primarySaleUnavailable
-            ? t(`purchase.primarySaleUnavailable.${primarySaleUnavailable}`)
-            : t("purchase.bffOffline"),
-        );
-      }
+      paymentTab?.close();
+      setApiCheckoutError(t("purchase.bffOffline"));
     } finally {
       setCheckoutBusy(false);
     }
   };
 
-  const handleOpenMarketAgain = () => {
-    if (checkoutUrl) window.open(checkoutUrl, "_blank", "noopener,noreferrer");
+  const handleReopenStripe = () => {
+    if (!lastPaymentUrl) return;
+    navigatePaymentTab(reservePaymentTab(), lastPaymentUrl);
   };
 
-  const checkoutDisabled =
+  const purchaseDisabled =
     checkoutBusy ||
     primarySaleUnavailable !== null ||
-    (bffSessionOk === false && !checkoutUrl && !canPurchaseViaBff) ||
+    bffSessionOk === false ||
+    !canPurchaseViaBff ||
     (!!primarySaleId && !envListingId && saleListingFetchState === "loading");
 
   return (
@@ -518,10 +522,13 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
               className="p-8 pt-10"
             >
               <div className="text-center mb-8">
+                <p className="text-xs font-medium uppercase tracking-[0.16em] text-gold/90 mb-2">
+                  {t("purchase.premiumTierLabel")}
+                </p>
                 <h2 className="font-display text-2xl mb-2">{t("purchase.selectQuantity")}</h2>
                 <p className="text-sm text-muted-foreground">{t("purchase.pricePerNFT")} HK$ {pricePerNFT}</p>
                 <p className="text-xs text-muted-foreground mt-3 leading-relaxed">
-                  {t("purchase.ipdexPriceNote")}
+                  {t("purchase.stripePriceNote")}
                 </p>
                 {primarySaleUnavailable ? (
                   <p
@@ -596,84 +603,6 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
             </motion.div>
           )}
 
-          {step === "checkout" && (
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              className="p-8 pt-10"
-            >
-              <div className="text-center mb-8">
-                <h2 className="font-display text-2xl mb-2">{t("purchase.ipdexCheckoutTitle")}</h2>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {t("purchase.ipdexCheckoutSubtitle", { quantity, totalPrice })}
-                </p>
-              </div>
-
-              <div className="mb-6 space-y-3 rounded-xl border border-border bg-accent/25 p-4 text-sm text-muted-foreground leading-relaxed">
-                <p>{t("purchase.bffCheckoutNote")}</p>
-                <p>{t("purchase.ddcSettlementLine", {
-                  chain: DATADANCE_CHAIN_NAME,
-                  chainId: DATADANCE_CHAIN_ID,
-                })}</p>
-                <p className="text-xs border-t border-border/60 pt-3">
-                  {t("purchase.partnerApiReminder", {
-                    partnerBase: getPartnerApiPublicLabel(),
-                  })}
-                </p>
-              </div>
-
-              {primarySaleUnavailable ? (
-                <p
-                  className="mb-4 text-xs text-amber-500/95 text-center leading-relaxed whitespace-pre-line"
-                  role="alert"
-                >
-                  {t(`purchase.primarySaleUnavailable.${primarySaleUnavailable}`)}
-                </p>
-              ) : null}
-
-              <button
-                type="button"
-                disabled={checkoutDisabled}
-                onClick={() => void handleCheckout()}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-gold to-gold-dark hover:from-gold-light hover:to-gold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                <ExternalLink className="w-5 h-5" aria-hidden />
-                <span className="text-primary-foreground font-medium">
-                  {checkoutBusy ? t("purchase.checkoutBusy") : t("purchase.payWithBffStripe")}
-                </span>
-              </button>
-
-              {bffSessionOk === false ? (
-                <p className="text-xs text-amber-500/95 text-center mt-4">{t("purchase.bffOffline")}</p>
-              ) : null}
-
-              {primarySaleId && saleListingFetchState === "loading" ? (
-                <p className="text-xs text-muted-foreground text-center mt-3">{t("purchase.resolvingListing")}</p>
-              ) : null}
-              {primarySaleId && saleListingFetchState === "fail" && !envListingId ? (
-                <p className="text-xs text-amber-500/90 text-center mt-3">{t("purchase.listingResolveFailed")}</p>
-              ) : null}
-              {!canPurchaseViaBff && checkoutUrl ? (
-                <p className="text-xs text-muted-foreground text-center mt-3">
-                  {t("purchase.listingFallbackHint")}
-                </p>
-              ) : null}
-
-              {apiCheckoutError ? (
-                <p className="text-xs text-red-400/95 text-center mt-3">{apiCheckoutError}</p>
-              ) : null}
-
-              <button
-                type="button"
-                onClick={() => setStep("select")}
-                className="w-full mt-4 text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {t("purchase.backToQuantity")}
-              </button>
-            </motion.div>
-          )}
-
           {step === "success" && (
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -689,31 +618,26 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
                 <ExternalLink className="w-10 h-10 text-gold" aria-hidden />
               </motion.div>
 
-              <h2 className="font-display text-2xl mb-2">{t("purchase.ipdexOpenedTitle")}</h2>
+              <h2 className="font-display text-2xl mb-2">{t("purchase.stripeOpenedTitle")}</h2>
               <p className="text-muted-foreground mb-4 leading-relaxed text-sm">
-                {lastPaymentMode === "bff"
-                  ? t("purchase.successBffStripe")
-                  : lastPaymentMode === "market"
-                    ? t("purchase.successMarketFallback")
-                    : t("purchase.ipdexOpenedBody", {
-                        dex: IPDEX_PRODUCT_NAME,
-                        chain: DATADANCE_CHAIN_NAME,
-                        chainId: DATADANCE_CHAIN_ID,
-                      })}
+                {t("purchase.successBffStripe")}
               </p>
               <p className="text-muted-foreground mb-8 text-xs leading-relaxed">
-                <span>{t("purchase.ipdexOpenedHint")}</span>
+                {t("purchase.stripeOpenedHint", {
+                  dex: IPDEX_PRODUCT_NAME,
+                  chain: DATADANCE_CHAIN_NAME,
+                })}
               </p>
 
               <div className="space-y-3">
-                {checkoutUrl ? (
+                {lastPaymentUrl ? (
                   <button
                     type="button"
-                    onClick={handleOpenMarketAgain}
+                    onClick={handleReopenStripe}
                     className="w-full py-3 rounded-xl border border-gold/50 text-gold hover:bg-gold/10 transition-colors text-sm flex items-center justify-center gap-2"
                   >
                     <ExternalLink className="w-4 h-4" aria-hidden />
-                    {t("purchase.openIpdexAgain")}
+                    {t("purchase.reopenStripe")}
                   </button>
                 ) : null}
                 <button

@@ -1,64 +1,39 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import {
-  LogIn,
-  Package,
-  Award,
-  Calendar,
-  Sparkles,
-  CheckCircle,
-  Loader2,
-  ExternalLink,
-} from "lucide-react";
+import { motion } from "motion/react";
+import { LogIn, LogOut, Package, Award, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import NFTBadge from "../components/NFTBadge";
+import NftDetailModal from "../components/NftDetailModal";
 import PurchaseModal from "../components/PurchaseModal";
 import RedeemBookModal from "../components/RedeemBookModal";
 import { bookBffJson, bookBffIsTransportIssue } from "../../lib/bookBffClient";
 import { bookBffJsonWithRefresh } from "../../lib/bookBffWithRefresh";
-import { getBookNftRedemptionRuleId } from "../../config/platform";
 import {
-  asRecordList,
-  BOOK_NFT_COLLECTION_UUID_RE,
+  getBookNftRedemptionRuleId,
+  getBookPrimarySaleId,
+  getBookStandardAirdropPublicCode,
+} from "../../config/platform";
+import {
   type DisplayNft,
   fetchNftBffPagesMerged,
+  isPremiumAccountNft,
+  isPremiumAttendanceStub,
   isRedeemEligible,
+  isStandardMembershipNft,
+  isSyntheticNftBalanceToken,
   mapNftRow,
   strField,
 } from "../../lib/bookAccountNftApi";
 import { buildClubRedeemPostJsonPayload, localizedBookRedeemFailureMessage, logClubRedeemResponseIfDebugging } from "../../lib/bookRedeemClient";
 import { toast } from "sonner";
 
-const UUID_RE = BOOK_NFT_COLLECTION_UUID_RE;
+const ACCOUNT_HEADER_BTN =
+  "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium tracking-wide transition-colors whitespace-nowrap";
 
-function parseOrder(row: Record<string, unknown>): { orderId: string; payUrl?: string } {
-  const orderId = strField(row, ["orderId", "order_id", "id"]);
-  const payUrl = strField(row, ["paymentUrl", "checkoutUrl", "payUrl", "stripeUrl", "url"]);
-  return { orderId, payUrl: payUrl || undefined };
-}
-
-async function fetchBffPages(buildPath: (p: number) => string): Promise<Record<string, unknown>[]> {
-  const merged: Record<string, unknown>[] = [];
-  const maxPages = 25;
-  for (let p = 1; p <= maxPages; p++) {
-    const r = await bookBffJsonWithRefresh<unknown>(buildPath(p));
-    if (r.code !== 0 || r.rawStatus >= 400 || bookBffIsTransportIssue(r)) break;
-    const rows = asRecordList(r.data);
-    if (!rows.length) break;
-    merged.push(...rows);
-    const d = r.data as Record<string, unknown> | null;
-    const totalPage =
-      typeof d?.totalPage === "number"
-        ? d.totalPage
-        : typeof d?.totalPages === "number"
-          ? d.totalPages
-          : null;
-    const page = typeof d?.page === "number" ? d.page : p;
-    if (totalPage != null && page >= totalPage) break;
-    if (rows.length < 12) break;
-  }
-  return merged;
+function membershipCardArt(nfts: DisplayNft[], fallbackCover: string): string {
+  const owned = nfts.find((n) => n.imageUrl)?.imageUrl;
+  return owned || fallbackCover || "";
 }
 
 export default function Account() {
@@ -75,62 +50,51 @@ export default function Account() {
 
   const [profileEmail, setProfileEmail] = useState("");
   const [displayNfts, setDisplayNfts] = useState<DisplayNft[]>([]);
-  const [pendingOrders, setPendingOrders] = useState<{ orderId: string; payUrl?: string }[]>([]);
   const [dataLoading, setDataLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  const [secondaryListingId, setSecondaryListingId] = useState("");
-  const [secondaryBusy, setSecondaryBusy] = useState(false);
-  const [secondaryFlash, setSecondaryFlash] = useState<string | null>(null);
-
-  const [showEventConfirm, setShowEventConfirm] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<number | null>(null);
   const [showRedeemModal, setShowRedeemModal] = useState(false);
   const [redeemTarget, setRedeemTarget] = useState<{ tokenId: string; collectionId: string } | null>(null);
   const [redeemBusy, setRedeemBusy] = useState(false);
   const [redeemError, setRedeemError] = useState<string | null>(null);
   const [purchaseOpen, setPurchaseOpen] = useState(false);
-
-  const [orderBusyId, setOrderBusyId] = useState<string | null>(null);
-
-  const upcomingEvents = useMemo(
-    () => [
-      {
-        id: 1,
-        titleKey: "account.demoEvent1Title",
-        timeKey: "account.demoEvent1Time",
-        typeKey: "account.demoEvent1Type",
-      },
-      {
-        id: 2,
-        titleKey: "account.demoEvent2Title",
-        timeKey: "account.demoEvent2Time",
-        typeKey: "account.demoEvent2Type",
-      },
-    ],
-    [],
-  );
+  const [detailNft, setDetailNft] = useState<DisplayNft | null>(null);
+  const [tierFallbackCovers, setTierFallbackCovers] = useState({ premium: "", standard: "" });
 
   const grouped = useMemo(() => {
-    const original: DisplayNft[] = [];
-    const redeemed: DisplayNft[] = [];
-    const principle: DisplayNft[] = [];
+    const premiumUnredeemed: DisplayNft[] = [];
+    const premiumStubs: DisplayNft[] = [];
+    const standardNfts: DisplayNft[] = [];
     for (const n of displayNfts) {
-      if (n.badge === "redeemed") redeemed.push(n);
-      else if (n.badge === "principle") principle.push(n);
-      else original.push(n);
+      if (n.badge === "principle") continue;
+      if (isStandardMembershipNft(n)) {
+        if (n.badge === "original") standardNfts.push(n);
+        continue;
+      }
+      if (!isPremiumAccountNft(n)) continue;
+      if (isPremiumAttendanceStub(n)) premiumStubs.push(n);
+      else premiumUnredeemed.push(n);
     }
-    return { original, redeemed, principle };
+    return {
+      premiumUnredeemed,
+      premiumStubs,
+      premiumVouchers: [...premiumUnredeemed, ...premiumStubs],
+      standardNfts,
+    };
   }, [displayNfts]);
+
+  const hasRedeemEligible = useMemo(
+    () => grouped.premiumUnredeemed.some((n) => isRedeemEligible(n)),
+    [grouped.premiumUnredeemed],
+  );
 
   const loadDashboard = useCallback(async () => {
     setDataLoading(true);
     setLoadError(null);
     try {
-      const [me, nftRows, ordRows] = await Promise.all([
+      const [me, nftRows] = await Promise.all([
         bookBffJsonWithRefresh<Record<string, unknown>>("/api/bff/me"),
         fetchNftBffPagesMerged((p) => `/api/bff/nfts/${p}`),
-        fetchBffPages((p) => `/api/bff/orders/pending/${p}`),
       ]);
 
       if (me.code === 0 && me.data && typeof me.data === "object") {
@@ -152,7 +116,6 @@ export default function Account() {
       }
 
       setDisplayNfts(nftRows.map(mapNftRow));
-      setPendingOrders(ordRows.map(parseOrder).filter((o) => Boolean(o.orderId)));
     } catch {
       setLoadError(t("purchase.bffOffline"));
     } finally {
@@ -248,18 +211,11 @@ export default function Account() {
     setIsLoggedIn(false);
     setProfileEmail("");
     setDisplayNfts([]);
-    setPendingOrders([]);
-    setSecondaryListingId("");
-    setSecondaryFlash(null);
   };
 
-  const handleJoinEvent = (eventId: number) => {
-    setSelectedEvent(eventId);
-    setShowEventConfirm(true);
-    setTimeout(() => {
-      setShowEventConfirm(false);
-      setSelectedEvent(null);
-    }, 3000);
+  const handleOpenNftDetail = (nft: DisplayNft) => {
+    if (!nft.collectionId || isSyntheticNftBalanceToken(nft.tokenId)) return;
+    setDetailNft(nft);
   };
 
   const handleRedeemClick = (nft: DisplayNft) => {
@@ -316,99 +272,66 @@ export default function Account() {
     }
   };
 
-  const handleCancelPayment = async (orderId: string) => {
-    if (!orderId.trim()) return;
-    setOrderBusyId(orderId);
-    try {
-      await bookBffJsonWithRefresh("/api/bff/orders/cancel-payment", {
-        method: "POST",
-        body: JSON.stringify({ orderId }),
-      });
-      await loadDashboard();
-    } finally {
-      setOrderBusyId(null);
-    }
-  };
-
-  const handleSecondaryPurchase = async () => {
-    const id = secondaryListingId.trim();
-    if (!UUID_RE.test(id)) {
-      setSecondaryFlash(t("account.secondaryError"));
-      return;
-    }
-    setSecondaryBusy(true);
-    setSecondaryFlash(null);
-    try {
-      const out = await bookBffJsonWithRefresh<{ paymentUrl?: string; payUrl?: string }>(
-        "/api/bff/orders/secondary",
-        {
-          method: "POST",
-          body: JSON.stringify({ listingId: id }),
-        },
-      );
-      if (out.code === 0) {
-        setSecondaryFlash(t("account.secondarySuccess"));
-        const d = out.data as Record<string, unknown> | null;
-        const url = d ? strField(d, ["paymentUrl", "checkoutUrl", "payUrl", "stripeUrl", "url"]) : "";
-        if (url) window.open(url, "_blank", "noopener,noreferrer");
-        await loadDashboard();
-      } else {
-        setSecondaryFlash(
-          bookBffIsTransportIssue(out)
-            ? t("purchase.bffOffline")
-            : out.message || t("account.secondaryError"),
-        );
-      }
-    } catch {
-      setSecondaryFlash(t("purchase.bffOffline"));
-    } finally {
-      setSecondaryBusy(false);
-    }
-  };
-
-  const renderNftSection = (
-    title: string,
+  const renderNftGrid = (
     nfts: DisplayNft[],
-    opts: { showRedeem?: boolean; delayBase?: number },
+    opts: {
+      showRedeem?: boolean;
+      variant?: "premium" | "standard";
+      delayBase?: number;
+      indexOffset?: number;
+      gridClass?: string;
+    },
   ) => {
     const delayBase = opts.delayBase ?? 0.9;
-    if (nfts.length === 0) return null;
+    const indexOffset = opts.indexOffset ?? 0;
+    const gridClass =
+      opts.gridClass ?? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: delayBase }}
-        className="mb-16"
-      >
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="font-display text-2xl">{title}</h2>
-          <span className="text-sm text-muted-foreground">
-            {t("account.badgeCount", { count: nfts.length })}
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className={`grid ${gridClass} gap-6`}>
           {nfts.map((nft, index) => (
             <motion.div
               key={nft.key}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: delayBase + 0.05 + index * 0.05 }}
-              className="group flex flex-col items-center"
+              transition={{ delay: delayBase + 0.05 + (indexOffset + index) * 0.05 }}
+              className="group flex flex-col items-center w-full max-w-[260px]"
             >
-              <div className="mb-4 flex justify-center">
+              <button
+                type="button"
+                onClick={() => handleOpenNftDetail(nft)}
+                disabled={!nft.collectionId || isSyntheticNftBalanceToken(nft.tokenId)}
+                className="mb-4 flex justify-center w-full rounded-2xl transition-transform hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/50 disabled:cursor-default disabled:hover:scale-100"
+                aria-label={t("nftDetailModal.openDetail")}
+              >
                 <NFTBadge
                   tokenId={nft.tokenId}
                   type={nft.badge}
-                  stubTicket={Boolean(nft.attendanceStub)}
+                  imageUrl={nft.imageUrl}
+                  displayName={nft.name}
+                  standardMember={opts.variant === "standard" || isStandardMembershipNft(nft)}
+                  stubTicket={isPremiumAttendanceStub(nft)}
                   size="md"
-                  animated={true}
+                  animated={false}
                   principleName={nft.principleName}
                   principleColor={nft.principleColor}
                 />
-              </div>
+              </button>
               <div className="space-y-2 w-full max-w-[240px]">
-                {nft.badge === "original" && (
+                {nft.badge === "original" && opts.variant === "standard" && (
+                  <>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">{t("account.standardAcquiredDate")}</span>
+                      <span className="font-tech">{nft.dateLabel}</span>
+                    </div>
+                    <div className="p-2 rounded-lg bg-stone-500/15 text-center">
+                      <span className="text-xs text-stone-300">✓ {t("account.standardMemberOk")}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground text-center leading-snug">
+                      {t("account.standardMemberNote")}
+                    </p>
+                  </>
+                )}
+                {nft.badge === "original" && opts.variant !== "standard" && (
                   <>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">{t("account.reservedDate")}</span>
@@ -417,10 +340,16 @@ export default function Account() {
                     <div className="p-2 rounded-lg bg-gold/10 text-center">
                       <span className="text-xs text-gold">✓ {t("account.reservedOk")}</span>
                     </div>
+                    <p className="text-xs text-muted-foreground text-center leading-snug">
+                      {t("account.premiumVoucherNote")}
+                    </p>
                     {opts.showRedeem && isRedeemEligible(nft) && (
                       <button
                         type="button"
-                        onClick={() => handleRedeemClick(nft)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRedeemClick(nft);
+                        }}
                         className="w-full mt-2 py-2 rounded-lg border border-gold/50 text-gold hover:bg-gold/10 transition-colors text-sm"
                       >
                         {t("account.redeemDemoCta")}
@@ -428,17 +357,18 @@ export default function Account() {
                     )}
                   </>
                 )}
-                {nft.badge === "redeemed" && (
+                {isPremiumAttendanceStub(nft) && (
                   <>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">{t("account.redeemDate")}</span>
                       <span className="font-tech">{nft.dateLabel}</span>
                     </div>
-                    {nft.attendanceStub ? (
-                      <p className="mt-2 text-xs text-muted-foreground text-center leading-snug">
-                        {t("account.stubAttendanceExplanation")}
-                      </p>
-                    ) : null}
+                    <div className="p-2 rounded-lg bg-muted/50 text-center">
+                      <span className="text-xs text-muted-foreground">✓ {t("account.stubRedeemedOk")}</span>
+                    </div>
+                    <p className="mt-2 text-xs text-muted-foreground text-center leading-snug">
+                      {t("account.stubAttendanceExplanation")}
+                    </p>
                     {nft.originalTokenId ? (
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">{t("account.linkOriginalBadge", { id: nft.originalTokenId })}</span>
@@ -461,6 +391,98 @@ export default function Account() {
               </div>
             </motion.div>
           ))}
+      </div>
+    );
+  };
+
+  const renderNftSection = (
+    title: string,
+    nfts: DisplayNft[],
+    opts: { showRedeem?: boolean; variant?: "premium" | "standard"; delayBase?: number },
+  ) => {
+    const delayBase = opts.delayBase ?? 0.9;
+    if (nfts.length === 0) return null;
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: delayBase }}
+        className="mb-16"
+      >
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="font-display text-2xl">{title}</h2>
+          <span className="text-sm text-muted-foreground">
+            {t("account.badgeCount", { count: nfts.length })}
+          </span>
+        </div>
+        {renderNftGrid(nfts, opts)}
+      </motion.div>
+    );
+  };
+
+  const renderPremiumSection = () => {
+    const { premiumUnredeemed, premiumStubs, premiumVouchers } = grouped;
+    if (premiumVouchers.length === 0) return null;
+    const delayBase = 0.3;
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: delayBase }}
+        className="mb-16"
+      >
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="font-display text-2xl">{t("account.nftPremiumVouchers")}</h2>
+          <span className="text-sm text-muted-foreground">
+            {t("account.badgeCount", { count: premiumVouchers.length })}
+          </span>
+        </div>
+
+        <div
+          className={
+            premiumUnredeemed.length > 0 && premiumStubs.length > 0
+              ? "grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 lg:items-start"
+              : "grid grid-cols-1 gap-8"
+          }
+        >
+          {premiumUnredeemed.length > 0 ? (
+            <div className="min-w-0">
+              <div className="flex items-center justify-between gap-3 mb-4">
+                <h3 className="text-sm font-medium uppercase tracking-[0.14em] text-gold/90">
+                  {t("account.premiumUnredeemedSection")}
+                </h3>
+                <span className="text-xs text-muted-foreground shrink-0">
+                  {t("account.badgeCount", { count: premiumUnredeemed.length })}
+                </span>
+              </div>
+              {renderNftGrid(premiumUnredeemed, {
+                showRedeem: true,
+                variant: "premium",
+                delayBase,
+                indexOffset: 0,
+                gridClass: "grid-cols-1 sm:grid-cols-2 xl:grid-cols-2",
+              })}
+            </div>
+          ) : null}
+
+          {premiumStubs.length > 0 ? (
+            <div className="min-w-0">
+              <div className="flex items-center justify-between gap-3 mb-4">
+                <h3 className="text-sm font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                  {t("account.premiumStubSection")}
+                </h3>
+                <span className="text-xs text-muted-foreground shrink-0">
+                  {t("account.badgeCount", { count: premiumStubs.length })}
+                </span>
+              </div>
+              {renderNftGrid(premiumStubs, {
+                variant: "premium",
+                delayBase,
+                indexOffset: premiumUnredeemed.length,
+                gridClass: "grid-cols-1 sm:grid-cols-2 xl:grid-cols-2",
+              })}
+            </div>
+          ) : null}
         </div>
       </motion.div>
     );
@@ -586,24 +608,27 @@ export default function Account() {
             )}
           </div>
           <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 self-start sm:self-auto">
-            <Link
-              to="/account/redeem"
-              className="inline-flex px-4 py-2 rounded-lg border border-gold/50 text-gold text-sm font-medium hover:bg-gold/10 transition-colors text-center justify-center"
-            >
-              {t("account.redeemPageNavCta")}
-            </Link>
+            {hasRedeemEligible ? (
+              <Link
+                to="/account/redeem"
+                className={`${ACCOUNT_HEADER_BTN} border border-gold/60 text-gold hover:bg-gold/10`}
+              >
+                {t("account.redeemPageNavCta")}
+              </Link>
+            ) : null}
             <button
               type="button"
               onClick={() => setPurchaseOpen(true)}
-              className="px-4 py-2 rounded-lg bg-gold/90 text-primary-foreground text-sm font-medium hover:bg-gold transition-colors"
+              className={`${ACCOUNT_HEADER_BTN} bg-gold/90 text-primary-foreground shadow-sm hover:bg-gold`}
             >
               {t("account.buyBadgeNft")}
             </button>
             <button
               type="button"
               onClick={handleLogout}
-              className="px-4 py-2 rounded-lg border border-border hover:border-gold/50 hover:bg-accent/50 transition-all duration-300"
+              className={`${ACCOUNT_HEADER_BTN} border border-border/60 text-muted-foreground hover:border-gold/50 hover:bg-accent/50 hover:text-foreground`}
             >
+              <LogOut className="w-4 h-4 shrink-0" aria-hidden />
               {t("account.logout")}
             </button>
           </div>
@@ -617,188 +642,61 @@ export default function Account() {
         </div>
       )}
 
-      {/* Pending orders + secondary */}
+      {/* Membership summary */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.15 }}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12"
-      >
-        <div className="p-6 rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm">
-          <h2 className="font-display text-xl mb-4">{t("account.pendingOrders")}</h2>
-          {pendingOrders.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{t("account.noPendingOrders")}</p>
-          ) : (
-            <ul className="space-y-3">
-              {pendingOrders.map((o) => (
-                <li
-                  key={o.orderId}
-                  className="flex flex-col sm:flex-row sm:items-center gap-2 sm:justify-between border border-border/40 rounded-lg p-3"
-                >
-                  <span className="font-tech text-sm break-all">
-                    {t("account.orderId")}: {o.orderId}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    {o.payUrl ? (
-                      <a
-                        href={o.payUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-sm text-gold hover:underline"
-                      >
-                        {t("account.pay")}
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
-                    ) : null}
-                    <button
-                      type="button"
-                      disabled={orderBusyId === o.orderId}
-                      onClick={() => handleCancelPayment(o.orderId)}
-                      className="text-xs px-2 py-1 rounded border border-border hover:border-destructive/50 text-muted-foreground"
-                    >
-                      {orderBusyId === o.orderId ? t("common.loading") : t("account.cancelPayment")}
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        <div className="p-6 rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm">
-          <h2 className="font-display text-xl mb-2">{t("account.secondaryTitle")}</h2>
-          <p className="text-sm text-muted-foreground mb-4">{t("account.secondaryHint")}</p>
-          <input
-            type="text"
-            placeholder={t("account.listingIdPlaceholder")}
-            value={secondaryListingId}
-            onChange={(e) => setSecondaryListingId(e.target.value)}
-            className="w-full px-4 py-2 rounded-lg bg-background border border-border font-tech text-sm mb-3"
-            disabled={secondaryBusy}
-          />
-          {secondaryFlash && (
-            <p className="text-xs text-muted-foreground mb-2" role="status">
-              {secondaryFlash}
-            </p>
-          )}
-          <button
-            type="button"
-            disabled={secondaryBusy || !secondaryListingId.trim()}
-            onClick={handleSecondaryPurchase}
-            className="w-full py-2 rounded-lg bg-gold/90 text-primary-foreground text-sm font-medium disabled:opacity-40"
-          >
-            {secondaryBusy ? t("common.loading") : t("account.secondarySubmit")}
-          </button>
-        </div>
-      </motion.div>
-
-      {/* Events */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="mb-12"
-      >
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="font-display text-2xl">{t("account.eventsTitle")}</h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {upcomingEvents.map((event, index) => (
-            <motion.div
-              key={event.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.25 + index * 0.1 }}
-              className="p-6 rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm hover:border-gold/30 transition-all duration-300"
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Calendar className="w-4 h-4 text-gold" />
-                    <span className="text-sm text-muted-foreground font-tech">{t(event.timeKey)}</span>
-                  </div>
-                  <h3 className="font-display text-lg mb-2">{t(event.titleKey)}</h3>
-                  <span className="inline-block px-3 py-1 rounded-full bg-gold/20 text-gold text-xs">{t(event.typeKey)}</span>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => handleJoinEvent(event.id)}
-                className="w-full mt-4 py-2 rounded-lg border border-gold/50 text-gold hover:bg-gold/10 transition-colors duration-300"
-              >
-                {t("account.joinEvent")}
-              </button>
-            </motion.div>
-          ))}
-        </div>
-
-        <AnimatePresence>
-          {showEventConfirm && (
-            <motion.div
-              initial={{ opacity: 0, y: -20, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.9 }}
-              className="fixed top-24 left-1/2 -translate-x-1/2 z-50 px-6 py-4 rounded-xl bg-card border border-gold/50 shadow-2xl backdrop-blur-xl"
-            >
-              <div className="flex items-center gap-3">
-                <CheckCircle className="w-6 h-6 text-[#4ade80]" />
-                <div>
-                  <p className="font-medium">{t("account.eventConfirmTitle")}</p>
-                  <p className="text-sm text-muted-foreground">{t("account.eventConfirmBody")}</p>
-                  {selectedEvent != null ? (
-                    <p className="text-xs text-muted-foreground mt-1 font-tech">#{selectedEvent}</p>
-                  ) : null}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-
-      {/* Stats */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"
+        className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12"
       >
         {[
           {
             icon: Package,
-            label: t("account.nftReservation"),
-            value: grouped.original.length,
+            label: t("account.nftPremiumVouchers"),
+            value: grouped.premiumVouchers.length,
+            nfts: grouped.premiumVouchers,
+            fallbackCover: tierFallbackCovers.premium,
             color: "from-gold to-gold-dark",
           },
           {
             icon: Award,
-            label: t("account.nftAttendance"),
-            value: grouped.redeemed.length,
-            color: "from-stone-400 to-stone-600",
-          },
-          {
-            icon: Sparkles,
-            label: t("account.nftPrinciple"),
-            value: grouped.principle.length,
-            color: "from-stone-600 to-[#a855f7]",
+            label: t("account.nftStandardMembership"),
+            value: grouped.standardNfts.length,
+            nfts: grouped.standardNfts,
+            fallbackCover: tierFallbackCovers.standard,
+            color: "from-stone-500 to-stone-700",
           },
         ].map((stat, index) => {
           const Icon = stat.icon;
+          const artUrl = membershipCardArt(stat.nfts, stat.fallbackCover);
           return (
             <motion.div
               key={stat.label}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.55 + index * 0.1 }}
+              transition={{ delay: 0.2 + index * 0.05 }}
               className="p-6 rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm"
             >
               <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center flex-shrink-0`}>
-                  <Icon className="w-6 h-6 text-white" />
+                <div className="w-20 h-20 rounded-xl overflow-hidden border border-border/50 bg-muted/20 shrink-0">
+                  {artUrl ? (
+                    <img
+                      src={artUrl}
+                      alt=""
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div
+                      className={`w-full h-full bg-gradient-to-br ${stat.color} flex items-center justify-center`}
+                    >
+                      <Icon className="w-8 h-8 text-white/90" />
+                    </div>
+                  )}
                 </div>
-                <div>
+                <div className="min-w-0 flex-1">
                   <div className="text-3xl font-tech text-foreground">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
+                  <div className="text-sm text-muted-foreground leading-snug">{stat.label}</div>
                 </div>
               </div>
             </motion.div>
@@ -806,13 +704,17 @@ export default function Account() {
         })}
       </motion.div>
 
-      {displayNfts.length === 0 && !dataLoading && (
-        <p className="text-center text-muted-foreground mb-12">{t("account.noNfts")}</p>
-      )}
+      {grouped.premiumVouchers.length === 0 &&
+        grouped.standardNfts.length === 0 &&
+        !dataLoading && (
+          <p className="text-center text-muted-foreground mb-12">{t("account.noNfts")}</p>
+        )}
 
-      {renderNftSection(t("account.nftReservation"), grouped.original, { showRedeem: true, delayBase: 0.65 })}
-      {renderNftSection(t("account.nftAttendance"), grouped.redeemed, { delayBase: 0.75 })}
-      {renderNftSection(t("account.nftPrinciple"), grouped.principle, { delayBase: 0.85 })}
+      {renderPremiumSection()}
+      {renderNftSection(t("account.nftStandardMembership"), grouped.standardNfts, {
+        variant: "standard",
+        delayBase: 0.35,
+      })}
 
       {showRedeemModal && redeemTarget && (
         <RedeemBookModal
@@ -825,6 +727,16 @@ export default function Account() {
         />
       )}
       {purchaseOpen ? <PurchaseModal onClose={() => setPurchaseOpen(false)} /> : null}
+      {detailNft ? (
+        <NftDetailModal
+          nft={detailNft}
+          onClose={() => setDetailNft(null)}
+          onRedeem={(n) => {
+            setDetailNft(null);
+            handleRedeemClick(n);
+          }}
+        />
+      ) : null}
     </div>
   );
 }

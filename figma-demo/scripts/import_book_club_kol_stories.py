@@ -46,7 +46,10 @@ EXCLUDE_HANDLES = {
     "qimeiluo",
     "anndylian",
     "aster_ninja_",
+    "0xcheshire",
 }
+
+MANUAL_OVERRIDES_PATH = ROOT / "scripts/manual_book_club_story_text.json"
 
 # When the sheet has no status hyperlink, still pull live X profile bio for these accounts.
 PROFILE_BIO_REFETCH_HANDLES = {"foma_bsc"}
@@ -160,6 +163,31 @@ def finalize_headline_body(body: str) -> tuple[str, str]:
     return body.strip(), ""
 
 
+def load_manual_overrides() -> dict[str, dict[str, str]]:
+    """Optional status-id -> {text, created_at?} for tweets that no longer fetch from X."""
+    if not MANUAL_OVERRIDES_PATH.is_file():
+        return {}
+    try:
+        data = json.loads(MANUAL_OVERRIDES_PATH.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as e:
+        print(f"  manual overrides unreadable: {e}", file=sys.stderr)
+        return {}
+    if not isinstance(data, dict):
+        return {}
+    out: dict[str, dict[str, str]] = {}
+    for key, val in data.items():
+        if isinstance(val, str) and val.strip():
+            out[str(key)] = {"text": val.strip()}
+        elif isinstance(val, dict):
+            text = (val.get("text") or val.get("headline") or "").strip()
+            if text:
+                out[str(key)] = {
+                    "text": text,
+                    "created_at": (val.get("created_at") or "").strip(),
+                }
+    return out
+
+
 def fetch_profile_bio(handle: str) -> str | None:
     api = FXTWITTER_USER.format(user=urllib.parse.quote(handle))
     req = urllib.request.Request(api, headers={"User-Agent": "cz-book-club-import/1.0"})
@@ -182,6 +210,7 @@ def import_stories(xlsx_path: Path) -> dict:
     stories = []
     fetched = 0
     failed_fetch = 0
+    manual_overrides = load_manual_overrides()
 
     for row in ws.iter_rows(min_row=1, max_row=120):
         name = (row[0].value or "").strip() if row[0].value else ""
@@ -232,6 +261,14 @@ def import_stories(xlsx_path: Path) -> dict:
                 method = "kol_sheet_x_live_text"
                 score = 0.9
                 fetched += 1
+            elif tweet_id and tweet_id in manual_overrides:
+                manual = manual_overrides[tweet_id]
+                body = manual["text"]
+                created_at = manual.get("created_at") or ""
+                method = "kol_manual_archived_text"
+                score = 0.88
+                fetched += 1
+                print(f"  manual text: @{screen_name}/{tweet_id}", file=sys.stderr)
             else:
                 failed_fetch += 1
                 method = "kol_sheet_reason_fallback_fetch_failed"

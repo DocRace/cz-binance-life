@@ -19,6 +19,7 @@ export function loadBffEnv() {
   const APP_SECRET = process.env.IPDEX_PARTNER_APP_SECRET || '';
   const COBRAND_ROOT = `${IPDEX_GATEWAY_PREFIX}${COBRAND}`.replace(/\/{2,}/g, '/') || COBRAND;
   const LISTING_FALLBACK = (process.env.BOOK_PRIMARY_LISTING_ID || '').trim();
+  const AIRDROP_PUBLIC_CODE = (process.env.BOOK_STANDARD_AIRDROP_PUBLIC_CODE || '').trim();
 
   return {
     IPDEX_CLIENT_ORIGIN,
@@ -27,6 +28,7 @@ export function loadBffEnv() {
     APP_KEY,
     APP_SECRET,
     LISTING_FALLBACK,
+    AIRDROP_PUBLIC_CODE,
   };
 }
 
@@ -70,6 +72,35 @@ export async function ipdexFacadeFetch(env, opts) {
     body: reqBody,
   });
 
+  const text = await res.text();
+  let json;
+  try {
+    json = text ? JSON.parse(text) : null;
+  } catch {
+    json = { code: -1, message: `non_json:${text?.slice(0, 120)}`, data: null };
+  }
+  return { ok: res.ok, status: res.status, json };
+}
+
+/** Public Client Service routes (JWT Bearer only — no Partner HMAC). */
+export async function ipdexPublicApiFetch(env, opts) {
+  const { method = 'GET', apiPath, query, body, accessToken } = opts;
+  const gp = env.IPDEX_GATEWAY_PREFIX || '';
+  const path = apiPath.startsWith('/') ? `${gp}${apiPath}` : `${gp}/${apiPath}`;
+  const sortedQ = sortedQueryStringFromObject(query || {});
+  const url = buildUrl(env.IPDEX_CLIENT_ORIGIN, path.replace(/\/{2,}/g, '/'), sortedQ);
+
+  const headers = {};
+  if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
+
+  let reqBody;
+  const methodUp = method.toUpperCase();
+  if (methodUp !== 'GET' && methodUp !== 'HEAD' && body !== undefined) {
+    headers['Content-Type'] = 'application/json';
+    reqBody = JSON.stringify(body);
+  }
+
+  const res = await fetch(url, { method: methodUp, headers, body: reqBody });
   const text = await res.text();
   let json;
   try {

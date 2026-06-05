@@ -1,6 +1,6 @@
 {
   "format_version": 2,
-  "updated_at": "2026-06-02T15:03:58.401083+00:00",
+  "updated_at": "2026-06-02T16:38:28.617403+00:00",
   "query": "local-xlsx + X oEmbed post text for status hyperlinks",
   "source_file": "Internal-币安人生书友会拟合作KOL名单.xlsx",
   "curator_pipeline": {
@@ -8,8 +8,8 @@
     "heuristic": "reason_column_or_oembed_text",
     "openai": false,
     "exclude_official_accounts": false,
-    "min_stories_target": 51,
-    "oembed_fetched": 50,
+    "min_stories_target": 50,
+    "oembed_fetched": 49,
     "oembed_failed": 1,
     "live_text_note": "Status hyperlinks use X oEmbed + vxtwitter fallback (articles / link-only posts)."
   },
@@ -293,21 +293,6 @@
       "url": "https://x.com/jiamibtc/status/2043340670136729891",
       "created_at": "April 12, 2026",
       "author_avatar_url": "https://unavatar.io/x/jiamibtc",
-      "curator": {
-        "tier": "standard",
-        "score": 0.9,
-        "method": "kol_sheet_x_live_text"
-      }
-    },
-    {
-      "id": "tw-2060347247204942213",
-      "kind": "twitter",
-      "author_display": "柴郡🔔｜Crypto+AI Plus · @0xCheshire",
-      "headline": "恭喜一姐 入选《财富》2026 年度全球最具影响力商界女性榜单，成为首位进入这份全球排名的加密原生高管！ 一姐一直都是不走寻常路。 出生在四川农村，后来做过电视主持人，进入科技行业，再到 2017 年联合创立币安。 这反而让她的故事更加传奇。 我很喜欢她的“首席客服官”这个说法。…",
-      "body": "",
-      "url": "https://x.com/0xCheshire/status/2060347247204942213",
-      "created_at": "May 29, 2026",
-      "author_avatar_url": "https://unavatar.io/x/0xCheshire",
       "curator": {
         "tier": "standard",
         "score": 0.9,
