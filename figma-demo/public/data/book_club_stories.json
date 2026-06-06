@@ -1,6 +1,6 @@
 {
   "format_version": 2,
-  "updated_at": "2026-06-06T16:05:00.000000+00:00",
+  "updated_at": "2026-06-06T16:10:00.000000+00:00",
   "query": "local-xlsx + X oEmbed post text for status hyperlinks",
   "source_file": "Internal-币安人生书友会拟合作KOL名单.xlsx",
   "curator_pipeline": {
@@ -705,18 +705,18 @@
       }
     },
     {
-      "id": "tw-2058646742795739284",
+      "id": "tw-2040168770917056642",
       "kind": "twitter",
       "author_display": "JIO JIO · @jiaojiaojio",
-      "headline": "把书中内容做成语音版并听完了发表书评",
+      "headline": "《Freedom of Money》很有可能被拍成一部漫威电影\n\n中文名《币安人生》不只是一本书，更像一个时代的电影脚本\n最近我越来越强烈地觉得，CZ 的新书 《Freedom of Money》-中文名：《币安人生》，它其实已经不只是一本书了，而更像是一部还没有正式开机的漫威式电影。",
       "body": "",
-      "url": "https://x.com/jiaojiaojio/status/2058646742795739284",
-      "created_at": "",
+      "url": "https://x.com/jiaojiaojio/status/2040168770917056642",
+      "created_at": "April 3, 2026",
       "author_avatar_url": "https://unavatar.io/x/jiaojiaojio",
       "curator": {
         "tier": "standard",
-        "score": 0.88,
-        "method": "kol_manual_archived_text"
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
       }
     },
     {
