@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ExternalLink, X } from "lucide-react";
 import { useTranslation } from "react-i18next";

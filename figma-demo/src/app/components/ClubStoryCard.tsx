@@ -69,21 +69,23 @@ export default function ClubStoryCard({
       </div>
 
       {displayText ? (
-        <div className="relative flex-1 min-h-0">
-          <p
-            ref={previewRef}
-            style={{ maxHeight: STORY_PREVIEW_MAX_PX }}
-            className="overflow-hidden font-display text-base font-medium leading-relaxed text-white/95 whitespace-pre-wrap wrap-anywhere"
-          >
-            {displayText}
-          </p>
-          {showExpand ? (
-            <div
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-card via-card/75 to-transparent"
-              aria-hidden
-            />
-          ) : null}
-        </div>
+        <p
+          ref={previewRef}
+          style={{
+            maxHeight: STORY_PREVIEW_MAX_PX,
+            ...(showExpand
+              ? {
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, #000 0%, #000 58%, rgba(0,0,0,0.45) 78%, transparent 100%)",
+                  maskImage:
+                    "linear-gradient(to bottom, #000 0%, #000 58%, rgba(0,0,0,0.45) 78%, transparent 100%)",
+                }
+              : {}),
+          }}
+          className="overflow-hidden font-display text-base font-medium leading-relaxed text-white/95 whitespace-pre-wrap wrap-anywhere"
+        >
+          {displayText}
+        </p>
       ) : null}
 
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
