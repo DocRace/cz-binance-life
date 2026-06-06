@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import RedeemStaffPanel from "./RedeemStaffPanel";
+import OverlayPortal from "./OverlayPortal";
+import { overlayBackdropClassLight } from "../lib/overlayLayers";
 
 interface RedeemBookModalProps {
   onClose: () => void;
@@ -24,14 +26,15 @@ export default function RedeemBookModal({
   const { t } = useTranslation();
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-        onClick={busy ? undefined : onClose}
-      >
+    <OverlayPortal>
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className={overlayBackdropClassLight}
+          onClick={busy ? undefined : onClose}
+        >
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -60,6 +63,7 @@ export default function RedeemBookModal({
           />
         </motion.div>
       </motion.div>
-    </AnimatePresence>
+      </AnimatePresence>
+    </OverlayPortal>
   );
 }

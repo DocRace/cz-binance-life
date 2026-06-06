@@ -520,6 +520,14 @@
       "notStarted": "この Primary Sale は IPDEX 上でまだ開始していません。開始時刻になるまでお待ちいただくか、設定を更新してください。"
     }
   },
+  "purchaseSuccess": {
+    "documentTitle": "お支払い完了 · CZ Life",
+    "title": "お支払いが完了しました",
+    "body": "ご購入ありがとうございます。Stripe でお支払いが記録されました。CZ Life の NFT は IPDEX の決済処理後、まもなくアカウントに表示されます。",
+    "orderLabel": "注文",
+    "viewAccount": "アカウントを見る",
+    "backToClub": "ブッククラブへ戻る"
+  },
   "account": {
     "loginTitle": "アカウントにサインイン",
     "loginSubtitle": "書城 BFF 経由で NFT と注文を表示します（httpOnly セッション）。",

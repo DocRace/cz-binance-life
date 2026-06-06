@@ -274,10 +274,15 @@ async function boot() {
       });
     }
 
+    const purchaseBody = { listingId, quantity: Math.floor(quantity) };
+    if (env.STRIPE_CALLBACK_ORIGIN) {
+      purchaseBody.stripeCallbackOrigin = env.STRIPE_CALLBACK_ORIGIN;
+    }
+
     const out = await ipdexFacadeFetch(env, {
       method: 'POST',
       suffixPath: '/market/ip/primary/purchase',
-      body: { listingId, quantity: Math.floor(quantity) },
+      body: purchaseBody,
       accessToken,
     });
     res.status(out.json?.code === 0 ? 200 : 400).json(out.json);

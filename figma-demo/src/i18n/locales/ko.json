@@ -520,6 +520,14 @@
       "notStarted": "이 Primary Sale은 아직 IPDEX에서 시작하지 않았습니다. 시작 시간을 기다리거나 설정을 수정하세요."
     }
   },
+  "purchaseSuccess": {
+    "documentTitle": "결제 완료 · CZ Life",
+    "title": "결제가 완료되었습니다",
+    "body": "구매해 주셔서 감사합니다. Stripe에 결제가 기록되었습니다. CZ Life NFT는 IPDEX 정산 후 곧 계정에 표시됩니다.",
+    "orderLabel": "주문",
+    "viewAccount": "내 계정 보기",
+    "backToClub": "북 클럽으로 돌아가기"
+  },
   "account": {
     "loginTitle": "계정에 로그인",
     "loginSubtitle": "북 스토어 BFF로 NFT와 주문을 봅니다(httpOnly 세션).",

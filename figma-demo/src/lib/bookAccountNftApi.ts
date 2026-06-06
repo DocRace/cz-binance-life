@@ -6,6 +6,7 @@ import { bookBffJsonWithRefresh } from "./bookBffWithRefresh";
 import { bookBffIsTransportIssue } from "./bookBffClient";
 import {
   getAttendanceStubCollectionIdSet,
+  isCzLifeBookCollectionId,
   isPremiumVoucherCollectionId,
   isStandardMembershipCollectionId,
 } from "../config/platform";
@@ -306,6 +307,15 @@ export function isPremiumVoucherNft(nft: DisplayNft): boolean {
 /** Placeholder when the nft-balance row did not expose a chain token id (must not POST to `/club/redeem`). */
 export function isSyntheticNftBalanceToken(tokenId: string): boolean {
   return /^item-\d+$/i.test(`${tokenId}`.trim());
+}
+
+/** Account / redeem UI: only NFTs from configured CZ Life collections (not the user's full IPDEX wallet). */
+export function isCzLifeBookNft(nft: DisplayNft): boolean {
+  return isCzLifeBookCollectionId(nft.collectionId);
+}
+
+export function filterCzLifeDisplayNfts(nfts: DisplayNft[]): DisplayNft[] {
+  return nfts.filter(isCzLifeBookNft);
 }
 
 export function isRedeemEligible(nft: DisplayNft): boolean {

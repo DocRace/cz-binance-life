@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { Gift, Mail, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PlatformSettlementRibbon from "./PlatformSettlementRibbon";
+import OverlayPortal from "./OverlayPortal";
+import { overlayBackdropClassLight } from "../lib/overlayLayers";
 import {
   getBookStandardAirdropPublicCode,
   getBookStandardCollectionId,
@@ -225,14 +227,15 @@ export default function AirdropClaimModal({ onClose }: AirdropClaimModalProps) {
   const configMissing = !publicCode;
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-        onClick={onClose}
-      >
+    <OverlayPortal>
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className={overlayBackdropClassLight}
+          onClick={onClose}
+        >
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -418,6 +421,7 @@ export default function AirdropClaimModal({ onClose }: AirdropClaimModalProps) {
           ) : null}
         </motion.div>
       </motion.div>
-    </AnimatePresence>
+      </AnimatePresence>
+    </OverlayPortal>
   );
 }

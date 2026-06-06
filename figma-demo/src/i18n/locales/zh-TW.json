@@ -520,6 +520,14 @@
       "notStarted": "此發售尚未在 IPDEX 開始。請等待開始時間或更新設定。"
     }
   },
+  "purchaseSuccess": {
+    "documentTitle": "付款完成 · CZ Life",
+    "title": "付款已完成",
+    "body": "感謝您的購買。Stripe 已記錄付款；CZ Life NFT 會在 IPDEX 結算後短時間內出現在您的帳戶。",
+    "orderLabel": "訂單",
+    "viewAccount": "查看我的帳戶",
+    "backToClub": "返回書友會"
+  },
   "account": {
     "loginTitle": "登入您的帳戶",
     "loginSubtitle": "透過書城 BFF 檢視 NFT 與訂單（httpOnly 工作階段）。",

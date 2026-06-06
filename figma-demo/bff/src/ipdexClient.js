@@ -20,6 +20,7 @@ export function loadBffEnv() {
   const COBRAND_ROOT = `${IPDEX_GATEWAY_PREFIX}${COBRAND}`.replace(/\/{2,}/g, '/') || COBRAND;
   const LISTING_FALLBACK = (process.env.BOOK_PRIMARY_LISTING_ID || '').trim();
   const AIRDROP_PUBLIC_CODE = (process.env.BOOK_STANDARD_AIRDROP_PUBLIC_CODE || '').trim();
+  const STRIPE_CALLBACK_ORIGIN = trimSlash(process.env.BOOK_STRIPE_CALLBACK_ORIGIN || '', true);
 
   return {
     IPDEX_CLIENT_ORIGIN,
@@ -29,6 +30,7 @@ export function loadBffEnv() {
     APP_SECRET,
     LISTING_FALLBACK,
     AIRDROP_PUBLIC_CODE,
+    STRIPE_CALLBACK_ORIGIN,
   };
 }
 

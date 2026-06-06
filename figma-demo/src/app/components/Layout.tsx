@@ -63,7 +63,7 @@ export default function Layout() {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6 }}
-        className="relative z-40 border-b border-border/50 backdrop-blur-xl bg-background/80"
+        className="relative z-[40] border-b border-border/50 backdrop-blur-xl bg-background/80"
       >
         <div className="container mx-auto px-4 py-3 sm:px-6">
           <div className="flex items-center justify-between gap-3">
@@ -174,13 +174,13 @@ export default function Layout() {
       </Sheet>
 
       {/* Main content */}
-      <main className="relative z-10">
+      <main className="relative">
         <Outlet />
-        <Toaster richColors position="top-center" />
+        <Toaster richColors position="top-center" toastOptions={{ className: "z-[230]" }} style={{ zIndex: 230 }} />
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-border/50 mt-20 backdrop-blur-xl bg-background/80">
+      <footer className="relative border-t border-border/50 mt-20 backdrop-blur-xl bg-background/80">
         <div className="container mx-auto px-6 py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div className="text-center">

@@ -145,6 +145,25 @@ export function isAttendanceStubCollectionId(collectionId?: string): boolean {
   return c !== "" && getAttendanceStubCollectionIdSet().has(c);
 }
 
+let czLifeCollectionMemo: ReadonlySet<string> | undefined;
+
+/** Union of premium voucher, standard free, and attendance-stub series configured for this book site. */
+export function getCzLifeBookCollectionIdSet(): ReadonlySet<string> {
+  if (czLifeCollectionMemo) return czLifeCollectionMemo;
+  const out = new Set<string>();
+  for (const id of getBookPremiumVoucherCollectionIdSet()) out.add(id);
+  out.add(getBookStandardCollectionIdNormalized());
+  for (const id of getAttendanceStubCollectionIdSet()) out.add(id);
+  czLifeCollectionMemo = out;
+  return czLifeCollectionMemo;
+}
+
+/** True when the NFT series UUID belongs to this CZ Life book-site integration. */
+export function isCzLifeBookCollectionId(collectionId?: string): boolean {
+  const c = normalizeCollectionUuid(`${collectionId ?? ""}`);
+  return c !== "" && getCzLifeBookCollectionIdSet().has(c);
+}
+
 /** Public IPDEX Client Service origin (Partner / user APIs). Used only for displayed URLs in the SPA — never secrets. */
 export function getIpdexClientApiOrigin(): string {
   const o = normalizeOrigin(envString("VITE_IPDEX_CLIENT_API_ORIGIN"));
@@ -166,9 +185,9 @@ export function getDatadanceSiteUrl(): string {
   return o || "https://datadance.ai";
 }
 
-/** DataDance explorer base URL (defaults to scan.datadance.ai). */
+/** DataDance explorer base URL (prod default: explorer.datadance.ai; set VITE_DATADANCE_EXPLORER_URL per env). */
 export function getDatadanceExplorerUrl(): string {
   return (
-    normalizeOrigin(envString("VITE_DATADANCE_EXPLORER_URL")) || "https://scan.datadance.ai"
+    normalizeOrigin(envString("VITE_DATADANCE_EXPLORER_URL")) || "https://explorer.datadance.ai"
   );
 }

@@ -61,10 +61,7 @@ export default function LanguageSwitcher() {
       </button>
 
       {isOpen && (
-        <div
-          className="absolute right-0 top-full mt-2 w-40 rounded-xl border border-border bg-card backdrop-blur-xl shadow-lg overflow-hidden"
-          style={{ zIndex: 9999 }}
-        >
+        <div className="absolute right-0 top-full z-[220] mt-2 w-40 overflow-hidden rounded-xl border border-border bg-card shadow-lg backdrop-blur-xl">
           {languages.map((language) => (
             <button
               key={language.code}

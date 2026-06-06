@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { ExternalLink, Mail, Minus, Plus, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PlatformSettlementRibbon from "./PlatformSettlementRibbon";
+import OverlayPortal from "./OverlayPortal";
+import { overlayBackdropClassLight } from "../lib/overlayLayers";
 import {
   DATADANCE_CHAIN_NAME,
   IPDEX_PRODUCT_NAME,
@@ -25,9 +27,24 @@ function isStripeCheckoutUrl(url: string): boolean {
   return /^https?:\/\/([^/]+\.)?stripe\.com\//i.test(url.trim());
 }
 
-/** Reserve a tab while the user gesture is active; navigate after async checkout. */
+/**
+ * Reserve a tab while the user gesture is active; navigate after async checkout.
+ * Do not pass `noopener` — it makes `window.open` return null, so we cannot set
+ * `tab.location` and Stripe would fall back to replacing the book-site tab.
+ */
 function reservePaymentTab(): Window | null {
-  return window.open("about:blank", "_blank", "noopener,noreferrer");
+  const tab = window.open("about:blank", "_blank");
+  if (tab) {
+    try {
+      tab.opener = null;
+      tab.document.title = "Stripe checkout";
+      tab.document.body.innerHTML =
+        '<p style="font-family:system-ui,sans-serif;padding:2rem;color:#444">Opening Stripe checkout…</p>';
+    } catch {
+      /* cross-origin once navigated; ignore */
+    }
+  }
+  return tab;
 }
 
 function navigatePaymentTab(tab: Window | null, paymentUrl: string): void {
@@ -35,6 +52,15 @@ function navigatePaymentTab(tab: Window | null, paymentUrl: string): void {
   if (!url) return;
   if (tab && !tab.closed) {
     tab.location.href = url;
+    return;
+  }
+  const fallback = window.open(url, "_blank");
+  if (fallback) {
+    try {
+      fallback.opener = null;
+    } catch {
+      /* ignore */
+    }
     return;
   }
   window.location.assign(url);
@@ -407,14 +433,15 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
     (!!primarySaleId && !envListingId && saleListingFetchState === "loading");
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-        onClick={onClose}
-      >
+    <OverlayPortal>
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className={overlayBackdropClassLight}
+          onClick={onClose}
+        >
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -584,12 +611,20 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
 
               <button
                 type="button"
-                disabled={primarySaleUnavailable !== null}
-                onClick={handleConfirmPurchase}
+                disabled={purchaseDisabled}
+                onClick={() => void handleCheckout()}
                 className="w-full py-4 rounded-xl bg-gradient-to-r from-gold to-gold-dark hover:from-gold-light hover:to-gold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <span className="text-primary-foreground font-medium">{t("purchase.confirmPurchase")}</span>
+                <span className="text-primary-foreground font-medium">
+                  {checkoutBusy ? t("purchase.checkoutBusy") : t("purchase.confirmPurchase")}
+                </span>
               </button>
+
+              {apiCheckoutError ? (
+                <p className="text-xs text-red-400/95 text-center mt-3" role="alert">
+                  {apiCheckoutError}
+                </p>
+              ) : null}
 
               {!skipLogin ? (
                 <button
@@ -655,6 +690,7 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
           )}
         </motion.div>
       </motion.div>
-    </AnimatePresence>
+      </AnimatePresence>
+    </OverlayPortal>
   );
 }

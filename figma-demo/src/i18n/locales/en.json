@@ -520,6 +520,14 @@
       "notStarted": "This Primary Sale has not started yet on IPDEX. Wait for the start time or update the configuration."
     }
   },
+  "purchaseSuccess": {
+    "documentTitle": "Payment received · CZ Life",
+    "title": "Payment received",
+    "body": "Thank you. Stripe has recorded your payment. Your CZ Life NFT may take a short moment to appear in your account while IPDEX settles the order.",
+    "orderLabel": "Order",
+    "viewAccount": "View my account",
+    "backToClub": "Back to Book Club"
+  },
   "account": {
     "loginTitle": "Sign in",
     "loginSubtitle": "NFTs and orders via this site's session (BFF).",

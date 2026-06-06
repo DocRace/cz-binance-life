@@ -11,6 +11,7 @@ import {
   BOOK_NFT_COLLECTION_UUID_RE,
   type DisplayNft,
   fetchNftBffPagesMerged,
+  filterCzLifeDisplayNfts,
   isRedeemEligible,
   mapNftRow,
 } from "../../lib/bookAccountNftApi";
@@ -66,7 +67,7 @@ export default function AccountRedeem() {
     setLoadError(null);
     try {
       const raw = await fetchNftBffPagesMerged((p) => `/api/bff/nfts/${p}`);
-      setDisplayNfts(raw.map(mapNftRow));
+      setDisplayNfts(filterCzLifeDisplayNfts(raw.map(mapNftRow)));
     } catch {
       setLoadError(t("account.loadError"));
       setDisplayNfts([]);

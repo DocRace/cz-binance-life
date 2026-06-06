@@ -17,6 +17,7 @@ import {
 import {
   type DisplayNft,
   fetchNftBffPagesMerged,
+  filterCzLifeDisplayNfts,
   isPremiumAccountNft,
   isPremiumAttendanceStub,
   isRedeemEligible,
@@ -115,7 +116,7 @@ export default function Account() {
         }
       }
 
-      setDisplayNfts(nftRows.map(mapNftRow));
+      setDisplayNfts(filterCzLifeDisplayNfts(nftRows.map(mapNftRow)));
     } catch {
       setLoadError(t("purchase.bffOffline"));
     } finally {

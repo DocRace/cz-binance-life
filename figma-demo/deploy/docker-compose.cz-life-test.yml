@@ -26,7 +26,7 @@ services:
         VITE_IPDEX_CLIENT_API_ORIGIN: ${VITE_IPDEX_CLIENT_API_ORIGIN:-https://ipdex-v1-dev.ipdex.vip}
         VITE_IPDEX_SOCIAL_X_URL: ${VITE_IPDEX_SOCIAL_X_URL:-}
         VITE_IPDEX_SOCIAL_FACEBOOK_URL: ${VITE_IPDEX_SOCIAL_FACEBOOK_URL:-}
-        VITE_DATADANCE_EXPLORER_URL: ${VITE_DATADANCE_EXPLORER_URL:-https://scan.datadance.ai}
+        VITE_DATADANCE_EXPLORER_URL: ${VITE_DATADANCE_EXPLORER_URL:-https://testnet.datadance.ai}
         VITE_BOOK_BFF_URL: ""
     expose:
       - "80"

@@ -7,7 +7,13 @@ function redeemVerboseDiagnosticsEnabled(): boolean {
     if (typeof window === "undefined") return false;
     if (`${window.localStorage?.getItem("bookDebugRedeem")}` === "1") return true;
     const h = window.location.hostname;
-    return h === "cz-life-test.ipdex.vip" || h === "localhost" || h === "127.0.0.1";
+    return (
+      h === "czlife.club" ||
+      h === "www.czlife.club" ||
+      h === "cz-life-test.ipdex.vip" ||
+      h === "localhost" ||
+      h === "127.0.0.1"
+    );
   } catch {
     return false;
   }

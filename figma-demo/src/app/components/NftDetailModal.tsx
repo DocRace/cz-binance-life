@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ExternalLink, Loader2, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import OverlayPortal from "./OverlayPortal";
+import { overlayBackdropClass } from "../lib/overlayLayers";
 import {
   DATADANCE_CHAIN_ID,
   DATADANCE_CHAIN_NAME,
@@ -169,14 +171,15 @@ export default function NftDetailModal({ nft, onClose, onRedeem }: NftDetailModa
   const canRedeem = onRedeem && isRedeemEligible(nft);
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm"
-        onClick={onClose}
-      >
+    <OverlayPortal>
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className={overlayBackdropClass}
+          onClick={onClose}
+        >
         <motion.div
           initial={{ scale: 0.94, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -365,6 +368,7 @@ export default function NftDetailModal({ nft, onClose, onRedeem }: NftDetailModa
           )}
         </motion.div>
       </motion.div>
-    </AnimatePresence>
+      </AnimatePresence>
+    </OverlayPortal>
   );
 }
