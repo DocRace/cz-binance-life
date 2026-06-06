@@ -220,6 +220,7 @@
     "storiesEmpty": "まだストーリーが読み込まれていません。fetch_book_club_ugc.py（Apify）を実行するか book_club_stories.json を編集してください。",
     "storiesOpen": "リンクを開く",
     "storiesOpenX": "Xで見る",
+    "storiesExpand": "全文を読む",
     "storiesDisclaimer": "公開投稿または編集投稿を起源とし、書籍サイト向けにトーンを整えています。著作権は作者に帰属します。",
     "buyBadgeCta": "プレミアム典藏版を購入（299 HKD）"
   },

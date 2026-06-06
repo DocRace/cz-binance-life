@@ -220,6 +220,7 @@
     "storiesEmpty": "아직 사연이 없습니다. fetch_book_club_ugc.py(Apify)를 실행하거나 book_club_stories.json을 편집하세요.",
     "storiesOpen": "링크 열기",
     "storiesOpenX": "X에서 보기",
+    "storiesExpand": "전체 보기",
     "storiesDisclaimer": "공개 게시물 또는 제출 콘텐츠를 바탕으로 하며, 도서 사이트 맥락에 맞게 톤을 조정했습니다. 저작권은 원작자에게 있습니다.",
     "buyBadgeCta": "프리미엄典藏版 구매 (299 HKD)"
   },

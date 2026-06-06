@@ -1,110 +1,21 @@
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { Users, MessageCircle, Calendar, BookOpen, Video, Trophy, Sparkles, ExternalLink, ShoppingBag } from "lucide-react";
+import { Users, MessageCircle, Calendar, BookOpen, Video, Trophy, Sparkles, ShoppingBag } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import EventRegistrationModal from "../components/EventRegistrationModal";
 import PurchaseModal from "../components/PurchaseModal";
 import AirdropClaimModal from "../components/AirdropClaimModal";
 import MembershipTiers from "../components/MembershipTiers";
-
-type BookClubStory = {
-  id: string;
-  kind?: string;
-  author_display: string;
-  author_avatar_url?: string;
-  headline: string;
-  body: string;
-  url?: string;
-  created_at?: string;
-  curator?: { tier: string; score: number; method: string };
-};
-
-function ClubStoryAvatar({ story }: { story: BookClubStory }) {
-  const handleGuess = story.author_display
-    .replace(/^@/, "")
-    .trim()
-    .split(/[\s·|,]/)[0]
-    .trim();
-  const candidates = [
-    story.author_avatar_url?.trim(),
-    handleGuess && /^[A-Za-z0-9_]{1,30}$/.test(handleGuess)
-      ? `https://unavatar.io/x/${encodeURIComponent(handleGuess)}`
-      : "",
-  ].filter(Boolean) as string[];
-
-  const [idx, setIdx] = useState(0);
-
-  useEffect(() => {
-    setIdx(0);
-  }, [story.id, story.author_avatar_url, story.author_display]);
-
-  if (idx >= candidates.length) {
-    return (
-      <div
-        className="flex size-11 shrink-0 items-center justify-center rounded-full border border-gold/20 bg-gold/10"
-        aria-hidden
-      >
-        <Users className="size-5 text-gold/70" />
-      </div>
-    );
-  }
-
-  return (
-    <img
-      src={candidates[idx]}
-      alt=""
-      width={44}
-      height={44}
-      loading="lazy"
-      decoding="async"
-      referrerPolicy="no-referrer"
-      className="size-11 shrink-0 rounded-full border border-gold/25 object-cover bg-card/40"
-      onError={() => setIdx((k) => k + 1)}
-    />
-  );
-}
-
-type BookClubStoriesDoc = {
-  format_version?: number;
-  stories?: BookClubStory[];
-};
-
-/** True for rows sourced from X (including legacy JSON with id tw-<tweetId> only). */
-function isTwitterStoryRow(story: BookClubStory): boolean {
-  if (story.kind === "twitter") return true;
-  if (story.kind === "community") return false;
-  return /^tw-\d+$/.test(story.id);
-}
-
-/** External story link — sheet hyperlinks (X/Telegram/etc.), legacy tweet ids, or profile fallback. */
-/** X/oEmbed text is one block; prefer longer field when legacy JSON still has both. */
-function storyDisplayText(story: BookClubStory): string {
-  const body = `${story.body ?? ""}`.trim();
-  const headline = `${story.headline ?? ""}`.trim();
-  if (!body) return headline;
-  if (!headline) return body;
-  return body.length >= headline.length ? body : headline;
-}
+import ClubStoryCard from "../components/ClubStoryCard";
+import ClubStoryDetailModal from "../components/ClubStoryDetailModal";
+import {
+  type BookClubStory,
+  type BookClubStoriesDoc,
+  resolveStoryExternalUrl,
+  storyDisplayText,
+} from "../../lib/bookClubStories";
 
 const CLUB_EVENT_KEYS = ["event1", "event2", "event3"] as const;
-
-function resolveStoryExternalUrl(story: BookClubStory): string | undefined {
-  const raw = story.url?.trim();
-  if (raw && /^https?:\/\//i.test(raw)) {
-    if (/x\.com|twitter\.com/i.test(raw)) {
-      return raw
-        .replace(/twitter\.com/gi, "x.com")
-        .replace(/mobile\.x\.com/gi, "x.com");
-    }
-    return raw;
-  }
-  if (isTwitterStoryRow(story) && /^tw-\d+$/.test(story.id)) {
-    return `https://x.com/i/web/status/${story.id.slice(3)}`;
-  }
-  const handle = story.author_display.match(/@([A-Za-z0-9_]{1,30})/)?.[1];
-  if (handle) return `https://x.com/${handle}`;
-  return undefined;
-}
 
 export default function BookClub() {
   const { t } = useTranslation();
@@ -113,6 +24,7 @@ export default function BookClub() {
   const [airdropOpen, setAirdropOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<string>("");
   const [communityStories, setCommunityStories] = useState<BookClubStory[] | null>(undefined);
+  const [expandedStory, setExpandedStory] = useState<BookClubStory | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -123,9 +35,9 @@ export default function BookClub() {
         const doc = (await res.json()) as BookClubStoriesDoc;
         const rows = Array.isArray(doc.stories) ? doc.stories : [];
         const positive = rows.filter((s) => {
-          const t = s.curator?.tier;
+          const tier = s.curator?.tier;
           const sc = s.curator?.score ?? 0.55;
-          if (t === "exclude") return false;
+          if (tier === "exclude") return false;
           return sc >= 0.42;
         });
         if (!cancelled) setCommunityStories(positive);
@@ -142,6 +54,13 @@ export default function BookClub() {
     setSelectedEvent(eventTitle);
     setShowRegistrationModal(true);
   };
+
+  const expandedDisplayText = expandedStory ? storyDisplayText(expandedStory) : "";
+  const expandedExternalUrl = expandedStory ? resolveStoryExternalUrl(expandedStory) : undefined;
+  const expandedLinkLabel =
+    expandedExternalUrl && /x\.com|twitter\.com/i.test(expandedExternalUrl)
+      ? t("club.storiesOpenX")
+      : t("club.storiesOpen");
 
   return (
     <>
@@ -223,37 +142,16 @@ export default function BookClub() {
                     ? t("club.storiesOpenX")
                     : t("club.storiesOpen");
                 return (
-                <motion.article
-                  key={story.id}
-                  initial={{ opacity: 0, y: 14 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.08 + idx * 0.05 }}
-                  className="flex min-w-0 flex-col rounded-2xl border border-border/60 bg-card/35 p-5 backdrop-blur-sm hover:border-gold/25 transition-colors"
-                >
-                  <div className="mb-3 flex min-w-0 items-center gap-3">
-                    <ClubStoryAvatar story={story} />
-                    <p className="min-w-0 flex-1 font-mono text-[11px] leading-snug text-gold/85 wrap-anywhere">
-                      {story.author_display}
-                    </p>
-                  </div>
-                  {displayText ? (
-                    <p className="font-display text-base font-medium leading-relaxed text-white/95 flex-1 whitespace-pre-wrap wrap-anywhere">
-                      {displayText}
-                    </p>
-                  ) : null}
-                  {externalUrl ? (
-                    <a
-                      href={externalUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-sky-400 hover:text-sky-300"
-                    >
-                      {linkLabel}
-                      <ExternalLink className="size-3" aria-hidden />
-                    </a>
-                  ) : null}
-                </motion.article>
-              );
+                  <ClubStoryCard
+                    key={story.id}
+                    story={story}
+                    displayText={displayText}
+                    externalUrl={externalUrl}
+                    linkLabel={linkLabel}
+                    index={idx}
+                    onExpand={() => setExpandedStory(story)}
+                  />
+                );
               })}
             </div>
           )}
@@ -431,6 +329,16 @@ export default function BookClub() {
         </div>
       </motion.div>
     </div>
+
+    {expandedStory ? (
+      <ClubStoryDetailModal
+        story={expandedStory}
+        displayText={expandedDisplayText}
+        externalUrl={expandedExternalUrl}
+        linkLabel={expandedLinkLabel}
+        onClose={() => setExpandedStory(null)}
+      />
+    ) : null}
 
     {/* Registration Modal */}
     {showRegistrationModal && (
