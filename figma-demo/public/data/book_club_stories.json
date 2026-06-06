@@ -1,6 +1,6 @@
 {
   "format_version": 2,
-  "updated_at": "2026-05-29T12:00:00.000000+00:00",
+  "updated_at": "2026-06-06T16:05:00.000000+00:00",
   "query": "local-xlsx + X oEmbed post text for status hyperlinks",
   "source_file": "Internal-币安人生书友会拟合作KOL名单.xlsx",
   "curator_pipeline": {
@@ -715,8 +715,8 @@
       "author_avatar_url": "https://unavatar.io/x/jiaojiaojio",
       "curator": {
         "tier": "standard",
-        "score": 0.75,
-        "method": "kol_sheet_reason_fallback_fetch_failed"
+        "score": 0.88,
+        "method": "kol_manual_archived_text"
       }
     },
     {
