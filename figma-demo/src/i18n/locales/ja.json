@@ -13,6 +13,18 @@
     "openMenu": "メニューを開く",
     "menuLabel": "メインナビゲーション"
   },
+  "meta": {
+    "siteName": "バイナンスライフブッククラブ",
+    "titleHome": "バイナンスライフブッククラブ",
+    "titleBook": "書籍紹介 · バイナンスライフブッククラブ",
+    "titleClub": "ブッククラブ · バイナンスライフブッククラブ",
+    "titlePrinciples": "CZの原則 · バイナンスライフブッククラブ",
+    "titleTimeline": "CZタイムライン · バイナンスライフブッククラブ",
+    "titleAccount": "アカウント · バイナンスライフブッククラブ",
+    "titleAccountRedeem": "現地引換 · バイナンスライフブッククラブ",
+    "titlePurchaseSuccess": "お支払い完了 · バイナンスライフブッククラブ",
+    "titleNotFound": "ページが見つかりません · バイナンスライフブッククラブ"
+  },
   "nftDetailModal": {
     "openDetail": "NFT詳細を見る",
     "loading": "NFT詳細を読み込み中…",
@@ -522,7 +534,7 @@
     }
   },
   "purchaseSuccess": {
-    "documentTitle": "お支払い完了 · CZ Life",
+    "documentTitle": "お支払い完了 · バイナンスライフブッククラブ",
     "title": "お支払いが完了しました",
     "body": "ご購入ありがとうございます。Stripe でお支払いが記録されました。CZ Life の NFT は IPDEX の決済処理後、まもなくアカウントに表示されます。",
     "orderLabel": "注文",

@@ -19,11 +19,13 @@ import {
   SheetTitle,
 } from "./ui/sheet";
 import { Toaster } from "sonner";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 
 export default function Layout() {
   const location = useLocation();
   const { t } = useTranslation();
+  useDocumentTitle();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const ipdexMarketHref = normalizeOrigin(getIpdexMarketOrigin());

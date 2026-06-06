@@ -17,7 +17,7 @@ i18n
       ko: { translation: ko },
       ja: { translation: ja }
     },
-    fallbackLng: "zh-TW",
+    fallbackLng: "en",
     detection: {
       order: ["localStorage", "navigator"],
       caches: ["localStorage"]

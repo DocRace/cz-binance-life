@@ -13,6 +13,18 @@
     "openMenu": "開啟選單",
     "menuLabel": "主要導覽"
   },
+  "meta": {
+    "siteName": "幣安人生書友會",
+    "titleHome": "幣安人生書友會",
+    "titleBook": "書籍介紹 · 幣安人生書友會",
+    "titleClub": "書友會 · 幣安人生書友會",
+    "titlePrinciples": "CZ原則 · 幣安人生書友會",
+    "titleTimeline": "CZ時間線 · 幣安人生書友會",
+    "titleAccount": "我的帳戶 · 幣安人生書友會",
+    "titleAccountRedeem": "現場核銷 · 幣安人生書友會",
+    "titlePurchaseSuccess": "付款完成 · 幣安人生書友會",
+    "titleNotFound": "找不到頁面 · 幣安人生書友會"
+  },
   "nftDetailModal": {
     "openDetail": "查看 NFT 詳情",
     "loading": "載入 NFT 詳情…",
@@ -522,7 +534,7 @@
     }
   },
   "purchaseSuccess": {
-    "documentTitle": "付款完成 · CZ Life",
+    "documentTitle": "付款完成 · 幣安人生書友會",
     "title": "付款已完成",
     "body": "感謝您的購買。Stripe 已記錄付款；CZ Life NFT 會在 IPDEX 結算後短時間內出現在您的帳戶。",
     "orderLabel": "訂單",

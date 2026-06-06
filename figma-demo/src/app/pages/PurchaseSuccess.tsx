@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router";
 import { motion } from "motion/react";
 import { CheckCircle2 } from "lucide-react";
@@ -8,10 +7,6 @@ export default function PurchaseSuccess() {
   const { t } = useTranslation();
   const [params] = useSearchParams();
   const orderId = `${params.get("orderId") ?? ""}`.trim();
-
-  useEffect(() => {
-    document.title = t("purchaseSuccess.documentTitle");
-  }, [t]);
 
   return (
     <div className="min-h-[70vh] flex items-center justify-center px-4 py-16">

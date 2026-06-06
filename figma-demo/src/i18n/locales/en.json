@@ -13,6 +13,18 @@
     "openMenu": "Open menu",
     "menuLabel": "Main navigation"
   },
+  "meta": {
+    "siteName": "Freedom of Money Book Club",
+    "titleHome": "Freedom of Money Book Club",
+    "titleBook": "The Book · Freedom of Money Book Club",
+    "titleClub": "Book Club · Freedom of Money Book Club",
+    "titlePrinciples": "CZ Principles · Freedom of Money Book Club",
+    "titleTimeline": "CZ Timeline · Freedom of Money Book Club",
+    "titleAccount": "Account · Freedom of Money Book Club",
+    "titleAccountRedeem": "On-site Redeem · Freedom of Money Book Club",
+    "titlePurchaseSuccess": "Payment received · Freedom of Money Book Club",
+    "titleNotFound": "Page not found · Freedom of Money Book Club"
+  },
   "nftDetailModal": {
     "openDetail": "View NFT details",
     "loading": "Loading NFT details…",
@@ -522,7 +534,7 @@
     }
   },
   "purchaseSuccess": {
-    "documentTitle": "Payment received · CZ Life",
+    "documentTitle": "Payment received · Freedom of Money Book Club",
     "title": "Payment received",
     "body": "Thank you. Stripe has recorded your payment. Your CZ Life NFT may take a short moment to appear in your account while IPDEX settles the order.",
     "orderLabel": "Order",

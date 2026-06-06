@@ -13,6 +13,18 @@
     "openMenu": "메뉴 열기",
     "menuLabel": "메인 탐색"
   },
+  "meta": {
+    "siteName": "바이낸스 인생 북클럽",
+    "titleHome": "바이낸스 인생 북클럽",
+    "titleBook": "도서 소개 · 바이낸스 인생 북클럽",
+    "titleClub": "북클럽 · 바이낸스 인생 북클럽",
+    "titlePrinciples": "CZ 원칙 · 바이낸스 인생 북클럽",
+    "titleTimeline": "CZ 타임라인 · 바이낸스 인생 북클럽",
+    "titleAccount": "내 계정 · 바이낸스 인생 북클럽",
+    "titleAccountRedeem": "현장 교환 · 바이낸스 인생 북클럽",
+    "titlePurchaseSuccess": "결제 완료 · 바이낸스 인생 북클럽",
+    "titleNotFound": "페이지를 찾을 수 없음 · 바이낸스 인생 북클럽"
+  },
   "nftDetailModal": {
     "openDetail": "NFT 상세 보기",
     "loading": "NFT 상세 불러오는 중…",
@@ -522,7 +534,7 @@
     }
   },
   "purchaseSuccess": {
-    "documentTitle": "결제 완료 · CZ Life",
+    "documentTitle": "결제 완료 · 바이낸스 인생 북클럽",
     "title": "결제가 완료되었습니다",
     "body": "구매해 주셔서 감사합니다. Stripe에 결제가 기록되었습니다. CZ Life NFT는 IPDEX 정산 후 곧 계정에 표시됩니다.",
     "orderLabel": "주문",
