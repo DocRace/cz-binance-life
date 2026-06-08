@@ -598,6 +598,8 @@
     "redeemSeriesUuidLabel": "系列 UUID（送交核銷 API）",
     "redeemSubmit": "驗證並核銷",
     "redeemSubmitting": "送出中…",
+    "redeemProcessingTitle": "正在處理核銷",
+    "redeemProcessingBody": "鏈上驗證可能需要數十秒，請留在本頁等候，勿關閉或離開。",
     "redeemStaffCodeTooShort": "請輸入完整驗證碼。",
     "redeemErrorStaffCode": "驗證碼不正確。",
     "redeemErrorNotEligible": "無法核銷此 NFT（系列不符或不可用）。",

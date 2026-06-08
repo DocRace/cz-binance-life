@@ -584,6 +584,8 @@
     "redeemSeriesUuidLabel": "시리즈 UUID(교환 API로 전달)",
     "redeemSubmit": "검증 후 교환",
     "redeemSubmitting": "전송 중…",
+    "redeemProcessingTitle": "교환 처리 중",
+    "redeemProcessingBody": "온체인 검증에 수십 초가 걸릴 수 있습니다. 이 페이지를 닫거나 나가지 말고 잠시만 기다려 주세요.",
     "redeemStaffCodeTooShort": "코드를 입력하세요.",
     "redeemErrorStaffCode": "검증 코드가 올바르지 않습니다.",
     "redeemErrorNotEligible": "이 NFT는 교환할 수 없습니다.",

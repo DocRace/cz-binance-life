@@ -598,6 +598,8 @@
     "redeemSeriesUuidLabel": "Series UUID (sent to redeem API)",
     "redeemSubmit": "Verify & redeem",
     "redeemSubmitting": "Submitting…",
+    "redeemProcessingTitle": "Processing your redemption",
+    "redeemProcessingBody": "On-chain verification can take up to a minute. Please stay on this page and wait — do not close or navigate away.",
     "redeemStaffCodeTooShort": "Enter the verification code.",
     "redeemErrorStaffCode": "Invalid verification code.",
     "redeemErrorNotEligible": "This NFT cannot be redeemed (wrong collection or not available).",

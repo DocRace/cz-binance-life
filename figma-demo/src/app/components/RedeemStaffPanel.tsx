@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { BookOpen } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import RedeemProcessingOverlay from "./RedeemProcessingOverlay";
 
 interface RedeemStaffPanelProps {
   /** Staff verification code typed on the attendee’s device (validated server-side against IPDEX). */
@@ -55,6 +56,7 @@ export default function RedeemStaffPanel({
 
   return (
     <div className={`${padding} text-center`}>
+      <RedeemProcessingOverlay open={busy} />
       {dense && imageUrl?.trim() ? (
         <div className="sr-only">{displayName || tokenId}</div>
       ) : (

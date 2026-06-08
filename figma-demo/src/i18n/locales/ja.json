@@ -584,6 +584,8 @@
     "redeemSeriesUuidLabel": "シリーズ UUID（引き換え API に送信）",
     "redeemSubmit": "確認して引き換え",
     "redeemSubmitting": "送信中…",
+    "redeemProcessingTitle": "引き換えを処理しています",
+    "redeemProcessingBody": "オンチェーン検証には数十秒かかる場合があります。このページから離れず、そのままお待ちください。",
     "redeemStaffCodeTooShort": "コードを入力してください。",
     "redeemErrorStaffCode": "検証コードが正しくありません。",
     "redeemErrorNotEligible": "この NFT は引き換えできません。",
