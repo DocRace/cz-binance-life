@@ -9,7 +9,12 @@ const languages = [
   { code: "ja", label: "日本語" }
 ];
 
-export default function LanguageSwitcher() {
+interface LanguageSwitcherProps {
+  /** Open menu upward (e.g. mobile nav sheet footer). */
+  dropUp?: boolean;
+}
+
+export default function LanguageSwitcher({ dropUp = false }: LanguageSwitcherProps) {
   const { i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -32,20 +37,24 @@ export default function LanguageSwitcher() {
     return currentLang.startsWith(langCode) || langCode.startsWith(currentLang);
   };
 
-  // Close dropdown when clicking outside
+  // Close dropdown when tapping outside (pointer events cover touch + mouse)
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+    if (!isOpen) return;
+
+    const handlePointerOutside = (event: PointerEvent) => {
+      const target = event.target as Node | null;
+      if (dropdownRef.current && target && !dropdownRef.current.contains(target)) {
         setIsOpen(false);
       }
     };
 
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
+    const id = window.setTimeout(() => {
+      document.addEventListener("pointerdown", handlePointerOutside);
+    }, 0);
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      window.clearTimeout(id);
+      document.removeEventListener("pointerdown", handlePointerOutside);
     };
   }, [isOpen]);
 
@@ -61,19 +70,26 @@ export default function LanguageSwitcher() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full z-[220] mt-2 w-40 overflow-hidden rounded-xl border border-border bg-card shadow-lg backdrop-blur-xl">
+        <div
+          role="listbox"
+          className={`absolute right-0 z-[220] w-40 overflow-hidden rounded-xl border border-border bg-card shadow-lg backdrop-blur-xl ${
+            dropUp ? "bottom-full mb-2" : "top-full mt-2"
+          }`}
+        >
           {languages.map((language) => (
             <button
+              type="button"
+              role="option"
+              aria-selected={isCurrentLanguage(language.code)}
               key={language.code}
               onClick={() => handleLanguageChange(language.code)}
               className={`
-                w-full px-4 py-3 text-left text-sm transition-colors cursor-pointer
+                w-full px-4 py-3 text-left text-sm transition-colors cursor-pointer touch-manipulation
                 ${isCurrentLanguage(language.code)
                   ? 'bg-gold/20 text-gold'
                   : 'text-foreground hover:bg-accent/50'
                 }
               `}
-              style={{ pointerEvents: 'auto' }}
             >
               {language.label}
             </button>

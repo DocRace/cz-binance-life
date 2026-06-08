@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { AlertTriangle } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface RedeemStaffPanelProps {
@@ -25,6 +25,8 @@ export default function RedeemStaffPanel({
   onConfirm,
   tokenId,
   seriesId,
+  imageUrl,
+  displayName,
   description,
   busy = false,
   externalError = null,
@@ -62,7 +64,7 @@ export default function RedeemStaffPanel({
           transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
           className="w-20 h-20 mx-auto mb-6 rounded-full bg-gold/20 flex items-center justify-center"
         >
-          <AlertTriangle className="w-10 h-10 text-gold" />
+          <BookOpen className="w-10 h-10 text-gold" />
         </motion.div>
       )}
 

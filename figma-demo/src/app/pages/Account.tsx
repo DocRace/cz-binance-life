@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
-import { LogIn, LogOut, Package, Award, Loader2 } from "lucide-react";
+import { BookOpen, LogIn, LogOut, Package, Award, Loader2 } from "lucide-react";
+import AccountPendingOrders from "../components/AccountPendingOrders";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import NFTBadge from "../components/NFTBadge";
@@ -614,6 +615,7 @@ export default function Account() {
                 to="/account/redeem"
                 className={`${ACCOUNT_HEADER_BTN} border border-gold/60 text-gold hover:bg-gold/10`}
               >
+                <BookOpen className="w-4 h-4 shrink-0" aria-hidden />
                 {t("account.redeemPageNavCta")}
               </Link>
             ) : null}
@@ -704,6 +706,8 @@ export default function Account() {
           );
         })}
       </motion.div>
+
+      <AccountPendingOrders active={isLoggedIn} onChanged={() => void loadDashboard()} />
 
       {grouped.premiumVouchers.length === 0 &&
         grouped.standardNfts.length === 0 &&

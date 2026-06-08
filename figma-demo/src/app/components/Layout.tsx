@@ -169,8 +169,8 @@ export default function Layout() {
               );
             })}
           </nav>
-          <div className="mt-auto border-t border-border/40 pt-4">
-            <LanguageSwitcher />
+          <div className="relative z-[1] mt-auto border-t border-border/40 pt-4 pb-2">
+            <LanguageSwitcher dropUp />
           </div>
         </SheetContent>
       </Sheet>
