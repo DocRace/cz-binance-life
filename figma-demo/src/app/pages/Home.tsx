@@ -7,6 +7,7 @@ import PurchaseModal from "../components/PurchaseModal";
 import AirdropClaimModal from "../components/AirdropClaimModal";
 import MembershipTiers from "../components/MembershipTiers";
 import Book3DCover from "../components/Book3DCover";
+import BookPickupStores from "../components/BookPickupStores";
 import bookCover from "../../assets/book-cover-hero.png";
 
 export default function Home() {
@@ -122,6 +123,12 @@ export default function Home() {
           onPremiumClick={() => setPurchaseOpen(true)}
           onStandardClick={() => setAirdropOpen(true)}
           className="mb-28 md:mb-36"
+        />
+
+        <BookPickupStores
+          className="mx-auto mb-28 md:mb-36 max-w-5xl"
+          delay={1.05}
+          titleId="home-pickup-stores"
         />
 
         {/* Features Grid */}
