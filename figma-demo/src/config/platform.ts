@@ -196,3 +196,5 @@ export function getDatadanceExplorerUrl(): string {
 export const BOOK_CLUB_TELEGRAM_HANDLE = "czlifeclub" as const;
 
 export const BOOK_CLUB_TELEGRAM_URL = "https://t.me/czlifeclub" as const;
+
+export const BOOK_CLUB_TELEGRAM_QR_SRC = "/telegram-czlifeclub-qr.png" as const;

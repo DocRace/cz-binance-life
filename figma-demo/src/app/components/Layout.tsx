@@ -8,6 +8,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import PlatformSettlementRibbon from "./PlatformSettlementRibbon";
 import {
   BOOK_CLUB_TELEGRAM_HANDLE,
+  BOOK_CLUB_TELEGRAM_QR_SRC,
   BOOK_CLUB_TELEGRAM_URL,
   getIpdexMarketOrigin,
   getIpdexSocialFacebookUrl,
@@ -201,6 +202,23 @@ export default function Layout() {
             </div>
             <div className="text-center">
               <h3 className="font-display mb-4">{t("footer.contactTitle")}</h3>
+              <a
+                href={BOOK_CLUB_TELEGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mx-auto mb-3 inline-block rounded-xl border border-border/45 bg-white p-2 shadow-sm transition-opacity hover:opacity-90"
+                aria-label={t("club.contactTelegramQrAlt")}
+              >
+                <img
+                  src={BOOK_CLUB_TELEGRAM_QR_SRC}
+                  alt=""
+                  width={120}
+                  height={120}
+                  className="h-[7.5rem] w-[7.5rem] object-contain"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 {t("club.contactTelegram")}:{" "}
                 <a

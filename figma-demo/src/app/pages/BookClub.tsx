@@ -14,7 +14,11 @@ import {
   resolveStoryExternalUrl,
   storyDisplayText,
 } from "../../lib/bookClubStories";
-import { BOOK_CLUB_TELEGRAM_HANDLE, BOOK_CLUB_TELEGRAM_URL } from "../../config/platform";
+import {
+  BOOK_CLUB_TELEGRAM_HANDLE,
+  BOOK_CLUB_TELEGRAM_QR_SRC,
+  BOOK_CLUB_TELEGRAM_URL,
+} from "../../config/platform";
 
 const CLUB_EVENT_KEYS = ["event1", "event2", "event3"] as const;
 
@@ -322,7 +326,24 @@ export default function BookClub() {
           </div>
 
           <div className="border-t border-border/50 pt-6 text-center">
-            <h3 className="font-display text-lg mb-2">{t("club.contactTitle")}</h3>
+            <h3 className="font-display text-lg mb-3">{t("club.contactTitle")}</h3>
+            <a
+              href={BOOK_CLUB_TELEGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mx-auto mb-3 inline-block rounded-xl border border-border/45 bg-white p-2.5 shadow-sm transition-opacity hover:opacity-90"
+              aria-label={t("club.contactTelegramQrAlt")}
+            >
+              <img
+                src={BOOK_CLUB_TELEGRAM_QR_SRC}
+                alt=""
+                width={140}
+                height={140}
+                className="h-[8.75rem] w-[8.75rem] object-contain"
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
             <p className="text-sm text-muted-foreground">
               {t("club.contactTelegram")}:{" "}
               <a href={BOOK_CLUB_TELEGRAM_URL} className="text-gold hover:text-gold-light transition-colors">

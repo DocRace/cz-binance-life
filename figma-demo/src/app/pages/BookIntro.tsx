@@ -1,18 +1,24 @@
+import { useMemo } from "react";
 import { motion } from "motion/react";
 import { Award, BookOpen, Globe, MapPin, Users } from "lucide-react";
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import Book3DCover from "../components/Book3DCover";
+import bookCover from "../../assets/book-cover-hero.png";
 
 type PickupStore = {
   name: string;
   address: string;
   hint?: string;
 };
-import Book3DCover from "../components/Book3DCover";
-import bookCover from "../../assets/book-cover-hero.png";
 
 export default function BookIntro() {
   const { t } = useTranslation();
+
+  const pickupStores = useMemo(() => {
+    const raw = t("book.pickupStores", { returnObjects: true });
+    return Array.isArray(raw) ? (raw as PickupStore[]) : [];
+  }, [t]);
+
   return (
     <div className="container mx-auto px-6 py-20">
       {/* Header */}
