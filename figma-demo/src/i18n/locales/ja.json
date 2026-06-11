@@ -176,6 +176,30 @@
     "feature3Desc": "極端な市場条件下で正しい決断を下す方法",
     "feature4Title": "リーダーシップ哲学",
     "feature4Desc": "グローバルな革新チームを構築・管理する方法",
+    "pickupStoresTitle": "実体書受け取り書店",
+    "pickupStoresSubtitle": "全4店舗 · 香港",
+    "pickupStoresIntro": "プレミアム版をご購入後、下記の書店で実体書をお受け取りいただけます。予約バウチャー NFT または購入確認情報をご持参のうえ、各店の営業時間をご確認ください。",
+    "pickupStores": [
+      {
+        "name": "商務印書館 銅鑼湾図書センター",
+        "address": "香港銅鑼湾怡和街9号"
+      },
+      {
+        "name": "商務印書館 尖沙咀図書センター",
+        "address": "九龍尖沙咀弥敦道83-97号華源大厦地下25号舗及び1階",
+        "hint": "MTR A1 または C 出口"
+      },
+      {
+        "name": "三聯書店 中環店",
+        "address": "香港中環域多利皇后街9号",
+        "hint": "MTR 中環駅 C 出口"
+      },
+      {
+        "name": "三聯書店 湾仔文化生活薈",
+        "address": "湾仔柯布連道1-1A号",
+        "hint": "MTR 湾仔駅 A3 出口"
+      }
+    ],
     "authorTitle": "著者について",
     "authorBio1": "チャンポン・ジャオ（Changpeng Zhao、CZ）は、バイナンス（Binance）の創設者であり前CEOです。バイナンスは世界最大の暗号資産取引所で、1日の取引高は数百億ドルに達します。",
     "authorBio2": "CZはカナダで育ち、家族を助けるためにマクドナルドやガソリンスタンドで働きました。マギル大学でコンピュータサイエンスを学び、卒業後は東京とニューヨークのフィンテック企業で働きました。2017年にバイナンスを創設し、わずか数か月でグローバルをリードする暗号資産取引プラットフォームに成長させました。",
@@ -205,7 +229,7 @@
     "step1Title": "会員バッジを取得",
     "step1Desc": "IPDEXでサインイン後、無料のスタンダード記念バッジを請求するか、プレミアム典藏版（299 HKD）を購入して予約バウチャーと紙の本を受け取ります。",
     "step2Title": "Telegramコミュニティに参加",
-    "step2Desc": "@BinanceBookClub で共読、イベント告知、読者同士の交流に参加できます。",
+    "step2Desc": "@czlifeclub で共読、イベント告知、読者同士の交流に参加できます。",
     "step3Title": "出席＆現地交換（プレミアム）",
     "step3Desc": "6月20日のオフライン盛典では、アカウント→現地交換からスタッフ認証でプレミアムバウチャーを出席記念 stub NFT に交換します。",
     "event1Date": "2026年6月20日",
@@ -223,7 +247,7 @@
     "event3Title": "読者ストーリー＆コミュニティ",
     "event3Type": "コミュニティ",
     "event3Desc": "Binanceとの体験を共有し、キュレーションされた読者ストーリーを読み、最新告知を受け取れます。",
-    "eventsDisclaimer": "申込は参加意向の記録です。最終日程・会場は @BinanceBookClub の告知をご確認ください。",
+    "eventsDisclaimer": "申込は参加意向の記録です。最終日程・会場は @czlifeclub の告知をご確認ください。",
     "contactTitle": "お問い合わせ",
     "contactTelegram": "テレグラム",
     "storiesKicker": "読者の声",
@@ -448,7 +472,7 @@
     "registerFor": "参加申込",
     "successTitle": "申込完了！",
     "successMessage": "参加申込が完了しました",
-    "successNote1": "✅ 参加意向を記録しました — @BinanceBookClub で確定情報をご確認ください",
+    "successNote1": "✅ 参加意向を記録しました — @czlifeclub で確定情報をご確認ください",
     "successNote2": "📍 プレミアム会員：盛典でバウチャーNFTをお持ちの上、アカウントから現地交換してください",
     "confirmButton": "確認"
   },
@@ -569,7 +593,7 @@
     "eventsTitle": "近日のハイライト",
     "joinEvent": "参加する",
     "eventConfirmTitle": "受け付けました",
-    "eventConfirmBody": "参加意向を記録しました。最終日程は @BinanceBookClub の告知をご確認ください。",
+    "eventConfirmBody": "参加意向を記録しました。最終日程は @czlifeclub の告知をご確認ください。",
     "redeemSuccess": "受領しました。NFT はしばらくして一覧に反映されます。",
     "redeemSuccessToast": "会場での償還が完了しました。",
     "stubAttendanceExplanation": "会場での償還後に付与される参加記念（スタブ）です。ブースでの再償還はできません。",

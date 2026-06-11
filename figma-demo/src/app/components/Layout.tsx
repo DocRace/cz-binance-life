@@ -7,6 +7,8 @@ import bookCover from "../../assets/book-cover-hero.png";
 import LanguageSwitcher from "./LanguageSwitcher";
 import PlatformSettlementRibbon from "./PlatformSettlementRibbon";
 import {
+  BOOK_CLUB_TELEGRAM_HANDLE,
+  BOOK_CLUB_TELEGRAM_URL,
   getIpdexMarketOrigin,
   getIpdexSocialFacebookUrl,
   getIpdexSocialXUrl,
@@ -200,7 +202,15 @@ export default function Layout() {
             <div className="text-center">
               <h3 className="font-display mb-4">{t("footer.contactTitle")}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                {t("club.contactTelegram")}: @BinanceBookClub
+                {t("club.contactTelegram")}:{" "}
+                <a
+                  href={BOOK_CLUB_TELEGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gold hover:text-gold-light transition-colors"
+                >
+                  @{BOOK_CLUB_TELEGRAM_HANDLE}
+                </a>
               </p>
             </div>
           </div>

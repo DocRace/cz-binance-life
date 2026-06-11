@@ -14,6 +14,7 @@ import {
   resolveStoryExternalUrl,
   storyDisplayText,
 } from "../../lib/bookClubStories";
+import { BOOK_CLUB_TELEGRAM_HANDLE, BOOK_CLUB_TELEGRAM_URL } from "../../config/platform";
 
 const CLUB_EVENT_KEYS = ["event1", "event2", "event3"] as const;
 
@@ -81,7 +82,7 @@ export default function BookClub() {
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
           <a
-            href="https://t.me/BinanceBookClub"
+            href={BOOK_CLUB_TELEGRAM_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 rounded-full bg-gold/90 px-8 py-3.5 text-sm font-body font-medium tracking-wide text-primary-foreground shadow-sm transition-colors hover:bg-gold"
@@ -323,7 +324,10 @@ export default function BookClub() {
           <div className="border-t border-border/50 pt-6 text-center">
             <h3 className="font-display text-lg mb-2">{t("club.contactTitle")}</h3>
             <p className="text-sm text-muted-foreground">
-              {t("club.contactTelegram")}: <a href="https://t.me/BinanceBookClub" className="text-gold hover:text-gold-light transition-colors">@BinanceBookClub</a>
+              {t("club.contactTelegram")}:{" "}
+              <a href={BOOK_CLUB_TELEGRAM_URL} className="text-gold hover:text-gold-light transition-colors">
+                @{BOOK_CLUB_TELEGRAM_HANDLE}
+              </a>
             </p>
           </div>
         </div>

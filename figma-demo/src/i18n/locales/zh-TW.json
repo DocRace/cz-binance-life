@@ -176,6 +176,30 @@
     "feature3Desc": "如何在極端市場條件下做出正確決策",
     "feature4Title": "領導哲學",
     "feature4Desc": "如何建立和管理一個全球化的創新團隊",
+    "pickupStoresTitle": "實體書領取書店",
+    "pickupStoresSubtitle": "共 4 間 · 香港",
+    "pickupStoresIntro": "購買進階典藏版後，可於下列書店領取實體書。請攜帶預約憑證 NFT 或購買確認資訊，並留意各店營業時間。",
+    "pickupStores": [
+      {
+        "name": "商務印書館銅鑼灣圖書中心",
+        "address": "香港銅鑼灣怡和街9號"
+      },
+      {
+        "name": "商務印書館尖沙咀圖書中心",
+        "address": "九龍尖沙咀彌敦道83-97號華源大廈地下25號舖及1樓全層",
+        "hint": "港鐵站 A1 或 C 出口"
+      },
+      {
+        "name": "三聯書店中環分店",
+        "address": "香港中環域多利皇后街9號",
+        "hint": "港鐵中環站 C 出口"
+      },
+      {
+        "name": "三聯書店灣仔文化生活薈",
+        "address": "灣仔柯布連道1-1A號",
+        "hint": "港鐵灣仔站 A3 出口"
+      }
+    ],
     "authorTitle": "關於作者",
     "authorBio1": "趙長鵬（Changpeng Zhao，CZ）是幣安（Binance）的創始人兼前首席執行官。幣安是全球最大的加密貨幣交易所，日交易量達數百億美元。",
     "authorBio2": "CZ 在加拿大長大，曾在麥當勞和加油站打工以幫助家庭。他在麥吉爾大學學習計算機科學，畢業後在東京和紐約的金融科技公司工作。2017年，他創立了幣安，並在短短幾個月內將其打造成全球領先的加密貨幣交易平台。",
@@ -205,7 +229,7 @@
     "step1Title": "取得會員勳章",
     "step1Desc": "以 IPDEX 帳號登入本站後，可免費領取標準紀念勳章，或購買進階典藏版（299 HKD）取得預約憑證與實體書。",
     "step2Title": "加入 Telegram 書友會",
-    "step2Desc": "前往 @BinanceBookClub 參與共讀、活動通知與讀者交流。",
+    "step2Desc": "前往 @czlifeclub 參與共讀、活動通知與讀者交流。",
     "step3Title": "出席盛典並現場核銷（進階會員）",
     "step3Desc": "6 月 20 日線下盛典請於帳戶頁「現場核銷」，由工作人員驗證後兌換出席紀念 stub NFT。",
     "event1Date": "2026年6月20日",
@@ -223,7 +247,7 @@
     "event3Title": "讀者故事與社群交流",
     "event3Type": "社群",
     "event3Desc": "分享你與 Binance 的故事、閱讀策展讀者投稿，並接收書友會最新公告。",
-    "eventsDisclaimer": "活動報名僅記錄參與意願；最終日程與場地資訊以 @BinanceBookClub 公告為準。",
+    "eventsDisclaimer": "活動報名僅記錄參與意願；最終日程與場地資訊以 @czlifeclub 公告為準。",
     "contactTitle": "聯繫我們",
     "contactTelegram": "Telegram",
     "storiesKicker": "讀者聲音",
@@ -448,7 +472,7 @@
     "registerFor": "報名參加",
     "successTitle": "報名成功！",
     "successMessage": "您已成功報名",
-    "successNote1": "✅ 已記錄您的參與意願 — 請留意 @BinanceBookClub 確認通知",
+    "successNote1": "✅ 已記錄您的參與意願 — 請留意 @czlifeclub 確認通知",
     "successNote2": "📍 進階會員：請攜帶預約憑證至盛典，於帳戶頁現場核銷",
     "confirmButton": "確定"
   },
@@ -583,7 +607,7 @@
     "eventsTitle": "即將開始的互動",
     "joinEvent": "參加活動",
     "eventConfirmTitle": "已收到請求",
-    "eventConfirmBody": "已記錄您的參與意願，最終日程以 @BinanceBookClub 公告為準。",
+    "eventConfirmBody": "已記錄您的參與意願，最終日程以 @czlifeclub 公告為準。",
     "redeemSuccess": "核銷成功。請重新整理後確認「到場紀念」藏品。",
     "redeemSuccessToast": "核銷已完成。",
     "stubAttendanceExplanation": "這是會場完成核銷後發放的到場紀念票根 NFT，不可用於再度現場兌換。",

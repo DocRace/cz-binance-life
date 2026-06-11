@@ -176,6 +176,30 @@
     "feature3Desc": "How to make the right decisions under extreme market conditions",
     "feature4Title": "Leadership Philosophy",
     "feature4Desc": "How to build and manage a globalized innovative team",
+    "pickupStoresTitle": "Physical book pickup",
+    "pickupStoresSubtitle": "4 locations · Hong Kong",
+    "pickupStoresIntro": "After purchasing the premium collector's edition, collect your physical copy at any store below. Bring your reservation voucher NFT or purchase confirmation, and check each store's opening hours.",
+    "pickupStores": [
+      {
+        "name": "Commercial Press Book Centre, Causeway Bay",
+        "address": "9 Yee Wo Street, Causeway Bay, Hong Kong"
+      },
+      {
+        "name": "Commercial Press Book Centre, Tsim Sha Tsui",
+        "address": "Shop 25, G/F & 1/F, Amazing Year Mansion, 83–97 Nathan Road, Tsim Sha Tsui",
+        "hint": "MTR Exit A1 or C"
+      },
+      {
+        "name": "Joint Publishing, Central",
+        "address": "9 Queen Victoria Street, Central, Hong Kong",
+        "hint": "MTR Central Station, Exit C"
+      },
+      {
+        "name": "Joint Publishing, Wan Chai Cultural Lifestyle Hub",
+        "address": "1–1A O'Brien Road, Wan Chai",
+        "hint": "MTR Wan Chai Station, Exit A3"
+      }
+    ],
     "authorTitle": "About The Author",
     "authorBio1": "Changpeng Zhao (CZ) is the founder and former CEO of Binance. Binance is the world's largest cryptocurrency exchange with daily trading volumes of tens of billions of dollars.",
     "authorBio2": "CZ grew up in Canada and worked at McDonald's and gas stations to help his family. He studied computer science at McGill University and after graduation worked at fintech companies in Tokyo and New York. In 2017, he founded Binance and built it into a global leading cryptocurrency trading platform in just a few months.",
@@ -205,7 +229,7 @@
     "step1Title": "Get your member badge",
     "step1Desc": "Sign in with IPDEX on this site, then claim the free standard commemorative badge or purchase the premium edition (299 HKD) for a reservation voucher and physical book.",
     "step2Title": "Join the Telegram community",
-    "step2Desc": "Enter @BinanceBookClub for group reading, event updates, and discussions with other readers.",
+    "step2Desc": "Enter @czlifeclub for group reading, event updates, and discussions with other readers.",
     "step3Title": "Attend & redeem on-site (Premium)",
     "step3Desc": "At the Jun 20 offline gala, open Account → On-site redeem and verify with staff to exchange your premium voucher for an attendance stub NFT.",
     "event1Date": "Jun 20, 2026",
@@ -223,7 +247,7 @@
     "event3Title": "Reader stories & community lounge",
     "event3Type": "Community",
     "event3Desc": "Share your Binance journey, read curated member stories, and stay close to book-club announcements.",
-    "eventsDisclaimer": "Event registration records your interest; final schedules and venue details are announced in @BinanceBookClub.",
+    "eventsDisclaimer": "Event registration records your interest; final schedules and venue details are announced in @czlifeclub.",
     "contactTitle": "Contact Us",
     "contactTelegram": "Telegram",
     "storiesKicker": "Reader voices",
@@ -448,7 +472,7 @@
     "registerFor": "Register for",
     "successTitle": "Registration Successful!",
     "successMessage": "Registered for",
-    "successNote1": "✅ We recorded your interest — watch @BinanceBookClub for confirmations",
+    "successNote1": "✅ We recorded your interest — watch @czlifeclub for confirmations",
     "successNote2": "📍 Premium members: bring your voucher NFT to the gala for on-site redemption in Account",
     "confirmButton": "Confirm"
   },
@@ -583,7 +607,7 @@
     "eventsTitle": "Events",
     "joinEvent": "Join",
     "eventConfirmTitle": "Request received",
-    "eventConfirmBody": "We recorded your interest. Final schedules are posted in @BinanceBookClub.",
+    "eventConfirmBody": "We recorded your interest. Final schedules are posted in @czlifeclub.",
     "redeemSuccess": "Redeemed successfully. Your attendance NFT should appear shortly after refresh.",
     "redeemSuccessToast": "Redeem completed.",
     "stubAttendanceExplanation": "This is your commemorative attendance stub after venue redemption — it cannot be exchanged again at the booth.",

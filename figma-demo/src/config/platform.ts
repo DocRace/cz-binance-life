@@ -191,3 +191,8 @@ export function getDatadanceExplorerUrl(): string {
     normalizeOrigin(envString("VITE_DATADANCE_EXPLORER_URL")) || "https://explorer.datadance.ai"
   );
 }
+
+/** Freedom of Money book club Telegram community. */
+export const BOOK_CLUB_TELEGRAM_HANDLE = "czlifeclub" as const;
+
+export const BOOK_CLUB_TELEGRAM_URL = "https://t.me/czlifeclub" as const;
