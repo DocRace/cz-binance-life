@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { motion } from "motion/react";
-import { Users, ShoppingBag } from "lucide-react";
+import { BookOpen, ChevronRight, Users, ShoppingBag } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PurchaseModal from "../components/PurchaseModal";
 import AirdropClaimModal from "../components/AirdropClaimModal";
@@ -125,12 +125,6 @@ export default function Home() {
           className="mb-28 md:mb-36"
         />
 
-        <BookPickupStores
-          className="mx-auto mb-28 md:mb-36 max-w-5xl"
-          delay={1.05}
-          titleId="home-pickup-stores"
-        />
-
         {/* Features Grid */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -175,39 +169,36 @@ export default function Home() {
           ))}
         </motion.div>
 
-        {/* Book Preview Section */}
-        <motion.div
+        {/* Book journey + pickup */}
+        <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.8 }}
-          className="mt-36 md:mt-44 text-center"
+          className="mt-36 md:mt-44"
         >
-          <h2 className="font-display text-3xl md:text-4xl font-medium mb-6 tracking-tight text-foreground">
-            {t("home.journeyTitle")}
-          </h2>
-          <p className="text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-12">
-            {t("home.journeyDesc")}
-          </p>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
-            {[
-              { label: t("home.stat1Label"), value: "3,247", unit: t("home.stat1Unit") },
-              { label: t("home.stat2Label"), value: "1,923", unit: t("home.stat2Unit") },
-              { label: t("home.stat4Label"), value: "5,170", unit: t("home.stat4Unit") }
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 2 + index * 0.1 }}
-                className="p-6 rounded-sm border border-border/45 bg-card/15"
-              >
-                <div className="text-3xl font-tech text-gold mb-1">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
-              </motion.div>
-            ))}
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="font-display text-3xl md:text-4xl font-medium mb-6 tracking-tight text-foreground">
+              {t("home.journeyTitle")}
+            </h2>
+            <p className="text-muted-foreground leading-relaxed mb-8">
+              {t("home.journeyDesc")}
+            </p>
+            <Link
+              to="/book"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-gold/55 px-6 py-3 text-sm font-medium text-gold transition-colors hover:bg-gold/10 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              <BookOpen className="h-4 w-4 shrink-0" aria-hidden />
+              {t("home.bookDetailsCta")}
+              <ChevronRight className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
+            </Link>
           </div>
-        </motion.div>
+
+          <BookPickupStores
+            className="mx-auto mt-16 md:mt-20 max-w-5xl"
+            delay={1.95}
+            titleId="home-pickup-stores"
+          />
+        </motion.section>
       </div>
 
       {purchaseOpen ? <PurchaseModal onClose={() => setPurchaseOpen(false)} /> : null}
