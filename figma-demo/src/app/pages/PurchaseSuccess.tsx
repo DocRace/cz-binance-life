@@ -1,15 +1,28 @@
+import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router";
 import { motion } from "motion/react";
 import { CheckCircle2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { SITE_CONTAINER_X } from "../layout/pageLayout";
+import {
+  markAccountSyncAfterPurchase,
+  markRecentPaidOrderId,
+  takeLastCheckoutOrderId,
+} from "../../lib/accountPurchaseSync";
 
 export default function PurchaseSuccess() {
   const { t } = useTranslation();
   const [params] = useSearchParams();
   const orderId = `${params.get("orderId") ?? ""}`.trim();
 
+  useEffect(() => {
+    markAccountSyncAfterPurchase();
+    const paidOrderId = orderId || takeLastCheckoutOrderId();
+    if (paidOrderId) markRecentPaidOrderId(paidOrderId);
+  }, [orderId]);
+
   return (
-    <div className="min-h-[70vh] flex items-center justify-center px-4 py-16">
+    <div className={`${SITE_CONTAINER_X} flex min-h-[70vh] items-center justify-center py-16`}>
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}

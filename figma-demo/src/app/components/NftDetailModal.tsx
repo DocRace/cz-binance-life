@@ -185,7 +185,7 @@ export default function NftDetailModal({ nft, onClose, onRedeem }: NftDetailModa
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.94, opacity: 0 }}
           transition={{ type: "spring", duration: 0.45 }}
-          className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl border border-border bg-card shadow-2xl"
+          className="relative flex w-full max-w-4xl max-h-[90vh] flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl md:flex-row"
           onClick={(e) => e.stopPropagation()}
         >
           <button
@@ -198,27 +198,27 @@ export default function NftDetailModal({ nft, onClose, onRedeem }: NftDetailModa
           </button>
 
           {loading ? (
-            <div className="flex flex-col items-center justify-center gap-3 py-24 text-muted-foreground">
+            <div className="flex flex-col items-center justify-center gap-3 py-24 text-muted-foreground min-h-[280px] w-full">
               <Loader2 className="w-8 h-8 animate-spin text-gold" />
               <p>{t("nftDetailModal.loading")}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-              <div className="p-6 md:p-8 flex items-center justify-center bg-muted/20 border-b md:border-b-0 md:border-r border-border min-h-[280px]">
+            <>
+              <aside className="flex shrink-0 items-center justify-center border-b border-border px-6 py-6 md:h-[90vh] md:w-[42%] md:border-b-0 md:border-r md:bg-muted/20 md:p-8">
                 {imageUrl ? (
                   <img
                     src={imageUrl}
                     alt={title}
-                    className="max-h-[min(420px,50vh)] w-full object-contain rounded-xl"
+                    className="block h-auto w-auto max-h-[min(320px,42vh)] max-w-full rounded-2xl object-contain ring-1 ring-border/50 md:max-h-[min(480px,72vh)]"
                   />
                 ) : (
-                  <div className="w-full aspect-square max-w-sm rounded-xl bg-gradient-to-br from-gold/30 to-muted flex items-center justify-center text-muted-foreground text-sm">
+                  <div className="flex aspect-square w-48 max-w-full items-center justify-center rounded-2xl bg-gradient-to-br from-gold/30 to-muted text-sm text-muted-foreground ring-1 ring-border/50">
                     {t("nftDetailModal.noImage")}
                   </div>
                 )}
-              </div>
+              </aside>
 
-              <div className="p-6 md:p-8 space-y-6">
+              <div className="min-h-0 flex-1 space-y-6 overflow-y-auto p-6 md:p-8">
                 <div>
                   <p className="text-xs uppercase tracking-[0.14em] text-gold/80 mb-1">
                     {stub
@@ -364,7 +364,7 @@ export default function NftDetailModal({ nft, onClose, onRedeem }: NftDetailModa
                   )}
                 </section>
               </div>
-            </div>
+            </>
           )}
         </motion.div>
       </motion.div>

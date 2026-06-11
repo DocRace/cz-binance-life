@@ -12,6 +12,7 @@ import {
   getBookPrimaryPriceHkdHint,
   getBookPrimarySaleId,
 } from "../../config/platform";
+import { rememberCheckoutOrderId } from "../../lib/accountPurchaseSync";
 import { bookBffJson, bookBffIsTransportIssue } from "../../lib/bookBffClient";
 
 interface PurchaseModalProps {
@@ -397,6 +398,7 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
 
       const paymentUrl = out.data?.paymentUrl?.trim() ?? "";
       if (out.code === 0 && paymentUrl) {
+        if (out.data?.orderId) rememberCheckoutOrderId(out.data.orderId);
         if (!isStripeCheckoutUrl(paymentUrl)) {
           paymentTab?.close();
           setApiCheckoutError(t("purchase.invalidPaymentUrl"));

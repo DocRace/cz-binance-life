@@ -1,8 +1,18 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router";
 import { motion } from "motion/react";
-import { Users, MessageCircle, Calendar, BookOpen, Video, Trophy, Sparkles, ShoppingBag } from "lucide-react";
+import {
+  Users,
+  MessageCircle,
+  Calendar,
+  BookOpen,
+  Video,
+  Trophy,
+  ShoppingBag,
+  MapPin,
+  ChevronRight,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
-import EventRegistrationModal from "../components/EventRegistrationModal";
 import PurchaseModal from "../components/PurchaseModal";
 import AirdropClaimModal from "../components/AirdropClaimModal";
 import MembershipTiers from "../components/MembershipTiers";
@@ -19,15 +29,19 @@ import {
   BOOK_CLUB_TELEGRAM_QR_SRC,
   BOOK_CLUB_TELEGRAM_URL,
 } from "../../config/platform";
-
-const CLUB_EVENT_KEYS = ["event1", "event2", "event3"] as const;
+import {
+  CARD_SURFACE,
+  CONTENT_NARROW,
+  GRID_GAP,
+  PAGE_HEADER,
+  PAGE_SHELL,
+  SECTION_SPACING,
+} from "../layout/pageLayout";
 
 export default function BookClub() {
   const { t } = useTranslation();
-  const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [purchaseOpen, setPurchaseOpen] = useState(false);
   const [airdropOpen, setAirdropOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<string>("");
   const [communityStories, setCommunityStories] = useState<BookClubStory[] | null>(undefined);
   const [expandedStory, setExpandedStory] = useState<BookClubStory | null>(null);
 
@@ -69,19 +83,19 @@ export default function BookClub() {
 
   return (
     <>
-    <div className="container mx-auto px-6 py-20">
+    <div className={PAGE_SHELL}>
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-20"
+        className={PAGE_HEADER}
       >
         <h1 className="font-display text-5xl md:text-6xl mb-6">
           <span className="bg-gradient-to-r from-gold to-gold-light bg-clip-text text-transparent">
             {t("club.title")}
           </span>
         </h1>
-        <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
+        <p className={`${CONTENT_NARROW} mb-8 text-xl text-muted-foreground`}>
           {t("club.subtitle")}
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
@@ -107,7 +121,8 @@ export default function BookClub() {
       <MembershipTiers
         onPremiumClick={() => setPurchaseOpen(true)}
         onStandardClick={() => setAirdropOpen(true)}
-        className="max-w-5xl mx-auto mb-20"
+        showKicker={false}
+        className={SECTION_SPACING}
       />
 
       {/* Community stories (UGC / Binance-positive, curated) */}
@@ -116,20 +131,16 @@ export default function BookClub() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.12 }}
-          className="max-w-5xl mx-auto mb-20 px-2"
+          className={SECTION_SPACING}
           aria-labelledby="club-stories-heading"
         >
           <div className="mb-6 flex flex-col items-center text-center">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.16em] text-gold/90">
-              <Sparkles className="size-3.5" aria-hidden />
-              {t("club.storiesKicker")}
-            </div>
             <h2 id="club-stories-heading" className="font-display text-3xl md:text-4xl mb-3">
               <span className="bg-gradient-to-r from-gold to-amber-200 bg-clip-text text-transparent">
                 {t("club.storiesTitle")}
               </span>
             </h2>
-            <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed">
+            <p className="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground">
               {t("club.storiesSubtitle")}
             </p>
           </div>
@@ -138,7 +149,7 @@ export default function BookClub() {
               {t("club.storiesEmpty")}
             </p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 [&>*]:min-w-0">
+            <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${GRID_GAP} [&>*]:min-w-0`}>
               {communityStories.map((story, idx) => {
                 const externalUrl = resolveStoryExternalUrl(story);
                 const displayText = storyDisplayText(story);
@@ -171,10 +182,9 @@ export default function BookClub() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
-        className="max-w-5xl mx-auto mb-20 px-2"
+        className={SECTION_SPACING}
       >
-        <h2 className="font-display text-3xl text-center mb-12">{t("club.benefitsTitle")}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+        <div className={`grid grid-cols-1 items-stretch md:grid-cols-3 ${GRID_GAP}`}>
           {[
             {
               icon: MessageCircle,
@@ -223,10 +233,8 @@ export default function BookClub() {
                 className="group relative flex h-full flex-col"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-500`} />
-                <div className="relative flex h-full min-h-[220px] flex-col p-6 rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm hover:border-gold/30 transition-all duration-500">
-                  <div className="w-12 h-12 mb-4 shrink-0 rounded-xl bg-gradient-to-br bg-gold/20 flex items-center justify-center">
-                    <Icon className="w-6 h-6 text-gold" />
-                  </div>
+                <div className={`relative flex h-full min-h-[220px] flex-col p-6 ${CARD_SURFACE} transition-all duration-500 hover:border-gold/30`}>
+                  <Icon className="mb-4 h-9 w-9 shrink-0 text-gold" aria-hidden />
                   <h3 className="font-display text-xl mb-2 min-h-[3.5rem] line-clamp-2">{benefit.title}</h3>
                   <p className="text-muted-foreground text-sm leading-relaxed flex-1">{benefit.description}</p>
                 </div>
@@ -236,58 +244,27 @@ export default function BookClub() {
         </div>
       </motion.div>
 
-      {/* Upcoming Events */}
+      {/* Offline event — same block as homepage */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
-        className="max-w-5xl mx-auto mb-20 px-2"
+        className={`${CONTENT_NARROW} ${SECTION_SPACING} text-center`}
       >
-        <h2 className="font-display text-3xl mb-8">{t("club.eventsTitle")}</h2>
-        <div className="space-y-4">
-          {CLUB_EVENT_KEYS.map((key, index) => {
-            const event = {
-              date: t(`club.${key}Date`),
-              time: t(`club.${key}Time`),
-              title: t(`club.${key}Title`),
-              type: t(`club.${key}Type`),
-              description: t(`club.${key}Desc`),
-            };
-            return (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.2 + index * 0.1 }}
-              className="group p-6 rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm hover:border-gold/30 transition-all duration-300"
-            >
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="px-3 py-1 rounded-full bg-gold/20 text-gold text-xs font-tech">
-                      {event.type}
-                    </span>
-                    <span className="text-sm text-muted-foreground font-tech">
-                      {event.date} {event.time}
-                    </span>
-                  </div>
-                  <h3 className="font-display text-xl mb-2">{event.title}</h3>
-                  <p className="text-sm text-muted-foreground">{event.description}</p>
-                </div>
-                <button
-                  onClick={() => handleRegister(event.title)}
-                  className="px-6 py-2 rounded-lg border border-gold/50 text-gold hover:bg-gold/10 transition-colors duration-300"
-                >
-                  {t("club.registerButton")}
-                </button>
-              </div>
-            </motion.div>
-            );
-          })}
-        </div>
-        <p className="mt-6 text-center text-[11px] leading-relaxed text-muted-foreground/75">
-          {t("club.eventsDisclaimer")}
+        <h2 className="font-display text-3xl md:text-4xl font-medium mb-6 tracking-tight text-foreground">
+          {t("home.offlineEventTitle")}
+        </h2>
+        <p className="text-muted-foreground leading-relaxed mb-8">
+          {t("home.offlineEventDesc")}
         </p>
+        <Link
+          to="/event"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-gold/90 px-8 py-3.5 text-sm font-body font-medium tracking-wide text-primary-foreground shadow-sm transition-colors hover:bg-gold no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        >
+          <MapPin className="h-4 w-4 shrink-0" aria-hidden />
+          {t("home.offlineEventCta")}
+          <ChevronRight className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
+        </Link>
       </motion.div>
 
       {/* How to Join */}
@@ -295,7 +272,7 @@ export default function BookClub() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.6 }}
-        className="max-w-5xl mx-auto px-2"
+        className="w-full"
       >
         <div className="p-8 rounded-2xl border border-gold/30 bg-gradient-to-br from-gold/5 to-transparent">
           <h2 className="font-display text-3xl mb-6 text-center">{t("club.howToJoinTitle")}</h2>
@@ -365,13 +342,6 @@ export default function BookClub() {
       />
     ) : null}
 
-    {/* Registration Modal */}
-    {showRegistrationModal && (
-      <EventRegistrationModal
-        onClose={() => setShowRegistrationModal(false)}
-        eventTitle={selectedEvent}
-      />
-    )}
     {purchaseOpen ? <PurchaseModal onClose={() => setPurchaseOpen(false)} /> : null}
     {airdropOpen ? <AirdropClaimModal onClose={() => setAirdropOpen(false)} /> : null}
     </>

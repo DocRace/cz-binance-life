@@ -96,3 +96,51 @@ export function bookBffIsTransportIssue(out: {
   const s = typeof out.rawStatus === "number" ? out.rawStatus : 0;
   return Boolean(out.transportError || (s >= 502 && s <= 504));
 }
+
+/** Stale cookie, rotated refresh token, or invalid access token — not a transport glitch. */
+export function bookBffIsUnauthorized(out: {
+  code?: number;
+  message?: string;
+  rawStatus?: number;
+  transportError?: boolean;
+}): boolean {
+  if (out.transportError) return false;
+  const status = typeof out.rawStatus === "number" ? out.rawStatus : 0;
+  if (status === 401 || status === 403) return true;
+  if (out.code === -10005) return true;
+  const msg = `${out.message ?? ""}`.toLowerCase();
+  return (
+    msg.includes("unauthorized") ||
+    msg.includes("jwt") ||
+    msg.includes("token") ||
+    msg.includes("expired") ||
+    msg.includes("login") ||
+    msg === "no_refresh" ||
+    msg === "refresh_failed"
+  );
+}
+
+/**
+ * `/me` (or equivalent profile) did not return user data and this is not a transient outage.
+ * Covers IPDEX 400 responses that are not tagged Unauthorized but still mean the session is dead.
+ */
+export function bookBffProfileUnavailable(out: {
+  code?: number;
+  data?: unknown;
+  rawStatus?: number;
+  transportError?: boolean;
+}): boolean {
+  if (bookBffIsTransportIssue(out)) return false;
+  if (out.code === 0 && out.data != null && typeof out.data === "object") return false;
+  return true;
+}
+
+/** Clear BFF cookies and reload so Account shows the login screen with a clean session. */
+export async function bookBffClearSessionAndReload(): Promise<void> {
+  try {
+    await bookBffJson("/api/bff/auth/logout", { method: "POST" });
+  } catch {
+    /* ignore */
+  }
+  if (typeof window !== "undefined") window.location.reload();
+}

@@ -1,20 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Users } from "lucide-react";
 import type { BookClubStory } from "../../lib/bookClubStories";
+import { buildClubStoryAvatarCandidates } from "../../lib/clubStoryAvatar";
 
 export default function ClubStoryAvatar({ story }: { story: BookClubStory }) {
-  const handleGuess = story.author_display
-    .replace(/^@/, "")
-    .trim()
-    .split(/[\s·|,]/)[0]
-    .trim();
-  const candidates = [
-    story.author_avatar_url?.trim(),
-    handleGuess && /^[A-Za-z0-9_]{1,30}$/.test(handleGuess)
-      ? `https://unavatar.io/x/${encodeURIComponent(handleGuess)}`
-      : "",
-  ].filter(Boolean) as string[];
-
+  const candidates = useMemo(() => buildClubStoryAvatarCandidates(story), [story]);
   const [idx, setIdx] = useState(0);
 
   useEffect(() => {

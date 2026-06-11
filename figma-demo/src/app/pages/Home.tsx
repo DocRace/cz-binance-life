@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { motion } from "motion/react";
-import { BookOpen, ChevronRight, Users, ShoppingBag } from "lucide-react";
+import { BookOpen, ChevronRight, MapPin, Users, ShoppingBag } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PurchaseModal from "../components/PurchaseModal";
 import AirdropClaimModal from "../components/AirdropClaimModal";
@@ -9,6 +9,15 @@ import MembershipTiers from "../components/MembershipTiers";
 import Book3DCover from "../components/Book3DCover";
 import BookPickupStores from "../components/BookPickupStores";
 import bookCover from "../../assets/book-cover-hero.png";
+import {
+  CARD_HOVER,
+  CARD_SURFACE,
+  CONTENT_NARROW,
+  CONTENT_WIDE,
+  GRID_GAP,
+  PAGE_SHELL_HOME,
+  SECTION_SPACING_LG,
+} from "../layout/pageLayout";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -17,9 +26,9 @@ export default function Home() {
 
   return (
     <>
-      <div className="container mx-auto max-w-[1200px] px-6 sm:px-10 py-24 md:py-32">
+      <div className={PAGE_SHELL_HOME}>
         {/* Hero */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 xl:gap-28 items-center mb-28 md:mb-36">
+        <div className={`grid grid-cols-1 items-center lg:grid-cols-2 ${GRID_GAP} gap-y-14 lg:gap-x-20 xl:gap-x-28 ${SECTION_SPACING_LG}`}>
           {/* Book */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
@@ -47,15 +56,6 @@ export default function Home() {
             transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             className="text-center lg:text-left order-1 lg:order-2 min-w-0 max-w-xl mx-auto lg:mx-0"
           >
-            <motion.span
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35 }}
-              className="inline-flex items-center rounded-full border border-gold/80 px-4 py-1.5 text-[11px] font-body font-medium uppercase tracking-[0.2em] text-gold-light/95 mb-8"
-            >
-              {t("home.coverBadge")}
-            </motion.span>
-
             <motion.h1
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -122,7 +122,8 @@ export default function Home() {
         <MembershipTiers
           onPremiumClick={() => setPurchaseOpen(true)}
           onStandardClick={() => setAirdropOpen(true)}
-          className="mb-28 md:mb-36"
+          showKicker={false}
+          className={SECTION_SPACING_LG}
         />
 
         {/* Features Grid */}
@@ -130,7 +131,7 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
-          className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 md:items-stretch md:gap-8"
+          className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:items-stretch ${GRID_GAP} ${SECTION_SPACING_LG}`}
         >
           {[
             {
@@ -159,8 +160,8 @@ export default function Home() {
               transition={{ delay: 1.4 + feature.delay }}
               className="group relative flex h-full min-h-0 flex-col"
             >
-              <div className="absolute inset-0 rounded-sm bg-gradient-to-br from-gold/[0.04] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-              <div className="relative flex h-full min-h-0 flex-col rounded-sm border border-border/50 bg-card/20 px-8 py-9 transition-colors duration-500 hover:border-gold/25">
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gold/[0.04] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              <div className={`relative flex h-full min-h-0 flex-col p-6 md:p-8 ${CARD_SURFACE} ${CARD_HOVER}`}>
                 <div className="mb-5 shrink-0 text-4xl opacity-90">{feature.icon}</div>
                 <h3 className="mb-2 font-display text-xl">{feature.title}</h3>
                 <p className="min-h-0 flex-1 leading-relaxed text-muted-foreground">{feature.description}</p>
@@ -174,9 +175,8 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.8 }}
-          className="mt-36 md:mt-44"
         >
-          <div className="mx-auto max-w-3xl text-center">
+          <div className={`${CONTENT_NARROW} text-center`}>
             <h2 className="font-display text-3xl md:text-4xl font-medium mb-6 tracking-tight text-foreground">
               {t("home.journeyTitle")}
             </h2>
@@ -185,7 +185,7 @@ export default function Home() {
             </p>
             <Link
               to="/book"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-gold/55 px-6 py-3 text-sm font-medium text-gold transition-colors hover:bg-gold/10 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-gold/90 px-8 py-3.5 text-sm font-body font-medium tracking-wide text-primary-foreground shadow-sm transition-colors hover:bg-gold no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <BookOpen className="h-4 w-4 shrink-0" aria-hidden />
               {t("home.bookDetailsCta")}
@@ -193,8 +193,30 @@ export default function Home() {
             </Link>
           </div>
 
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.9 }}
+            className={`${CONTENT_NARROW} mt-20 md:mt-28 text-center`}
+          >
+            <h2 className="font-display text-3xl md:text-4xl font-medium mb-6 tracking-tight text-foreground">
+              {t("home.offlineEventTitle")}
+            </h2>
+            <p className="text-muted-foreground leading-relaxed mb-8">
+              {t("home.offlineEventDesc")}
+            </p>
+            <Link
+              to="/event"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-gold/90 px-8 py-3.5 text-sm font-body font-medium tracking-wide text-primary-foreground shadow-sm transition-colors hover:bg-gold no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              <MapPin className="h-4 w-4 shrink-0" aria-hidden />
+              {t("home.offlineEventCta")}
+              <ChevronRight className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
+            </Link>
+          </motion.div>
+
           <BookPickupStores
-            className="mx-auto mt-16 md:mt-20 max-w-5xl"
+            className={`${CONTENT_WIDE} mt-16 md:mt-20`}
             delay={1.95}
             titleId="home-pickup-stores"
           />

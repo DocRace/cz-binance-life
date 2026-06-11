@@ -1,15 +1,22 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { BookOpen, LogIn, LogOut, Package, Award, Loader2 } from "lucide-react";
 import AccountPendingOrders from "../components/AccountPendingOrders";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import NFTBadge from "../components/NFTBadge";
 import NftDetailModal from "../components/NftDetailModal";
 import PurchaseModal from "../components/PurchaseModal";
 import RedeemBookModal from "../components/RedeemBookModal";
-import { bookBffJson, bookBffIsTransportIssue } from "../../lib/bookBffClient";
-import { bookBffJsonWithRefresh } from "../../lib/bookBffWithRefresh";
+import RedeemScanUnavailableModal from "../components/RedeemScanUnavailableModal";
+import { isRedeemScanDeepLink } from "../../lib/redeemDeepLink";
+import {
+  bookBffClearSessionAndReload,
+  bookBffIsTransportIssue,
+  bookBffJson,
+  bookBffProfileUnavailable,
+} from "../../lib/bookBffClient";
+import { bookBffJsonWithRefresh, bookBffVerifySessionAlive } from "../../lib/bookBffWithRefresh";
 import {
   getBookNftRedemptionRuleId,
   getBookPrimarySaleId,
@@ -21,13 +28,17 @@ import {
   filterCzLifeDisplayNfts,
   isPremiumAccountNft,
   isPremiumAttendanceStub,
+  isMeaningfulNftDateLabel,
+  isPremiumVoucherNft,
   isRedeemEligible,
   isStandardMembershipNft,
   isSyntheticNftBalanceToken,
   mapNftRow,
   strField,
 } from "../../lib/bookAccountNftApi";
+import { pollDashboardRefresh, takeAccountSyncAfterPurchase } from "../../lib/accountPurchaseSync";
 import { buildClubRedeemPostJsonPayload, localizedBookRedeemFailureMessage, logClubRedeemResponseIfDebugging } from "../../lib/bookRedeemClient";
+import { CARD_SURFACE, CONTENT_NARROW, PAGE_SHELL, SITE_CONTAINER_X } from "../layout/pageLayout";
 import { toast } from "sonner";
 
 const ACCOUNT_HEADER_BTN =
@@ -40,6 +51,7 @@ function membershipCardArt(nfts: DisplayNft[], fallbackCover: string): string {
 
 export default function Account() {
   const { t } = useTranslation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [sessionChecking, setSessionChecking] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -53,6 +65,7 @@ export default function Account() {
   const [profileEmail, setProfileEmail] = useState("");
   const [displayNfts, setDisplayNfts] = useState<DisplayNft[]>([]);
   const [dataLoading, setDataLoading] = useState(false);
+  const [dashboardReady, setDashboardReady] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const [showRedeemModal, setShowRedeemModal] = useState(false);
@@ -62,6 +75,11 @@ export default function Account() {
   const [purchaseOpen, setPurchaseOpen] = useState(false);
   const [detailNft, setDetailNft] = useState<DisplayNft | null>(null);
   const [tierFallbackCovers, setTierFallbackCovers] = useState({ premium: "", standard: "" });
+  const [ordersRefreshKey, setOrdersRefreshKey] = useState(0);
+  const [postPurchaseSyncing, setPostPurchaseSyncing] = useState(false);
+  const [redeemScanPending, setRedeemScanPending] = useState(() => isRedeemScanDeepLink(searchParams));
+  const [showRedeemScanUnavailable, setShowRedeemScanUnavailable] = useState(false);
+  const redeemScanHandledRef = useRef(false);
 
   const grouped = useMemo(() => {
     const premiumUnredeemed: DisplayNft[] = [];
@@ -90,9 +108,24 @@ export default function Account() {
     [grouped.premiumUnredeemed],
   );
 
-  const loadDashboard = useCallback(async () => {
-    setDataLoading(true);
+  const suppressPendingCollectionIds = useMemo(() => {
+    if (!postPurchaseSyncing) return undefined;
+    const ids = new Set<string>();
+    for (const nft of displayNfts) {
+      if (nft.badge !== "original" || !isPremiumVoucherNft(nft) || !nft.collectionId) continue;
+      ids.add(nft.collectionId.trim().toLowerCase());
+    }
+    return ids.size > 0 ? ids : undefined;
+  }, [displayNfts, postPurchaseSyncing]);
+
+  const loadDashboard = useCallback(async (options?: { background?: boolean }) => {
+    const background = options?.background ?? false;
+    if (!background) {
+      setDataLoading(true);
+      setDashboardReady(false);
+    }
     setLoadError(null);
+    let sessionExpired = false;
     try {
       const [me, nftRows] = await Promise.all([
         bookBffJsonWithRefresh<Record<string, unknown>>("/api/bff/me"),
@@ -106,24 +139,43 @@ export default function Account() {
         );
       } else {
         setProfileEmail(t("account.profileEmailFallback"));
-        if (me.rawStatus === 401) {
-          setIsLoggedIn(false);
+        if (bookBffProfileUnavailable(me)) {
+          sessionExpired = true;
+          void bookBffClearSessionAndReload();
           return;
         }
-        if (bookBffIsTransportIssue(me)) {
-          setLoadError(t("purchase.bffOffline"));
-        } else {
-          setLoadError(t("account.loadError"));
-        }
+        setLoadError(t("purchase.bffOffline"));
       }
 
       setDisplayNfts(filterCzLifeDisplayNfts(nftRows.map(mapNftRow)));
     } catch {
       setLoadError(t("purchase.bffOffline"));
     } finally {
-      setDataLoading(false);
+      if (!sessionExpired) {
+        if (!background) setDataLoading(false);
+        setDashboardReady(true);
+      }
     }
   }, [t]);
+
+  const syncDashboardAfterPurchase = useCallback(async () => {
+    setPostPurchaseSyncing(true);
+    setDataLoading(true);
+    setDashboardReady(false);
+    try {
+      await pollDashboardRefresh(
+        () => loadDashboard({ background: true }),
+        () => setOrdersRefreshKey((k) => k + 1),
+      );
+    } finally {
+      setPostPurchaseSyncing(false);
+      setDataLoading(false);
+      setDashboardReady(true);
+      setOrdersRefreshKey((k) => k + 1);
+    }
+  }, [loadDashboard]);
+
+  const accountContentLoading = dataLoading || postPurchaseSyncing;
 
   useEffect(() => {
     let cancel = false;
@@ -152,8 +204,48 @@ export default function Account() {
 
   useEffect(() => {
     if (!isLoggedIn) return;
-    loadDashboard();
-  }, [isLoggedIn, loadDashboard]);
+    if (takeAccountSyncAfterPurchase()) {
+      void syncDashboardAfterPurchase();
+      return;
+    }
+    void loadDashboard();
+  }, [isLoggedIn, loadDashboard, syncDashboardAfterPurchase]);
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    const onVisible = () => {
+      if (document.visibilityState !== "visible") return;
+      if (takeAccountSyncAfterPurchase()) {
+        void syncDashboardAfterPurchase();
+        return;
+      }
+      void (async () => {
+        const alive = await bookBffVerifySessionAlive();
+        if (!alive) await bookBffClearSessionAndReload();
+      })();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, [isLoggedIn, syncDashboardAfterPurchase]);
+
+  useEffect(() => {
+    if (isRedeemScanDeepLink(searchParams)) {
+      setRedeemScanPending(true);
+      redeemScanHandledRef.current = false;
+    }
+  }, [searchParams]);
+
+  const clearRedeemScanQuery = useCallback(() => {
+    if (!isRedeemScanDeepLink(searchParams)) return;
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        next.delete("redeem");
+        return next;
+      },
+      { replace: true },
+    );
+  }, [searchParams, setSearchParams]);
 
   const handleSendCode = async () => {
     const email = emailInput.trim();
@@ -213,6 +305,7 @@ export default function Account() {
     setIsLoggedIn(false);
     setProfileEmail("");
     setDisplayNfts([]);
+    setDashboardReady(false);
   };
 
   const handleOpenNftDetail = (nft: DisplayNft) => {
@@ -226,6 +319,32 @@ export default function Account() {
     setRedeemTarget({ tokenId: nft.tokenId, collectionId: nft.collectionId });
     setShowRedeemModal(true);
   };
+
+  useEffect(() => {
+    if (!redeemScanPending || !isLoggedIn || sessionChecking || dataLoading || !dashboardReady) return;
+    if (redeemScanHandledRef.current) return;
+
+    const firstEligible = displayNfts.find((n) => isRedeemEligible(n) && n.collectionId);
+    redeemScanHandledRef.current = true;
+    clearRedeemScanQuery();
+
+    if (firstEligible) {
+      handleRedeemClick(firstEligible);
+      setRedeemScanPending(false);
+      return;
+    }
+
+    setShowRedeemScanUnavailable(true);
+    setRedeemScanPending(false);
+  }, [
+    redeemScanPending,
+    isLoggedIn,
+    sessionChecking,
+    dataLoading,
+    dashboardReady,
+    displayNfts,
+    clearRedeemScanQuery,
+  ]);
 
   const handleConfirmRedeem = async (staffCode: string) => {
     const target = redeemTarget;
@@ -321,12 +440,16 @@ export default function Account() {
               <div className="space-y-2 w-full max-w-[240px]">
                 {nft.badge === "original" && opts.variant === "standard" && (
                   <>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">{t("account.standardAcquiredDate")}</span>
-                      <span className="font-tech">{nft.dateLabel}</span>
-                    </div>
-                    <div className="p-2 rounded-lg bg-stone-500/15 text-center">
-                      <span className="text-xs text-stone-300">✓ {t("account.standardMemberOk")}</span>
+                    {isMeaningfulNftDateLabel(nft.dateLabel) ? (
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">{t("account.standardAcquiredDate")}</span>
+                        <span className="font-tech">{nft.dateLabel}</span>
+                      </div>
+                    ) : null}
+                    <div className="flex justify-center">
+                      <span className="inline-flex items-center rounded-full bg-stone-500/15 px-3 py-1.5 text-xs text-stone-300">
+                        ✓ {t("account.standardMemberOk")}
+                      </span>
                     </div>
                     <p className="text-xs text-muted-foreground text-center leading-snug">
                       {t("account.standardMemberNote")}
@@ -335,38 +458,46 @@ export default function Account() {
                 )}
                 {nft.badge === "original" && opts.variant !== "standard" && (
                   <>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">{t("account.reservedDate")}</span>
-                      <span className="font-tech">{nft.dateLabel}</span>
-                    </div>
-                    <div className="p-2 rounded-lg bg-gold/10 text-center">
-                      <span className="text-xs text-gold">✓ {t("account.reservedOk")}</span>
+                    {isMeaningfulNftDateLabel(nft.dateLabel) ? (
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">{t("account.reservedDate")}</span>
+                        <span className="font-tech">{nft.dateLabel}</span>
+                      </div>
+                    ) : null}
+                    <div className="flex flex-wrap items-center justify-center gap-2">
+                      <span className="inline-flex items-center rounded-full bg-gold/10 px-3 py-1.5 text-xs text-gold">
+                        ✓ {t("account.reservedOk")}
+                      </span>
+                      {opts.showRedeem && isRedeemEligible(nft) ? (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRedeemClick(nft);
+                          }}
+                          className="inline-flex items-center rounded-full border border-gold/50 px-3 py-1.5 text-xs text-gold transition-colors hover:bg-gold/10"
+                        >
+                          {t("account.redeemDemoCta")}
+                        </button>
+                      ) : null}
                     </div>
                     <p className="text-xs text-muted-foreground text-center leading-snug">
                       {t("account.premiumVoucherNote")}
                     </p>
-                    {opts.showRedeem && isRedeemEligible(nft) && (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRedeemClick(nft);
-                        }}
-                        className="w-full mt-2 py-2 rounded-lg border border-gold/50 text-gold hover:bg-gold/10 transition-colors text-sm"
-                      >
-                        {t("account.redeemDemoCta")}
-                      </button>
-                    )}
                   </>
                 )}
                 {isPremiumAttendanceStub(nft) && (
                   <>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">{t("account.redeemDate")}</span>
-                      <span className="font-tech">{nft.dateLabel}</span>
-                    </div>
-                    <div className="p-2 rounded-lg bg-muted/50 text-center">
-                      <span className="text-xs text-muted-foreground">✓ {t("account.stubRedeemedOk")}</span>
+                    {isMeaningfulNftDateLabel(nft.dateLabel) ? (
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">{t("account.redeemDate")}</span>
+                        <span className="font-tech">{nft.dateLabel}</span>
+                      </div>
+                    ) : null}
+                    <div className="flex justify-center">
+                      <span className="inline-flex items-center rounded-full bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground">
+                        ✓ {t("account.stubRedeemedOk")}
+                      </span>
                     </div>
                     <p className="mt-2 text-xs text-muted-foreground text-center leading-snug">
                       {t("account.stubAttendanceExplanation")}
@@ -380,10 +511,12 @@ export default function Account() {
                 )}
                 {nft.badge === "principle" && (
                   <>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">{t("account.earnedDate")}</span>
-                      <span className="font-tech">{nft.dateLabel}</span>
-                    </div>
+                    {isMeaningfulNftDateLabel(nft.dateLabel) ? (
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">{t("account.earnedDate")}</span>
+                        <span className="font-tech">{nft.dateLabel}</span>
+                      </div>
+                    ) : null}
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">{t("account.principleMeta")}</span>
                       <span className="font-tech">{nft.principleName}</span>
@@ -492,7 +625,7 @@ export default function Account() {
 
   if (sessionChecking) {
     return (
-      <div className="container mx-auto px-6 py-20 flex flex-col items-center gap-4 text-muted-foreground">
+      <div className={`${SITE_CONTAINER_X} flex flex-col items-center gap-4 py-20 text-muted-foreground`}>
         <Loader2 className="w-8 h-8 animate-spin text-gold" />
         <p>{t("account.sessionChecking")}</p>
       </div>
@@ -501,18 +634,23 @@ export default function Account() {
 
   if (!isLoggedIn) {
     return (
-      <div className="container mx-auto px-6 py-20">
-        <div className="max-w-md mx-auto">
+      <div className={PAGE_SHELL}>
+        <div className={`${CONTENT_NARROW} max-w-md`}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-12"
           >
-            <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center">
+            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center">
               <LogIn className="w-10 h-10 text-primary-foreground" />
             </div>
             <h1 className="font-display text-3xl mb-3">{t("account.loginTitle")}</h1>
             <p className="text-muted-foreground">{t("account.loginSubtitle")}</p>
+            {redeemScanPending ? (
+              <p className="mt-4 rounded-xl border border-gold/35 bg-gold/10 px-4 py-3 text-sm leading-relaxed text-gold/95">
+                {t("account.redeemScanLoginHint")}
+              </p>
+            ) : null}
           </motion.div>
 
           <motion.div
@@ -533,7 +671,7 @@ export default function Account() {
                   type="email"
                   value={emailInput}
                   onChange={(e) => setEmailInput(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-card border border-border focus:border-gold/50 outline-none transition-colors"
+                  className="w-full rounded-full border border-border bg-card px-5 py-3 outline-none transition-colors focus:border-gold/50"
                   autoComplete="email"
                   disabled={authBusy}
                 />
@@ -541,7 +679,7 @@ export default function Account() {
                   type="button"
                   onClick={handleSendCode}
                   disabled={authBusy || !emailInput.includes("@")}
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-gold to-gold-dark text-primary-foreground font-medium disabled:opacity-40"
+                  className="w-full rounded-full bg-gradient-to-r from-gold to-gold-dark py-3 font-medium text-primary-foreground disabled:opacity-40"
                 >
                   {authBusy ? t("common.loading") : t("purchase.sendCode")}
                 </button>
@@ -554,14 +692,14 @@ export default function Account() {
                   inputMode="numeric"
                   value={otpInput}
                   onChange={(e) => setOtpInput(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-card border border-border focus:border-gold/50 outline-none transition-colors font-tech tracking-wider"
+                  className="w-full rounded-full border border-border bg-card px-5 py-3 font-tech tracking-wider outline-none transition-colors focus:border-gold/50"
                   disabled={authBusy}
                 />
                 <button
                   type="button"
                   onClick={handleVerifyOtp}
                   disabled={authBusy || !otpInput.trim()}
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-gold to-gold-dark text-primary-foreground font-medium disabled:opacity-40"
+                  className="w-full rounded-full bg-gradient-to-r from-gold to-gold-dark py-3 font-medium text-primary-foreground disabled:opacity-40"
                 >
                   {authBusy ? t("common.loading") : t("purchase.verifyAndContinue")}
                 </button>
@@ -593,7 +731,7 @@ export default function Account() {
   }
 
   return (
-    <div className="container mx-auto px-6 py-20">
+    <div className={PAGE_SHELL}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -638,88 +776,99 @@ export default function Account() {
         </div>
       </motion.div>
 
-      {dataLoading && (
-        <div className="flex items-center gap-2 text-muted-foreground mb-8">
-          <Loader2 className="w-4 h-4 animate-spin" />
-          <span>{t("common.loading")}</span>
+      {accountContentLoading ? (
+        <div
+          className="flex flex-col items-center justify-center gap-4 py-20 text-muted-foreground"
+          role="status"
+          aria-live="polite"
+        >
+          <Loader2 className="w-9 h-9 animate-spin text-gold" aria-hidden />
+          <p className="text-sm text-center max-w-sm leading-relaxed">
+            {postPurchaseSyncing ? t("account.syncingAfterPurchase") : t("common.loading")}
+          </p>
         </div>
-      )}
-
-      {/* Membership summary */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.15 }}
-        className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12"
-      >
-        {[
-          {
-            icon: Package,
-            label: t("account.nftPremiumVouchers"),
-            value: grouped.premiumVouchers.length,
-            nfts: grouped.premiumVouchers,
-            fallbackCover: tierFallbackCovers.premium,
-            color: "from-gold to-gold-dark",
-          },
-          {
-            icon: Award,
-            label: t("account.nftStandardMembership"),
-            value: grouped.standardNfts.length,
-            nfts: grouped.standardNfts,
-            fallbackCover: tierFallbackCovers.standard,
-            color: "from-stone-500 to-stone-700",
-          },
-        ].map((stat, index) => {
-          const Icon = stat.icon;
-          const artUrl = membershipCardArt(stat.nfts, stat.fallbackCover);
-          return (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + index * 0.05 }}
-              className="p-6 rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-20 h-20 rounded-xl overflow-hidden border border-border/50 bg-muted/20 shrink-0">
-                  {artUrl ? (
-                    <img
-                      src={artUrl}
-                      alt=""
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div
-                      className={`w-full h-full bg-gradient-to-br ${stat.color} flex items-center justify-center`}
-                    >
-                      <Icon className="w-8 h-8 text-white/90" />
+      ) : (
+        <>
+          {/* Membership summary */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.15 }}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12"
+          >
+            {[
+              {
+                icon: Package,
+                label: t("account.nftPremiumVouchers"),
+                value: grouped.premiumVouchers.length,
+                nfts: grouped.premiumVouchers,
+                fallbackCover: tierFallbackCovers.premium,
+                color: "from-gold to-gold-dark",
+              },
+              {
+                icon: Award,
+                label: t("account.nftStandardMembership"),
+                value: grouped.standardNfts.length,
+                nfts: grouped.standardNfts,
+                fallbackCover: tierFallbackCovers.standard,
+                color: "from-stone-500 to-stone-700",
+              },
+            ].map((stat, index) => {
+              const Icon = stat.icon;
+              const artUrl = membershipCardArt(stat.nfts, stat.fallbackCover);
+              return (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 + index * 0.05 }}
+                  className={`p-6 ${CARD_SURFACE}`}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-border/50 bg-muted/20">
+                      {artUrl ? (
+                        <img
+                          src={artUrl}
+                          alt=""
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div
+                          className={`w-full h-full bg-gradient-to-br ${stat.color} flex items-center justify-center`}
+                        >
+                          <Icon className="w-8 h-8 text-white/90" />
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="text-3xl font-tech text-foreground">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground leading-snug">{stat.label}</div>
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
-      </motion.div>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-3xl font-tech text-foreground">{stat.value}</div>
+                      <div className="text-sm text-muted-foreground leading-snug">{stat.label}</div>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
 
-      <AccountPendingOrders active={isLoggedIn} onChanged={() => void loadDashboard()} />
+          <AccountPendingOrders
+            active={isLoggedIn}
+            refreshKey={ordersRefreshKey}
+            suppressCollectionIds={suppressPendingCollectionIds}
+            onChanged={() => void loadDashboard()}
+          />
 
-      {grouped.premiumVouchers.length === 0 &&
-        grouped.standardNfts.length === 0 &&
-        !dataLoading && (
-          <p className="text-center text-muted-foreground mb-12">{t("account.noNfts")}</p>
-        )}
+          {grouped.premiumVouchers.length === 0 && grouped.standardNfts.length === 0 && (
+            <p className="text-center text-muted-foreground mb-12">{t("account.noNfts")}</p>
+          )}
 
-      {renderPremiumSection()}
-      {renderNftSection(t("account.nftStandardMembership"), grouped.standardNfts, {
-        variant: "standard",
-        delayBase: 0.35,
-      })}
+          {renderPremiumSection()}
+          {renderNftSection(t("account.nftStandardMembership"), grouped.standardNfts, {
+            variant: "standard",
+            delayBase: 0.35,
+          })}
+        </>
+      )}
 
       {showRedeemModal && redeemTarget && (
         <RedeemBookModal
@@ -732,6 +881,12 @@ export default function Account() {
         />
       )}
       {purchaseOpen ? <PurchaseModal onClose={() => setPurchaseOpen(false)} /> : null}
+      {showRedeemScanUnavailable ? (
+        <RedeemScanUnavailableModal
+          onClose={() => setShowRedeemScanUnavailable(false)}
+          onPurchase={() => setPurchaseOpen(true)}
+        />
+      ) : null}
       {detailNft ? (
         <NftDetailModal
           nft={detailNft}

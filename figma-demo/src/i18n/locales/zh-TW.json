@@ -4,6 +4,7 @@
     "book": "書籍介紹",
     "club": "書友會",
     "joinClub": "加入書友會",
+    "offlineEvent": "線下活動",
     "principles": "CZ原則",
     "timeline": "CZ時間線",
     "account": "我的帳戶",
@@ -18,6 +19,7 @@
     "titleHome": "幣安人生書友會",
     "titleBook": "書籍介紹 · 幣安人生書友會",
     "titleClub": "書友會 · 幣安人生書友會",
+    "titleOfflineEvent": "線下活動 · 幣安人生書友會",
     "titlePrinciples": "CZ原則 · 幣安人生書友會",
     "titleTimeline": "CZ時間線 · 幣安人生書友會",
     "titleAccount": "我的帳戶 · 幣安人生書友會",
@@ -75,6 +77,85 @@
     "poweredByDataDanceChain": "Powered by DataDance Chain",
     "chainExplorer": "DataDance 瀏覽器"
   },
+  "offlineEvent": {
+    "backHome": "返回首頁",
+    "title": "《幣安人生》書友會 啟動儀式 & 分享會",
+    "launchHeadline": "《幣安人生》全球書友會即將啟航",
+    "launchTagline": "6 月 20 日香港首發，共同見證首批 NFT 會員權益發布及全球書友社群成立",
+    "subtitle": "商務印書館 · 一本讀書會 · IPDEX 聯合呈獻",
+    "dateLabel": "日期",
+    "date": "2026 年 6 月 20 日（星期六）",
+    "timeLabel": "時間",
+    "time": "17:00 – 19:00",
+    "venueLabel": "地點",
+    "venue": "商務印書館 · 尖沙咀旗艦店",
+    "address": "九龍尖沙咀彌敦道 83–97 號華淵大廈 地下 25 號舖及 1 樓全層\n（港鐵尖沙咀站 A1 出口轉右）",
+    "languageLabel": "語言",
+    "language": "普通話",
+    "flowParagraphs": [
+      "一本好書能夠啟發思考，而一個優秀嘅讀者社群，則能夠讓思想持續生長。",
+      "6 月 20 日，《幣安人生》全球書友會成立儀式將於香港商務印書館尖沙咀旗艦店舉行。本次活動將匯聚出版界、科技界、投資界及內容創作領域嘉賓，共同見證《幣安人生》全球書友會正式成立，開啟讀者交流與共創嘅新篇章。",
+      "《幣安人生》記錄咗趙長鵬（CZ）嘅成長與創業歷程，亦展現咗數字時代創新者嘅思考與實踐。圍繞呢本書，全球書友會將致力於搭建一個開放、多元嘅交流平台，讓來自唔同地區、唔同背景嘅讀者，可以圍繞閱讀、創業、創新同時代發展展開持續對話，喺分享與交流中共同成長。",
+      "作為書友會嘅重要創新實踐，本次活動亦將發布專屬數字會員權益。參加者可獲得由書友會發行嘅《幣安人生》數字憑證（由 IPDEX 及 DataDance 提供技術支持），作為書友會成員身份認證及紀念收藏。未來，呢個數字憑證亦將逐步連接更多讀者活動、專屬內容及社群權益，為讀者帶來更加豐富嘅參與體驗。",
+      "活動現場將設有嘉賓主題分享、圓桌對話及互動交流環節。來自作者團隊、行業機構及知名意見領袖嘅嘉賓，將圍繞創業精神、長期主義、內容價值與數字時代嘅文化創新展開深入探討，共同探索閱讀與社群共創嘅更多可能。",
+      "由一本書到一個社群，由閱讀到共創，《幣安人生》全球書友會希望讓更多熱愛閱讀、關注創新嘅人匯聚一堂，讓思想喺交流中產生連結，讓知識喺分享中創造價值。",
+      "6 月 20 日，誠邀您相聚香港商務印書館尖沙咀旗艦店，共同見證《幣安人生》全球書友會嘅啟航時刻。"
+    ],
+    "agendaTitle": "活動議程",
+    "agendaTopicLabel": "活動主題：",
+    "agendaTopic": "書承史詩・智啟新程——《幣安人生》全球書友會成立儀式",
+    "agendaTimeLabel": "活動時間：",
+    "agendaTime": "2026 年 6 月 20 日（星期六）17:00–19:00",
+    "agendaVenueLabel": "活動地點：",
+    "agendaVenue": "商務印書館尖沙咀旗艦店",
+    "agendaColTime": "時間",
+    "agendaColSegment": "環節",
+    "agendaColContent": "內容",
+    "agendaRows": [
+      {
+        "time": "17:00–17:15",
+        "segment": "開幕致辭：文化使命",
+        "content": "商務印書館代表致歡迎辭，分享《幣安人生》於香港出版發行嘅文化意義。"
+      },
+      {
+        "time": "17:15–17:35",
+        "segment": "主題分享：《幣安人生》與時代精神",
+        "content": "嘉賓圍繞書籍內容、創業故事及時代機遇作分享。"
+      },
+      {
+        "time": "17:35–18:05",
+        "segment": "圓桌論壇：由閱讀到共創——數碼時代嘅新連結",
+        "content": "多位業界嘉賓圍繞閱讀、創新、社群共建及數碼時代嘅發展趨勢展開交流。"
+      },
+      {
+        "time": "18:05–18:15",
+        "segment": "《幣安人生》社群短片放映",
+        "content": "透過影像呈現書中精神及全球社群故事。"
+      },
+      {
+        "time": "18:15–18:35",
+        "segment": "《幣安人生》全球書友會成立儀式暨 NFT 會員權益發布",
+        "content": "正式宣布全球書友會成立，發布專屬 NFT 會員憑證及未來會員權益體系，一同見證書友會啟航。"
+      },
+      {
+        "time": "18:35–19:00",
+        "segment": "自由交流及大合照",
+        "content": "嘉賓與讀者互動交流，並進行現場合照留念。"
+      }
+    ],
+    "highlightsTitle": "活動亮點",
+    "highlights": [
+      "《幣安人生》全球書友會正式成立",
+      "全球首批書友會 NFT 會員權益發布",
+      "商務印書館香港首發活動",
+      "多位業界嘉賓跨界分享",
+      "《幣安人生》社群短片首映",
+      "讀者面對面交流互動"
+    ],
+    "scanTitle": "掃碼報名",
+    "scanHint": "請使用手機相機或微信／支付寶掃描二維碼完成報名",
+    "qrAlt": "線下活動報名二維碼"
+  },
   "home": {
     "title": "《幣安人生》",
     "subtitle": "商務印書館讀書活動・預約憑證與現場票根紀念 NFT",
@@ -92,6 +173,9 @@
     "journeyTitle": "從程序員到加密貨幣巨頭",
     "journeyDesc": "《幣安人生》記錄了 CZ 從一個普通程序員，到創建全球最大加密貨幣交易所的傳奇經歷。本書不僅是一部創業史，更是一本關於堅持、創新和願景的人生指南。",
     "bookDetailsCta": "查看書籍詳情",
+    "offlineEventTitle": "《幣安人生》全球書友會即將啟航",
+    "offlineEventDesc": "6 月 20 日香港商務印書館尖沙咀旗艦店舉行成立儀式，見證首批 NFT 會員權益發布，歡迎報名參與。",
+    "offlineEventCta": "了解線下活動",
     "stat1Label": "活動預約人數",
     "stat1Unit": "人",
     "stat2Label": "實際到場人數",
@@ -180,6 +264,8 @@
     "pickupStoresTitle": "實體書領取書店",
     "pickupStoresSubtitle": "共 4 間 · 香港",
     "pickupStoresIntro": "購買進階典藏版後，可於下列書店領取實體書。請攜帶預約憑證 NFT 或購買確認資訊，並留意各店營業時間。",
+    "pickupMapLabel": "香港實體書領取書店地圖",
+    "pickupMapUnavailable": "地圖暫時無法載入，請直接查看右側書店列表。",
     "pickupStores": [
       {
         "name": "商務印書館銅鑼灣圖書中心",
@@ -324,7 +410,7 @@
     "carouselTapCentreExpand": "請先對準此卡，再次點擊可展開。",
     "expand": "展開細節",
     "collapse": "收合",
-    "disclaimer": "本頁為《幣安人生》書友閱讀脈絡而整理的編輯性摘要，非法律或投資建議；日期與統計或因來源略有出入。",
+    "disclaimer": "縮圖與連結指向第三方 YouTube 頁面；可否播放以平台與上傳者設定為準。本頁為《幣安人生》書友閱讀脈絡而整理的編輯性摘要，非法律或投資建議；日期與統計或因來源略有出入。",
     "xFeedTitle": "X 上的貼文",
     "xFeedSubtitle": "摘選 @cz_binance 貼文（本地備存；完整脈絡請至 X 查看）。",
     "xFeedCount": "此備存共 {{count}} 則",
@@ -485,7 +571,14 @@
     "badgeDesc": "可免費領取標準紀念勳章；購買進階典藏版則含預約憑證、實體書，並可於盛典現場核銷。",
     "contactTitle": "書友會聯繫方式",
     "publisherSocialTitle": "商務印書館",
+    "publisherDesc": "《幣安人生》出版與線下活動合作夥伴。",
+    "publisherWechatAria": "商務印書館微信公眾號",
+    "ipdexWebsiteAria": "IPDEX 官網",
+    "ipdexXAria": "IPDEX 官方 X",
     "poweredByIpdex": "NFT 交易與本站登入／結帳由 IPDEX 提供技術支援。",
+    "datadanceTitle": "DataDance Chain",
+    "datadanceDesc": "鏈上結算與數位憑證基礎建設由 DataDance Chain 提供。",
+    "datadanceWebsiteAria": "DataDance 官網",
     "ipdexMarket": "NFT 市場",
     "copyright": "© 2026 IPDEX 版權所有"
   },
@@ -569,7 +662,7 @@
   },
   "account": {
     "loginTitle": "登入您的帳戶",
-    "loginSubtitle": "使用 DDC Wallet（Web3Auth）或信箱 OTP，經書城 BFF 建立工作階段。",
+    "loginSubtitle": "使用與 IPDEX 相同的電子郵件驗證碼登入；首次使用將自動建立 IPDEX 帳號。帳戶、NFT 與訂單等資料服務由 IPDEX 提供。",
     "web3authLogin": "使用 DDC Wallet 登入",
     "web3authError": "錢包登入失敗，請重試或改用信箱 OTP。",
     "loginOrDivider": "或使用信箱登入",
@@ -587,6 +680,7 @@
     "logout": "登出",
     "title": "我的帳戶",
     "loadError": "無法載入帳戶資料。",
+    "syncingAfterPurchase": "付款已完成，正在確認憑證、訂單與鏈上資料。此過程可能需數十秒，請耐心等候，無需重新整理頁面。",
     "nftReservation": "讀書活動預約憑證",
     "nftPremiumVouchers": "進階版 · 預約憑證",
     "nftStandardMembership": "普通版 · 會員紀念章",
@@ -612,6 +706,10 @@
     "eventConfirmBody": "已記錄您的參與意願，最終日程以 @czlifeclub 公告為準。",
     "redeemSuccess": "核銷成功。請重新整理後確認「到場紀念」藏品。",
     "redeemSuccessToast": "核銷已完成。",
+    "redeemScanLoginHint": "登入後將自動開啟現場核銷；請使用購買進階典藏版時的電子郵件。",
+    "redeemScanNoneTitle": "目前沒有可核銷的憑證",
+    "redeemScanNoneBody": "您的帳戶中暫無可於現場核銷的進階版預約憑證。請先購買進階典藏版，取得 NFT 憑證後再於會場掃碼核銷。",
+    "redeemScanPurchaseCta": "購買進階典藏版",
     "stubAttendanceExplanation": "這是會場完成核銷後發放的到場紀念票根 NFT，不可用於再度現場兌換。",
     "premiumUnredeemedSection": "待核銷憑證",
     "premiumStubSection": "已兌換 · 到場票根",

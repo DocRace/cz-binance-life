@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { getRecentPaidOrderIds, reconcileRecentPaidOrderIds } from "../../lib/accountPurchaseSync";
 import { bookBffJsonWithRefresh } from "../../lib/bookBffWithRefresh";
 import { bookBffIsTransportIssue } from "../../lib/bookBffClient";
 
@@ -29,6 +30,19 @@ function str(v: unknown): string {
 function formatHkd(cents: number | undefined): string {
   if (cents == null || !Number.isFinite(cents)) return "—";
   return `HK$ ${(cents / 100).toFixed(2)}`;
+}
+
+function filterStalePendingRows(
+  rows: PendingOrderRow[],
+  hideOrderIds: Set<string>,
+  suppressCollectionIds?: Set<string>,
+): PendingOrderRow[] {
+  return rows.filter((row) => {
+    if (hideOrderIds.has(row.c_order_id)) return false;
+    const collectionId = `${row.c_collection_id ?? ""}`.trim().toLowerCase();
+    if (collectionId && suppressCollectionIds?.has(collectionId)) return false;
+    return true;
+  });
 }
 
 function mergePendingRows(data: PendingOrdersPayload): PendingOrderRow[] {
@@ -63,10 +77,19 @@ function mergePendingRows(data: PendingOrdersPayload): PendingOrderRow[] {
 
 interface AccountPendingOrdersProps {
   active: boolean;
+  /** Bump after purchase sync so pending-order list re-fetches too. */
+  refreshKey?: number;
+  /** During post-payment sync, hide pending rows for collections that already show a new voucher. */
+  suppressCollectionIds?: Set<string>;
   onChanged?: () => void;
 }
 
-export default function AccountPendingOrders({ active, onChanged }: AccountPendingOrdersProps) {
+export default function AccountPendingOrders({
+  active,
+  refreshKey = 0,
+  suppressCollectionIds,
+  onChanged,
+}: AccountPendingOrdersProps) {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState<PendingOrderRow[]>([]);
@@ -88,18 +111,20 @@ export default function AccountPendingOrders({ active, onChanged }: AccountPendi
         setOrders([]);
         return;
       }
-      setOrders(mergePendingRows(out.data));
+      const rows = mergePendingRows(out.data);
+      reconcileRecentPaidOrderIds(rows.map((row) => row.c_order_id));
+      setOrders(filterStalePendingRows(rows, getRecentPaidOrderIds(), suppressCollectionIds));
     } catch {
       setError(t("purchase.bffOffline"));
       setOrders([]);
     } finally {
       setLoading(false);
     }
-  }, [active, t]);
+  }, [active, suppressCollectionIds, t]);
 
   useEffect(() => {
     void load();
-  }, [load]);
+  }, [load, refreshKey]);
 
   const handlePay = (order: PendingOrderRow) => {
     const url = order.paymentUrl?.trim();

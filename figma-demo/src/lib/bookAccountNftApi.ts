@@ -218,6 +218,13 @@ export function pickNftCollectionName(row: Record<string, unknown>): string {
   return "";
 }
 
+/** True when `dateLabel` came from NFT balance timestamps (not the "—" placeholder). */
+export function isMeaningfulNftDateLabel(label: string | undefined): boolean {
+  const s = `${label ?? ""}`.trim();
+  if (!s || s === "—" || s === "-") return false;
+  return /^\d{4}-\d{2}-\d{2}/.test(s);
+}
+
 function earliestDateIsoPrefix(row: Record<string, unknown>): string {
   const keys = ["createdAt", "purchasedAt", "mintedAt", "updatedAt"];
   for (const sub of nftRowVariants(row)) {

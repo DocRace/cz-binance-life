@@ -9,6 +9,7 @@ import Account from "./pages/Account";
 import AccountRedeem from "./pages/AccountRedeem";
 import PurchaseSuccess from "./pages/PurchaseSuccess";
 import NotFound from "./pages/NotFound";
+import OfflineEvent from "./pages/OfflineEvent";
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
       { index: true, Component: Home },
       { path: "book", Component: BookIntro },
       { path: "club", Component: BookClub },
+      { path: "event", Component: OfflineEvent },
       { path: "principles", Component: CZPrinciples },
       { path: "timeline", Component: Timeline },
       { path: "account/redeem", Component: AccountRedeem },

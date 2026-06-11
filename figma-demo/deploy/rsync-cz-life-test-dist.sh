@@ -38,7 +38,8 @@ export VITE_IPDEX_MARKET_URL="${VITE_IPDEX_MARKET_URL:-https://ipdex-v1-dev.ipde
 export VITE_IPDEX_CLIENT_API_ORIGIN="${VITE_IPDEX_CLIENT_API_ORIGIN:-https://ipdex-v1-dev.ipdex.vip}"
 export VITE_DATADANCE_EXPLORER_URL="${VITE_DATADANCE_EXPLORER_URL:-https://testnet.datadance.ai}"
 export VITE_DATADANCE_SITE_URL="${VITE_DATADANCE_SITE_URL:-https://datadance.ai}"
-export VITE_IPDEX_SOCIAL_X_URL="${VITE_IPDEX_SOCIAL_X_URL:-https://x.com/ipdex}"
+export VITE_IPDEX_SOCIAL_X_URL="${VITE_IPDEX_SOCIAL_X_URL:-https://x.com/IPDEX_Official}"
+export VITE_IPDEX_SITE_URL="${VITE_IPDEX_SITE_URL:-https://ipdex.vip}"
 export VITE_IPDEX_SOCIAL_FACEBOOK_URL="${VITE_IPDEX_SOCIAL_FACEBOOK_URL:-https://facebook.com/ipdex}"
 export VITE_BOOK_BFF_URL="${VITE_BOOK_BFF_URL:-}"
 

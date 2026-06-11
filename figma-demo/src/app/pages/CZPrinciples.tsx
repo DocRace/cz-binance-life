@@ -1,35 +1,19 @@
 import { motion } from "motion/react";
 import { Sparkles, Target, Zap, Shield, Heart, TrendingUp, Eye, HandHeart } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import {
+  CONTENT_NARROW,
+  CONTENT_WIDE,
+  GRID_GAP,
+  PAGE_HEADER,
+  PAGE_SHELL,
+} from "../layout/pageLayout";
 
-const ICON_BACKGROUNDS = ["gold", "light", "dark"] as const;
-type IconBackground = (typeof ICON_BACKGROUNDS)[number];
-
-function principleIconTone(tone: IconBackground) {
-  switch (tone) {
-    case "gold":
-      return {
-        iconBox: "border border-gold/35 bg-gold/12",
-        icon: "text-gold",
-        hoverSheen: "from-gold/25 via-gold/8 to-transparent",
-        card: "border-gold/30 bg-gold/[0.055] hover:border-gold/45",
-      };
-    case "light":
-      return {
-        iconBox: "border border-white/12 bg-white/[0.06]",
-        icon: "text-foreground",
-        hoverSheen: "from-white/12 via-white/[0.04] to-transparent",
-        card: "border-white/12 bg-white/[0.035] hover:border-white/22",
-      };
-    case "dark":
-      return {
-        iconBox: "border border-border/60 bg-black/55",
-        icon: "text-muted-foreground",
-        hoverSheen: "from-zinc-950/90 via-black/45 to-transparent",
-        card: "border-zinc-800/70 bg-zinc-950/55 hover:border-zinc-600/55",
-      };
-  }
-}
+/** Same palette as the former「用戶至上」card — darker surface for all principles. */
+const PRINCIPLE_CARD =
+  "border-zinc-800/70 bg-zinc-950/55 hover:border-zinc-600/55";
+const PRINCIPLE_HOVER_SHEEN =
+  "from-zinc-950/90 via-black/45 to-transparent";
 
 export default function CZPrinciples() {
   const { t } = useTranslation();
@@ -93,12 +77,11 @@ export default function CZPrinciples() {
   ];
 
   return (
-    <div className="container mx-auto px-6 py-20">
-      {/* Header */}
+    <div className={PAGE_SHELL}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-20"
+        className={PAGE_HEADER}
       >
         <div className="inline-block mb-6">
           <div className="relative">
@@ -110,23 +93,15 @@ export default function CZPrinciples() {
             </h1>
           </div>
         </div>
-        <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
+        <p className={`${CONTENT_NARROW} text-xl text-muted-foreground`}>
           {t("principles.subtitle")}
         </p>
-        <div className="inline-block px-6 py-3 rounded-full border border-gold/30 bg-gold/10">
-          <p className="text-sm text-gold">
-            ✨ {t("principles.badgeNote")}
-          </p>
-        </div>
       </motion.div>
 
-      {/* Principles Grid */}
-      <div className="mx-auto w-full max-w-7xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className={CONTENT_WIDE}>
+        <div className={`grid grid-cols-1 md:grid-cols-2 ${GRID_GAP}`}>
           {principles.map((principle, index) => {
             const Icon = principle.icon;
-            const tone = ICON_BACKGROUNDS[index % ICON_BACKGROUNDS.length];
-            const tc = principleIconTone(tone);
             return (
               <motion.div
                 key={index}
@@ -135,56 +110,33 @@ export default function CZPrinciples() {
                 transition={{ delay: 0.1 * index, duration: 0.6 }}
                 className="group relative"
               >
-                {/* Background glow — subtle, theme colors only */}
                 <div
-                  className={`pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br ${tc.hoverSheen} opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-[0.14]`}
+                  className={`pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br ${PRINCIPLE_HOVER_SHEEN} opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-[0.14]`}
                 />
 
-                {/* Card */}
                 <div
-                  className={`relative h-full rounded-2xl border p-8 backdrop-blur-sm transition-all duration-500 ${tc.card}`}
+                  className={`relative h-full rounded-2xl border p-8 backdrop-blur-sm transition-all duration-500 ${PRINCIPLE_CARD}`}
                 >
-                  {/* Icon */}
-                  <div className="mb-6">
-                    <div
-                      className={`inline-flex h-16 w-16 items-center justify-center rounded-2xl ${tc.iconBox}`}
-                    >
-                      <Icon className={`h-8 w-8 ${tc.icon}`} />
-                    </div>
-                  </div>
+                  <Icon className="mb-5 h-8 w-8 shrink-0 text-gold/70" aria-hidden />
 
-                  {/* Title */}
                   <div className="mb-4">
                     <h3 className="font-display text-2xl mb-1">{principle.title}</h3>
                     <p className="text-sm text-muted-foreground font-tech">{principle.subtitle}</p>
                   </div>
 
-                  {/* Description */}
                   <p className="text-muted-foreground leading-relaxed mb-6">
                     {principle.description}
                   </p>
 
-                  {/* Quote */}
                   <div className="relative pl-4 border-l-2 border-gold/30">
                     <p className="text-sm italic text-muted-foreground">
                       "{principle.quote}"
                     </p>
                   </div>
-
-                  {/* Coming soon badge */}
-                  <div className="mt-6 pt-6 border-t border-border/50">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">{t("principles.badgeLabel")}</span>
-                      <span className="px-3 py-1 rounded-full bg-accent/50 text-xs text-muted-foreground">
-                        {t("principles.comingSoon")}
-                      </span>
-                    </div>
-                  </div>
                 </div>
 
-                {/* Hover sheen on card edge */}
                 <div
-                  className={`pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br ${tc.hoverSheen} opacity-0 transition-opacity duration-500 group-hover:opacity-[0.06]`}
+                  className={`pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br ${PRINCIPLE_HOVER_SHEEN} opacity-0 transition-opacity duration-500 group-hover:opacity-[0.06]`}
                 />
               </motion.div>
             );

@@ -398,6 +398,49 @@ async function boot() {
     );
   });
 
+  /** In-memory cache for X profile avatars (fxtwitter → pbs.twimg redirect). */
+  const clubAvatarCache = new Map();
+  const CLUB_AVATAR_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+  const HANDLE_RE = /^[A-Za-z0-9_]{1,30}$/;
+
+  function upgradeTwitterAvatarUrl(url) {
+    return `${url}`.replace(/_normal\.(jpe?g|png|webp)$/i, '_400x400.$1');
+  }
+
+  app.get('/api/bff/club/avatar/:handle', async (req, res) => {
+    const handle = `${req.params.handle ?? ''}`.replace(/^@/, '').trim();
+    if (!HANDLE_RE.test(handle)) {
+      return res.status(400).json({ code: -10001, message: 'invalid_handle', data: null });
+    }
+
+    const cached = clubAvatarCache.get(handle);
+    if (cached && cached.expires > Date.now()) {
+      res.set('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
+      return res.redirect(302, cached.url);
+    }
+
+    try {
+      const upstream = await fetch(`https://api.fxtwitter.com/${encodeURIComponent(handle)}`, {
+        headers: { Accept: 'application/json', 'User-Agent': 'cz-booksite-bff/1.0' },
+        signal: AbortSignal.timeout(12_000),
+      });
+      if (!upstream.ok) {
+        return res.status(upstream.status === 404 ? 404 : 502).end();
+      }
+      const payload = await upstream.json();
+      const rawUrl = payload?.user?.avatar_url;
+      if (typeof rawUrl !== 'string' || !rawUrl.startsWith('https://pbs.twimg.com/')) {
+        return res.status(404).end();
+      }
+      const url = upgradeTwitterAvatarUrl(rawUrl);
+      clubAvatarCache.set(handle, { url, expires: Date.now() + CLUB_AVATAR_TTL_MS });
+      res.set('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
+      return res.redirect(302, url);
+    } catch {
+      return res.status(502).end();
+    }
+  });
+
   app.post('/api/bff/club/redeem', async (req, res) => {
     const accessToken = bearer(req);
     if (!accessToken) return res.status(401).json({ code: -10005, message: 'Unauthorized', data: null });

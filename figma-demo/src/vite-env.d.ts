@@ -19,6 +19,8 @@ interface ImportMetaEnv {
   readonly VITE_IPDEX_BOOK_PREMIUM_COLLECTION_ID?: string;
   /** Public Client Service origin (display / future APIs), e.g. https://your-client-api.example — no trailing slash. */
   readonly VITE_IPDEX_CLIENT_API_ORIGIN?: string;
+  /** IPDEX marketing site (footer brand link), default https://ipdex.vip */
+  readonly VITE_IPDEX_SITE_URL?: string;
   readonly VITE_IPDEX_SOCIAL_X_URL?: string;
   readonly VITE_IPDEX_SOCIAL_FACEBOOK_URL?: string;
   /** DataDance block explorer origin, default handled in code if unset. */
@@ -34,6 +36,8 @@ interface ImportMetaEnv {
   readonly VITE_IPDEX_BOOK_ATTEND_STUB_SERIES_IDS?: string;
   /** Same as plural form; single-series convenience. */
   readonly VITE_IPDEX_BOOK_ATTEND_STUB_SERIES_ID?: string;
+  /** Mapbox public token for pickup-store map (client-side; restrict URL in Mapbox dashboard). */
+  readonly VITE_MAPBOX_ACCESS_TOKEN?: string;
 }
 
 interface ImportMeta {

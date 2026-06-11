@@ -170,9 +170,14 @@ export function getIpdexClientApiOrigin(): string {
   return o;
 }
 
+/** IPDEX product / marketing site (footer brand link). */
+export function getIpdexSiteUrl(): string {
+  return normalizeOrigin(envString("VITE_IPDEX_SITE_URL")) || "https://ipdex.vip";
+}
+
 /** Footer / marketing links (override defaults when needed). */
 export function getIpdexSocialXUrl(): string {
-  return envString("VITE_IPDEX_SOCIAL_X_URL") || "https://x.com/ipdex";
+  return envString("VITE_IPDEX_SOCIAL_X_URL") || "https://x.com/IPDEX_Official";
 }
 
 export function getIpdexSocialFacebookUrl(): string {
@@ -192,9 +197,21 @@ export function getDatadanceExplorerUrl(): string {
   );
 }
 
+/** Commercial Press (商務印書館) WeChat official account article — footer link. */
+export const COMMERCIAL_PRESS_WECHAT_URL =
+  "https://mp.weixin.qq.com/s/Di2kA9omehVh04PNHcXBRA" as const;
+
 /** Freedom of Money book club Telegram community. */
 export const BOOK_CLUB_TELEGRAM_HANDLE = "czlifeclub" as const;
 
 export const BOOK_CLUB_TELEGRAM_URL = "https://t.me/czlifeclub" as const;
 
 export const BOOK_CLUB_TELEGRAM_QR_SRC = "/telegram-czlifeclub-qr.png" as const;
+
+/** Offline book-club launch event — registration QR on `/event`. */
+export const OFFLINE_EVENT_REGISTER_QR_SRC = "/offline-event-register-qr.png" as const;
+
+export const OFFLINE_EVENT_POSTER_SRC = "/offline-event-poster.png" as const;
+
+/** On-site redeem QR deep link — opens account redeem flow after login. */
+export { redeemScanPath, redeemScanUrl } from "../lib/redeemDeepLink";

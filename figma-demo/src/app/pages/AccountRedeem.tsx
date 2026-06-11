@@ -5,19 +5,26 @@ import { ArrowLeft, ChevronRight, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import NFTBadge from "../components/NFTBadge";
 import RedeemStaffPanel from "../components/RedeemStaffPanel";
-import { bookBffIsTransportIssue, bookBffJson } from "../../lib/bookBffClient";
-import { bookBffJsonWithRefresh } from "../../lib/bookBffWithRefresh";
+import {
+  bookBffClearSessionAndReload,
+  bookBffIsTransportIssue,
+  bookBffJson,
+  bookBffProfileUnavailable,
+} from "../../lib/bookBffClient";
+import { bookBffJsonWithRefresh, bookBffVerifySessionAlive } from "../../lib/bookBffWithRefresh";
 import {
   BOOK_NFT_COLLECTION_UUID_RE,
   type DisplayNft,
   fetchNftBffPagesMerged,
   filterCzLifeDisplayNfts,
+  isMeaningfulNftDateLabel,
   isRedeemEligible,
   mapNftRow,
 } from "../../lib/bookAccountNftApi";
 import { buildClubRedeemPostJsonPayload, localizedBookRedeemFailureMessage, logClubRedeemResponseIfDebugging, normalizeRedeemSourceTokenId } from "../../lib/bookRedeemClient";
 import { getBookNftRedemptionRuleId } from "../../config/platform";
 import { toast } from "sonner";
+import { CONTENT_DEFAULT, PAGE_SHELL } from "../layout/pageLayout";
 
 const UUID_RE = BOOK_NFT_COLLECTION_UUID_RE;
 
@@ -46,8 +53,20 @@ export default function AccountRedeem() {
           setIsLoggedIn(false);
           return;
         }
-        const ok = s.code === 0 && Boolean(s.data?.authenticated);
-        setIsLoggedIn(ok);
+        if (!(s.code === 0 && s.data?.authenticated)) {
+          setIsLoggedIn(false);
+          return;
+        }
+        const me = await bookBffJsonWithRefresh<Record<string, unknown>>("/api/bff/me");
+        if (cancel) return;
+        if (me.code === 0 && me.data && typeof me.data === "object") {
+          setIsLoggedIn(true);
+        } else if (bookBffProfileUnavailable(me)) {
+          void bookBffClearSessionAndReload();
+        } else {
+          setLoadError(t("purchase.bffOffline"));
+          setIsLoggedIn(false);
+        }
       } catch {
         if (!cancel) {
           setLoadError(t("purchase.bffOffline"));
@@ -80,6 +99,19 @@ export default function AccountRedeem() {
     if (!isLoggedIn) return;
     void loadNfts();
   }, [isLoggedIn, loadNfts]);
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    const recheckSession = () => {
+      if (document.visibilityState !== "visible") return;
+      void (async () => {
+        const alive = await bookBffVerifySessionAlive();
+        if (!alive) await bookBffClearSessionAndReload();
+      })();
+    };
+    document.addEventListener("visibilitychange", recheckSession);
+    return () => document.removeEventListener("visibilitychange", recheckSession);
+  }, [isLoggedIn]);
 
   const eligible = useMemo(() => displayNfts.filter((n) => isRedeemEligible(n) && n.collectionId), [displayNfts]);
 
@@ -137,7 +169,7 @@ export default function AccountRedeem() {
 
   if (sessionChecking) {
     return (
-      <div className="container mx-auto px-6 py-20 flex flex-col items-center gap-4 text-muted-foreground">
+      <div className={`${PAGE_SHELL} flex flex-col items-center gap-4 text-muted-foreground`}>
         <Loader2 className="w-8 h-8 animate-spin text-gold" />
         <p>{t("account.sessionChecking")}</p>
       </div>
@@ -149,7 +181,7 @@ export default function AccountRedeem() {
   }
 
   return (
-    <div className="container mx-auto px-6 py-10 md:py-16 max-w-5xl">
+    <div className={`${PAGE_SHELL} py-10 md:py-16 ${CONTENT_DEFAULT}`}>
       <nav className="mb-8">
         <Link
           to="/account"
@@ -226,10 +258,12 @@ export default function AccountRedeem() {
                     {nft.name ? (
                       <p className="text-sm font-medium text-foreground line-clamp-2">{nft.name}</p>
                     ) : null}
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">{t("account.reservedDate")}</span>
-                      <span className="font-tech">{nft.dateLabel}</span>
-                    </div>
+                    {isMeaningfulNftDateLabel(nft.dateLabel) ? (
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">{t("account.reservedDate")}</span>
+                        <span className="font-tech">{nft.dateLabel}</span>
+                      </div>
+                    ) : null}
                     <div className="p-2 rounded-lg bg-gold/10 text-center">
                       <span className="text-xs text-gold">✓ {t("account.reservedOk")}</span>
                     </div>

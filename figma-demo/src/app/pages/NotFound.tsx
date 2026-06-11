@@ -1,10 +1,11 @@
 import { motion } from "motion/react";
 import { Link } from "react-router";
 import { Home } from "lucide-react";
+import { PAGE_SHELL } from "../layout/pageLayout";
 
 export default function NotFound() {
   return (
-    <div className="container mx-auto px-6 py-20 min-h-[60vh] flex items-center justify-center">
+    <div className={`${PAGE_SHELL} flex min-h-[60vh] items-center justify-center`}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

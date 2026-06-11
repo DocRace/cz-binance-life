@@ -204,6 +204,28 @@ def fetch_profile_bio(handle: str) -> str | None:
     return bio if bio and not is_weak_post_text(bio) else None
 
 
+def upgrade_twitter_avatar(url: str) -> str:
+    return re.sub(r"_normal\.(jpe?g|png|webp)$", r"_400x400.\1", url, flags=re.I)
+
+
+def fetch_profile_avatar(handle: str) -> str | None:
+    api = FXTWITTER_USER.format(user=urllib.parse.quote(handle))
+    req = urllib.request.Request(api, headers={"User-Agent": "cz-book-club-import/1.0"})
+    try:
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError) as e:
+        print(f"  profile avatar fail: @{handle} ({e})", file=sys.stderr)
+        return None
+    user = data.get("user") if isinstance(data.get("user"), dict) else None
+    if not user:
+        return None
+    raw = (user.get("avatar_url") or "").strip()
+    if raw.startswith("https://pbs.twimg.com/profile_images"):
+        return upgrade_twitter_avatar(raw)
+    return None
+
+
 def import_stories(xlsx_path: Path) -> dict:
     wb = load_workbook(xlsx_path)
     ws = wb.active
@@ -305,7 +327,8 @@ def import_stories(xlsx_path: Path) -> dict:
                 "body": display_body,
                 "url": normalize_x_url(url) if STATUS_RE.search(url) else url,
                 "created_at": created_at,
-                "author_avatar_url": f"https://unavatar.io/x/{handle}",
+                "author_avatar_url": fetch_profile_avatar(handle)
+                or f"https://unavatar.io/x/{handle}",
                 "curator": {
                     "tier": "standard",
                     "score": score,

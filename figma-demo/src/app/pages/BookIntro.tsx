@@ -4,12 +4,22 @@ import { useTranslation } from "react-i18next";
 import Book3DCover from "../components/Book3DCover";
 import BookPickupStores from "../components/BookPickupStores";
 import bookCover from "../../assets/book-cover-hero.png";
+import {
+  CARD_SURFACE,
+  CONTENT_DEFAULT,
+  CONTENT_NARROW,
+  CONTENT_PROSE,
+  GRID_GAP,
+  PAGE_HEADER,
+  PAGE_SHELL,
+  SECTION_SPACING,
+} from "../layout/pageLayout";
 
 export default function BookIntro() {
   const { t } = useTranslation();
 
   return (
-    <div className="container mx-auto px-6 py-20">
+    <div className={PAGE_SHELL}>
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -21,7 +31,7 @@ export default function BookIntro() {
             {t("book.title")}
           </span>
         </h1>
-        <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+        <p className={`${CONTENT_NARROW} text-xl text-muted-foreground`}>
           {t("book.subtitle")}
         </p>
       </motion.div>
@@ -31,7 +41,7 @@ export default function BookIntro() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.2 }}
-        className="mx-auto mb-20 flex max-w-2xl flex-col items-center"
+        className={`mx-auto flex max-w-2xl flex-col items-center ${SECTION_SPACING}`}
       >
         <div className="relative w-full">
           <div className="pointer-events-none absolute inset-0 bg-gold opacity-20 blur-3xl" aria-hidden />
@@ -55,7 +65,7 @@ export default function BookIntro() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
-        className="max-w-4xl mx-auto mb-20"
+        className={`${CONTENT_PROSE} ${SECTION_SPACING}`}
       >
         <div className="prose prose-invert prose-lg max-w-none">
           <h2 className="font-display text-3xl mb-6">{t("book.contentTitle")}</h2>
@@ -79,7 +89,7 @@ export default function BookIntro() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
-        className="grid grid-cols-1 md:grid-cols-2 md:items-stretch gap-8 max-w-5xl mx-auto mb-20"
+        className={`${CONTENT_DEFAULT} grid grid-cols-1 md:grid-cols-2 md:items-stretch ${GRID_GAP} ${SECTION_SPACING}`}
       >
         {[
           {
@@ -113,7 +123,7 @@ export default function BookIntro() {
               className="group relative flex h-full min-h-0 flex-col"
             >
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gold/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-              <div className="relative flex h-full min-h-0 flex-col rounded-2xl border border-border/50 bg-card/30 p-6 backdrop-blur-sm">
+              <div className={`relative flex h-full min-h-0 flex-col p-6 ${CARD_SURFACE}`}>
                 <div className="mb-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gold/20">
                   <Icon className="h-6 w-6 text-gold" />
                 </div>
@@ -132,9 +142,9 @@ export default function BookIntro() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2 }}
-        className="mx-auto max-w-5xl"
+        className={CONTENT_DEFAULT}
       >
-        <div className="p-8 rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm">
+        <div className={`p-8 ${CARD_SURFACE}`}>
           <h2 className="font-display text-3xl mb-6">{t("book.authorTitle")}</h2>
           <div className="space-y-4 text-muted-foreground">
             <p className="leading-relaxed">
