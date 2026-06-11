@@ -584,31 +584,36 @@ function TimelineCarouselCard({
       className="group relative w-full text-left outline-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0c]"
     >
       <div
-        className={`relative overflow-hidden rounded-2xl border bg-[#0a0a0c]/90 p-5 backdrop-blur-sm transition-[border-color,box-shadow] sm:p-6 ${
+        className={`relative overflow-hidden rounded-2xl border p-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] backdrop-blur-xl backdrop-saturate-150 transition-[border-color,box-shadow] sm:p-6 ${
           isFocused
-            ? `${ui.border} shadow-[0_28px_72px_-34px_rgba(212,175,55,0.42)] ring-1 ring-white/10`
-            : "border-white/10 hover:border-white/20"
+            ? `border-white/20 bg-black/62 ${ui.border} shadow-[0_28px_72px_-34px_rgba(212,175,55,0.42),inset_0_1px_0_0_rgba(255,255,255,0.1)] ring-1 ring-white/12`
+            : "border-white/15 bg-black/58 hover:border-white/25"
         }`}
       >
+        {/* Frosted scrim — improves text contrast over the cover-flow stage */}
+        <div
+          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/25 via-[#0a0a0c]/55 to-black/70"
+          aria-hidden
+        />
         {isFocused ? (
           <div
             className={`pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full blur-3xl ${ui.gradient}`}
             aria-hidden
           />
         ) : (
-          <span className="absolute right-4 top-4 rounded-full border border-white/10 bg-black/45 px-2 py-0.5 text-[9px] uppercase tracking-[0.2em] text-muted-foreground/80">
+          <span className="absolute right-4 top-4 z-10 rounded-full border border-white/15 bg-black/55 px-2 py-0.5 text-[9px] uppercase tracking-[0.2em] text-muted-foreground/90 backdrop-blur-md">
             {t("timeline.carouselFocusCue")}
           </span>
         )}
 
-        <div className="relative flex flex-col gap-3">
+        <div className="relative z-10 flex flex-col gap-3">
           <div className="flex flex-wrap items-start justify-between gap-2">
             <span
               className={`inline-flex items-center rounded-full border px-3 py-1 font-mono text-xs font-semibold tracking-wide ${ui.pill}`}
             >
               {t(event.yearKey)}
             </span>
-            <span className="max-w-[min(100%,11rem)] text-balance break-words rounded-md border border-white/10 bg-black/35 px-2 py-0.5 text-left text-[10px] font-medium uppercase leading-tight tracking-wide text-muted-foreground sm:max-w-[min(100%,13rem)]">
+            <span className="max-w-[min(100%,11rem)] text-balance break-words rounded-md border border-white/12 bg-black/50 px-2 py-0.5 text-left text-[10px] font-medium uppercase leading-tight tracking-wide text-muted-foreground backdrop-blur-sm sm:max-w-[min(100%,13rem)]">
               {t(event.locKey)}
             </span>
           </div>
@@ -621,10 +626,10 @@ function TimelineCarouselCard({
               <Icon className="relative h-6 w-6 text-white" aria-hidden />
             </div>
             <div>
-              <h2 className="font-display text-xl font-semibold leading-snug tracking-tight sm:text-2xl">
+              <h2 className="font-display text-xl font-semibold leading-snug tracking-tight text-foreground sm:text-2xl">
                 {t(event.titleKey)}
               </h2>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t(event.descKey)}</p>
+              <p className="mt-2 text-sm leading-relaxed text-foreground/85">{t(event.descKey)}</p>
             </div>
           </div>
 

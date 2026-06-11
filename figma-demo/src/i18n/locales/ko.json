@@ -128,9 +128,9 @@
       "커뮤니티 영상 시사",
       "독자 대면 교류"
     ],
-    "scanTitle": "QR 코드로 신청",
-    "scanHint": "휴대폰 카메라 또는 WeChat/Alipay로 스캔하여 신청하세요",
-    "qrAlt": "오프라인 행사 신청 QR 코드"
+    "scanTitle": "QR로 그룹 참여·신청",
+    "scanHint": "휴대폰 카메라 또는 Telegram으로 스캔해 그룹에 참여하고 신청하세요",
+    "qrAlt": "Telegram 북클럽 입群 QR 코드"
   },
   "home": {
     "title": "바이낸스 인생",

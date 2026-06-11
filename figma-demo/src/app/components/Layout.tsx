@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import bookCover from "../../assets/book-cover-hero.png";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { DataDanceWordmark } from "./DataDanceWordmark";
 import {
   BOOK_CLUB_TELEGRAM_HANDLE,
   BOOK_CLUB_TELEGRAM_QR_SRC,
@@ -326,15 +327,15 @@ export default function Layout() {
               <div className="flex flex-col items-center gap-3 border-t border-border/40 pt-8 text-center lg:items-end lg:border-t-0 lg:pl-8 lg:pt-0 lg:text-right">
                 <h4 className={partnerTitleClass}>{t("footer.datadanceTitle")}</h4>
                 <p className={partnerDescClass}>{t("footer.datadanceDesc")}</p>
-                <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-end">
+                <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-end">
                   <a
                     href={datadanceHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={partnerBrandLinkClass}
+                    className="inline-flex text-foreground/90 transition-colors hover:text-gold"
+                    aria-label={t("footer.datadanceWebsiteAria")}
                   >
-                    DataDance
-                    <SquareArrowOutUpRight className="h-3 w-3 shrink-0 opacity-90" aria-hidden />
+                    <DataDanceWordmark className="h-[1.5625rem] w-[9rem]" />
                   </a>
                   <a
                     href={datadanceHref}

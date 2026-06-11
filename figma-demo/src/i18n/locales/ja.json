@@ -128,9 +128,9 @@
       "コミュニティ映像プレミア",
       "読者との対面交流"
     ],
-    "scanTitle": "QRコードで申込",
-    "scanHint": "スマホのカメラまたはWeChat／Alipayでスキャンして申し込み",
-    "qrAlt": "オフラインイベント申込QRコード"
+    "scanTitle": "QRでグループ参加・申込",
+    "scanHint": "スマホのカメラまたはTelegramでスキャンし、グループに参加して申し込み",
+    "qrAlt": "Telegramブッククラブ入群QRコード"
   },
   "home": {
     "title": "バイナンスライフ",

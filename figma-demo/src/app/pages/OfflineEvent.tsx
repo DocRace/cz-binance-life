@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
+  BOOK_CLUB_TELEGRAM_URL,
   OFFLINE_EVENT_POSTER_SRC,
   OFFLINE_EVENT_REGISTER_QR_SRC,
 } from "../../config/platform";
@@ -138,7 +139,13 @@ export default function OfflineEvent() {
 
           <div className={`mt-8 w-full max-w-sm p-6 text-center ${CARD_SURFACE}`}>
             <p className="mb-4 font-display text-xl text-gold">{t("offlineEvent.scanTitle")}</p>
-            <div className="mx-auto inline-block rounded-2xl border border-border/50 bg-white p-3 shadow-sm">
+            <a
+              href={BOOK_CLUB_TELEGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mx-auto inline-block rounded-2xl border border-border/50 bg-white p-3 shadow-sm transition-opacity hover:opacity-90"
+              aria-label={t("offlineEvent.qrAlt")}
+            >
               <img
                 src={OFFLINE_EVENT_REGISTER_QR_SRC}
                 alt={t("offlineEvent.qrAlt")}
@@ -148,7 +155,7 @@ export default function OfflineEvent() {
                 loading="eager"
                 decoding="async"
               />
-            </div>
+            </a>
             <p className="mt-4 text-xs leading-relaxed text-muted-foreground">{t("offlineEvent.scanHint")}</p>
           </div>
 

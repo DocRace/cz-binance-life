@@ -208,8 +208,8 @@ export const BOOK_CLUB_TELEGRAM_URL = "https://t.me/czlifeclub" as const;
 
 export const BOOK_CLUB_TELEGRAM_QR_SRC = "/telegram-czlifeclub-qr.png" as const;
 
-/** Offline book-club launch event — registration QR on `/event`. */
-export const OFFLINE_EVENT_REGISTER_QR_SRC = "/offline-event-register-qr.png" as const;
+/** Offline book-club launch event — Telegram group QR on `/event`. */
+export const OFFLINE_EVENT_REGISTER_QR_SRC = BOOK_CLUB_TELEGRAM_QR_SRC;
 
 export const OFFLINE_EVENT_POSTER_SRC = "/offline-event-poster.png" as const;
 

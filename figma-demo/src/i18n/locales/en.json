@@ -128,9 +128,9 @@
       "Premiere of the Freedom of Money community film",
       "Face-to-face reader interaction"
     ],
-    "scanTitle": "Scan to register",
-    "scanHint": "Use your phone camera or WeChat / Alipay to scan and register",
-    "qrAlt": "Offline event registration QR code"
+    "scanTitle": "Scan to join & register",
+    "scanHint": "Scan with your phone camera or Telegram to join the group and register",
+    "qrAlt": "Telegram book club group QR code"
   },
   "home": {
     "title": "Freedom of Money",
