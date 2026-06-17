@@ -8,6 +8,10 @@ import { loadBffEnv, ipdexFacadeFetch, ipdexPublicApiFetch } from './ipdexClient
 const PORT = Number(process.env.BFF_PORT || 8787);
 const AT_COOKIE = 'bff_ipdex_at';
 const RT_COOKIE = 'bff_ipdex_rt';
+/** Matches IPDEX access JWT (`jwtManager` default 1h). */
+const ACCESS_COOKIE_MAX_AGE_MS = 60 * 60 * 1000;
+/** Matches IPDEX refresh JWT (`jwt.js` default 7d) — 7-day login without OTP re-entry. */
+const REFRESH_COOKIE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
 function parseOrigins() {
   const raw = process.env.BOOK_ALLOWED_ORIGINS || 'http://localhost:5173';
@@ -42,6 +46,32 @@ function cookieBase() {
     path: '/',
     secure: process.env.BOOK_COOKIE_SECURE === '1',
   };
+}
+
+function setAuthCookies(res, accessToken, refreshToken) {
+  res.cookie(AT_COOKIE, accessToken, { ...cookieBase(), maxAge: ACCESS_COOKIE_MAX_AGE_MS });
+  res.cookie(RT_COOKIE, refreshToken, { ...cookieBase(), maxAge: REFRESH_COOKIE_MAX_AGE_MS });
+}
+
+function hasAccessCookie(at) {
+  return Boolean(at && `${at}`.length > 10);
+}
+
+async function refreshAuthFromCookie(env, refreshToken) {
+  const out = await ipdexFacadeFetch(env, {
+    method: 'POST',
+    suffixPath: '/user/refresh-jwt',
+    body: { refreshJWT: refreshToken },
+  });
+  const j = out.json;
+  if (j?.code === 0 && j.data?.accessToken && j.data?.refreshToken) {
+    return {
+      ok: true,
+      accessToken: j.data.accessToken,
+      refreshToken: j.data.refreshToken,
+    };
+  }
+  return { ok: false, json: j };
 }
 
 /** When IPDEX returns a JSON envelope, use 400 for business errors — only unknown/missing body ⇒ 502 (so SPA treats 502–504 as transport). */
@@ -108,11 +138,7 @@ async function boot() {
     });
     const j = out.json;
     if (j?.code === 0 && j.data?.accessToken && j.data?.refreshToken) {
-      res.cookie(AT_COOKIE, j.data.accessToken, { ...cookieBase(), maxAge: 55 * 60 * 1000 });
-      res.cookie(RT_COOKIE, j.data.refreshToken, {
-        ...cookieBase(),
-        maxAge: 14 * 24 * 60 * 60 * 1000,
-      });
+      setAuthCookies(res, j.data.accessToken, j.data.refreshToken);
       return res.json({ code: 0, message: j.message ?? '', data: { ok: true } });
     }
     res.status(out.ok && j?.code !== 0 ? 400 : 502).json(j);
@@ -123,21 +149,12 @@ async function boot() {
     if (!rt) {
       return res.status(401).json({ code: -1, message: 'no_refresh', data: null });
     }
-    const out = await ipdexFacadeFetch(env, {
-      method: 'POST',
-      suffixPath: '/user/refresh-jwt',
-      body: { refreshJWT: rt },
-    });
-    const j = out.json;
-    if (j?.code === 0 && j.data?.accessToken && j.data?.refreshToken) {
-      res.cookie(AT_COOKIE, j.data.accessToken, { ...cookieBase(), maxAge: 55 * 60 * 1000 });
-      res.cookie(RT_COOKIE, j.data.refreshToken, {
-        ...cookieBase(),
-        maxAge: 14 * 24 * 60 * 60 * 1000,
-      });
+    const refreshed = await refreshAuthFromCookie(env, rt);
+    if (refreshed.ok) {
+      setAuthCookies(res, refreshed.accessToken, refreshed.refreshToken);
       return res.json({ code: 0, message: '', data: { ok: true } });
     }
-    res.status(401).json(j || { code: -1, message: 'refresh_failed', data: null });
+    res.status(401).json(refreshed.json || { code: -1, message: 'refresh_failed', data: null });
   });
 
   app.post('/api/bff/auth/logout', (_req, res) => {
@@ -146,9 +163,26 @@ async function boot() {
     res.json({ code: 0, message: '', data: null });
   });
 
-  app.get('/api/bff/auth/session', (req, res) => {
+  app.get('/api/bff/auth/session', async (req, res) => {
     const at = req.cookies?.[AT_COOKIE];
-    res.json({ code: 0, message: '', data: { authenticated: Boolean(at && at.length > 10) } });
+    if (hasAccessCookie(at)) {
+      return res.json({ code: 0, message: '', data: { authenticated: true } });
+    }
+
+    const rt = req.cookies?.[RT_COOKIE];
+    if (!rt) {
+      return res.json({ code: 0, message: '', data: { authenticated: false } });
+    }
+
+    const refreshed = await refreshAuthFromCookie(env, rt);
+    if (refreshed.ok) {
+      setAuthCookies(res, refreshed.accessToken, refreshed.refreshToken);
+      return res.json({ code: 0, message: '', data: { authenticated: true } });
+    }
+
+    res.clearCookie(AT_COOKIE, cookieBase());
+    res.clearCookie(RT_COOKIE, cookieBase());
+    return res.json({ code: 0, message: '', data: { authenticated: false } });
   });
 
   function bearer(req) {
