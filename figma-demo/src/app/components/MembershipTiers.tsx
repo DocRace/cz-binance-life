@@ -5,7 +5,17 @@ import { useTranslation } from "react-i18next";
 import { GRID_GAP } from "../layout/pageLayout";
 
 const STANDARD_BENEFIT_KEYS = ["benefit1", "benefit2", "benefit3", "benefit4", "benefit5"] as const;
-const PREMIUM_BENEFIT_KEYS = ["benefit1", "benefit2", "benefit3", "benefit4", "benefit5"] as const;
+const PREMIUM_BENEFIT_KEYS = [
+  "benefit1",
+  "benefit2",
+  "benefit3",
+  "benefit4",
+  "benefit5",
+  "benefit6",
+  "benefit7",
+  "benefit8",
+  "benefit9",
+] as const;
 
 type MembershipTiersProps = {
   onPremiumClick: () => void;

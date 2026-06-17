@@ -1,8 +1,7 @@
 import { useEffect, useRef, useMemo } from "react";
-import mapboxgl from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { useTranslation } from "react-i18next";
-import { getMapboxAccessToken } from "../../lib/bookPickupStoreLocations";
 
 export type PickupMapStore = {
   name: string;
@@ -17,6 +16,13 @@ interface BookPickupMapProps {
   className?: string;
 }
 
+const TILE_URL = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+const TILE_ATTRIBUTION =
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+
+const MARKER_BUTTON_CLASS =
+  "flex h-8 w-8 items-center justify-center rounded-full border-2 border-gold bg-background/95 text-xs font-tech font-medium text-gold shadow-md transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60";
+
 export default function BookPickupMap({
   stores,
   selectedIndex,
@@ -25,58 +31,52 @@ export default function BookPickupMap({
 }: BookPickupMapProps) {
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const mapRef = useRef<mapboxgl.Map | null>(null);
-  const markersRef = useRef<mapboxgl.Marker[]>([]);
+  const mapRef = useRef<L.Map | null>(null);
+  const markersRef = useRef<L.Marker[]>([]);
   const onSelectRef = useRef(onSelectIndex);
   onSelectRef.current = onSelectIndex;
 
-  const token = getMapboxAccessToken();
   const storeKey = useMemo(
     () => stores.map((s) => `${s.lng},${s.lat}`).join("|"),
     [stores],
   );
 
   useEffect(() => {
-    if (!token || !containerRef.current || stores.length === 0) return;
+    if (!containerRef.current || stores.length === 0) return;
 
-    mapboxgl.accessToken = token;
-
-    const map = new mapboxgl.Map({
-      container: containerRef.current,
-      style: "mapbox://styles/mapbox/dark-v11",
-      center: [stores[0].lng, stores[0].lat],
+    const map = L.map(containerRef.current, {
+      center: [stores[0].lat, stores[0].lng],
       zoom: 11.2,
+      zoomControl: false,
       attributionControl: true,
     });
 
-    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
+    L.control.zoom({ position: "topright" }).addTo(map);
 
-    const bounds = new mapboxgl.LngLatBounds();
-    const markers: mapboxgl.Marker[] = [];
+    const layer = L.tileLayer(TILE_URL, {
+      attribution: TILE_ATTRIBUTION,
+      subdomains: "abcd",
+      maxZoom: 20,
+    }).addTo(map);
+
+    const bounds = L.latLngBounds([]);
+    const markers: L.Marker[] = [];
 
     stores.forEach((store, index) => {
-      bounds.extend([store.lng, store.lat]);
-
-      const el = document.createElement("button");
-      el.type = "button";
-      el.className =
-        "flex h-8 w-8 items-center justify-center rounded-full border-2 border-gold bg-background/95 text-xs font-tech font-medium text-gold shadow-md transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60";
-      el.setAttribute("aria-label", store.name);
-      el.textContent = `${index + 1}`;
-      el.addEventListener("click", (e) => {
-        e.stopPropagation();
-        onSelectRef.current(index);
+      bounds.extend([store.lat, store.lng]);
+      const icon = L.divIcon({
+        className: "book-pickup-marker !bg-transparent !border-0",
+        html: `<button type="button" aria-label="${store.name.replace(/"/g, "&quot;")}" class="${MARKER_BUTTON_CLASS}">${index + 1}</button>`,
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
       });
-
-      const marker = new mapboxgl.Marker({ element: el, anchor: "center" })
-        .setLngLat([store.lng, store.lat])
-        .addTo(map);
-
+      const marker = L.marker([store.lat, store.lng], { icon }).addTo(map);
+      marker.on("click", () => onSelectRef.current(index));
       markers.push(marker);
     });
 
     if (stores.length > 1) {
-      map.fitBounds(bounds, { padding: 48, maxZoom: 13.5, duration: 0 });
+      map.fitBounds(bounds, { padding: [48, 48], maxZoom: 13.5, animate: false });
     }
 
     mapRef.current = map;
@@ -88,44 +88,30 @@ export default function BookPickupMap({
       map.remove();
       mapRef.current = null;
     };
-  }, [token, storeKey, stores]);
+  }, [storeKey, stores]);
 
   useEffect(() => {
     const map = mapRef.current;
     const store = stores[selectedIndex];
     if (!map || !store) return;
 
-    map.flyTo({
-      center: [store.lng, store.lat],
-      zoom: 14.2,
-      duration: 700,
-      essential: true,
-    });
+    map.flyTo([store.lat, store.lng], 14.2, { duration: 0.7 });
 
     markersRef.current.forEach((marker, index) => {
-      const el = marker.getElement();
+      const el = marker.getElement()?.querySelector("button");
+      if (!el) return;
       const active = index === selectedIndex;
       el.style.transform = active ? "scale(1.12)" : "scale(1)";
       el.style.boxShadow = active ? "0 0 0 2px rgba(212, 175, 55, 0.85)" : "0 2px 8px rgba(0,0,0,0.35)";
     });
   }, [selectedIndex, stores]);
 
-  if (!token) {
-    return (
-      <div
-        className={`flex min-h-[280px] items-center justify-center rounded-2xl border border-border/50 bg-card/20 px-6 text-center text-sm text-muted-foreground ${className}`}
-      >
-        {t("book.pickupMapUnavailable")}
-      </div>
-    );
-  }
-
   return (
     <div
       className={`relative min-h-[280px] overflow-hidden rounded-2xl border border-border/50 bg-card/20 lg:min-h-[420px] ${className}`}
       aria-label={t("book.pickupMapLabel")}
     >
-      <div ref={containerRef} className="absolute inset-0 h-full w-full" />
+      <div ref={containerRef} className="absolute inset-0 h-full w-full [&_.leaflet-control-attribution]:text-[10px]" />
     </div>
   );
 }

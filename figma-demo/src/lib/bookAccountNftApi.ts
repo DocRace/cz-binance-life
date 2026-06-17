@@ -169,32 +169,23 @@ function nestedRecord(row: Record<string, unknown>, keys: string[]): Record<stri
   return null;
 }
 
-/** Token or collection artwork URL from merged nft-balance row + details. */
-export function pickNftImageUrl(row: Record<string, unknown>): string {
-  const keys = [
-    "c_image",
-    "image",
-    "imageUrl",
-    "image_url",
-    "tokenImage",
-    "nftImage",
-    "cover",
-    "c_cover",
-    "salesCover",
-    "c_sales_cover",
-  ];
+function pickTokenLevelImageUrl(row: Record<string, unknown>): string {
+  const keys = ["c_image", "image", "imageUrl", "image_url", "tokenImage", "nftImage"];
   for (const sub of nftRowVariants(row)) {
     const s = strField(sub, keys);
     if (s) return s;
     const fromMeta = metadataImageUrl(sub.c_metadata ?? sub.metadata);
     if (fromMeta) return fromMeta;
   }
-  const collection = nestedRecord(row, ["c_collection", "collection", "collectionInfo"]);
-  if (collection) {
-    const cover = strField(collection, ["c_cover", "c_image", "cover", "image"]);
-    if (cover) return cover;
-  }
   return "";
+}
+
+/** Per-token artwork URL from merged nft-balance row + details; collection cover is fallback only. */
+export function pickNftImageUrl(row: Record<string, unknown>): string {
+  const tokenUrl = pickTokenLevelImageUrl(row);
+  if (tokenUrl) return tokenUrl;
+  const collection = nestedRecord(row, ["c_collection", "collection", "collectionInfo"]);
+  return collection ? strField(collection, ["c_cover", "c_image", "cover", "image"]) : "";
 }
 
 export function pickNftDisplayName(row: Record<string, unknown>): string {

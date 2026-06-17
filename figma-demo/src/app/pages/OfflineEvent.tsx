@@ -33,6 +33,7 @@ import {
 } from "../layout/pageLayout";
 
 type AgendaRow = { time: string; segment: string; content: string };
+type PartnerAbout = { title: string; body: string };
 
 /** Icons aligned with `offlineEvent.highlights` order across locales */
 const HIGHLIGHT_ICONS: LucideIcon[] = [Users, Award, Building2, Mic, Clapperboard, Handshake];
@@ -60,6 +61,11 @@ export default function OfflineEvent() {
   const highlights = useMemo(() => {
     const raw = t("offlineEvent.highlights", { returnObjects: true });
     return Array.isArray(raw) ? (raw as string[]) : [];
+  }, [t]);
+
+  const partners = useMemo(() => {
+    const raw = t("offlineEvent.partners", { returnObjects: true });
+    return Array.isArray(raw) ? (raw as PartnerAbout[]) : [];
   }, [t]);
 
   return (
@@ -131,7 +137,7 @@ export default function OfflineEvent() {
             <img
               src={OFFLINE_EVENT_POSTER_SRC}
               alt=""
-              className="w-full object-cover object-top"
+              className="w-full object-contain"
               loading="eager"
               decoding="async"
             />
@@ -168,6 +174,28 @@ export default function OfflineEvent() {
           </Link>
         </motion.div>
       </div>
+
+      {partners.length > 0 ? (
+        <motion.section
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          className={`${CONTENT_DEFAULT} ${SECTION_SPACING} mt-12 md:mt-16`}
+          aria-labelledby="offline-event-partners"
+        >
+          <h2 id="offline-event-partners" className="mb-6 font-display text-2xl md:text-3xl text-foreground">
+            {t("offlineEvent.partnersTitle")}
+          </h2>
+          <div className={`grid grid-cols-1 gap-4 md:grid-cols-3 ${GRID_GAP}`}>
+            {partners.map((partner) => (
+              <article key={partner.title} className={`p-6 md:p-7 ${CARD_SURFACE}`}>
+                <h3 className="font-display text-lg text-gold mb-3">{partner.title}</h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">{partner.body}</p>
+              </article>
+            ))}
+          </div>
+        </motion.section>
+      ) : null}
 
       <motion.section
         initial={{ opacity: 0, y: 12 }}

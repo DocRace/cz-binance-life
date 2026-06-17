@@ -64,6 +64,16 @@ export function getBookStandardAirdropPublicCode(): string {
   return envString("VITE_IPDEX_BOOK_STANDARD_AIRDROP_PUBLIC_CODE");
 }
 
+/** Free STANDARD tier primary sale UUID (HK$0.01 «免費版» when airdrop publicCode is unset). */
+export function getBookStandardPrimarySaleId(): string {
+  return envString("VITE_IPDEX_BOOK_STANDARD_PRIMARY_SALE_ID");
+}
+
+/** Listing UUID for free STANDARD primary purchase (`POST /ip/primary/purchase`). */
+export function getBookStandardPrimaryListingId(): string {
+  return envString("VITE_IPDEX_BOOK_STANDARD_PRIMARY_LISTING_ID");
+}
+
 /** Expected collection UUID for the free-tier series (sanity check after campaign load). */
 export function getBookStandardCollectionId(): string {
   const fromEnv = envString("VITE_IPDEX_BOOK_STANDARD_COLLECTION_ID");

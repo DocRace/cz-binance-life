@@ -15,6 +15,9 @@ interface ImportMetaEnv {
   readonly VITE_IPDEX_BOOK_STANDARD_AIRDROP_PUBLIC_CODE?: string;
   /** Optional collection UUID sanity check for free-tier airdrop (defaults in code). */
   readonly VITE_IPDEX_BOOK_STANDARD_COLLECTION_ID?: string;
+  /** Free STANDARD tier primary sale when airdrop publicCode is unset. */
+  readonly VITE_IPDEX_BOOK_STANDARD_PRIMARY_SALE_ID?: string;
+  readonly VITE_IPDEX_BOOK_STANDARD_PRIMARY_LISTING_ID?: string;
   /** Paid PREMIUM voucher collection UUID(s) — eligible for on-site redeem (comma-separated). */
   readonly VITE_IPDEX_BOOK_PREMIUM_COLLECTION_ID?: string;
   /** Public Client Service origin (display / future APIs), e.g. https://your-client-api.example — no trailing slash. */

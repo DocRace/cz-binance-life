@@ -7,7 +7,7 @@ set -euo pipefail
 
 FIGMA_DEMO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 IPDEX_BACKEND="${IPDEX_BACKEND:-${HOME}/Developer/data-dance/ipdex/ipdex-backend-v1}"
-ENV_DIR="${ENV_DIR:-${HOME}/Downloads/ipdex-env}"
+ENV_DIR="${ENV_DIR:-${HOME}/Downloads/ipdex-env/ipdex-env-dev}"
 KEY="${DEPLOY_KEY:-${ENV_DIR}/ipdex-singapore-dev-test.pem}"
 HOST="${DEPLOY_HOST:-ubuntu@52.221.179.13}"
 SPA_ENV="${SPA_ENV:-${FIGMA_DEMO}/deploy/.env.spa}"

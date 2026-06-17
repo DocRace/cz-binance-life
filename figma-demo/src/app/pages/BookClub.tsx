@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
 import { motion } from "motion/react";
 import {
@@ -28,6 +28,9 @@ import {
   BOOK_CLUB_TELEGRAM_HANDLE,
   BOOK_CLUB_TELEGRAM_QR_SRC,
   BOOK_CLUB_TELEGRAM_URL,
+  getBookStandardAirdropPublicCode,
+  getBookStandardPrimaryListingId,
+  getBookStandardPrimarySaleId,
 } from "../../config/platform";
 import {
   CARD_SURFACE,
@@ -42,8 +45,22 @@ export default function BookClub() {
   const { t } = useTranslation();
   const [purchaseOpen, setPurchaseOpen] = useState(false);
   const [airdropOpen, setAirdropOpen] = useState(false);
+  const [standardPurchaseOpen, setStandardPurchaseOpen] = useState(false);
   const [communityStories, setCommunityStories] = useState<BookClubStory[] | null>(undefined);
   const [expandedStory, setExpandedStory] = useState<BookClubStory | null>(null);
+
+  const standardTier = useMemo(() => {
+    const airdropCode = getBookStandardAirdropPublicCode().trim();
+    const saleId = getBookStandardPrimarySaleId().trim();
+    const listingId = getBookStandardPrimaryListingId().trim();
+    return { airdropCode, saleId, listingId };
+  }, []);
+
+  const openStandardTier = () => {
+    if (standardTier.airdropCode) setAirdropOpen(true);
+    else if (standardTier.saleId) setStandardPurchaseOpen(true);
+    else setAirdropOpen(true);
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -120,7 +137,7 @@ export default function BookClub() {
 
       <MembershipTiers
         onPremiumClick={() => setPurchaseOpen(true)}
-        onStandardClick={() => setAirdropOpen(true)}
+        onStandardClick={openStandardTier}
         showKicker={false}
         className={SECTION_SPACING}
       />
@@ -343,6 +360,14 @@ export default function BookClub() {
     ) : null}
 
     {purchaseOpen ? <PurchaseModal onClose={() => setPurchaseOpen(false)} /> : null}
+    {standardPurchaseOpen ? (
+      <PurchaseModal
+        onClose={() => setStandardPurchaseOpen(false)}
+        saleIdOverride={standardTier.saleId}
+        listingIdOverride={standardTier.listingId}
+        priceHkdHintOverride={0.01}
+      />
+    ) : null}
     {airdropOpen ? <AirdropClaimModal onClose={() => setAirdropOpen(false)} /> : null}
     </>
   );

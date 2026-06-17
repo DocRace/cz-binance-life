@@ -18,6 +18,10 @@ import { bookBffJson, bookBffIsTransportIssue } from "../../lib/bookBffClient";
 interface PurchaseModalProps {
   onClose: () => void;
   skipLogin?: boolean;
+  /** Override env primary sale (e.g. free STANDARD «免費版»). */
+  saleIdOverride?: string;
+  listingIdOverride?: string;
+  priceHkdHintOverride?: number | null;
 }
 
 type Step = "login" | "select" | "success";
@@ -191,7 +195,13 @@ function extractPrimarySaleHints(data: unknown): PrimarySaleHints {
   return hints;
 }
 
-export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseModalProps) {
+export default function PurchaseModal({
+  onClose,
+  skipLogin = false,
+  saleIdOverride,
+  listingIdOverride,
+  priceHkdHintOverride,
+}: PurchaseModalProps) {
   const { t } = useTranslation();
   const [step, setStep] = useState<Step>(skipLogin ? "select" : "login");
   const [quantity, setQuantity] = useState(1);
@@ -209,27 +219,36 @@ export default function PurchaseModal({ onClose, skipLogin = false }: PurchaseMo
   const [saleListingFetchState, setSaleListingFetchState] = useState<"idle" | "loading" | "ok" | "fail">("idle");
   const [primarySaleUnavailable, setPrimarySaleUnavailable] = useState<PrimarySaleUnavailableReason | null>(null);
 
-  const envPriceBaseline = useMemo(() => getBookPrimaryPriceHkdHint() ?? 100, []);
+  const envPriceBaseline = useMemo(
+    () => priceHkdHintOverride ?? getBookPrimaryPriceHkdHint() ?? 100,
+    [priceHkdHintOverride],
+  );
   const [unitPriceHkd, setUnitPriceHkd] = useState<number>(() => envPriceBaseline);
   const [quantityCap, setQuantityCap] = useState(10);
 
   const pricePerNFT = unitPriceHkd;
   const totalPrice = quantity * pricePerNFT;
 
-  const envListingId = useMemo(() => getBookPrimaryListingId().trim(), []);
-  const primarySaleId = useMemo(() => getBookPrimarySaleId().trim(), []);
+  const envListingId = useMemo(
+    () => (listingIdOverride ?? getBookPrimaryListingId()).trim(),
+    [listingIdOverride],
+  );
+  const primarySaleId = useMemo(
+    () => (saleIdOverride ?? getBookPrimarySaleId()).trim(),
+    [saleIdOverride],
+  );
   /** BFF checkout can succeed with env listing id, or by resolving listing from primary-sale id. */
   const canPurchaseViaBff = Boolean(envListingId || primarySaleId);
 
   const fetchPrimarySaleHints = useCallback(async (): Promise<PrimarySaleHints> => {
-    const sid = getBookPrimarySaleId().trim();
+    const sid = primarySaleId;
     if (!sid) return { listingId: "" };
     const out = await bookBffJson<unknown>(
       `/api/bff/market/primary-sales/${encodeURIComponent(sid)}`,
     );
     if (out.code !== 0 || bookBffIsTransportIssue(out) || !out.data) return { listingId: "" };
     return extractPrimarySaleHints(out.data);
-  }, []);
+  }, [primarySaleId]);
 
   useEffect(() => {
     let cancelled = false;
