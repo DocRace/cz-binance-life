@@ -1,7 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Serif+TC:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Orbitron:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap');
+
+/**
+ * CJK fallbacks: UI is zh-TW but UGC (KOL tweets) is often simplified Chinese.
+ * Stack both TC + SC before system UI fonts to avoid missing glyphs / wrong regional forms.
+ */
+:root {
+  --font-cjk-sans:
+    'Noto Sans TC', 'Noto Sans SC', 'PingFang TC', 'PingFang SC', 'Heiti TC', 'Microsoft JhengHei',
+    'Microsoft YaHei', sans-serif;
+  --font-cjk-serif:
+    'Noto Serif TC', 'Noto Serif SC', 'Noto Sans TC', 'Noto Sans SC', 'PingFang TC', 'Microsoft JhengHei',
+    serif;
+}
 
 body {
-  font-family: 'Instrument Sans', 'Noto Sans TC', system-ui, sans-serif;
+  font-family: 'Instrument Sans', var(--font-cjk-sans);
 }
 
 h1,
@@ -10,18 +23,23 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Cormorant Garamond', 'Noto Serif TC', serif;
+  font-family: 'Cormorant Garamond', var(--font-cjk-serif);
   font-weight: 500;
 }
 
 .font-display {
-  font-family: 'Cormorant Garamond', 'Noto Serif TC', serif;
+  font-family: 'Cormorant Garamond', var(--font-cjk-serif);
 }
 
 .font-body {
-  font-family: 'Instrument Sans', 'Noto Sans TC', sans-serif;
+  font-family: 'Instrument Sans', var(--font-cjk-sans);
+}
+
+/** Long-form Chinese (e.g. book-club KOL quotes): prefer sans CJK for readability. */
+.font-cjk {
+  font-family: var(--font-cjk-sans);
 }
 
 .font-tech {
-  font-family: 'Orbitron', 'Instrument Sans', monospace;
+  font-family: 'Orbitron', 'Instrument Sans', var(--font-cjk-sans);
 }

@@ -63,7 +63,7 @@ export default function ClubStoryCard({
     >
       <div className="mb-3 flex min-w-0 items-center gap-3">
         <ClubStoryAvatar story={story} />
-        <p className="min-w-0 flex-1 font-mono text-[11px] leading-snug text-gold/85 wrap-anywhere">
+        <p className="min-w-0 flex-1 font-cjk text-[11px] leading-snug text-gold/85 wrap-anywhere">
           {story.author_display}
         </p>
       </div>
@@ -82,7 +82,7 @@ export default function ClubStoryCard({
                 }
               : {}),
           }}
-          className="overflow-hidden font-display text-base font-medium leading-relaxed text-white/95 whitespace-pre-wrap wrap-anywhere"
+          className="overflow-hidden font-cjk text-base font-normal leading-relaxed text-white/95 whitespace-pre-wrap wrap-anywhere"
         >
           {displayText}
         </p>

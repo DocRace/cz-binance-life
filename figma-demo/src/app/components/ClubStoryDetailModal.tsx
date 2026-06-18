@@ -68,7 +68,7 @@ export default function ClubStoryDetailModal({
                 <div className="min-w-0">
                   <p
                     id="club-story-detail-title"
-                    className="font-mono text-xs leading-snug text-gold/90 wrap-anywhere"
+                    className="font-cjk text-xs leading-snug text-gold/90 wrap-anywhere"
                   >
                     {story.author_display}
                   </p>
@@ -81,7 +81,7 @@ export default function ClubStoryDetailModal({
 
             <div className="flex-1 overflow-y-auto px-5 py-4">
               {displayText ? (
-                <p className="font-display text-base md:text-lg font-medium leading-relaxed text-white/95 whitespace-pre-wrap wrap-anywhere">
+                <p className="font-cjk text-base md:text-lg font-normal leading-relaxed text-white/95 whitespace-pre-wrap wrap-anywhere">
                   {displayText}
                 </p>
               ) : null}
