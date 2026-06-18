@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState, type RefObject } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent, type RefObject } from "react";
 import { motion } from "motion/react";
-import { ChevronDown, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import ClubStoryAvatar from "./ClubStoryAvatar";
-import type { BookClubStory } from "../../lib/bookClubStories";
+import { storyCjkScriptFontClass, type BookClubStory } from "../../lib/bookClubStories";
 
 /** Preview body max height — ~5 lines at base size. */
 const STORY_PREVIEW_MAX_PX = 168;
@@ -52,18 +52,47 @@ export default function ClubStoryCard({
   const { t } = useTranslation();
   const previewRef = useRef<HTMLParagraphElement>(null);
   const overflows = usePreviewOverflow(displayText, previewRef);
-  const showExpand = Boolean(displayText) && overflows;
+  const scriptFontClass = storyCjkScriptFontClass(story);
+  const canOpenDetail = Boolean(displayText);
+
+  const openDetail = () => {
+    if (canOpenDetail) onExpand();
+  };
+
+  const handleCardClick = () => {
+    openDetail();
+  };
+
+  const handleCardKeyDown = (e: KeyboardEvent<HTMLElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      openDetail();
+    }
+  };
+
+  const stopCardActivation = (e: MouseEvent) => {
+    e.stopPropagation();
+  };
 
   return (
     <motion.article
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.08 + index * 0.05 }}
-      className="flex min-w-0 flex-col rounded-2xl border border-border/60 bg-card/35 p-5 backdrop-blur-sm hover:border-gold/25 transition-colors"
+      role={canOpenDetail ? "button" : undefined}
+      tabIndex={canOpenDetail ? 0 : undefined}
+      aria-label={canOpenDetail ? t("club.storiesExpand") : undefined}
+      onClick={canOpenDetail ? handleCardClick : undefined}
+      onKeyDown={canOpenDetail ? handleCardKeyDown : undefined}
+      className={`flex min-w-0 flex-col rounded-2xl border border-border/60 bg-card/35 p-5 backdrop-blur-sm transition-colors ${
+        canOpenDetail
+          ? "cursor-pointer hover:border-gold/35 hover:bg-card/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40"
+          : "hover:border-gold/25"
+      }`}
     >
-      <div className="mb-3 flex min-w-0 items-center gap-3">
+      <div className="mb-3 flex min-w-0 items-center gap-3 pointer-events-none">
         <ClubStoryAvatar story={story} />
-        <p className="min-w-0 flex-1 font-cjk text-[11px] leading-snug text-gold/85 wrap-anywhere">
+        <p className={`min-w-0 flex-1 ${scriptFontClass} text-[11px] leading-snug text-gold/85 wrap-anywhere`}>
           {story.author_display}
         </p>
       </div>
@@ -73,7 +102,7 @@ export default function ClubStoryCard({
           ref={previewRef}
           style={{
             maxHeight: STORY_PREVIEW_MAX_PX,
-            ...(showExpand
+            ...(overflows
               ? {
                   WebkitMaskImage:
                     "linear-gradient(to bottom, #000 0%, #000 58%, rgba(0,0,0,0.45) 78%, transparent 100%)",
@@ -82,28 +111,22 @@ export default function ClubStoryCard({
                 }
               : {}),
           }}
-          className="overflow-hidden font-cjk text-base font-normal leading-relaxed text-white/95 whitespace-pre-wrap wrap-anywhere"
+          className={`overflow-hidden pointer-events-none ${scriptFontClass} text-base font-normal leading-relaxed text-white/95 whitespace-pre-wrap wrap-anywhere`}
         >
           {displayText}
         </p>
       ) : null}
 
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
-        {showExpand ? (
-          <button
-            type="button"
-            onClick={onExpand}
-            className="inline-flex items-center gap-1 text-xs font-medium text-gold hover:text-gold-light transition-colors"
-          >
-            {t("club.storiesExpand")}
-            <ChevronDown className="size-3.5" aria-hidden />
-          </button>
+        {canOpenDetail ? (
+          <span className="pointer-events-none text-xs font-medium text-gold/80">{t("club.storiesExpand")}</span>
         ) : null}
         {externalUrl ? (
           <a
             href={externalUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={stopCardActivation}
             className="inline-flex items-center gap-1.5 text-xs font-medium text-sky-400 hover:text-sky-300"
           >
             {linkLabel}
