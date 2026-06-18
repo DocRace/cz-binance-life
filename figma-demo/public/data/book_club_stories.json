@@ -1,6 +1,6 @@
 {
   "format_version": 2,
-  "updated_at": "2026-06-18T16:05:44+00:00",
+  "updated_at": "2026-06-18T16:49:16+00:00",
   "query": "local-xlsx + X oEmbed post text for status hyperlinks",
   "source_file": "Internal-币安人生书友会拟合作KOL名单.xlsx",
   "curator_pipeline": {
@@ -18,7 +18,7 @@
       "id": "tw-2043659608292757607",
       "kind": "twitter",
       "author_display": "KK · @longwinsk",
-      "headline": "这本书我也读得很慢，本来想读完再写几句的。看到这段，很有同感：“我无法快速读完这本书，对于我来说，需要一些时间。并不是我有阅读障碍，而是跟随书本脚步的同时，无数记忆碎片不断涌现在我眼前….”，忍不住转发，顺便谈几点感受。 与Elon…",
+      "headline": "这本书我也读得很慢，本来想读完再写几句的。看到这段，很有同感：“我无法快速读完这本书，对于我来说，需要一些时间。并不是我有阅读障碍，而是跟随书本脚步的同时，无数记忆碎片不断涌现在我眼前….”，忍不住转发，顺便谈几点感受。  \n\n与Elon Musk等其他传奇人物的故事不同，很多事情以及自传里提到的人物，就在我身边或者我也认识。有一种亲历历史的鲜活感，感受也因此特别多： \n\n1. CZ是个很真很坦诚的人。其他同行可能很难做到，也写自传的话，可能一章都无法完成吧？\n\n2. 时间是最宝贵的，要花在值得花的人和事情上，然后让时间慢慢去放大这个效应；\n\n3. 要有勇气，为了效率“得罪”人。个人是这样，组织也应该是这样。  \n\n。。。。。。\n\n最后，可惜错过了那个演讲😭",
       "body": "",
       "url": "https://x.com/longwinsk/status/2043659608292757607",
       "created_at": "April 13, 2026",
@@ -26,7 +26,7 @@
       "curator": {
         "tier": "standard",
         "score": 0.9,
-        "method": "kol_sheet_x_live_text"
+        "method": "kol_manual_book_review"
       }
     },
     {
