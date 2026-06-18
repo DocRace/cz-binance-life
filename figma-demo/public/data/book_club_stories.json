@@ -1,6 +1,6 @@
 {
   "format_version": 2,
-  "updated_at": "2026-06-06T16:10:00.000000+00:00",
+  "updated_at": "2026-06-18T08:00:00.000000+00:00",
   "query": "local-xlsx + X oEmbed post text for status hyperlinks",
   "source_file": "Internal-币安人生书友会拟合作KOL名单.xlsx",
   "curator_pipeline": {
@@ -14,6 +14,21 @@
     "live_text_note": "Status hyperlinks use X oEmbed + vxtwitter fallback (articles / link-only posts)."
   },
   "stories": [
+    {
+      "id": "tw-2043390466302042532",
+      "kind": "twitter",
+      "author_display": "wsjack · @wsjack",
+      "headline": "花了一个周末的时间，终于把 @cz_binance 的《币安人生》这本书认真看完了，感觉收获颇丰吧。\n\n说实话，这本书并不能称得上是什么文学作品。大部分的文字也只是比较平铺直叙的记录。但我却很喜欢这种风格，每一小节都不长，非常像一个推文的threads，读起来没有任何难度，前后文也不会有太多关联。\n\n通过这本书，我们都可以大致了解 CZ 到目前为止整个人生的状态。我本以为这本书会包含非常多商战内容。但事实是他主要讲的都是cz的成长、cz的创业历程、推广加密货币、以及监狱的低谷。可见的是cz一直是专注于自身、专注于整个行业的发展，而不是内卷。格局可见一斑，这样的格局才是币安做到第一的根本原因。\n\n我觉得，如果你想从这本书中学习“有用的”知识的话，可以直接跳转到最后一个附录，看“CZ的原则”，那里每一句都是金句，应该对每个人都有启发。阅读时间不长，十几分钟，我强烈建议每个人都去阅读两遍以上。\n\n但我更愿意去看这些人的成长和创业经历，因为环境和经历才是塑造一个人的关键。《乔布斯传》、《马斯克传》这些几百页的大部头我从小学开始就阅读了，而且现在对他们人生的一些桥段还是记忆犹新。通过了解他们的人生经历，感悟到的绝对比那些鸡汤类的“名人名言”更多。所以我建议有点时间的人还是完整的阅读整本书为好。\n\n对于我而言，收获最大的应该是 CZ 关于公司团队构建以及全球化的那些思考。这些经验是美国公司那种天生全球化的创业历程中体会不到的。非常适合有重华人基因的团队学习。也是cz 能够超出华人限制，把币安带成世界第一所的原因，一号位的高度决定了公司的高度。\n\n最近好多大佬和kol关于这本书有争议，我提议大家都写本回忆录吧，看谁写得好我站谁。😂",
+      "body": "",
+      "url": "https://x.com/wsjack/status/2043390466302042532",
+      "created_at": "April 12, 2026",
+      "author_avatar_url": "https://pbs.twimg.com/profile_images/1915884884121554944/APSh-FwJ_400x400.jpg",
+      "curator": {
+        "tier": "featured",
+        "score": 0.98,
+        "method": "kol_manual_book_review"
+      }
+    },
     {
       "id": "tw-2043659608292757607",
       "kind": "twitter",
