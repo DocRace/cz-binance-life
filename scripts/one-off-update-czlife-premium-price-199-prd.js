@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * One-off: set CZ Life premium primary sale + listing price to HK$199 (19900 cents).
+ * One-off: set CZ Life premium primary sale + listing price to HK$198 (19800 cents).
  */
 require('dotenv').config({ path: process.env.IPDEX_ENV || '.env.admin.server' });
 const knex = require('knex')({
@@ -15,7 +15,7 @@ const knex = require('knex')({
 
 const PREMIUM_SALE_ID = 'e9d0d243-f17f-49b3-ad85-e6f19894bfd7';
 const PREMIUM_LISTING_ID = '759954d4-05ba-41f5-9f8b-9dbac94eb61b';
-const NEW_PRICE_CENTS = 19900;
+const NEW_PRICE_CENTS = 19800;
 
 (async () => {
   const beforeSale = await knex('t_primary_sales').where('c_sales_id', PREMIUM_SALE_ID).first();

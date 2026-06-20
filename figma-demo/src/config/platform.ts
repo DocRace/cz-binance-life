@@ -56,7 +56,7 @@ export function getBookPrimaryPriceHkdHint(): number | null {
 
 /** Whole-number HK$ for Premium UI copy; matches build env, overridden by live sale API in checkout. */
 export function getBookPremiumPriceHkd(): number {
-  return getBookPrimaryPriceHkdHint() ?? 199;
+  return getBookPrimaryPriceHkdHint() ?? 198;
 }
 
 export function formatBookPremiumPriceHkd(): string {
