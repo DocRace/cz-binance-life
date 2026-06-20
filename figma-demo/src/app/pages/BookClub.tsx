@@ -31,6 +31,7 @@ import {
   getBookStandardAirdropPublicCode,
   getBookStandardPrimaryListingId,
   getBookStandardPrimarySaleId,
+  formatBookPremiumPriceHkd,
 } from "../../config/platform";
 import {
   CARD_SURFACE,
@@ -55,6 +56,8 @@ export default function BookClub() {
     const listingId = getBookStandardPrimaryListingId().trim();
     return { airdropCode, saleId, listingId };
   }, []);
+
+  const premiumPriceLabel = useMemo(() => formatBookPremiumPriceHkd(), []);
 
   const openStandardTier = () => {
     if (standardTier.airdropCode) setAirdropOpen(true);
@@ -130,7 +133,7 @@ export default function BookClub() {
             className="inline-flex items-center justify-center gap-2 rounded-full border border-gold/60 px-8 py-3.5 text-sm font-body font-medium tracking-wide text-gold hover:bg-gold/10 transition-colors"
           >
             <ShoppingBag className="h-4 w-4" aria-hidden />
-            {t("club.buyBadgeCta")}
+            {t("club.buyBadgeCta", { priceHkd: premiumPriceLabel })}
           </button>
         </div>
       </motion.div>
@@ -298,7 +301,7 @@ export default function BookClub() {
               {
                 step: "01",
                 title: t("club.step1Title"),
-                description: t("club.step1Desc")
+                description: t("club.step1Desc", { priceHkd: premiumPriceLabel })
               },
               {
                 step: "02",

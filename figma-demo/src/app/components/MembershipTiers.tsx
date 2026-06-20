@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { Check, Gift, Sparkles, ShoppingBag, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { GRID_GAP } from "../layout/pageLayout";
+import { formatBookPremiumPriceHkd } from "../../config/platform";
 
 const STANDARD_BENEFIT_KEYS = ["benefit1", "benefit2", "benefit3", "benefit4", "benefit5"] as const;
 const PREMIUM_BENEFIT_KEYS = [
@@ -82,7 +83,7 @@ export default function MembershipTiers({
             <h3 className="font-display text-2xl text-foreground mb-2">
               {t("membershipTiers.premium.accessLabel")}
             </h3>
-            <p className="font-tech text-3xl text-gold">{t("membershipTiers.premium.price")}</p>
+            <p className="font-tech text-3xl text-gold">{formatBookPremiumPriceHkd()}</p>
             <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
               {t("membershipTiers.premium.tagline")}
             </p>

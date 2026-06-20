@@ -186,7 +186,7 @@
     "premium": {
       "tierLabel": "プレミアム会員",
       "accessLabel": "PREMIUM ACCESS",
-      "price": "299 HKD",
+      "price": "{{priceHkd}}",
       "tagline": "限定発行｜グローバル読書会のコア特典",
       "benefit1": "実体書『バイナンスライフ』",
       "benefit2": "専用 NFT 身分証",
@@ -300,7 +300,7 @@
     "registerButton": "参加申込",
     "howToJoinTitle": "ブッククラブへの参加方法は？",
     "step1Title": "会員バッジを取得",
-    "step1Desc": "IPDEXでサインイン後、無料のスタンダード記念バッジを請求するか、プレミアム典藏版（299 HKD）を購入して予約バウチャーと紙の本を受け取ります。",
+    "step1Desc": "IPDEXでサインイン後、無料のスタンダード記念バッジを請求するか、プレミアム典藏版（{{priceHkd}}）を購入して予約バウチャーと紙の本を受け取ります。",
     "step2Title": "Telegramコミュニティに参加",
     "step2Desc": "@czlifeclub で共読、イベント告知、読者同士の交流に参加できます。",
     "step3Title": "出席＆現地交換（プレミアム）",
@@ -332,7 +332,7 @@
     "storiesOpenX": "Xで見る",
     "storiesExpand": "全文を読む",
     "storiesDisclaimer": "公開投稿または編集投稿を起源とし、書籍サイト向けにトーンを整えています。著作権は作者に帰属します。",
-    "buyBadgeCta": "プレミアム典藏版を購入（299 HKD）"
+    "buyBadgeCta": "プレミアム典藏版を購入（{{priceHkd}}）"
   },
   "principles": {
     "title": "CZ原則",

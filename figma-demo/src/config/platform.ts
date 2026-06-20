@@ -54,6 +54,15 @@ export function getBookPrimaryPriceHkdHint(): number | null {
   return Math.round(n * 100) / 100;
 }
 
+/** Whole-number HK$ for Premium UI copy; matches build env, overridden by live sale API in checkout. */
+export function getBookPremiumPriceHkd(): number {
+  return getBookPrimaryPriceHkdHint() ?? 199;
+}
+
+export function formatBookPremiumPriceHkd(): string {
+  return `${getBookPremiumPriceHkd()} HKD`;
+}
+
 /** When multiple NFT redemption DB rules exist, SPA passes this UUID to `/club/redeem` (optional when exactly one enabled rule). */
 export function getBookNftRedemptionRuleId(): string {
   return envString("VITE_IPDEX_NFT_REDEMPTION_RULE_ID");

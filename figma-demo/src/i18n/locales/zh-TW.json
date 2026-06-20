@@ -219,7 +219,7 @@
     "premium": {
       "tierLabel": "進階會員",
       "accessLabel": "PREMIUM ACCESS",
-      "price": "299 HKD",
+      "price": "{{priceHkd}}",
       "tagline": "限量發行｜尊享全球書友會核心權益",
       "benefit1": "《幣安人生》實體書",
       "benefit2": "專屬 NFT 身份憑證",
@@ -333,7 +333,7 @@
     "registerButton": "報名參加",
     "howToJoinTitle": "如何加入書友會？",
     "step1Title": "取得會員徽章",
-    "step1Desc": "以 IPDEX 帳號登入本站後，可免費領取標準紀念徽章，或購買進階典藏版（299 HKD）取得預約憑證與實體書。",
+    "step1Desc": "以 IPDEX 帳號登入本站後，可免費領取標準紀念徽章，或購買進階典藏版（{{priceHkd}}）取得預約憑證與實體書。",
     "step2Title": "加入 Telegram 書友會",
     "step2Desc": "前往 @czlifeclub 參與共讀、活動通知與讀者交流。",
     "step3Title": "出席盛典並現場核銷（進階會員）",
@@ -365,7 +365,7 @@
     "storiesOpenX": "在 X 查看推文",
     "storiesExpand": "展開全文",
     "storiesDisclaimer": "內容來源為公開貼文或編輯收件，僅作書站脈絡下的友善展示；著作權仍歸原作者。",
-    "buyBadgeCta": "購買進階典藏版（299 HKD）"
+    "buyBadgeCta": "購買進階典藏版（{{priceHkd}}）"
   },
   "principles": {
     "title": "CZ 原則",

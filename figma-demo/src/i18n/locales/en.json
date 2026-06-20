@@ -195,7 +195,7 @@
     "premium": {
       "tierLabel": "Premium member",
       "accessLabel": "PREMIUM ACCESS",
-      "price": "299 HKD",
+      "price": "{{priceHkd}}",
       "tagline": "Limited release | Core privileges of the global book club",
       "benefit1": "Physical copy of Freedom of Money",
       "benefit2": "Exclusive NFT identity credential",
@@ -309,7 +309,7 @@
     "registerButton": "Register",
     "howToJoinTitle": "How to Join the Book Club?",
     "step1Title": "Get your member badge",
-    "step1Desc": "Sign in with IPDEX on this site, then claim the free standard commemorative badge or purchase the premium edition (299 HKD) for a reservation voucher and physical book.",
+    "step1Desc": "Sign in with IPDEX on this site, then claim the free standard commemorative badge or purchase the premium edition ({{priceHkd}}) for a reservation voucher and physical book.",
     "step2Title": "Join the Telegram community",
     "step2Desc": "Enter @czlifeclub for group reading, event updates, and discussions with other readers.",
     "step3Title": "Attend & redeem on-site (Premium)",
@@ -341,7 +341,7 @@
     "storiesOpenX": "View on X",
     "storiesExpand": "Read full story",
     "storiesDisclaimer": "Stories are sourced from public posts or editorial submissions; tone is filtered for a respectful book-site context. Rights remain with the original authors.",
-    "buyBadgeCta": "Buy premium edition (299 HKD)"
+    "buyBadgeCta": "Buy premium edition ({{priceHkd}})"
   },
   "principles": {
     "title": "CZ Principles",
