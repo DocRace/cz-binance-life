@@ -1,3 +1,5 @@
+import { cjkScriptFontClass, detectCjkScript } from "./cjkScript";
+
 export type BookClubStory = {
   id: string;
   kind?: string;
@@ -27,6 +29,12 @@ export function storyDisplayText(story: BookClubStory): string {
   if (!body) return headline;
   if (!headline) return body;
   return body.length >= headline.length ? body : headline;
+}
+
+/** Infer simplified vs traditional script from story author + content. */
+export function storyCjkScriptFontClass(story: BookClubStory): string {
+  const text = [story.author_display, story.headline, story.body].filter(Boolean).join("\n");
+  return cjkScriptFontClass(detectCjkScript(text));
 }
 
 export function resolveStoryExternalUrl(story: BookClubStory): string | undefined {

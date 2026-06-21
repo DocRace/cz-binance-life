@@ -5,11 +5,13 @@ import { useTranslation } from "react-i18next";
 import OverlayPortal from "./OverlayPortal";
 import { overlayBackdropClass } from "../lib/overlayLayers";
 import ClubStoryAvatar from "./ClubStoryAvatar";
-import type { BookClubStory } from "../../lib/bookClubStories";
+import ClubStoryTranslationControls from "./ClubStoryTranslationControls";
+import { useClubStoryLocalizedText } from "../hooks/useClubStoryLocalizedText";
+import { storyCjkScriptFontClass, type BookClubStory } from "../../lib/bookClubStories";
 
 interface ClubStoryDetailModalProps {
   story: BookClubStory;
-  displayText: string;
+  originalText: string;
   externalUrl?: string;
   linkLabel: string;
   onClose: () => void;
@@ -17,12 +19,15 @@ interface ClubStoryDetailModalProps {
 
 export default function ClubStoryDetailModal({
   story,
-  displayText,
+  originalText,
   externalUrl,
   linkLabel,
   onClose,
 }: ClubStoryDetailModalProps) {
   const { t } = useTranslation();
+  const localized = useClubStoryLocalizedText(story.id, originalText, "full");
+  const scriptFontClass = storyCjkScriptFontClass(story);
+  const bodyFontClass = localized.showingTranslation ? "font-body" : scriptFontClass;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -68,7 +73,7 @@ export default function ClubStoryDetailModal({
                 <div className="min-w-0">
                   <p
                     id="club-story-detail-title"
-                    className="font-cjk text-xs leading-snug text-gold/90 wrap-anywhere"
+                    className={`${scriptFontClass} text-xs leading-snug text-gold/90 wrap-anywhere`}
                   >
                     {story.author_display}
                   </p>
@@ -80,9 +85,18 @@ export default function ClubStoryDetailModal({
             </div>
 
             <div className="flex-1 overflow-y-auto px-5 py-4">
-              {displayText ? (
-                <p className="font-cjk text-base md:text-lg font-normal leading-relaxed text-white/95 whitespace-pre-wrap wrap-anywhere">
-                  {displayText}
+              <div className="mb-3">
+                <ClubStoryTranslationControls
+                  showingTranslation={localized.showingTranslation}
+                  showOriginal={localized.showOriginal}
+                  loading={localized.loading}
+                  failed={localized.failed}
+                  onToggle={localized.toggleOriginal}
+                />
+              </div>
+              {localized.visibleText ? (
+                <p className={`${bodyFontClass} text-base md:text-lg font-normal leading-relaxed text-white/95 whitespace-pre-wrap wrap-anywhere`}>
+                  {localized.visibleText}
                 </p>
               ) : null}
             </div>

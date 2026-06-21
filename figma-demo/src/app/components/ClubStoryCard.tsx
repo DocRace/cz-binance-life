@@ -3,6 +3,8 @@ import { motion } from "motion/react";
 import { ExternalLink } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import ClubStoryAvatar from "./ClubStoryAvatar";
+import ClubStoryTranslationControls from "./ClubStoryTranslationControls";
+import { useClubStoryLocalizedText } from "../hooks/useClubStoryLocalizedText";
 import { storyCjkScriptFontClass, type BookClubStory } from "../../lib/bookClubStories";
 
 /** Preview body max height — ~5 lines at base size. */
@@ -10,7 +12,7 @@ const STORY_PREVIEW_MAX_PX = 168;
 
 interface ClubStoryCardProps {
   story: BookClubStory;
-  displayText: string;
+  originalText: string;
   externalUrl?: string;
   linkLabel: string;
   index: number;
@@ -43,17 +45,19 @@ function usePreviewOverflow(text: string, previewRef: RefObject<HTMLParagraphEle
 
 export default function ClubStoryCard({
   story,
-  displayText,
+  originalText,
   externalUrl,
   linkLabel,
   index,
   onExpand,
 }: ClubStoryCardProps) {
   const { t } = useTranslation();
+  const localized = useClubStoryLocalizedText(story.id, originalText, "preview");
   const previewRef = useRef<HTMLParagraphElement>(null);
-  const overflows = usePreviewOverflow(displayText, previewRef);
+  const overflows = usePreviewOverflow(localized.visibleText, previewRef);
   const scriptFontClass = storyCjkScriptFontClass(story);
-  const canOpenDetail = Boolean(displayText);
+  const bodyFontClass = localized.showingTranslation ? "font-body" : scriptFontClass;
+  const canOpenDetail = Boolean(originalText);
 
   const openDetail = () => {
     if (canOpenDetail) onExpand();
@@ -97,7 +101,7 @@ export default function ClubStoryCard({
         </p>
       </div>
 
-      {displayText ? (
+      {localized.visibleText ? (
         <p
           ref={previewRef}
           style={{
@@ -111,13 +115,21 @@ export default function ClubStoryCard({
                 }
               : {}),
           }}
-          className={`overflow-hidden pointer-events-none ${scriptFontClass} text-base font-normal leading-relaxed text-white/95 whitespace-pre-wrap wrap-anywhere`}
+          className={`overflow-hidden pointer-events-none ${bodyFontClass} text-base font-normal leading-relaxed text-white/95 whitespace-pre-wrap wrap-anywhere`}
         >
-          {displayText}
+          {localized.visibleText}
         </p>
       ) : null}
 
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+        <ClubStoryTranslationControls
+          showingTranslation={localized.showingTranslation}
+          showOriginal={localized.showOriginal}
+          loading={localized.loading}
+          failed={localized.failed}
+          onToggle={localized.toggleOriginal}
+          stopPropagation
+        />
         {canOpenDetail ? (
           <span className="pointer-events-none text-xs font-medium text-gold/80">{t("club.storiesExpand")}</span>
         ) : null}

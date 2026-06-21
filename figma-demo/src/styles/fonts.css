@@ -40,6 +40,20 @@ h6 {
   font-family: var(--font-cjk-sans);
 }
 
+/** Detected simplified-Chinese UGC — SC-first stack. */
+.font-cjk-hans {
+  font-family:
+    'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', 'Heiti SC', 'Noto Sans TC', 'PingFang TC',
+    sans-serif;
+}
+
+/** Detected traditional-Chinese UGC — TC-first stack. */
+.font-cjk-hant {
+  font-family:
+    'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', 'Heiti TC', 'Noto Sans SC', 'PingFang SC',
+    sans-serif;
+}
+
 .font-tech {
   font-family: 'Orbitron', 'Instrument Sans', var(--font-cjk-sans);
 }

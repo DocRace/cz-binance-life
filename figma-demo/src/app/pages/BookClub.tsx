@@ -9,6 +9,7 @@ import {
   Video,
   Trophy,
   ShoppingBag,
+  Gift,
   MapPin,
   ChevronRight,
 } from "lucide-react";
@@ -18,12 +19,14 @@ import AirdropClaimModal from "../components/AirdropClaimModal";
 import MembershipTiers from "../components/MembershipTiers";
 import ClubStoryCard from "../components/ClubStoryCard";
 import ClubStoryDetailModal from "../components/ClubStoryDetailModal";
+import { ClubStoryTranslationsProvider } from "../context/ClubStoryTranslationsContext";
 import {
   type BookClubStory,
   type BookClubStoriesDoc,
   resolveStoryExternalUrl,
   storyDisplayText,
 } from "../../lib/bookClubStories";
+import type { BookClubStoriesI18nDoc, ClubStoryTranslationsById } from "../../lib/clubStoryTranslate";
 import {
   BOOK_CLUB_TELEGRAM_HANDLE,
   BOOK_CLUB_TELEGRAM_QR_SRC,
@@ -48,6 +51,8 @@ export default function BookClub() {
   const [airdropOpen, setAirdropOpen] = useState(false);
   const [standardPurchaseOpen, setStandardPurchaseOpen] = useState(false);
   const [communityStories, setCommunityStories] = useState<BookClubStory[] | null>(undefined);
+  const [storyTranslations, setStoryTranslations] = useState<ClubStoryTranslationsById>({});
+  const [storyTranslationsReady, setStoryTranslationsReady] = useState(false);
   const [expandedStory, setExpandedStory] = useState<BookClubStory | null>(null);
 
   const standardTier = useMemo(() => {
@@ -69,9 +74,12 @@ export default function BookClub() {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch("/data/book_club_stories.json", { cache: "no-store" });
-        if (!res.ok) throw new Error(String(res.status));
-        const doc = (await res.json()) as BookClubStoriesDoc;
+        const [storiesRes, i18nRes] = await Promise.all([
+          fetch("/data/book_club_stories.json", { cache: "no-store" }),
+          fetch("/data/book_club_stories_i18n.json", { cache: "no-store" }),
+        ]);
+        if (!storiesRes.ok) throw new Error(String(storiesRes.status));
+        const doc = (await storiesRes.json()) as BookClubStoriesDoc;
         const rows = Array.isArray(doc.stories) ? doc.stories : [];
         const positive = rows.filter((s) => {
           const tier = s.curator?.tier;
@@ -79,9 +87,26 @@ export default function BookClub() {
           if (tier === "exclude") return false;
           return sc >= 0.42;
         });
-        if (!cancelled) setCommunityStories(positive);
+
+        let byId: ClubStoryTranslationsById = {};
+        if (i18nRes.ok) {
+          const i18nDoc = (await i18nRes.json()) as BookClubStoriesI18nDoc;
+          if (i18nDoc?.by_id && typeof i18nDoc.by_id === "object") {
+            byId = i18nDoc.by_id;
+          }
+        }
+
+        if (!cancelled) {
+          setCommunityStories(positive);
+          setStoryTranslations(byId);
+          setStoryTranslationsReady(true);
+        }
       } catch {
-        if (!cancelled) setCommunityStories([]);
+        if (!cancelled) {
+          setCommunityStories([]);
+          setStoryTranslations({});
+          setStoryTranslationsReady(true);
+        }
       }
     })();
     return () => {
@@ -102,6 +127,7 @@ export default function BookClub() {
       : t("club.storiesOpen");
 
   return (
+    <ClubStoryTranslationsProvider byId={storyTranslations} ready={storyTranslationsReady}>
     <>
     <div className={PAGE_SHELL}>
       {/* Header */}
@@ -118,22 +144,22 @@ export default function BookClub() {
         <p className={`${CONTENT_NARROW} mb-8 text-xl text-muted-foreground`}>
           {t("club.subtitle")}
         </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-          <a
-            href={BOOK_CLUB_TELEGRAM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-gold/90 px-8 py-3.5 text-sm font-body font-medium tracking-wide text-primary-foreground shadow-sm transition-colors hover:bg-gold"
-          >
-            {t("club.joinClubCta")}
-          </a>
+        <div className="mx-auto flex w-full max-w-sm flex-col items-stretch gap-3 mb-8 sm:max-w-md">
           <button
             type="button"
             onClick={() => setPurchaseOpen(true)}
-            className="inline-flex items-center justify-center gap-2 rounded-full border border-gold/60 px-8 py-3.5 text-sm font-body font-medium tracking-wide text-gold hover:bg-gold/10 transition-colors"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold/90 px-8 py-3.5 text-sm font-body font-medium tracking-wide text-primary-foreground shadow-sm transition-colors hover:bg-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            <ShoppingBag className="h-4 w-4" aria-hidden />
-            {t("club.buyBadgeCta", { priceHkd: premiumPriceLabel })}
+            <ShoppingBag className="h-4 w-4 shrink-0" aria-hidden />
+            {t("club.joinPurchaseClubCta")}
+          </button>
+          <button
+            type="button"
+            onClick={openStandardTier}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-gold/60 px-8 py-3.5 text-sm font-body font-medium tracking-wide text-foreground transition-colors hover:bg-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            <Gift className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
+            {t("club.joinFreeClubCta")}
           </button>
         </div>
       </motion.div>
@@ -172,7 +198,7 @@ export default function BookClub() {
             <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${GRID_GAP} [&>*]:min-w-0`}>
               {communityStories.map((story, idx) => {
                 const externalUrl = resolveStoryExternalUrl(story);
-                const displayText = storyDisplayText(story);
+                const originalText = storyDisplayText(story);
                 const linkLabel =
                   externalUrl && /x\.com|twitter\.com/i.test(externalUrl)
                     ? t("club.storiesOpenX")
@@ -181,7 +207,7 @@ export default function BookClub() {
                   <ClubStoryCard
                     key={story.id}
                     story={story}
-                    displayText={displayText}
+                    originalText={originalText}
                     externalUrl={externalUrl}
                     linkLabel={linkLabel}
                     index={idx}
@@ -355,7 +381,7 @@ export default function BookClub() {
     {expandedStory ? (
       <ClubStoryDetailModal
         story={expandedStory}
-        displayText={expandedDisplayText}
+        originalText={expandedDisplayText}
         externalUrl={expandedExternalUrl}
         linkLabel={expandedLinkLabel}
         onClose={() => setExpandedStory(null)}
@@ -373,5 +399,6 @@ export default function BookClub() {
     ) : null}
     {airdropOpen ? <AirdropClaimModal onClose={() => setAirdropOpen(false)} /> : null}
     </>
+    </ClubStoryTranslationsProvider>
   );
 }
