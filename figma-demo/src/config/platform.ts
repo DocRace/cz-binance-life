@@ -7,7 +7,7 @@
 export const IPDEX_PRODUCT_NAME = "IPDEX" as const;
 
 /** Product/network display name aligned with Data Dance chain branding. */
-export const DATADANCE_CHAIN_NAME = "DatadanceChain" as const;
+export const DATADANCE_CHAIN_NAME = "DataDance" as const;
 
 /** Chain id used by IPDEX for DDCNFT mint/settlement (DataDance). */
 export const DATADANCE_CHAIN_ID = "44508" as const;

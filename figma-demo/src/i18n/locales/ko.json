@@ -74,7 +74,7 @@
   },
   "platform": {
     "settlementStack": "자산 거래 {{dex}} · {{chain}} (체인 ID {{chainId}})",
-    "poweredByDataDanceChain": "Powered by DataDance Chain",
+    "poweredByDataDanceChain": "Powered by DataDance",
     "chainExplorer": "DataDance 익스플로러"
   },
   "offlineEvent": {
@@ -132,7 +132,7 @@
     "partners": [
       { "title": "상무인서관 소개", "body": "1897년 상하이에서 설립된 중국 최고(最古)의 근대 출판 기관. 1914년 홍콩 지점 설립, 1988년 홍콩 지점 유한회사 등록. 편집 출판 및 교육 훈련 사업." },
       { "title": "IPDEX 소개", "body": "IP 권익 거래 분야 선도 Web3 플랫폼 기업. 홍콩 기반·글로벌 IP 권익 거래소 및 체인-클라우드 일체형 SaaS 제공." },
-      { "title": "DDC 소개", "body": "DataDance Chain(DDC)은 소비자 데이터 중심의 탈중앙화 데이터 거래 플랫폼으로 개인의 데이터 통제와 기업의 프라이버시 보호형 인사이트를 지원합니다." }
+      { "title": "DDC 소개", "body": "DataDance(DDC)은 소비자 데이터 중심의 탈중앙화 데이터 거래 플랫폼으로 개인의 데이터 통제와 기업의 프라이버시 보호형 인사이트를 지원합니다." }
     ],
     "scanTitle": "QR로 그룹 참여·신청",
     "scanHint": "휴대폰 카메라 또는 Telegram으로 스캔해 그룹에 참여하고 신청하세요",
@@ -571,7 +571,7 @@
     "ipdexWebsiteAria": "IPDEX 공식 웹사이트",
     "ipdexXAria": "IPDEX 공식 X",
     "poweredByIpdex": "NFT 거래와 본 사이트 로그인·결제는 IPDEX가 기술을 제공합니다.",
-    "datadanceTitle": "DataDance Chain",
+    "datadanceTitle": "DataDance",
     "datadanceDesc": "온체인 결제와 디지털 자격증 인프라를 제공합니다.",
     "datadanceWebsiteAria": "DataDance 공식 웹사이트",
     "ipdexMarket": "NFT 마켓",

@@ -74,7 +74,7 @@
   },
   "platform": {
     "settlementStack": "Trading on {{dex}} · {{chain}} (chain {{chainId}})",
-    "poweredByDataDanceChain": "Powered by DataDance Chain",
+    "poweredByDataDanceChain": "Powered by DataDance",
     "chainExplorer": "Explorer"
   },
   "offlineEvent": {
@@ -140,7 +140,7 @@
       },
       {
         "title": "About DDC",
-        "body": "DataDance Chain (DDC) is a decentralised data trading platform built around consumer data, helping individuals control and share data safely while giving enterprises trusted, privacy-aware insights."
+        "body": "DataDance (DDC) is a decentralised data trading platform built around consumer data, helping individuals control and share data safely while giving enterprises trusted, privacy-aware insights."
       }
     ],
     "scanTitle": "Scan to join & register",
@@ -580,7 +580,7 @@
     "ipdexWebsiteAria": "IPDEX website",
     "ipdexXAria": "IPDEX on X",
     "poweredByIpdex": "NFT trading and this site’s sign-in/checkout are powered by IPDEX.",
-    "datadanceTitle": "DataDance Chain",
+    "datadanceTitle": "DataDance",
     "datadanceDesc": "On-chain settlement and digital credential infrastructure.",
     "datadanceWebsiteAria": "DataDance website",
     "ipdexMarket": "NFT market",

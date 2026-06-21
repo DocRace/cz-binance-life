@@ -74,7 +74,7 @@
   },
   "platform": {
     "settlementStack": "資產交易：{{dex}} · {{chain}}（鏈編號 {{chainId}}）",
-    "poweredByDataDanceChain": "Powered by DataDance Chain",
+    "poweredByDataDanceChain": "Powered by DataDance",
     "chainExplorer": "DataDance 瀏覽器"
   },
   "offlineEvent": {
@@ -164,7 +164,7 @@
       },
       {
         "title": "關於 DDC",
-        "body": "DataDance Chain（DDC）是一個圍繞消費者數據打造的去中心化數據交易平台，協助個人安全掌控及共享數據，並讓企業獲得可信且兼顧私隱保護的數據洞察。DDC 致力於構建開放、透明、私隱優先的數據經濟基礎設施，推動數據價值的公平流通。"
+        "body": "DataDance（DDC）是一個圍繞消費者數據打造的去中心化數據交易平台，協助個人安全掌控及共享數據，並讓企業獲得可信且兼顧私隱保護的數據洞察。DDC 致力於構建開放、透明、私隱優先的數據經濟基礎設施，推動數據價值的公平流通。"
       }
     ],
     "scanTitle": "掃碼入群報名",
@@ -604,8 +604,8 @@
     "ipdexWebsiteAria": "IPDEX 官網",
     "ipdexXAria": "IPDEX 官方 X",
     "poweredByIpdex": "NFT 交易與本站登入／結帳由 IPDEX 提供技術支援。",
-    "datadanceTitle": "DataDance Chain",
-    "datadanceDesc": "鏈上結算與數位憑證基礎建設由 DataDance Chain 提供。",
+    "datadanceTitle": "DataDance",
+    "datadanceDesc": "鏈上結算與數位憑證基礎建設由 DataDance 提供。",
     "datadanceWebsiteAria": "DataDance 官網",
     "ipdexMarket": "NFT 市場",
     "copyright": "© 2026 IPDEX 版權所有"

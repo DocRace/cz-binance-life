@@ -323,7 +323,7 @@ export default function Layout() {
                 </div>
               </div>
 
-              {/* DataDance Chain — right on wide screens */}
+              {/* DataDance — right on wide screens */}
               <div className="flex flex-col items-center gap-3 border-t border-border/40 pt-8 text-center lg:items-end lg:border-t-0 lg:pl-8 lg:pt-0 lg:text-right">
                 <h4 className={partnerTitleClass}>{t("footer.datadanceTitle")}</h4>
                 <p className={partnerDescClass}>{t("footer.datadanceDesc")}</p>
