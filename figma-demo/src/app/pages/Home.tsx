@@ -114,14 +114,14 @@ export default function Home() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.85 }}
-              className="flex flex-col items-stretch justify-center lg:justify-start gap-3 sm:max-w-sm lg:max-w-none"
+              className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3"
             >
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 onClick={() => setPurchaseOpen(true)}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold/90 px-5 py-3.5 text-sm font-body font-medium tracking-wide text-primary-foreground shadow-sm transition-colors duration-300 hover:bg-gold whitespace-nowrap sm:px-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-gold/90 px-5 py-3.5 text-sm font-body font-medium tracking-wide text-primary-foreground shadow-sm transition-colors duration-300 hover:bg-gold whitespace-nowrap sm:px-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <ShoppingBag className="h-4 w-4 shrink-0" aria-hidden />
                 {t("home.joinPurchaseClubButton")}
@@ -132,7 +132,7 @@ export default function Home() {
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 onClick={openStandardTier}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-gold/60 px-5 py-3.5 text-sm font-body font-medium tracking-wide text-foreground transition-colors duration-300 hover:bg-gold/10 whitespace-nowrap sm:px-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-gold/60 px-5 py-3.5 text-sm font-body font-medium tracking-wide text-foreground transition-colors duration-300 hover:bg-gold/10 whitespace-nowrap sm:px-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <Gift className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
                 {t("home.joinFreeClubButton")}

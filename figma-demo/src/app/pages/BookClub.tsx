@@ -144,11 +144,11 @@ export default function BookClub() {
         <p className={`${CONTENT_NARROW} mb-8 text-xl text-muted-foreground`}>
           {t("club.subtitle")}
         </p>
-        <div className="mx-auto flex w-full max-w-sm flex-col items-stretch gap-3 mb-8 sm:max-w-md">
+        <div className="mx-auto mb-8 flex w-full max-w-sm flex-col items-stretch gap-3 sm:max-w-none sm:flex-row sm:items-center sm:justify-center">
           <button
             type="button"
             onClick={() => setPurchaseOpen(true)}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold/90 px-8 py-3.5 text-sm font-body font-medium tracking-wide text-primary-foreground shadow-sm transition-colors hover:bg-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-gold/90 px-8 py-3.5 text-sm font-body font-medium tracking-wide text-primary-foreground shadow-sm transition-colors hover:bg-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <ShoppingBag className="h-4 w-4 shrink-0" aria-hidden />
             {t("club.joinPurchaseClubCta")}
@@ -156,7 +156,7 @@ export default function BookClub() {
           <button
             type="button"
             onClick={openStandardTier}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-gold/60 px-8 py-3.5 text-sm font-body font-medium tracking-wide text-foreground transition-colors hover:bg-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-gold/60 px-8 py-3.5 text-sm font-body font-medium tracking-wide text-foreground transition-colors hover:bg-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <Gift className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
             {t("club.joinFreeClubCta")}
