@@ -1,6 +1,6 @@
 {
   "format_version": 2,
-  "updated_at": "2026-06-18T16:51:47+00:00",
+  "updated_at": "2026-06-22T02:08:56.687Z",
   "query": "local-xlsx + X oEmbed post text for status hyperlinks",
   "source_file": "Internal-币安人生书友会拟合作KOL名单.xlsx",
   "curator_pipeline": {
@@ -53,21 +53,6 @@
       "url": "https://x.com/Sure5J/status/2043366229524861098",
       "created_at": "Sun Apr 12 16:30:47 +0000 2026",
       "author_avatar_url": "https://pbs.twimg.com/profile_images/1861795896121561088/BS4hw4Lr_400x400.jpg",
-      "curator": {
-        "tier": "standard",
-        "score": 0.9,
-        "method": "kol_sheet_x_live_text"
-      }
-    },
-    {
-      "id": "tw-2056372782087168073",
-      "kind": "twitter",
-      "author_display": "Freedom of Money Art · @FOMA_BSC",
-      "headline": "其實之前也看過不少自傳，很多大佬的自傳充滿成功學的油膩，但CZ這本書最大的特點就是——坦誠。他毫不避諱自己在美國認罪、入獄的經歷，甚至詳細描寫了監獄裡的生活狀態——如何用那台無法聯網的舊電腦、在每次僅15分鐘的限時裡一段一段地寫書。這種「在低谷中寫作」的堅韌，比任何勵志口號都更有力量。\n\n書名《Freedom of Money》不是噱頭。整本書貫穿始終的是他對金融平權、資金自由的執著。他不是在教你如何炒幣暴富，而是在講述一個關於打破壁壘的故事。讀完之後，你會理解為什麼幣安要把Logo設計成「頂點的完美平衡」——那代表著他追求的公平。這種價值觀層面的共鳴，讓這本書超越了普通商業傳記的範疇。\n\n很少有商業領袖的自傳是在監獄裡完成的。這本書的特殊之處在於，它的創作環境決定了它的質感——沒有浮華的修飾，只有最樸素、最核心的思考。你甚至可以從字裡行間感受到他被迫慢下來之後，對過往人生的冷靜復盤。\n\n最後值得一提的是，@cz_binance 承諾將這本書的所有收益100%捐給慈善機構。當你買這本書的時候，你收穫的不只是一個故事，也是一份善意的流轉。這讓人讀起來心裡反而多了一份敬意。",
-      "body": "",
-      "url": "https://x.com/FOMA_BSC/status/2056372782087168073",
-      "created_at": "May 18, 2026",
-      "author_avatar_url": "https://pbs.twimg.com/profile_images/2055205455916597248/Fs_91cLG_400x400.jpg",
       "curator": {
         "tier": "standard",
         "score": 0.9,
@@ -717,6 +702,21 @@
         "tier": "standard",
         "score": 0.9,
         "method": "kol_sheet_x_live_text_refetch"
+      }
+    },
+    {
+      "id": "tw-2056372782087168073",
+      "kind": "twitter",
+      "author_display": "Freedom of Money Art · @FOMA_BSC",
+      "headline": "其實之前也看過不少自傳，很多大佬的自傳充滿成功學的油膩，但CZ這本書最大的特點就是——坦誠。他毫不避諱自己在美國認罪、入獄的經歷，甚至詳細描寫了監獄裡的生活狀態——如何用那台無法聯網的舊電腦、在每次僅15分鐘的限時裡一段一段地寫書。這種「在低谷中寫作」的堅韌，比任何勵志口號都更有力量。\n\n書名《Freedom of Money》不是噱頭。整本書貫穿始終的是他對金融平權、資金自由的執著。他不是在教你如何炒幣暴富，而是在講述一個關於打破壁壘的故事。讀完之後，你會理解為什麼幣安要把Logo設計成「頂點的完美平衡」——那代表著他追求的公平。這種價值觀層面的共鳴，讓這本書超越了普通商業傳記的範疇。\n\n很少有商業領袖的自傳是在監獄裡完成的。這本書的特殊之處在於，它的創作環境決定了它的質感——沒有浮華的修飾，只有最樸素、最核心的思考。你甚至可以從字裡行間感受到他被迫慢下來之後，對過往人生的冷靜復盤。\n\n最後值得一提的是，@cz_binance 承諾將這本書的所有收益100%捐給慈善機構。當你買這本書的時候，你收穫的不只是一個故事，也是一份善意的流轉。這讓人讀起來心裡反而多了一份敬意。",
+      "body": "",
+      "url": "https://x.com/FOMA_BSC/status/2056372782087168073",
+      "created_at": "May 18, 2026",
+      "author_avatar_url": "https://pbs.twimg.com/profile_images/2055205455916597248/Fs_91cLG_400x400.jpg",
+      "curator": {
+        "tier": "standard",
+        "score": 0.9,
+        "method": "kol_sheet_x_live_text"
       }
     },
     {
