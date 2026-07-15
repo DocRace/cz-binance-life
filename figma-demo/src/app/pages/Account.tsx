@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useSearchParams } from "react-router";
 import NFTBadge from "../components/NFTBadge";
 import NftDetailModal from "../components/NftDetailModal";
+import GiftNftModal from "../components/GiftNftModal";
 import PurchaseModal from "../components/PurchaseModal";
 import RedeemBookModal from "../components/RedeemBookModal";
 import RedeemScanUnavailableModal from "../components/RedeemScanUnavailableModal";
@@ -37,6 +38,8 @@ import {
   strField,
 } from "../../lib/bookAccountNftApi";
 import { pollDashboardRefresh, takeAccountSyncAfterPurchase } from "../../lib/accountPurchaseSync";
+import { tryFulfillPendingGiftPurchase } from "../../lib/giftPurchaseFulfill";
+import { readPendingGiftPurchase } from "../../lib/giftPurchaseStorage";
 import { buildClubRedeemPostJsonPayload, localizedBookRedeemFailureMessage, logClubRedeemResponseIfDebugging } from "../../lib/bookRedeemClient";
 import { CARD_SURFACE, CONTENT_NARROW, PAGE_SHELL, SITE_CONTAINER_X } from "../layout/pageLayout";
 import { toast } from "sonner";
@@ -74,6 +77,7 @@ export default function Account() {
   const [redeemError, setRedeemError] = useState<string | null>(null);
   const [purchaseOpen, setPurchaseOpen] = useState(false);
   const [detailNft, setDetailNft] = useState<DisplayNft | null>(null);
+  const [giftNft, setGiftNft] = useState<DisplayNft | null>(null);
   const [tierFallbackCovers, setTierFallbackCovers] = useState({ premium: "", standard: "" });
   const [ordersRefreshKey, setOrdersRefreshKey] = useState(0);
   const [postPurchaseSyncing, setPostPurchaseSyncing] = useState(false);
@@ -118,7 +122,7 @@ export default function Account() {
     return ids.size > 0 ? ids : undefined;
   }, [displayNfts, postPurchaseSyncing]);
 
-  const loadDashboard = useCallback(async (options?: { background?: boolean }) => {
+  const loadDashboard = useCallback(async (options?: { background?: boolean; fulfillGift?: boolean }) => {
     const background = options?.background ?? false;
     if (!background) {
       setDataLoading(true);
@@ -126,6 +130,8 @@ export default function Account() {
     }
     setLoadError(null);
     let sessionExpired = false;
+    let resolvedEmail = "";
+    let mappedNfts: DisplayNft[] = [];
     try {
       const [me, nftRows] = await Promise.all([
         bookBffJsonWithRefresh<Record<string, unknown>>("/api/bff/me"),
@@ -134,11 +140,11 @@ export default function Account() {
 
       if (me.code === 0 && me.data && typeof me.data === "object") {
         const d = me.data as Record<string, unknown>;
-        setProfileEmail(
-          strField(d, ["email", "userEmail", "mail"]) || t("account.profileEmailFallback"),
-        );
+        resolvedEmail = strField(d, ["email", "userEmail", "mail"]) || t("account.profileEmailFallback");
+        setProfileEmail(resolvedEmail);
       } else {
-        setProfileEmail(t("account.profileEmailFallback"));
+        resolvedEmail = t("account.profileEmailFallback");
+        setProfileEmail(resolvedEmail);
         if (bookBffProfileUnavailable(me)) {
           sessionExpired = true;
           void bookBffClearSessionAndReload();
@@ -147,7 +153,34 @@ export default function Account() {
         setLoadError(t("purchase.bffOffline"));
       }
 
-      setDisplayNfts(filterCzLifeDisplayNfts(nftRows.map(mapNftRow)));
+      mappedNfts = filterCzLifeDisplayNfts(nftRows.map(mapNftRow));
+      setDisplayNfts(mappedNfts);
+
+      const pendingGift = readPendingGiftPurchase();
+      const shouldTryFulfillGift =
+        pendingGift &&
+        pendingGift.status !== "complete" &&
+        resolvedEmail.includes("@") &&
+        (options?.fulfillGift ||
+          pendingGift.status === "pending" ||
+          pendingGift.status === "partial");
+
+      if (shouldTryFulfillGift) {
+        const outcome = await tryFulfillPendingGiftPurchase({
+          nfts: mappedNfts,
+          payerEmail: resolvedEmail,
+        });
+        if (outcome.status === "complete") {
+          toast.success(t("giftPurchase.fulfillComplete", { email: outcome.recipientEmail }));
+          const refreshed = await fetchNftBffPagesMerged((p) => `/api/bff/nfts/${p}`);
+          mappedNfts = filterCzLifeDisplayNfts(refreshed.map(mapNftRow));
+          setDisplayNfts(mappedNfts);
+        } else if (outcome.status === "partial") {
+          toast.message(t("giftPurchase.fulfillPartial"));
+        } else if (outcome.status === "failed") {
+          toast.error(t("giftPurchase.fulfillFailed"));
+        }
+      }
     } catch {
       setLoadError(t("purchase.bffOffline"));
     } finally {
@@ -164,7 +197,7 @@ export default function Account() {
     setDashboardReady(false);
     try {
       await pollDashboardRefresh(
-        () => loadDashboard({ background: true }),
+        () => loadDashboard({ background: true, fulfillGift: true }),
         () => setOrdersRefreshKey((k) => k + 1),
       );
     } finally {
@@ -894,6 +927,21 @@ export default function Account() {
           onRedeem={(n) => {
             setDetailNft(null);
             handleRedeemClick(n);
+          }}
+          onGift={(n) => {
+            setDetailNft(null);
+            setGiftNft(n);
+          }}
+        />
+      ) : null}
+      {giftNft ? (
+        <GiftNftModal
+          nft={giftNft}
+          payerEmail={profileEmail}
+          onClose={() => setGiftNft(null)}
+          onGifted={() => {
+            toast.success(t("account.giftSuccess"));
+            void loadDashboard({ background: true });
           }}
         />
       ) : null}

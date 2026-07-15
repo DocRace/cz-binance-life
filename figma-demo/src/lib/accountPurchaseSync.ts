@@ -35,6 +35,7 @@ export function rememberCheckoutOrderId(orderId: string): void {
   const id = orderId.trim();
   if (!id) return;
   try {
+    localStorage.setItem(LAST_CHECKOUT_ORDER_KEY, id);
     sessionStorage.setItem(LAST_CHECKOUT_ORDER_KEY, id);
   } catch {
     /* ignore */
@@ -43,7 +44,8 @@ export function rememberCheckoutOrderId(orderId: string): void {
 
 export function takeLastCheckoutOrderId(): string {
   try {
-    const id = `${sessionStorage.getItem(LAST_CHECKOUT_ORDER_KEY) ?? ""}`.trim();
+    const id = `${localStorage.getItem(LAST_CHECKOUT_ORDER_KEY) ?? sessionStorage.getItem(LAST_CHECKOUT_ORDER_KEY) ?? ""}`.trim();
+    localStorage.removeItem(LAST_CHECKOUT_ORDER_KEY);
     sessionStorage.removeItem(LAST_CHECKOUT_ORDER_KEY);
     return id;
   } catch {
@@ -54,7 +56,9 @@ export function takeLastCheckoutOrderId(): string {
 /** Call on `/purchase-success` so the next Account visit knows to re-fetch. */
 export function markAccountSyncAfterPurchase(): void {
   try {
-    sessionStorage.setItem(SYNC_STORAGE_KEY, String(Date.now()));
+    const stamp = String(Date.now());
+    localStorage.setItem(SYNC_STORAGE_KEY, stamp);
+    sessionStorage.setItem(SYNC_STORAGE_KEY, stamp);
   } catch {
     /* private mode / quota */
   }
@@ -63,7 +67,10 @@ export function markAccountSyncAfterPurchase(): void {
 /** Returns true once per purchase-success visit; flag is cleared immediately. */
 export function takeAccountSyncAfterPurchase(): boolean {
   try {
-    if (!sessionStorage.getItem(SYNC_STORAGE_KEY)) return false;
+    const stamp =
+      localStorage.getItem(SYNC_STORAGE_KEY) ?? sessionStorage.getItem(SYNC_STORAGE_KEY);
+    if (!stamp) return false;
+    localStorage.removeItem(SYNC_STORAGE_KEY);
     sessionStorage.removeItem(SYNC_STORAGE_KEY);
     return true;
   } catch {

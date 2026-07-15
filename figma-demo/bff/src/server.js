@@ -432,6 +432,49 @@ async function boot() {
     );
   });
 
+  app.post('/api/bff/gift/lookup-email', async (req, res) => {
+    const accessToken = bearer(req);
+    if (!accessToken) return res.status(401).json({ code: -10005, message: 'Unauthorized', data: null });
+
+    const email = `${req.body?.email ?? ''}`.trim().toLowerCase();
+    if (!email.includes('@')) {
+      return res.status(400).json({ code: -10001, message: 'invalid_email', data: null });
+    }
+
+    const out = await ipdexFacadeFetch(env, {
+      method: 'POST',
+      suffixPath: '/gift/lookup-email',
+      body: { email },
+      accessToken,
+    });
+    res.status(httpStatusFromIpdexEnvelope(out)).json(
+      out.json ?? { code: -1, message: 'upstream_bad_response', data: null },
+    );
+  });
+
+  app.post('/api/bff/nft/gift', async (req, res) => {
+    const accessToken = bearer(req);
+    if (!accessToken) return res.status(401).json({ code: -10005, message: 'Unauthorized', data: null });
+
+    const collectionId = `${req.body?.collectionId ?? ''}`.trim();
+    const tokenId = `${req.body?.tokenId ?? ''}`.trim();
+    const recipientEmail = `${req.body?.recipientEmail ?? ''}`.trim().toLowerCase();
+
+    if (!uuidLike(collectionId) || !tokenId || !recipientEmail.includes('@')) {
+      return res.status(400).json({ code: -10001, message: 'missing_or_invalid_body', data: null });
+    }
+
+    const out = await ipdexFacadeFetch(env, {
+      method: 'POST',
+      suffixPath: '/nft/gift',
+      body: { collectionId, tokenId, recipientEmail },
+      accessToken,
+    });
+    res.status(httpStatusFromIpdexEnvelope(out)).json(
+      out.json ?? { code: -1, message: 'upstream_bad_response', data: null },
+    );
+  });
+
   /** In-memory cache for X profile avatars (fxtwitter → pbs.twimg redirect). */
   const clubAvatarCache = new Map();
   const CLUB_AVATAR_TTL_MS = 7 * 24 * 60 * 60 * 1000;

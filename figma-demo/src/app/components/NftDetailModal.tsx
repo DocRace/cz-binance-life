@@ -13,6 +13,7 @@ import {
   type DisplayNft,
   fetchNftDetailBundle,
   isPremiumAttendanceStub,
+  isPremiumVoucherNft,
   isRedeemEligible,
   isStandardMembershipNft,
   pickNftImageUrl,
@@ -23,6 +24,7 @@ interface NftDetailModalProps {
   nft: DisplayNft;
   onClose: () => void;
   onRedeem?: (nft: DisplayNft) => void;
+  onGift?: (nft: DisplayNft) => void;
 }
 
 function parseMetadataAttributes(raw: unknown): Array<{ trait: string; value: string }> {
@@ -78,7 +80,7 @@ function recordField(row: Record<string, unknown> | null | undefined, keys: stri
   return strField(row, keys);
 }
 
-export default function NftDetailModal({ nft, onClose, onRedeem }: NftDetailModalProps) {
+export default function NftDetailModal({ nft, onClose, onRedeem, onGift }: NftDetailModalProps) {
   const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [bundle, setBundle] = useState<Awaited<ReturnType<typeof fetchNftDetailBundle>>>(null);
@@ -169,6 +171,12 @@ export default function NftDetailModal({ nft, onClose, onRedeem }: NftDetailModa
   const stub = isPremiumAttendanceStub(nft);
   const standard = isStandardMembershipNft(nft);
   const canRedeem = onRedeem && isRedeemEligible(nft);
+  const canGift =
+    onGift &&
+    nft.badge === "original" &&
+    isPremiumVoucherNft(nft) &&
+    !isPremiumAttendanceStub(nft) &&
+    Boolean(nft.collectionId);
 
   return (
     <OverlayPortal>
@@ -278,6 +286,16 @@ export default function NftDetailModal({ nft, onClose, onRedeem }: NftDetailModa
                     className="w-full py-3 rounded-xl border border-gold/50 text-gold hover:bg-gold/10 text-sm font-medium"
                   >
                     {t("account.redeemDemoCta")}
+                  </button>
+                ) : null}
+
+                {canGift ? (
+                  <button
+                    type="button"
+                    onClick={() => onGift?.(nft)}
+                    className="w-full py-3 rounded-xl border border-gold/50 text-gold hover:bg-gold/10 text-sm font-medium"
+                  >
+                    {t("giftPurchase.giftToFriendCta")}
                   </button>
                 ) : null}
 

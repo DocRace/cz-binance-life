@@ -9,11 +9,13 @@ import {
   markRecentPaidOrderId,
   takeLastCheckoutOrderId,
 } from "../../lib/accountPurchaseSync";
+import { readPendingGiftPurchase } from "../../lib/giftPurchaseStorage";
 
 export default function PurchaseSuccess() {
   const { t } = useTranslation();
   const [params] = useSearchParams();
   const orderId = `${params.get("orderId") ?? ""}`.trim();
+  const pendingGift = readPendingGiftPurchase();
 
   useEffect(() => {
     markAccountSyncAfterPurchase();
@@ -31,6 +33,14 @@ export default function PurchaseSuccess() {
         <CheckCircle2 className="mx-auto mb-5 h-14 w-14 text-gold" aria-hidden />
         <h1 className="font-display text-2xl mb-3">{t("purchaseSuccess.title")}</h1>
         <p className="text-sm text-muted-foreground leading-relaxed mb-2">{t("purchaseSuccess.body")}</p>
+        {pendingGift && pendingGift.status !== "complete" ? (
+          <p className="text-sm text-muted-foreground leading-relaxed mb-2">
+            {t("purchaseSuccess.giftPendingNote", {
+              email: pendingGift.recipientEmail,
+              count: pendingGift.quantity,
+            })}
+          </p>
+        ) : null}
         {orderId ? (
           <p className="text-xs text-muted-foreground font-mono mb-6 break-all">
             {t("purchaseSuccess.orderLabel")}: {orderId}

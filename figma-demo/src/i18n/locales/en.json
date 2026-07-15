@@ -662,7 +662,8 @@
     "body": "Thank you. Stripe has recorded your payment. Your CZ Life NFT may take a short moment to appear in your account while IPDEX settles the order.",
     "orderLabel": "Order",
     "viewAccount": "View my account",
-    "backToClub": "Back to Book Club"
+    "backToClub": "Back to Book Club",
+    "giftPendingNote": "You are gifting {{count}} NFT(s) to {{email}}. They will be sent automatically once your account syncs after payment."
   },
   "account": {
     "loginTitle": "Sign in",
@@ -677,7 +678,7 @@
     "bindEmailError": "Could not bind email. Check the code or try another address.",
     "giftCta": "Gift to friend",
     "giftTitle": "Gift NFT",
-    "giftSubtitle": "Transfer this NFT to another member by email. They must have or create an IPDEX account.",
+    "giftSubtitle": "Enter their email to transfer this NFT.",
     "giftSubmit": "Send gift",
     "giftSuccess": "NFT gifted successfully.",
     "giftError": "Could not complete the gift. Check the recipient email and try again.",
@@ -769,6 +770,25 @@
     "redeemPickAnother": "Change selection",
     "redeemNoEligibleNfts": "There are no voucher NFTs in this account eligible for redemption, or holdings have not synced yet.",
     "redeemBack": "Back to account"
+  },
+  "giftPurchase": {
+    "modeSelf": "Buy for myself",
+    "modeGift": "Gift to a friend",
+    "intro": "You pay with your account. After payment, premium voucher NFT(s) are transferred to your friend's email. If they are not on IPDEX yet, an account is created automatically.",
+    "recipientEmailLabel": "Recipient email",
+    "confirmRecipient": "Confirm recipient",
+    "recipientExists": "This email is registered on IPDEX. NFT(s) will be sent there after you pay.",
+    "recipientWillProvision": "This email is not registered yet. IPDEX will create an account when we send the gift.",
+    "confirmGiftPurchase": "Pay & gift",
+    "successStripe": "Stripe checkout opened. After payment, {{count}} NFT(s) will be sent to {{email}}.",
+    "cannotGiftToSelf": "You cannot gift to your own email.",
+    "lookupFailed": "Could not verify the recipient email. Check it and try again.",
+    "fulfillComplete": "Gift sent successfully to {{email}}.",
+    "fulfillPartial": "Some NFTs were gifted; the rest may still be syncing. Refresh your account shortly.",
+    "fulfillFailed": "Payment succeeded but automatic gifting failed. You can gift manually from your account.",
+    "giftToFriendCta": "Gift to friend",
+    "errorNotOwned": "This account does not hold the selected NFT. Log in with the email used to pay, then try again.",
+    "errorInvalidParameter": "Could not identify this NFT for gifting. Refresh your account and try again."
   },
   "common": {
     "loading": "Loading...",

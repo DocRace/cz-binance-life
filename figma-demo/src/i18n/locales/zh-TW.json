@@ -686,7 +686,8 @@
     "body": "感謝您的購買。Stripe 已記錄付款；CZ Life NFT 會在 IPDEX 結算後短時間內出現在您的帳戶。",
     "orderLabel": "訂單",
     "viewAccount": "查看我的帳戶",
-    "backToClub": "返回書友會"
+    "backToClub": "返回書友會",
+    "giftPendingNote": "您正在贈送 {{count}} 枚 NFT 給 {{email}}。付款完成並同步帳戶後，系統會自動轉贈。"
   },
   "account": {
     "loginTitle": "登入您的帳戶",
@@ -701,7 +702,7 @@
     "bindEmailError": "無法綁定信箱，請檢查驗證碼或更換信箱。",
     "giftCta": "贈送給朋友",
     "giftTitle": "贈送 NFT",
-    "giftSubtitle": "輸入對方電子郵件，將此 NFT 轉移給對方（對方需有或建立 IPDEX 帳號）。",
+    "giftSubtitle": "輸入對方電子郵件，將此 NFT 轉移給對方。",
     "giftSubmit": "確認贈送",
     "giftSuccess": "NFT 已成功贈送。",
     "giftError": "贈送失敗，請確認收件人信箱後再試。",
@@ -793,6 +794,25 @@
     "redeemPickAnother": "改選其他",
     "redeemNoEligibleNfts": "此帳號目前沒有可核銷的憑證，或資料尚未同步。",
     "redeemBack": "返回帳戶"
+  },
+  "giftPurchase": {
+    "modeSelf": "自己購買",
+    "modeGift": "贈送朋友",
+    "intro": "由您付款購買。付款完成後，系統會將進階版憑證 NFT 轉贈至朋友的信箱；若對方尚未註冊 IPDEX，將自動建立帳號。",
+    "recipientEmailLabel": "收件人信箱",
+    "confirmRecipient": "確認收件人",
+    "recipientExists": "此信箱已在 IPDEX 註冊，付款完成後 NFT 將轉入該帳戶。",
+    "recipientWillProvision": "此信箱尚未註冊，贈送時 IPDEX 將自動為對方建立帳號。",
+    "confirmGiftPurchase": "付款並贈送",
+    "successStripe": "已開啟 Stripe 付款。付款確認後，將把 {{count}} 枚 NFT 贈送至 {{email}}。",
+    "cannotGiftToSelf": "無法贈送給自己的信箱。",
+    "lookupFailed": "無法驗證收件人信箱，請檢查後再試。",
+    "fulfillComplete": "已成功贈送至 {{email}}。",
+    "fulfillPartial": "部分 NFT 已贈出，其餘可能仍在同步，請稍後重新整理帳戶。",
+    "fulfillFailed": "付款成功但自動贈送失敗，您可於帳戶中手動贈送。",
+    "giftToFriendCta": "贈送給朋友",
+    "errorNotOwned": "目前登入的帳戶不持有這枚 NFT。請用付款時的電子郵件登入後再試。",
+    "errorInvalidParameter": "無法識別要贈送的 NFT，請重新整理帳戶後再試。"
   },
   "common": {
     "loading": "載入中...",

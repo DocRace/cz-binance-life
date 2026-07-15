@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ExternalLink, Mail, Minus, Plus, X } from "lucide-react";
+import { ExternalLink, Gift, Mail, Minus, Plus, User, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PlatformSettlementRibbon from "./PlatformSettlementRibbon";
 import OverlayPortal from "./OverlayPortal";
@@ -13,6 +13,8 @@ import {
   getBookPrimarySaleId,
 } from "../../config/platform";
 import { rememberCheckoutOrderId } from "../../lib/accountPurchaseSync";
+import { lookupGiftRecipientEmail } from "../../lib/giftNftClient";
+import { rememberPendingGiftPurchase } from "../../lib/giftPurchaseStorage";
 import { bookBffJson, bookBffIsTransportIssue } from "../../lib/bookBffClient";
 
 interface PurchaseModalProps {
@@ -25,6 +27,7 @@ interface PurchaseModalProps {
 }
 
 type Step = "login" | "select" | "success";
+type PurchaseMode = "self" | "gift";
 
 const ORDER_ERROR_UNPAID = -20008;
 
@@ -204,7 +207,12 @@ export default function PurchaseModal({
 }: PurchaseModalProps) {
   const { t } = useTranslation();
   const [step, setStep] = useState<Step>(skipLogin ? "select" : "login");
+  const [purchaseMode, setPurchaseMode] = useState<PurchaseMode>("self");
   const [quantity, setQuantity] = useState(1);
+  const [giftRecipientEmail, setGiftRecipientEmail] = useState("");
+  const [giftVerifiedEmail, setGiftVerifiedEmail] = useState("");
+  const [giftRecipientExists, setGiftRecipientExists] = useState<boolean | null>(null);
+  const [giftLookupBusy, setGiftLookupBusy] = useState(false);
 
   const [loginSubStep, setLoginSubStep] = useState<"email" | "otp">("email");
   const [emailInput, setEmailInput] = useState("");
@@ -388,6 +396,40 @@ export default function PurchaseModal({
     return out.message || t("purchase.primaryPurchaseFailed");
   };
 
+  const resetGiftRecipient = () => {
+    setGiftVerifiedEmail("");
+    setGiftRecipientExists(null);
+  };
+
+  const handleGiftRecipientLookup = async () => {
+    const email = giftRecipientEmail.trim().toLowerCase();
+    if (!email.includes("@")) return;
+    setGiftLookupBusy(true);
+    setApiCheckoutError(null);
+    resetGiftRecipient();
+    try {
+      const me = await bookBffJson<Record<string, unknown>>("/api/bff/me");
+      const payerEmail = `${me.data?.email ?? emailInput ?? ""}`.trim().toLowerCase();
+      if (payerEmail && payerEmail === email) {
+        setApiCheckoutError(t("giftPurchase.cannotGiftToSelf"));
+        return;
+      }
+      const out = await lookupGiftRecipientEmail(email);
+      if (!out.ok) {
+        setApiCheckoutError(t("giftPurchase.lookupFailed"));
+        return;
+      }
+      setGiftVerifiedEmail(email);
+      setGiftRecipientExists(out.data.exists);
+    } catch {
+      setApiCheckoutError(t("purchase.bffOffline"));
+    } finally {
+      setGiftLookupBusy(false);
+    }
+  };
+
+  const giftRecipientReady = purchaseMode !== "gift" || Boolean(giftVerifiedEmail);
+
   const handleCheckout = async () => {
     setApiCheckoutError(null);
     setCheckoutBusy(true);
@@ -417,7 +459,16 @@ export default function PurchaseModal({
 
       const paymentUrl = out.data?.paymentUrl?.trim() ?? "";
       if (out.code === 0 && paymentUrl) {
-        if (out.data?.orderId) rememberCheckoutOrderId(out.data.orderId);
+        if (out.data?.orderId) {
+          rememberCheckoutOrderId(out.data.orderId);
+          if (purchaseMode === "gift" && giftVerifiedEmail) {
+            rememberPendingGiftPurchase({
+              recipientEmail: giftVerifiedEmail,
+              quantity: Math.floor(quantity),
+              orderId: out.data.orderId,
+            });
+          }
+        }
         if (!isStripeCheckoutUrl(paymentUrl)) {
           paymentTab?.close();
           setApiCheckoutError(t("purchase.invalidPaymentUrl"));
@@ -451,6 +502,7 @@ export default function PurchaseModal({
     primarySaleUnavailable !== null ||
     bffSessionOk === false ||
     !canPurchaseViaBff ||
+    !giftRecipientReady ||
     (!!primarySaleId && !envListingId && saleListingFetchState === "loading");
 
   return (
@@ -588,6 +640,78 @@ export default function PurchaseModal({
                 ) : null}
               </div>
 
+              <div className="mb-6 grid grid-cols-2 gap-2 rounded-xl border border-border p-1 bg-muted/20">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPurchaseMode("self");
+                    resetGiftRecipient();
+                    setApiCheckoutError(null);
+                  }}
+                  className={`inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm transition-colors ${
+                    purchaseMode === "self"
+                      ? "bg-card border border-gold/40 text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <User className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
+                  {t("giftPurchase.modeSelf")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPurchaseMode("gift");
+                    resetGiftRecipient();
+                    setApiCheckoutError(null);
+                  }}
+                  className={`inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm transition-colors ${
+                    purchaseMode === "gift"
+                      ? "bg-card border border-gold/40 text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Gift className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
+                  {t("giftPurchase.modeGift")}
+                </button>
+              </div>
+
+              {purchaseMode === "gift" ? (
+                <div className="mb-6 space-y-3 rounded-xl border border-border bg-accent/20 p-4">
+                  <p className="text-sm text-muted-foreground leading-relaxed">{t("giftPurchase.intro")}</p>
+                  <div>
+                    <label className="text-xs text-muted-foreground">{t("giftPurchase.recipientEmailLabel")}</label>
+                    <input
+                      type="email"
+                      value={giftRecipientEmail}
+                      onChange={(e) => {
+                        setGiftRecipientEmail(e.target.value);
+                        resetGiftRecipient();
+                      }}
+                      className="mt-1 w-full px-4 py-3 rounded-xl bg-input-background border border-border focus:border-gold/50 focus:outline-none text-sm"
+                      placeholder="friend@example.com"
+                      autoComplete="email"
+                    />
+                  </div>
+                  {giftVerifiedEmail ? (
+                    <p className="text-xs text-emerald-600/90 dark:text-emerald-400/90 leading-relaxed">
+                      {giftRecipientExists
+                        ? t("giftPurchase.recipientExists")
+                        : t("giftPurchase.recipientWillProvision")}
+                    </p>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled={giftLookupBusy || !giftRecipientEmail.includes("@")}
+                      onClick={() => void handleGiftRecipientLookup()}
+                      className="w-full flex items-center justify-center gap-2 rounded-xl border border-border px-4 py-3 text-sm hover:border-gold/50 hover:bg-accent/40 transition-colors disabled:opacity-50"
+                    >
+                      <Mail className="h-4 w-4" aria-hidden />
+                      {giftLookupBusy ? t("common.loading") : t("giftPurchase.confirmRecipient")}
+                    </button>
+                  )}
+                </div>
+              ) : null}
+
               <div className="mb-8">
                 <div className="flex items-center justify-center gap-4 mb-6">
                   <button
@@ -637,7 +761,11 @@ export default function PurchaseModal({
                 className="w-full py-4 rounded-xl bg-gradient-to-r from-gold to-gold-dark hover:from-gold-light hover:to-gold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="text-primary-foreground font-medium">
-                  {checkoutBusy ? t("purchase.checkoutBusy") : t("purchase.confirmPurchase")}
+                  {checkoutBusy
+                    ? t("purchase.checkoutBusy")
+                    : purchaseMode === "gift"
+                      ? t("giftPurchase.confirmGiftPurchase")
+                      : t("purchase.confirmPurchase")}
                 </span>
               </button>
 
@@ -676,7 +804,9 @@ export default function PurchaseModal({
 
               <h2 className="font-display text-2xl mb-2">{t("purchase.stripeOpenedTitle")}</h2>
               <p className="text-muted-foreground mb-4 leading-relaxed text-sm">
-                {t("purchase.successBffStripe")}
+                {purchaseMode === "gift" && giftVerifiedEmail
+                  ? t("giftPurchase.successStripe", { email: giftVerifiedEmail, count: quantity })
+                  : t("purchase.successBffStripe")}
               </p>
               <p className="text-muted-foreground mb-8 text-xs leading-relaxed">
                 {t("purchase.stripeOpenedHint", {

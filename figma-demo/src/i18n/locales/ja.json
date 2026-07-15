@@ -653,11 +653,18 @@
     "body": "ご購入ありがとうございます。Stripe でお支払いが記録されました。CZ Life の NFT は IPDEX の決済処理後、まもなくアカウントに表示されます。",
     "orderLabel": "注文",
     "viewAccount": "アカウントを見る",
-    "backToClub": "ブッククラブへ戻る"
+    "backToClub": "ブッククラブへ戻る",
+    "giftPendingNote": "{{email}} へ {{count}} 件の NFT を贈予予定です。お支払い後、アカウント同期が完了すると自動で送られます。"
   },
   "account": {
     "loginTitle": "アカウントにサインイン",
     "loginSubtitle": "IPDEX と同じメール OTP でサインイン。初回利用時は IPDEX アカウントを自動作成します。アカウント・NFT・注文データは IPDEX が提供します。",
+    "giftCta": "友達に贈る",
+    "giftTitle": "NFT を贈る",
+    "giftSubtitle": "相手のメールアドレスにこの NFT を転送します。",
+    "giftSubmit": "贈る",
+    "giftSuccess": "NFT を贈りました。",
+    "giftError": "贈与に失敗しました。受取人のメールを確認して再試行してください。",
     "logout": "ログアウト",
     "title": "マイアカウント",
     "loadError": "アカウント情報を読み込めませんでした。",
@@ -746,6 +753,25 @@
     "redeemPickAnother": "別のバウチャーを選ぶ",
     "redeemNoEligibleNfts": "引き換え可能な NFT がありません、またはまだ一覧に同期されていません。",
     "redeemBack": "アカウントに戻る"
+  },
+  "giftPurchase": {
+    "modeSelf": "自分用に購入",
+    "modeGift": "友達に贈る",
+    "intro": "お支払いはあなたのアカウントで行います。決済後、プレミアムバウチャー NFT を友達のメールへ転送します。IPDEX 未登録の場合は自動でアカウントを作成します。",
+    "recipientEmailLabel": "受取人のメール",
+    "confirmRecipient": "受取人を確認",
+    "recipientExists": "このメールは IPDEX に登録済みです。お支払い後に NFT を送ります。",
+    "recipientWillProvision": "このメールは未登録です。贈与時に IPDEX がアカウントを自動作成します。",
+    "confirmGiftPurchase": "支払って贈る",
+    "successStripe": "Stripe の決済画面を開きました。お支払い後、{{count}} 件の NFT を {{email}} へ送ります。",
+    "cannotGiftToSelf": "自分のメールには贈れません。",
+    "lookupFailed": "受取人のメールを確認できませんでした。入力を確認して再試行してください。",
+    "fulfillComplete": "{{email}} への贈与が完了しました。",
+    "fulfillPartial": "一部の NFT は贈りました。残りは同期中の可能性があります。しばらくしてアカウントを更新してください。",
+    "fulfillFailed": "お支払いは成功しましたが自動贈与に失敗しました。アカウントから手動で贈ることができます。",
+    "giftToFriendCta": "友達に贈る",
+    "errorNotOwned": "現在のログインアカウントはこの NFT を保有していません。購入時のメールでログインしてから再試行してください。",
+    "errorInvalidParameter": "贈る NFT を特定できません。アカウントを更新してから再試行してください。"
   },
   "common": {
     "loading": "読み込み中...",
