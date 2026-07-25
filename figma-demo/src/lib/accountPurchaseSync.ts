@@ -2,6 +2,9 @@ const SYNC_STORAGE_KEY = "cz-life:sync-account-after-purchase";
 const PAID_ORDERS_KEY = "cz-life:recent-paid-order-ids";
 const LAST_CHECKOUT_ORDER_KEY = "cz-life:last-checkout-order-id";
 
+/** Grace period only — hide pending row while webhook may still be catching up. */
+const PAID_ORDER_HIDE_MAX_AGE_MS = 2 * 60 * 1000;
+
 type PaidOrderEntry = { id: string; at: number };
 
 function readPaidOrderEntries(): PaidOrderEntry[] {
@@ -78,23 +81,31 @@ export function takeAccountSyncAfterPurchase(): boolean {
   }
 }
 
-/** Paid order still listed as pending upstream — hide it until the API catches up. */
+/**
+ * Briefly hide a just-paid order from the pending list while fulfillment webhook catches up.
+ * Keep the window short: long hides masked stuck PENDING orders (paid-but-unfulfilled bugs).
+ */
 export function markRecentPaidOrderId(orderId: string): void {
   const id = orderId.trim();
   if (!id) return;
-  const maxAgeMs = 24 * 60 * 60 * 1000;
   const now = Date.now();
   const next = [
     { id, at: now },
-    ...readPaidOrderEntries().filter((entry) => entry.id !== id && now - entry.at < maxAgeMs),
+    ...readPaidOrderEntries().filter((entry) => entry.id !== id && now - entry.at < PAID_ORDER_HIDE_MAX_AGE_MS),
   ].slice(0, 12);
   writePaidOrderEntries(next);
 }
 
+/** Stop hiding an order id (e.g. still pending after grace period — show so user can see stuck state). */
+export function clearRecentPaidOrderId(orderId: string): void {
+  const id = orderId.trim();
+  if (!id) return;
+  writePaidOrderEntries(readPaidOrderEntries().filter((entry) => entry.id !== id));
+}
+
 export function getRecentPaidOrderIds(): Set<string> {
-  const maxAgeMs = 24 * 60 * 60 * 1000;
   const now = Date.now();
-  const alive = readPaidOrderEntries().filter((entry) => now - entry.at < maxAgeMs);
+  const alive = readPaidOrderEntries().filter((entry) => now - entry.at < PAID_ORDER_HIDE_MAX_AGE_MS);
   if (alive.length !== readPaidOrderEntries().length) writePaidOrderEntries(alive);
   return new Set(alive.map((entry) => entry.id));
 }

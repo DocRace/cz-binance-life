@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "motion/react";
-import { BookOpen, LogIn, LogOut, Package, Award, Loader2 } from "lucide-react";
+import { BookOpen, FileText, LogIn, LogOut, Package, Award, Loader2 } from "lucide-react";
 import AccountPendingOrders from "../components/AccountPendingOrders";
 import { useTranslation } from "react-i18next";
 import { Link, useSearchParams } from "react-router";
@@ -323,7 +323,9 @@ export default function Account() {
         setAuthError(
           bookBffIsTransportIssue(out)
             ? t("purchase.bffOffline")
-            : out.message || t("purchase.bffAuthError"),
+            : out.code === -10016 || out.code === -10017
+              ? t("account.loginCodeInvalid")
+              : out.message || t("purchase.bffAuthError"),
         );
       }
     } catch {
@@ -781,6 +783,13 @@ export default function Account() {
             )}
           </div>
           <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 self-start sm:self-auto">
+            <Link
+              to="/account/invoices"
+              className={`${ACCOUNT_HEADER_BTN} border border-border/60 text-muted-foreground hover:border-gold/50 hover:bg-accent/50 hover:text-foreground`}
+            >
+              <FileText className="w-4 h-4 shrink-0" aria-hidden />
+              {t("account.invoicesNavCta")}
+            </Link>
             {hasRedeemEligible ? (
               <Link
                 to="/account/redeem"

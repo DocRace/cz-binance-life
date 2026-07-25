@@ -10,6 +10,7 @@ function titleKeyForPath(pathname: string): string {
   if (pathname === "/principles") return "meta.titlePrinciples";
   if (pathname === "/timeline") return "meta.titleTimeline";
   if (pathname === "/account/redeem") return "meta.titleAccountRedeem";
+  if (pathname === "/account/invoices") return "meta.titleAccountInvoices";
   if (pathname === "/account") return "meta.titleAccount";
   if (pathname === "/purchase-success") return "meta.titlePurchaseSuccess";
   return "meta.titleNotFound";

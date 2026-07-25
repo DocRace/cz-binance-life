@@ -111,7 +111,7 @@ async function boot() {
   });
 
   app.post('/api/bff/auth/send-code', async (req, res) => {
-    const email = `${req.body?.email ?? ''}`.trim();
+    const email = `${req.body?.email ?? ''}`.trim().toLowerCase();
     if (!email.includes('@')) {
       return res.status(400).json({ code: -1, message: 'invalid_email', data: null });
     }
@@ -126,8 +126,8 @@ async function boot() {
   });
 
   app.post('/api/bff/auth/login', async (req, res) => {
-    const email = `${req.body?.email ?? ''}`.trim();
-    const code = `${req.body?.code ?? ''}`;
+    const email = `${req.body?.email ?? ''}`.trim().toLowerCase();
+    const code = `${req.body?.code ?? ''}`.trim();
     if (!email || !code) {
       return res.status(400).json({ code: -1, message: 'missing_fields', data: null });
     }
@@ -346,6 +346,34 @@ async function boot() {
     const out = await ipdexFacadeFetch(env, {
       method: 'GET',
       suffixPath: `/market/user/orders/pending/${pg}`,
+      accessToken,
+    });
+    res.status(out.json?.code === 0 ? 200 : 400).json(out.json);
+  });
+
+  app.get('/api/bff/orders/history/:page', async (req, res) => {
+    const accessToken = bearer(req);
+    if (!accessToken) return res.status(401).json({ code: -10005, message: 'Unauthorized', data: null });
+    const pg = pageInt(req.params.page);
+    if (!pg) return res.status(400).json({ code: -10001, message: 'Invalid page', data: null });
+    const out = await ipdexFacadeFetch(env, {
+      method: 'GET',
+      suffixPath: `/market/user/purchase/history/${pg}`,
+      accessToken,
+    });
+    res.status(out.json?.code === 0 ? 200 : 400).json(out.json);
+  });
+
+  app.get('/api/bff/orders/:orderId/payment', async (req, res) => {
+    const accessToken = bearer(req);
+    if (!accessToken) return res.status(401).json({ code: -10005, message: 'Unauthorized', data: null });
+    const orderId = `${req.params.orderId ?? ''}`.trim();
+    if (!uuidLike(orderId)) {
+      return res.status(400).json({ code: -10001, message: 'Invalid orderId', data: null });
+    }
+    const out = await ipdexFacadeFetch(env, {
+      method: 'GET',
+      suffixPath: `/market/user/orders/${orderId}/payment`,
       accessToken,
     });
     res.status(out.json?.code === 0 ? 200 : 400).json(out.json);

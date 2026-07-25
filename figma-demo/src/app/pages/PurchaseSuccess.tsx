@@ -7,9 +7,16 @@ import { SITE_CONTAINER_X } from "../layout/pageLayout";
 import {
   markAccountSyncAfterPurchase,
   markRecentPaidOrderId,
+  clearRecentPaidOrderId,
   takeLastCheckoutOrderId,
 } from "../../lib/accountPurchaseSync";
 import { readPendingGiftPurchase } from "../../lib/giftPurchaseStorage";
+import { bookBffJsonWithRefresh } from "../../lib/bookBffWithRefresh";
+
+type PendingOrdersPayload = {
+  success?: boolean;
+  rows?: Array<Record<string, unknown>>;
+};
 
 export default function PurchaseSuccess() {
   const { t } = useTranslation();
@@ -20,7 +27,40 @@ export default function PurchaseSuccess() {
   useEffect(() => {
     markAccountSyncAfterPurchase();
     const paidOrderId = orderId || takeLastCheckoutOrderId();
-    if (paidOrderId) markRecentPaidOrderId(paidOrderId);
+    if (!paidOrderId) return;
+
+    // Brief hide for webhook lag; if still pending after polls, show it again (stuck fulfillment).
+    markRecentPaidOrderId(paidOrderId);
+
+    let cancelled = false;
+    const delaysMs = [3000, 8000, 20000];
+    (async () => {
+      for (const delay of delaysMs) {
+        await new Promise((r) => setTimeout(r, delay));
+        if (cancelled) return;
+        try {
+          const out = await bookBffJsonWithRefresh<PendingOrdersPayload>("/api/bff/orders/pending/1");
+          if (out.code !== 0 || !out.data?.success) continue;
+          const stillPending = (out.data.rows ?? []).some(
+            (row) => `${row.c_order_id ?? ""}`.trim() === paidOrderId,
+          );
+          if (stillPending) {
+            clearRecentPaidOrderId(paidOrderId);
+            return;
+          }
+          // Gone from pending → fulfillment landed; keep hide marker until TTL.
+          return;
+        } catch {
+          /* ignore transient */
+        }
+      }
+      // After grace polls, always clear hide so a stuck order surfaces in Account.
+      clearRecentPaidOrderId(paidOrderId);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [orderId]);
 
   return (

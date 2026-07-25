@@ -7,6 +7,7 @@ import CZPrinciples from "./pages/CZPrinciples";
 import Timeline from "./pages/Timeline";
 import Account from "./pages/Account";
 import AccountRedeem from "./pages/AccountRedeem";
+import AccountInvoices from "./pages/AccountInvoices";
 import PurchaseSuccess from "./pages/PurchaseSuccess";
 import NotFound from "./pages/NotFound";
 import OfflineEvent from "./pages/OfflineEvent";
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
       { path: "principles", Component: CZPrinciples },
       { path: "timeline", Component: Timeline },
       { path: "account/redeem", Component: AccountRedeem },
+      { path: "account/invoices", Component: AccountInvoices },
       { path: "purchase-success", Component: PurchaseSuccess },
       { path: "account", Component: Account },
       { path: "*", Component: NotFound },
