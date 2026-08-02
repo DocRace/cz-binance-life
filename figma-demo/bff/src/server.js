@@ -308,9 +308,21 @@ async function boot() {
       });
     }
 
-    const purchaseBody = { listingId, quantity: Math.floor(quantity) };
+    const paymentChannelRaw = `${req.body?.paymentChannel ?? 'stripe'}`.trim().toLowerCase();
+    const paymentChannel = paymentChannelRaw === 'crypto' ? 'crypto' : 'stripe';
+    const purchaseBody = {
+      listingId,
+      quantity: Math.floor(quantity),
+      paymentChannel,
+    };
+    if (paymentChannel === 'stripe') {
+      purchaseBody.currency = `${req.body?.currency ?? 'hkd'}`.trim().toLowerCase() || 'hkd';
+    }
     if (env.STRIPE_CALLBACK_ORIGIN) {
       purchaseBody.stripeCallbackOrigin = env.STRIPE_CALLBACK_ORIGIN;
+    }
+    if (req.body?.paymentReturnUrls && typeof req.body.paymentReturnUrls === 'object') {
+      purchaseBody.paymentReturnUrls = req.body.paymentReturnUrls;
     }
 
     const out = await ipdexFacadeFetch(env, {
@@ -329,10 +341,12 @@ async function boot() {
     if (!uuidLike(listingId)) {
       return res.status(400).json({ code: -10001, message: 'Invalid listingId', data: null });
     }
+    const paymentChannelRaw = `${req.body?.paymentChannel ?? 'stripe'}`.trim().toLowerCase();
+    const paymentChannel = paymentChannelRaw === 'crypto' ? 'crypto' : 'stripe';
     const out = await ipdexFacadeFetch(env, {
       method: 'POST',
       suffixPath: '/market/ip/secondary/purchase',
-      body: { listingId },
+      body: { listingId, paymentChannel },
       accessToken,
     });
     res.status(out.json?.code === 0 ? 200 : 400).json(out.json);

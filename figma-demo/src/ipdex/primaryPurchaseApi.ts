@@ -15,11 +15,21 @@ export async function createPrimaryPurchaseOrderViaClientApi(options: {
   accessToken: string;
   listingId: string;
   quantity: number;
-}): Promise<{ orderId: string; paymentUrl: string }> {
+  paymentChannel?: "stripe" | "crypto";
+  currency?: string;
+}): Promise<{
+  orderId: string;
+  paymentUrl: string;
+  paymentChannel?: string;
+  settleAsset?: string;
+  settleAmount?: string;
+  settleChainId?: string;
+}> {
   const origin = normalizeOrigin(options.clientApiOrigin ?? getIpdexClientApiOrigin());
   if (!origin) {
     throw new Error("missing_client_api_origin");
   }
+  const paymentChannel = options.paymentChannel === "crypto" ? "crypto" : "stripe";
   const res = await fetch(`${origin}/ip/primary/purchase`, {
     method: "POST",
     headers: {
@@ -29,10 +39,21 @@ export async function createPrimaryPurchaseOrderViaClientApi(options: {
     body: JSON.stringify({
       listingId: options.listingId,
       quantity: options.quantity,
+      paymentChannel,
+      ...(paymentChannel === "stripe"
+        ? { currency: (options.currency || "hkd").toLowerCase() }
+        : {}),
     }),
   });
 
-  const json = (await res.json()) as IpdexEnvelope<{ orderId: string; paymentUrl: string }>;
+  const json = (await res.json()) as IpdexEnvelope<{
+    orderId: string;
+    paymentUrl: string;
+    paymentChannel?: string;
+    settleAsset?: string;
+    settleAmount?: string;
+    settleChainId?: string;
+  }>;
   if (!res.ok || json.code !== 0 || !json.data?.paymentUrl) {
     throw new Error(json.message || `http_${res.status}`);
   }

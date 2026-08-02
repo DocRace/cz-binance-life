@@ -31,8 +31,15 @@ type PurchaseMode = "self" | "gift";
 
 const ORDER_ERROR_UNPAID = -20008;
 
-function isStripeCheckoutUrl(url: string): boolean {
-  return /^https?:\/\/([^/]+\.)?stripe\.com\//i.test(url.trim());
+function isAllowedPaymentUrl(url: string): boolean {
+  const u = url.trim();
+  if (!/^https?:\/\//i.test(u)) return false;
+  // Stripe Checkout
+  if (/^https?:\/\/([^/]+\.)?stripe\.com\//i.test(u)) return true;
+  // BSC $U cashier (real host or local stub Intent)
+  if (/settlement\.stub\.local/i.test(u)) return true;
+  if (/\/pay\//i.test(u) || /settlement/i.test(u) || /cashier/i.test(u)) return true;
+  return false;
 }
 
 /**
@@ -77,6 +84,10 @@ function navigatePaymentTab(tab: Window | null, paymentUrl: string): void {
 interface PrimaryPurchaseData {
   orderId?: string;
   paymentUrl?: string;
+  paymentChannel?: string;
+  settleAsset?: string;
+  settleAmount?: string;
+  settleChainId?: string;
 }
 
 type PrimarySaleListingRow = Record<string, unknown>;
@@ -208,6 +219,10 @@ export default function PurchaseModal({
   const { t } = useTranslation();
   const [step, setStep] = useState<Step>(skipLogin ? "select" : "login");
   const [purchaseMode, setPurchaseMode] = useState<PurchaseMode>("self");
+  const cryptoPayEnabled =
+    `${import.meta.env.VITE_CRYPTO_SETTLEMENT_ENABLED ?? ""}`.trim() === "1" ||
+    `${import.meta.env.VITE_CRYPTO_SETTLEMENT_ENABLED ?? ""}`.trim().toLowerCase() === "true";
+  const [checkoutPaymentChannel, setCheckoutPaymentChannel] = useState<"stripe" | "crypto">("stripe");
   const [quantity, setQuantity] = useState(1);
   const [giftRecipientEmail, setGiftRecipientEmail] = useState("");
   const [giftVerifiedEmail, setGiftVerifiedEmail] = useState("");
@@ -437,8 +452,13 @@ export default function PurchaseModal({
     const paymentTab = reservePaymentTab();
 
     try {
-      const body: { quantity: number; listingId?: string } = {
+      const body: {
+        quantity: number;
+        listingId?: string;
+        paymentChannel?: "stripe" | "crypto";
+      } = {
         quantity: Math.floor(quantity),
+        paymentChannel: checkoutPaymentChannel,
       };
       let lid = envListingId || (saleResolvedListingId || "").trim();
       if (!lid && primarySaleId) {
@@ -469,7 +489,7 @@ export default function PurchaseModal({
             });
           }
         }
-        if (!isStripeCheckoutUrl(paymentUrl)) {
+        if (!isAllowedPaymentUrl(paymentUrl)) {
           paymentTab?.close();
           setApiCheckoutError(t("purchase.invalidPaymentUrl"));
           return;
@@ -752,6 +772,33 @@ export default function PurchaseModal({
                     <span className="text-xl font-tech text-gold">HK$ {totalPrice}</span>
                   </div>
                 </div>
+
+                {cryptoPayEnabled ? (
+                  <div className="mt-4 grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setCheckoutPaymentChannel("stripe")}
+                      className={`rounded-xl border px-3 py-2 text-sm transition-colors ${
+                        checkoutPaymentChannel === "stripe"
+                          ? "border-gold bg-gold/15 text-foreground"
+                          : "border-border text-muted-foreground hover:border-gold/40"
+                      }`}
+                    >
+                      Card / Alipay
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setCheckoutPaymentChannel("crypto")}
+                      className={`rounded-xl border px-3 py-2 text-sm transition-colors ${
+                        checkoutPaymentChannel === "crypto"
+                          ? "border-gold bg-gold/15 text-foreground"
+                          : "border-border text-muted-foreground hover:border-gold/40"
+                      }`}
+                    >
+                      Pay with $U (BSC)
+                    </button>
+                  </div>
+                ) : null}
               </div>
 
               <button
