@@ -44,6 +44,7 @@ import {
   PAGE_SHELL,
   SECTION_SPACING,
 } from "../layout/pageLayout";
+import CzInscriptionMark from "../components/CzInscriptionMark";
 
 export default function BookClub() {
   const { t } = useTranslation();
@@ -141,9 +142,15 @@ export default function BookClub() {
             {t("club.title")}
           </span>
         </h1>
-        <p className={`${CONTENT_NARROW} mb-8 text-xl text-muted-foreground`}>
+        <p className={`${CONTENT_NARROW} mb-6 text-xl text-muted-foreground`}>
           {t("club.subtitle")}
         </p>
+
+        {/* CZ inscription — one line (幣安人生 Club), under subtitle */}
+        <figure className="mx-auto mb-8 w-full max-w-[20rem]" aria-label={t("club.inscriptionAlt")}>
+          <CzInscriptionMark alt={t("club.inscriptionAlt")} />
+        </figure>
+
         <div className="mx-auto mb-8 flex w-full max-w-sm flex-col items-stretch gap-3 sm:max-w-none sm:flex-row sm:items-center sm:justify-center">
           <button
             type="button"

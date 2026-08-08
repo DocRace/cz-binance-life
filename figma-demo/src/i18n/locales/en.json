@@ -351,7 +351,12 @@
     "storiesTranslating": "Translating…",
     "storiesTranslationFailed": "Translation unavailable — showing original",
     "storiesDisclaimer": "Stories are sourced from public posts or editorial submissions; tone is filtered for a respectful book-site context. Rights remain with the original authors.",
-    "buyBadgeCta": "Buy premium edition ({{priceHkd}})"
+    "buyBadgeCta": "Buy premium edition ({{priceHkd}})",
+    "inscriptionKicker": "Inscription",
+    "inscriptionTitle": "Book club inscription",
+    "inscriptionSubtitle": "Handwritten by CZ for the book club — 「幣安人生 Club」.",
+    "inscriptionAlt": "Handwritten inscription by CZ: 幣安人生 Club",
+    "inscriptionCredit": "Inscription by CZ"
   },
   "principles": {
     "title": "CZ Principles",

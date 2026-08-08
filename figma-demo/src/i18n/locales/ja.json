@@ -342,7 +342,12 @@
     "storiesTranslating": "翻訳中…",
     "storiesTranslationFailed": "翻訳できません。原文を表示しています",
     "storiesDisclaimer": "公開投稿または編集投稿を起源とし、書籍サイト向けにトーンを整えています。著作権は作者に帰属します。",
-    "buyBadgeCta": "プレミアム典藏版を購入（{{priceHkd}}）"
+    "buyBadgeCta": "プレミアム典藏版を購入（{{priceHkd}}）",
+    "inscriptionKicker": "題字",
+    "inscriptionTitle": "ブッククラブ題字",
+    "inscriptionSubtitle": "ブッククラブのために CZ が直筆で記した「幣安人生 Club」。",
+    "inscriptionAlt": "CZ 直筆題字：幣安人生 Club",
+    "inscriptionCredit": "CZ 題字"
   },
   "principles": {
     "title": "CZ原則",

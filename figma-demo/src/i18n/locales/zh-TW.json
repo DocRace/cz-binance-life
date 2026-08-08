@@ -375,7 +375,12 @@
     "storiesTranslating": "翻譯中…",
     "storiesTranslationFailed": "暫無法翻譯，顯示原文",
     "storiesDisclaimer": "內容來源為公開貼文或編輯收件，僅作書站脈絡下的友善展示；著作權仍歸原作者。",
-    "buyBadgeCta": "購買進階典藏版（{{priceHkd}}）"
+    "buyBadgeCta": "購買進階典藏版（{{priceHkd}}）",
+    "inscriptionKicker": "題字",
+    "inscriptionTitle": "書友會題字",
+    "inscriptionSubtitle": "書友會獲 CZ 親筆題字「幣安人生 Club」。",
+    "inscriptionAlt": "CZ 親筆題字：幣安人生 Club",
+    "inscriptionCredit": "CZ 題字"
   },
   "principles": {
     "title": "CZ 原則",
