@@ -11,6 +11,7 @@ import AccountInvoices from "./pages/AccountInvoices";
 import PurchaseSuccess from "./pages/PurchaseSuccess";
 import NotFound from "./pages/NotFound";
 import OfflineEvent from "./pages/OfflineEvent";
+import CryptoChronicle from "./pages/CryptoChronicle";
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
       { index: true, Component: Home },
       { path: "book", Component: BookIntro },
       { path: "club", Component: BookClub },
+      { path: "club/chronicle", Component: CryptoChronicle },
       { path: "event", Component: OfflineEvent },
       { path: "principles", Component: CZPrinciples },
       { path: "timeline", Component: Timeline },

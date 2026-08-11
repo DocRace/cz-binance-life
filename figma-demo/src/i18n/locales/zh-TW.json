@@ -26,7 +26,8 @@
     "titleAccountRedeem": "現場核銷 · 幣安人生書友會",
     "titleAccountInvoices": "付款憑證 · 幣安人生書友會",
     "titlePurchaseSuccess": "付款完成 · 幣安人生書友會",
-    "titleNotFound": "找不到頁面 · 幣安人生書友會"
+    "titleNotFound": "找不到頁面 · 幣安人生書友會",
+    "titleChronicle": "加密編年史 · 幣安人生書友會"
   },
   "nftDetailModal": {
     "openDetail": "查看 NFT 詳情",
@@ -380,7 +381,8 @@
     "inscriptionTitle": "書友會題字",
     "inscriptionSubtitle": "書友會獲 CZ 親筆題字「幣安人生 Club」。",
     "inscriptionAlt": "CZ 親筆題字：幣安人生 Club",
-    "inscriptionCredit": "CZ 題字"
+    "inscriptionCredit": "CZ 題字",
+    "chronicleCta": "加密編年史"
   },
   "principles": {
     "title": "CZ 原則",
@@ -867,5 +869,202 @@
     "close": "關閉",
     "confirm": "確認",
     "cancel": "取消"
+  },
+  "chronicle": {
+    "backClub": "返回書友會",
+    "kicker": "《幣安人生》共讀計劃",
+    "decodeCz": "解碼 CZ",
+    "introLead": "點擊 CZ 關鍵人生節點，記錄你最難忘的加密經歷。",
+    "participants": "已有 {{count}} 人完成自己的加密編年史",
+    "startCta": "開始我的加密編年史",
+    "fillTitle": "你的加密編年史",
+    "fillHint": "（選填）點擊節點時間，寫下那個階段你在做什麼、什麼事影響了你。寫得越細，編年史越完整。",
+    "filledProgress": "已填寫 {{count}} / {{total}} 個節點",
+    "savedMark": "已記錄",
+    "yourEventLabel": "YOU",
+    "yourEventTitle": "你的大事件",
+    "inputLabel": "你的加密經歷",
+    "inputPlaceholder": "這個時間段，你在幹什麼？有什麼影響你的大事件？",
+    "save": "保存",
+    "savedToast": "已保存到本地草稿",
+    "distillCta": "蒸餾我的加密編年史",
+    "needOneEntry": "請至少填寫一個時間節點",
+    "resultKicker": "結果",
+    "resultTitle": "我的加密編年史",
+    "myTimeline": "我的加密編年史",
+    "keywords": "關鍵詞",
+    "matchedPrinciples": "我適配的 CZ 原則",
+    "principleN": "原則{{n}}",
+    "shareCardTitle": "我的加密編年史",
+    "shareCardSub": "CZ 的幣安人生 × 同一條時間軸",
+    "shareCardCzLife": "同一條時間軸上的我",
+    "capsuleCta": "封裝膠囊",
+    "againCta": "再填一次",
+    "createMine": "創建我的編年史",
+    "shareCta": "分享結果",
+    "copied": "分享文案已複製",
+    "copyFailed": "複製失敗，請手動分享連結",
+    "shareBlank": "____",
+    "shareMyLifeFallback": "仍在書寫中",
+    "shareTextZh": ".@CZ 的幣安人生：賣房 all in、封神、入獄、翻身。\n我的加密人生：{{myLife}}\n同一條時間軸，你的加密人生是什麼樣？\n創建你的加密編年史 👇\n{{link}}",
+    "shareTextEn": ".@cz_binance's Binance Life: sold his house, went all-in, built an empire, went to prison, bounced back.\nMy crypto life: {{myLife}}\nSame timeline, what does yours look like?\nCreate your own crypto life 👇\n{{link}}",
+    "nodes": {
+      "n2013": {
+        "title": "三個第一次",
+        "event": "第一次聽說 BTC，第一次全倉 BTC，第一次進入加密行業。",
+        "bullets": [
+          "第一次聽說 BTC",
+          "第一次全倉 BTC",
+          "第一次進入加密行業"
+        ],
+        "year": "2013"
+      },
+      "n2014": {
+        "title": "OKCoin 時期",
+        "event": "短暫出任 OKCoin CTO。",
+        "bullets": [
+          "短暫出任 OKCoin CTO"
+        ],
+        "year": "2014"
+      },
+      "n2017_06": {
+        "title": "火鍋桌上的決定",
+        "event": "成都火鍋聊到 ICO，成為幣安誕生的起點。",
+        "bullets": [
+          "成都火鍋聊到 ICO",
+          "成為幣安誕生的起點"
+        ],
+        "year": "2017.6"
+      },
+      "n2017_07": {
+        "title": "幣安上線",
+        "event": "7 月 14 日，幣安交易所上線，同期發行 BNB。",
+        "bullets": [
+          "7 月 14 日幣安交易所上線",
+          "同期發行 BNB"
+        ],
+        "year": "2017.7"
+      },
+      "n2017_09": {
+        "title": "撤離大陸",
+        "event": "九四禁令發布，連夜撤離大陸，自掏資產補償用戶。",
+        "bullets": [
+          "九四禁令發布",
+          "連夜撤離大陸",
+          "自掏資產補償用戶"
+        ],
+        "year": "2017.9"
+      },
+      "n2017_end": {
+        "title": "幣安登頂",
+        "event": "上線半年，幣安交易量衝上全球第一。",
+        "bullets": [
+          "上線半年交易量衝上全球第一"
+        ],
+        "year": "2017末"
+      },
+      "n2019_safu": {
+        "title": "BTC 被盜",
+        "event": "被盜七千枚 BTC，選擇全額兜底，推出 SAFU。",
+        "bullets": [
+          "被盜七千枚 BTC",
+          "全額兜底",
+          "推出 SAFU"
+        ],
+        "year": "2019"
+      },
+      "n2019_eco": {
+        "title": "生態擴張",
+        "event": "上線幣安智能鏈、Launchpad、合約，把幣安從交易所擴成龐大生態。",
+        "bullets": [
+          "上線幣安智能鏈",
+          "Launchpad 與合約",
+          "從交易所擴成生態"
+        ],
+        "year": "2019"
+      },
+      "n2021": {
+        "title": "帝國巔峰",
+        "event": "幣安交易量佔全球最大份額，BNB 衝上高點，多國監管開始緊盯。",
+        "bullets": [
+          "交易量佔全球最大份額",
+          "BNB 衝上高點",
+          "多國監管開始緊盯"
+        ],
+        "year": "2021"
+      },
+      "n2022_11": {
+        "title": "FTX 崩塌",
+        "event": "宣布收購 FTX，隔天放棄，風暴引向自己。",
+        "bullets": [
+          "宣布收購 FTX",
+          "隔天放棄",
+          "風暴引向自己"
+        ],
+        "year": "2022.11"
+      },
+      "n2023": {
+        "title": "被圍剿",
+        "event": "CFTC、SEC 接連起訴，多國監管連環施壓，幣安陸續退出或收縮部分國家市場。",
+        "bullets": [
+          "CFTC、SEC 接連起訴",
+          "多國監管連環施壓",
+          "部分市場退出或收縮"
+        ],
+        "year": "2023"
+      },
+      "n2023_11": {
+        "title": "認罪辭任",
+        "event": "幣安被罰約 72 億美元，他個人被罰 1.5 億，辭任 CEO。",
+        "bullets": [
+          "幣安被罰約 72 億美元",
+          "個人被罰 1.5 億",
+          "辭任 CEO"
+        ],
+        "year": "2023.11"
+      },
+      "n2024_06": {
+        "title": "入獄",
+        "event": "經歷數月周旋，終判刑四個月，獄中寫完《幣安人生》初稿。",
+        "bullets": [
+          "終判刑四個月",
+          "獄中寫完《幣安人生》初稿"
+        ],
+        "year": "2024.6"
+      },
+      "n2024_09": {
+        "title": "重獲自由",
+        "event": "9 月 27 日出獄，感慨時間與自由最珍貴。",
+        "bullets": [
+          "9 月 27 日出獄",
+          "感慨時間與自由最珍貴"
+        ],
+        "year": "2024.9"
+      },
+      "n2024_end": {
+        "title": "轉向教育",
+        "event": "繼續 Giggle Academy 免費教育項目。",
+        "bullets": [
+          "繼續 Giggle Academy 免費教育項目"
+        ],
+        "year": "2024末"
+      }
+    },
+    "identityTitle": "你更像哪一類？",
+    "identityHint": "身份會決定可用的行為標籤池，之後仍可手動增減標籤。",
+    "audienceRetail": "散戶 / 交易者",
+    "audienceRetailDesc": "入場、倉位、持有節奏與市場烙印",
+    "audienceFounder": "Founder / 創業者",
+    "audienceFounderDesc": "方向決策、團隊、產品與危機處理",
+    "distilling": "正在蒸餾…",
+    "confirmTitle": "確認你的行為標籤",
+    "confirmHint": "我們根據你的填寫猜了這些標籤，可勾選或取消後再生成原則。",
+    "suggestedTags": "猜你可能是",
+    "moreTags": "查看更多標籤",
+    "backFill": "返回修改",
+    "generatePrinciples": "生成我的原則",
+    "needOneTag": "請至少選擇一個行為標籤",
+    "behaviorTags": "行為標籤",
+    "fromTags": "來自標籤"
   }
 }

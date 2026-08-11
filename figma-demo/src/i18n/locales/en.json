@@ -26,7 +26,8 @@
     "titleAccountRedeem": "On-site Redeem · Freedom of Money Book Club",
     "titleAccountInvoices": "Payment vouchers · Freedom of Money Book Club",
     "titlePurchaseSuccess": "Payment received · Freedom of Money Book Club",
-    "titleNotFound": "Page not found · Freedom of Money Book Club"
+    "titleNotFound": "Page not found · Freedom of Money Book Club",
+    "titleChronicle": "Crypto Chronicle · Freedom of Money Book Club"
   },
   "nftDetailModal": {
     "openDetail": "View NFT details",
@@ -113,12 +114,36 @@
     "agendaColSegment": "Segment",
     "agendaColContent": "Details",
     "agendaRows": [
-      { "time": "17:00–17:10", "segment": "Welcome remarks", "content": "Opening address by Mr. Mao Yongbo, General Manager of The Commercial Press (Hong Kong)." },
-      { "time": "17:10–17:25", "segment": "Keynote sharing", "content": "Geoffrey, Founder of DataDance and Director of IPDEX, on Web3 innovation and the road ahead." },
-      { "time": "17:25–17:55", "segment": "Entrepreneurship & the times", "content": "Web3 guests share entrepreneurial journeys and industry insights." },
-      { "time": "17:55–18:05", "segment": "Community co-creation film", "content": "Premiere of a Freedom of Money theme film co-created by the global community." },
-      { "time": "18:05–18:25", "segment": "Book club launch ceremony", "content": "Official launch of the global book club and release of the membership system and exclusive benefits." },
-      { "time": "18:25–19:00", "segment": "Networking & group photo", "content": "Guests and readers mingle and take photos together." }
+      {
+        "time": "17:00–17:10",
+        "segment": "Welcome remarks",
+        "content": "Opening address by Mr. Mao Yongbo, General Manager of The Commercial Press (Hong Kong)."
+      },
+      {
+        "time": "17:10–17:25",
+        "segment": "Keynote sharing",
+        "content": "Geoffrey, Founder of DataDance and Director of IPDEX, on Web3 innovation and the road ahead."
+      },
+      {
+        "time": "17:25–17:55",
+        "segment": "Entrepreneurship & the times",
+        "content": "Web3 guests share entrepreneurial journeys and industry insights."
+      },
+      {
+        "time": "17:55–18:05",
+        "segment": "Community co-creation film",
+        "content": "Premiere of a Freedom of Money theme film co-created by the global community."
+      },
+      {
+        "time": "18:05–18:25",
+        "segment": "Book club launch ceremony",
+        "content": "Official launch of the global book club and release of the membership system and exclusive benefits."
+      },
+      {
+        "time": "18:25–19:00",
+        "segment": "Networking & group photo",
+        "content": "Guests and readers mingle and take photos together."
+      }
     ],
     "highlightsTitle": "Highlights",
     "highlights": [
@@ -356,7 +381,8 @@
     "inscriptionTitle": "Book club inscription",
     "inscriptionSubtitle": "Handwritten by CZ for the book club — 「幣安人生 Club」.",
     "inscriptionAlt": "Handwritten inscription by CZ: 幣安人生 Club",
-    "inscriptionCredit": "Inscription by CZ"
+    "inscriptionCredit": "Inscription by CZ",
+    "chronicleCta": "Crypto chronicle"
   },
   "principles": {
     "title": "CZ Principles",
@@ -843,5 +869,202 @@
     "close": "Close",
     "confirm": "Confirm",
     "cancel": "Cancel"
+  },
+  "chronicle": {
+    "backClub": "Back to book club",
+    "kicker": "Freedom of Money reading plan",
+    "decodeCz": "Decode CZ",
+    "introLead": "Tap CZ’s milestones and record the crypto moments that shaped you.",
+    "participants": "{{count}} people have finished their crypto chronicle",
+    "startCta": "Start my crypto chronicle",
+    "fillTitle": "Your crypto chronicle",
+    "fillHint": "(Optional) Open a milestone and write what you were doing — and what changed you. The more detail, the richer your chronicle.",
+    "filledProgress": "{{count}} / {{total}} milestones filled",
+    "savedMark": "Saved",
+    "yourEventLabel": "YOU",
+    "yourEventTitle": "Your milestone",
+    "inputLabel": "Your crypto story",
+    "inputPlaceholder": "What were you doing in this period? What event shaped you?",
+    "save": "Save",
+    "savedToast": "Saved to local draft",
+    "distillCta": "Distill my crypto chronicle",
+    "needOneEntry": "Fill in at least one milestone",
+    "resultKicker": "Result",
+    "resultTitle": "My crypto chronicle",
+    "myTimeline": "My crypto chronicle",
+    "keywords": "Keywords",
+    "matchedPrinciples": "CZ principles I match",
+    "principleN": "Principle {{n}}",
+    "shareCardTitle": "My crypto chronicle",
+    "shareCardSub": "CZ’s Binance life × the same timeline",
+    "shareCardCzLife": "Me on the same timeline",
+    "capsuleCta": "Seal capsule",
+    "againCta": "Fill again",
+    "createMine": "Create mine",
+    "shareCta": "Share result",
+    "copied": "Share text copied",
+    "copyFailed": "Copy failed — share the link manually",
+    "shareBlank": "____",
+    "shareMyLifeFallback": "still being written",
+    "shareTextZh": ".@CZ 的幣安人生：賣房 all in、封神、入獄、翻身。\n我的加密人生：{{myLife}}\n同一條時間軸，你的加密人生是什麼樣？\n創建你的加密編年史 👇\n{{link}}",
+    "shareTextEn": ".@cz_binance's Binance Life: sold his house, went all-in, built an empire, went to prison, bounced back.\nMy crypto life: {{myLife}}\nSame timeline, what does yours look like?\nCreate your own crypto life 👇\n{{link}}",
+    "nodes": {
+      "n2013": {
+        "title": "Three firsts",
+        "event": "First heard of BTC, went all-in on BTC, entered crypto.",
+        "bullets": [
+          "First heard of BTC",
+          "First all-in on BTC",
+          "First step into crypto"
+        ],
+        "year": "2013"
+      },
+      "n2014": {
+        "title": "OKCoin chapter",
+        "event": "Briefly served as OKCoin CTO.",
+        "bullets": [
+          "Briefly served as OKCoin CTO"
+        ],
+        "year": "2014"
+      },
+      "n2017_06": {
+        "title": "Hotpot decision",
+        "event": "An ICO talk over Chengdu hotpot became the spark for Binance.",
+        "bullets": [
+          "ICO talk over Chengdu hotpot",
+          "The spark that led to Binance"
+        ],
+        "year": "2017.6"
+      },
+      "n2017_07": {
+        "title": "Binance launch",
+        "event": "On July 14, Binance exchange went live; BNB launched alongside.",
+        "bullets": [
+          "Binance launched on July 14",
+          "BNB issued at the same time"
+        ],
+        "year": "2017.7"
+      },
+      "n2017_09": {
+        "title": "Leaving the mainland",
+        "event": "After the Sept 4 ban, overnight exit; used personal assets to compensate users.",
+        "bullets": [
+          "Sept 4 ban",
+          "Overnight exit",
+          "Personal assets used to compensate users"
+        ],
+        "year": "2017.9"
+      },
+      "n2017_end": {
+        "title": "Binance on top",
+        "event": "Within six months, Binance volume ranked No.1 globally.",
+        "bullets": [
+          "No.1 global volume within six months"
+        ],
+        "year": "Late 2017"
+      },
+      "n2019_safu": {
+        "title": "BTC hack",
+        "event": "7,000 BTC stolen; full make-good and SAFU launched.",
+        "bullets": [
+          "7,000 BTC stolen",
+          "Full make-good",
+          "SAFU launched"
+        ],
+        "year": "2019"
+      },
+      "n2019_eco": {
+        "title": "Ecosystem expansion",
+        "event": "BSC, Launchpad, and futures — from exchange to ecosystem.",
+        "bullets": [
+          "Binance Smart Chain",
+          "Launchpad & futures",
+          "Exchange → ecosystem"
+        ],
+        "year": "2019"
+      },
+      "n2021": {
+        "title": "Empire peak",
+        "event": "Largest global share; BNB highs; regulators close in.",
+        "bullets": [
+          "Largest global volume share",
+          "BNB near highs",
+          "Regulators close in"
+        ],
+        "year": "2021"
+      },
+      "n2022_11": {
+        "title": "FTX collapse",
+        "event": "Announced a deal for FTX, walked away the next day; the storm turned toward him.",
+        "bullets": [
+          "Announced FTX deal",
+          "Walked away next day",
+          "Storm turned toward him"
+        ],
+        "year": "2022.11"
+      },
+      "n2023": {
+        "title": "Under siege",
+        "event": "CFTC and SEC suits; pressure worldwide; Binance exited or shrunk markets.",
+        "bullets": [
+          "CFTC & SEC actions",
+          "Global regulatory pressure",
+          "Market exits and shrinkage"
+        ],
+        "year": "2023"
+      },
+      "n2023_11": {
+        "title": "Plea & resignation",
+        "event": "Binance fined ~$4.3B; personal fine $50M; resigned as CEO.",
+        "bullets": [
+          "Binance fined ~$4.3B",
+          "Personal fine $50M",
+          "Resigned as CEO"
+        ],
+        "year": "2023.11"
+      },
+      "n2024_06": {
+        "title": "Prison",
+        "event": "Four-month sentence; drafted Freedom of Money in custody.",
+        "bullets": [
+          "Four-month sentence",
+          "Drafted the book in custody"
+        ],
+        "year": "2024.6"
+      },
+      "n2024_09": {
+        "title": "Freedom again",
+        "event": "Released on Sept 27; time and freedom felt most precious.",
+        "bullets": [
+          "Released on Sept 27",
+          "Time and freedom felt most precious"
+        ],
+        "year": "2024.9"
+      },
+      "n2024_end": {
+        "title": "Turn to education",
+        "event": "Continued Giggle Academy free education.",
+        "bullets": [
+          "Continued Giggle Academy free education"
+        ],
+        "year": "Late 2024"
+      }
+    },
+    "identityTitle": "Which fits you better?",
+    "identityHint": "This picks your behavior-tag pool. You can still edit tags later.",
+    "audienceRetail": "Retail / trader",
+    "audienceRetailDesc": "Entry, sizing, holding style, market scars",
+    "audienceFounder": "Founder / builder",
+    "audienceFounderDesc": "Direction, team, product, crisis response",
+    "distilling": "Distilling…",
+    "confirmTitle": "Confirm your behavior tags",
+    "confirmHint": "We guessed these from what you wrote. Toggle any, then generate principles.",
+    "suggestedTags": "You might be",
+    "moreTags": "More tags",
+    "backFill": "Back to edit",
+    "generatePrinciples": "Generate my principles",
+    "needOneTag": "Select at least one behavior tag",
+    "behaviorTags": "Behavior tags",
+    "fromTags": "From tags"
   }
 }

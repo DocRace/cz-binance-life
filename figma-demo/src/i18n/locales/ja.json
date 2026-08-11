@@ -26,7 +26,8 @@
     "titleAccountRedeem": "現地引換 · バイナンスライフブッククラブ",
     "titleAccountInvoices": "支払い証明書 · バイナンスライフブッククラブ",
     "titlePurchaseSuccess": "お支払い完了 · バイナンスライフブッククラブ",
-    "titleNotFound": "ページが見つかりません · バイナンスライフブッククラブ"
+    "titleNotFound": "ページが見つかりません · バイナンスライフブッククラブ",
+    "titleChronicle": "暗号年表 · Freedom of Money Book Club"
   },
   "nftDetailModal": {
     "openDetail": "NFT詳細を見る",
@@ -113,12 +114,36 @@
     "agendaColSegment": "环节",
     "agendaColContent": "内容",
     "agendaRows": [
-      { "time": "17:00–17:10", "segment": "歓迎挨拶", "content": "商務印書館（香港）総経理 毛永波氏による挨拶。" },
-      { "time": "17:10–17:25", "segment": "基調講演", "content": "DataDance 創設者・IPDEX 取締役 Geoffrey による Web3 イノベーションと展望。" },
-      { "time": "17:25–17:55", "segment": "起業ストーリーと時代の機会", "content": "Web3 ゲストによる起業体験と業界洞察の共有。" },
-      { "time": "17:55–18:05", "segment": "コミュニティ共創映像", "content": "グローバルコミュニティが共同制作した『バイナンスライフ』テーマ映像の上映。" },
-      { "time": "18:05–18:25", "segment": "ブッククラブ起動式", "content": "グローバルブッククラブの正式起動と会員体系・専属特典の発表。" },
-      { "time": "18:25–19:00", "segment": "交流・集合写真", "content": "ゲストと読者の交流および記念撮影。" }
+      {
+        "time": "17:00–17:10",
+        "segment": "歓迎挨拶",
+        "content": "商務印書館（香港）総経理 毛永波氏による挨拶。"
+      },
+      {
+        "time": "17:10–17:25",
+        "segment": "基調講演",
+        "content": "DataDance 創設者・IPDEX 取締役 Geoffrey による Web3 イノベーションと展望。"
+      },
+      {
+        "time": "17:25–17:55",
+        "segment": "起業ストーリーと時代の機会",
+        "content": "Web3 ゲストによる起業体験と業界洞察の共有。"
+      },
+      {
+        "time": "17:55–18:05",
+        "segment": "コミュニティ共創映像",
+        "content": "グローバルコミュニティが共同制作した『バイナンスライフ』テーマ映像の上映。"
+      },
+      {
+        "time": "18:05–18:25",
+        "segment": "ブッククラブ起動式",
+        "content": "グローバルブッククラブの正式起動と会員体系・専属特典の発表。"
+      },
+      {
+        "time": "18:25–19:00",
+        "segment": "交流・集合写真",
+        "content": "ゲストと読者の交流および記念撮影。"
+      }
     ],
     "highlightsTitle": "見どころ",
     "highlights": [
@@ -131,9 +156,18 @@
     ],
     "partnersTitle": "パートナー",
     "partners": [
-      { "title": "商務印書館について", "body": "1897年上海で創立された中国最古の近代的出版機関。1914年に香港支店を設立、1988年に香港支店が有限公司として正式登録。編集出版と教育研修を手がける。" },
-      { "title": "IPDEXについて", "body": "IP権益取引分野をリードするWeb3プラットフォーム企業。香港発・グローバル展開のIP権益取引所とチェーンクラウド一体型SaaSを提供。" },
-      { "title": "DDCについて", "body": "DataDance（DDC）は消費者データを中心とした分散型データ取引プラットフォーム。個人のデータ管理と企業のプライバシー配慮型インサイトを支援。" }
+      {
+        "title": "商務印書館について",
+        "body": "1897年上海で創立された中国最古の近代的出版機関。1914年に香港支店を設立、1988年に香港支店が有限公司として正式登録。編集出版と教育研修を手がける。"
+      },
+      {
+        "title": "IPDEXについて",
+        "body": "IP権益取引分野をリードするWeb3プラットフォーム企業。香港発・グローバル展開のIP権益取引所とチェーンクラウド一体型SaaSを提供。"
+      },
+      {
+        "title": "DDCについて",
+        "body": "DataDance（DDC）は消費者データを中心とした分散型データ取引プラットフォーム。個人のデータ管理と企業のプライバシー配慮型インサイトを支援。"
+      }
     ],
     "scanTitle": "QRでグループ参加・申込",
     "scanHint": "スマホのカメラまたはTelegramでスキャンし、グループに参加して申し込み",
@@ -347,7 +381,8 @@
     "inscriptionTitle": "ブッククラブ題字",
     "inscriptionSubtitle": "ブッククラブのために CZ が直筆で記した「幣安人生 Club」。",
     "inscriptionAlt": "CZ 直筆題字：幣安人生 Club",
-    "inscriptionCredit": "CZ 題字"
+    "inscriptionCredit": "CZ 題字",
+    "chronicleCta": "暗号年表"
   },
   "principles": {
     "title": "CZ原則",
@@ -826,5 +861,202 @@
     "close": "閉じる",
     "confirm": "確認",
     "cancel": "キャンセル"
+  },
+  "chronicle": {
+    "backClub": "ブッククラブへ戻る",
+    "kicker": "『バイナンス人生』共読プラン",
+    "decodeCz": "CZをデコード",
+    "introLead": "CZの人生ノードを開き、忘れられない暗号資産の体験を記録しましょう。",
+    "participants": "{{count}}人が自分の暗号年表を完成しました",
+    "startCta": "自分の暗号年表を始める",
+    "fillTitle": "あなたの暗号年表",
+    "fillHint": "(Optional) Open a milestone and write what you were doing — and what changed you. The more detail, the richer your chronicle.",
+    "filledProgress": "{{count}} / {{total}} milestones filled",
+    "savedMark": "Saved",
+    "yourEventLabel": "YOU",
+    "yourEventTitle": "Your milestone",
+    "inputLabel": "Your crypto story",
+    "inputPlaceholder": "What were you doing in this period? What event shaped you?",
+    "save": "Save",
+    "savedToast": "Saved to local draft",
+    "distillCta": "年表を蒸留する",
+    "needOneEntry": "Fill in at least one milestone",
+    "resultKicker": "Result",
+    "resultTitle": "私の暗号年表",
+    "myTimeline": "My crypto chronicle",
+    "keywords": "Keywords",
+    "matchedPrinciples": "マッチしたCZ原則",
+    "principleN": "Principle {{n}}",
+    "shareCardTitle": "My crypto chronicle",
+    "shareCardSub": "CZ’s Binance life × the same timeline",
+    "shareCardCzLife": "Me on the same timeline",
+    "capsuleCta": "カプセルを封入",
+    "againCta": "もう一度書く",
+    "createMine": "自分の年表を作る",
+    "shareCta": "結果をシェア",
+    "copied": "Share text copied",
+    "copyFailed": "Copy failed — share the link manually",
+    "shareBlank": "____",
+    "shareMyLifeFallback": "still being written",
+    "shareTextZh": ".@CZ 的幣安人生：賣房 all in、封神、入獄、翻身。\n我的加密人生：{{myLife}}\n同一條時間軸，你的加密人生是什麼樣？\n創建你的加密編年史 👇\n{{link}}",
+    "shareTextEn": ".@cz_binance's Binance Life: sold his house, went all-in, built an empire, went to prison, bounced back.\nMy crypto life: {{myLife}}\nSame timeline, what does yours look like?\nCreate your own crypto life 👇\n{{link}}",
+    "nodes": {
+      "n2013": {
+        "title": "Three firsts",
+        "event": "First heard of BTC, went all-in on BTC, entered crypto.",
+        "bullets": [
+          "First heard of BTC",
+          "First all-in on BTC",
+          "First step into crypto"
+        ],
+        "year": "2013"
+      },
+      "n2014": {
+        "title": "OKCoin chapter",
+        "event": "Briefly served as OKCoin CTO.",
+        "bullets": [
+          "Briefly served as OKCoin CTO"
+        ],
+        "year": "2014"
+      },
+      "n2017_06": {
+        "title": "Hotpot decision",
+        "event": "An ICO talk over Chengdu hotpot became the spark for Binance.",
+        "bullets": [
+          "ICO talk over Chengdu hotpot",
+          "The spark that led to Binance"
+        ],
+        "year": "2017.6"
+      },
+      "n2017_07": {
+        "title": "Binance launch",
+        "event": "On July 14, Binance exchange went live; BNB launched alongside.",
+        "bullets": [
+          "Binance launched on July 14",
+          "BNB issued at the same time"
+        ],
+        "year": "2017.7"
+      },
+      "n2017_09": {
+        "title": "Leaving the mainland",
+        "event": "After the Sept 4 ban, overnight exit; used personal assets to compensate users.",
+        "bullets": [
+          "Sept 4 ban",
+          "Overnight exit",
+          "Personal assets used to compensate users"
+        ],
+        "year": "2017.9"
+      },
+      "n2017_end": {
+        "title": "Binance on top",
+        "event": "Within six months, Binance volume ranked No.1 globally.",
+        "bullets": [
+          "No.1 global volume within six months"
+        ],
+        "year": "Late 2017"
+      },
+      "n2019_safu": {
+        "title": "BTC hack",
+        "event": "7,000 BTC stolen; full make-good and SAFU launched.",
+        "bullets": [
+          "7,000 BTC stolen",
+          "Full make-good",
+          "SAFU launched"
+        ],
+        "year": "2019"
+      },
+      "n2019_eco": {
+        "title": "Ecosystem expansion",
+        "event": "BSC, Launchpad, and futures — from exchange to ecosystem.",
+        "bullets": [
+          "Binance Smart Chain",
+          "Launchpad & futures",
+          "Exchange → ecosystem"
+        ],
+        "year": "2019"
+      },
+      "n2021": {
+        "title": "Empire peak",
+        "event": "Largest global share; BNB highs; regulators close in.",
+        "bullets": [
+          "Largest global volume share",
+          "BNB near highs",
+          "Regulators close in"
+        ],
+        "year": "2021"
+      },
+      "n2022_11": {
+        "title": "FTX collapse",
+        "event": "Announced a deal for FTX, walked away the next day; the storm turned toward him.",
+        "bullets": [
+          "Announced FTX deal",
+          "Walked away next day",
+          "Storm turned toward him"
+        ],
+        "year": "2022.11"
+      },
+      "n2023": {
+        "title": "Under siege",
+        "event": "CFTC and SEC suits; pressure worldwide; Binance exited or shrunk markets.",
+        "bullets": [
+          "CFTC & SEC actions",
+          "Global regulatory pressure",
+          "Market exits and shrinkage"
+        ],
+        "year": "2023"
+      },
+      "n2023_11": {
+        "title": "Plea & resignation",
+        "event": "Binance fined ~$4.3B; personal fine $50M; resigned as CEO.",
+        "bullets": [
+          "Binance fined ~$4.3B",
+          "Personal fine $50M",
+          "Resigned as CEO"
+        ],
+        "year": "2023.11"
+      },
+      "n2024_06": {
+        "title": "Prison",
+        "event": "Four-month sentence; drafted Freedom of Money in custody.",
+        "bullets": [
+          "Four-month sentence",
+          "Drafted the book in custody"
+        ],
+        "year": "2024.6"
+      },
+      "n2024_09": {
+        "title": "Freedom again",
+        "event": "Released on Sept 27; time and freedom felt most precious.",
+        "bullets": [
+          "Released on Sept 27",
+          "Time and freedom felt most precious"
+        ],
+        "year": "2024.9"
+      },
+      "n2024_end": {
+        "title": "Turn to education",
+        "event": "Continued Giggle Academy free education.",
+        "bullets": [
+          "Continued Giggle Academy free education"
+        ],
+        "year": "Late 2024"
+      }
+    },
+    "identityTitle": "どちらに近いですか？",
+    "identityHint": "身分で使える行動タグのプールが変わります。後からタグを編集できます。",
+    "audienceRetail": "個人投資家 / トレーダー",
+    "audienceRetailDesc": "参入・ポジション・保有と市場の刻印",
+    "audienceFounder": "Founder / ビルダー",
+    "audienceFounderDesc": "方針・チーム・プロダクト・危機対応",
+    "distilling": "蒸留中…",
+    "confirmTitle": "行動タグを確認",
+    "confirmHint": "記入内容から推定したタグです。選択して原則を生成してください。",
+    "suggestedTags": "推定タグ",
+    "moreTags": "その他のタグ",
+    "backFill": "編集に戻る",
+    "generatePrinciples": "原則を生成",
+    "needOneTag": "タグを1つ以上選んでください",
+    "behaviorTags": "行動タグ",
+    "fromTags": "タグ由来"
   }
 }

@@ -1,0 +1,78 @@
+export type ChronicleStep = "intro" | "identity" | "fill" | "confirm" | "result";
+
+export type ChronicleAudience = "retail" | "founder";
+
+export type ChronicleNodeId =
+  | "n2013"
+  | "n2014"
+  | "n2017_06"
+  | "n2017_07"
+  | "n2017_09"
+  | "n2017_end"
+  | "n2019_safu"
+  | "n2019_eco"
+  | "n2021"
+  | "n2022_11"
+  | "n2023"
+  | "n2023_11"
+  | "n2024_06"
+  | "n2024_09"
+  | "n2024_end";
+
+export type UserEntries = Partial<Record<ChronicleNodeId, string>>;
+
+export type BehaviorTag = {
+  id: string;
+  audience: ChronicleAudience[];
+  dimension: string;
+  label: string;
+  synonyms: string[];
+};
+
+export type PrincipleRef = {
+  name: string;
+  note: string | null;
+};
+
+export type BehaviorTagMap = {
+  version: number;
+  source: string;
+  tags: BehaviorTag[];
+  principlesByTag: Record<string, PrincipleRef[]>;
+};
+
+export type ScoredTag = {
+  id: string;
+  label: string;
+  score: number;
+  dimension: string;
+  sourceNodes: ChronicleNodeId[];
+};
+
+export type DistilledNode = {
+  nodeId: ChronicleNodeId;
+  text: string;
+  keywords: string[];
+};
+
+export type MatchedPrinciple = {
+  name: string;
+  note: string | null;
+  score: number;
+  fromTags: string[];
+};
+
+export type ChronicleResult = {
+  audience: ChronicleAudience;
+  nodes: DistilledNode[];
+  tags: ScoredTag[];
+  confirmedTagIds: string[];
+  principles: MatchedPrinciple[];
+};
+
+export type SharePayloadV2 = {
+  v: 2;
+  audience: ChronicleAudience;
+  entries: UserEntries;
+  confirmedTagIds: string[];
+};

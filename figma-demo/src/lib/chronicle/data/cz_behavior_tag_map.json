@@ -1,0 +1,1082 @@
+{
+  "version": 1,
+  "source": "行为标签匹配表.xlsx",
+  "tags": [
+    {
+      "id": "early_entry",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "入场与选择",
+      "label": "早期入场",
+      "synonyms": [
+        "早期入场",
+        "很早进圈",
+        "追早期项目"
+      ]
+    },
+    {
+      "id": "late_entry",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "入场与选择",
+      "label": "后知后觉",
+      "synonyms": [
+        "后知后觉",
+        "牛市尾巴才进",
+        "总慢一拍"
+      ]
+    },
+    {
+      "id": "bluechip_only",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "入场与选择",
+      "label": "只碰主流",
+      "synonyms": [
+        "只碰主流",
+        "只买 BTC",
+        "ETH",
+        "不碰山寨"
+      ]
+    },
+    {
+      "id": "chase_new",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "入场与选择",
+      "label": "爱冲新币",
+      "synonyms": [
+        "爱冲新币",
+        "新币新链一出就上",
+        "打新"
+      ]
+    },
+    {
+      "id": "onchain_degen",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "入场与选择",
+      "label": "链上老炮",
+      "synonyms": [
+        "链上老炮",
+        "深玩 DeFi",
+        "撸空投",
+        "频繁交互"
+      ]
+    },
+    {
+      "id": "buy_dip",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "仓位与决策",
+      "label": "逆势加仓",
+      "synonyms": [
+        "逆势加仓",
+        "越跌越买",
+        "往下扛",
+        "抄底"
+      ]
+    },
+    {
+      "id": "fomo_buy",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "仓位与决策",
+      "label": "追高买入",
+      "synonyms": [
+        "追高买入",
+        "涨了才追",
+        "FOMO 进场"
+      ]
+    },
+    {
+      "id": "all_in",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "仓位与决策",
+      "label": "全仓豪赌",
+      "synonyms": [
+        "全仓豪赌",
+        "重仓单一",
+        "all in 过"
+      ]
+    },
+    {
+      "id": "diversified",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "仓位与决策",
+      "label": "分散保守",
+      "synonyms": [
+        "分散保守",
+        "分仓",
+        "留现金",
+        "不押单一"
+      ]
+    },
+    {
+      "id": "long_hold",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "持有与退出",
+      "label": "长期扛单",
+      "synonyms": [
+        "长期扛单",
+        "拿得住",
+        "几年不动",
+        "钻石手"
+      ]
+    },
+    {
+      "id": "cut_loss",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "持有与退出",
+      "label": "割肉快",
+      "synonyms": [
+        "割肉快",
+        "跌了就跑",
+        "止损果断"
+      ]
+    },
+    {
+      "id": "swing_trade",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "持有与退出",
+      "label": "高抛低吸",
+      "synonyms": [
+        "高抛低吸",
+        "做波段",
+        "高卖低买"
+      ]
+    },
+    {
+      "id": "cant_hold",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "持有与退出",
+      "label": "拿不住",
+      "synonyms": [
+        "拿不住",
+        "老是卖飞",
+        "拿不到大涨"
+      ]
+    },
+    {
+      "id": "emotion_driven",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "心态与纪律",
+      "label": "情绪驱动",
+      "synonyms": [
+        "情绪驱动",
+        "追涨杀跌",
+        "被情绪带走"
+      ]
+    },
+    {
+      "id": "disciplined",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "心态与纪律",
+      "label": "纪律型",
+      "synonyms": [
+        "纪律型",
+        "有规则",
+        "按计划执行"
+      ]
+    },
+    {
+      "id": "stoic",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "心态与纪律",
+      "label": "钝感扛压",
+      "synonyms": [
+        "钝感扛压",
+        "大跌大涨心态稳",
+        "睡得着"
+      ]
+    },
+    {
+      "id": "liquidated",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "经历与烙印",
+      "label": "爆过仓",
+      "synonyms": [
+        "爆过仓",
+        "合约爆过",
+        "归过零",
+        "爆仓",
+        "爆倉",
+        "被爆仓",
+        "爆仓过"
+      ]
+    },
+    {
+      "id": "rugged",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "经历与烙印",
+      "label": "踩过雷",
+      "synonyms": [
+        "踩过雷",
+        "项目跑路",
+        "交易所暴雷",
+        "被盗"
+      ]
+    },
+    {
+      "id": "underwater",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "经历与烙印",
+      "label": "被套过",
+      "synonyms": [
+        "被套过",
+        "深套",
+        "站过高岗"
+      ]
+    },
+    {
+      "id": "survived_bear",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "经历与烙印",
+      "label": "熬过熊",
+      "synonyms": [
+        "熬过熊",
+        "完整扛过一轮熊市"
+      ]
+    },
+    {
+      "id": "missed_bull",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "经历与烙印",
+      "label": "错过牛",
+      "synonyms": [
+        "错过牛",
+        "踏空过",
+        "看别人赚"
+      ]
+    },
+    {
+      "id": "left_and_returned",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "经历与烙印",
+      "label": "离场又回归",
+      "synonyms": [
+        "离场又回归",
+        "离开过又回来"
+      ]
+    },
+    {
+      "id": "researcher",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "身份状态",
+      "label": "研究型",
+      "synonyms": [
+        "研究型",
+        "看白皮书基本面",
+        "重研究"
+      ]
+    },
+    {
+      "id": "social_follower",
+      "audience": [
+        "retail"
+      ],
+      "dimension": "身份状态",
+      "label": "社交型",
+      "synonyms": [
+        "社交型",
+        "混社群",
+        "看 KOL",
+        "跟单"
+      ]
+    },
+    {
+      "id": "early_bet",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "方向与决策",
+      "label": "早期押注",
+      "synonyms": [
+        "早期押注",
+        "很早看准一个赛道",
+        "技术就投入"
+      ]
+    },
+    {
+      "id": "fast_pivot",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "方向与决策",
+      "label": "快速转向",
+      "synonyms": [
+        "快速转向",
+        "发现不对果断 pivot"
+      ]
+    },
+    {
+      "id": "long_termism",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "方向与决策",
+      "label": "长期主义",
+      "synonyms": [
+        "长期主义",
+        "认准一件事做多年",
+        "不追风口"
+      ]
+    },
+    {
+      "id": "chase_narrative",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "方向与决策",
+      "label": "追热点",
+      "synonyms": [
+        "追热点",
+        "哪个叙事火做哪个"
+      ]
+    },
+    {
+      "id": "first_principles",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "方向与决策",
+      "label": "第一性思考",
+      "synonyms": [
+        "第一性思考",
+        "不看标签看本质"
+      ]
+    },
+    {
+      "id": "lead_by_example",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "团队与人",
+      "label": "以身作则",
+      "synonyms": [
+        "以身作则",
+        "自己先干",
+        "不甩锅"
+      ]
+    },
+    {
+      "id": "delegate",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "团队与人",
+      "label": "善于放权",
+      "synonyms": [
+        "善于放权",
+        "敢交出去",
+        "不微观管理"
+      ]
+    },
+    {
+      "id": "rank_and_yank",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "团队与人",
+      "label": "末位淘汰",
+      "synonyms": [
+        "末位淘汰",
+        "团队优胜劣汰",
+        "快速换人"
+      ]
+    },
+    {
+      "id": "output_first",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "团队与人",
+      "label": "重用产出",
+      "synonyms": [
+        "重用产出",
+        "只看结果不看苦劳"
+      ]
+    },
+    {
+      "id": "retention_fail",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "团队与人",
+      "label": "留人失败",
+      "synonyms": [
+        "留人失败",
+        "核心团队流失过",
+        "留不住人"
+      ]
+    },
+    {
+      "id": "keep_simple",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "商业与合作",
+      "label": "简单直接",
+      "synonyms": [
+        "简单直接",
+        "合作条款简单",
+        "不绕"
+      ]
+    },
+    {
+      "id": "exit_clause",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "商业与合作",
+      "label": "留退路",
+      "synonyms": [
+        "留退路",
+        "凡事留终止条款",
+        "想最坏"
+      ]
+    },
+    {
+      "id": "no_exclusivity",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "商业与合作",
+      "label": "拒绝排他",
+      "synonyms": [
+        "拒绝排他",
+        "不签独家",
+        "不被绑定"
+      ]
+    },
+    {
+      "id": "passive_bd",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "商业与合作",
+      "label": "被动 BD",
+      "synonyms": [
+        "被动 BD",
+        "靠实力吸引合作",
+        "不硬推"
+      ]
+    },
+    {
+      "id": "partner_burned",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "商业与合作",
+      "label": "踩过合作坑",
+      "synonyms": [
+        "踩过合作坑",
+        "被合伙人",
+        "合作方坑过"
+      ]
+    },
+    {
+      "id": "user_first",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "产品与用户",
+      "label": "用户优先",
+      "synonyms": [
+        "用户优先",
+        "一切围绕用户",
+        "护用户利益"
+      ]
+    },
+    {
+      "id": "scalable_only",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "产品与用户",
+      "label": "只做可规模化",
+      "synonyms": [
+        "只做可规模化",
+        "不做扩不大的事",
+        "先 MVP"
+      ]
+    },
+    {
+      "id": "over_polish",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "产品与用户",
+      "label": "过度打磨",
+      "synonyms": [
+        "过度打磨",
+        "追求完美",
+        "上线太慢"
+      ]
+    },
+    {
+      "id": "ship_fast",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "产品与用户",
+      "label": "迭代快",
+      "synonyms": [
+        "迭代快",
+        "小步快跑",
+        "边做边改"
+      ]
+    },
+    {
+      "id": "make_whole",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "危机与公关",
+      "label": "兜底担责",
+      "synonyms": [
+        "兜底担责",
+        "出事自己扛",
+        "不让用户买单"
+      ]
+    },
+    {
+      "id": "fast_response",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "危机与公关",
+      "label": "快速回应",
+      "synonyms": [
+        "快速回应",
+        "负面一出立刻处理"
+      ]
+    },
+    {
+      "id": "silent_crisis",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "危机与公关",
+      "label": "沉默吃亏",
+      "synonyms": [
+        "沉默吃亏",
+        "危机时没发声",
+        "被写成最坏"
+      ]
+    },
+    {
+      "id": "near_zero",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "危机与公关",
+      "label": "扛过至暗",
+      "synonyms": [
+        "扛过至暗",
+        "项目经历过归零边缘又活下来"
+      ]
+    },
+    {
+      "id": "regulatory_hit",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "危机与公关",
+      "label": "被监管打过",
+      "synonyms": [
+        "被监管打过",
+        "踩过合规",
+        "政策的雷"
+      ]
+    },
+    {
+      "id": "calm",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "心态",
+      "label": "冷静克制",
+      "synonyms": [
+        "冷静克制",
+        "高压下情绪稳"
+      ]
+    },
+    {
+      "id": "time_anxiety",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "心态",
+      "label": "时间焦虑",
+      "synonyms": [
+        "时间焦虑",
+        "总觉得时间不够",
+        "快节奏"
+      ]
+    },
+    {
+      "id": "peak_to_trough",
+      "audience": [
+        "founder"
+      ],
+      "dimension": "心态",
+      "label": "盛极转折",
+      "synonyms": [
+        "盛极转折",
+        "做到过高点又跌下来"
+      ]
+    }
+  ],
+  "principlesByTag": {
+    "early_entry": [
+      {
+        "name": "做个早期采用者",
+        "note": null
+      }
+    ],
+    "late_entry": [
+      {
+        "name": "别把目标太当回事",
+        "note": "节奏是自己的"
+      },
+      {
+        "name": "不停地学",
+        "note": null
+      }
+    ],
+    "bluechip_only": [
+      {
+        "name": "守住底线",
+        "note": "不碰看不懂的"
+      }
+    ],
+    "chase_new": [
+      {
+        "name": "做个早期采用者",
+        "note": "反面提醒：别只追新"
+      }
+    ],
+    "onchain_degen": [
+      {
+        "name": "不停地学",
+        "note": null
+      }
+    ],
+    "buy_dip": [
+      {
+        "name": "正面心态",
+        "note": null
+      },
+      {
+        "name": "让有限的资源发挥出价值",
+        "note": null
+      }
+    ],
+    "fomo_buy": [
+      {
+        "name": "别只盯着钱",
+        "note": "反面"
+      },
+      {
+        "name": "性格冷静",
+        "note": null
+      }
+    ],
+    "all_in": [
+      {
+        "name": "做个早期采用者",
+        "note": "控制下行博上行"
+      }
+    ],
+    "diversified": [
+      {
+        "name": "让有限的资源发挥出价值",
+        "note": null
+      }
+    ],
+    "long_hold": [
+      {
+        "name": "搞长期、双赢的关系或合作",
+        "note": null
+      },
+      {
+        "name": "专注",
+        "note": null
+      }
+    ],
+    "cut_loss": [
+      {
+        "name": "守住底线",
+        "note": "及时止损保命"
+      }
+    ],
+    "swing_trade": [
+      {
+        "name": "专注",
+        "note": "做好少数几件事"
+      }
+    ],
+    "cant_hold": [
+      {
+        "name": "别把目标太当回事",
+        "note": "反面：被短期带走"
+      }
+    ],
+    "emotion_driven": [
+      {
+        "name": "性格冷静",
+        "note": "反面"
+      },
+      {
+        "name": "远离「有毒」的关系",
+        "note": null
+      }
+    ],
+    "disciplined": [
+      {
+        "name": "守住底线",
+        "note": null
+      },
+      {
+        "name": "性格冷静",
+        "note": null
+      }
+    ],
+    "stoic": [
+      {
+        "name": "性格冷静",
+        "note": null
+      },
+      {
+        "name": "正面心态",
+        "note": null
+      }
+    ],
+    "liquidated": [
+      {
+        "name": "别只盯着钱",
+        "note": null
+      },
+      {
+        "name": "守住底线",
+        "note": null
+      }
+    ],
+    "rugged": [
+      {
+        "name": "别被标签糊弄",
+        "note": null
+      },
+      {
+        "name": "看懂这个世界",
+        "note": null
+      }
+    ],
+    "underwater": [
+      {
+        "name": "正面心态",
+        "note": "谷底继续走"
+      }
+    ],
+    "survived_bear": [
+      {
+        "name": "正面心态",
+        "note": null
+      },
+      {
+        "name": "专注",
+        "note": null
+      }
+    ],
+    "missed_bull": [
+      {
+        "name": "别把目标太当回事",
+        "note": null
+      },
+      {
+        "name": "不停地学",
+        "note": null
+      }
+    ],
+    "left_and_returned": [
+      {
+        "name": "别浪费时间",
+        "note": "想清楚真正稀缺的是什么"
+      }
+    ],
+    "researcher": [
+      {
+        "name": "不停地学",
+        "note": null
+      },
+      {
+        "name": "别被标签糊弄",
+        "note": null
+      }
+    ],
+    "social_follower": [
+      {
+        "name": "远离「有毒」的关系",
+        "note": null
+      },
+      {
+        "name": "看懂这个世界",
+        "note": null
+      }
+    ],
+    "early_bet": [
+      {
+        "name": "做个早期采用者",
+        "note": null
+      }
+    ],
+    "fast_pivot": [
+      {
+        "name": "快速推进，或者放弃",
+        "note": null
+      },
+      {
+        "name": "别把目标太当回事",
+        "note": null
+      }
+    ],
+    "long_termism": [
+      {
+        "name": "搞长期、双赢的关系或合作",
+        "note": null
+      },
+      {
+        "name": "专注",
+        "note": null
+      }
+    ],
+    "chase_narrative": [
+      {
+        "name": "别把目标太当回事",
+        "note": "反面"
+      }
+    ],
+    "first_principles": [
+      {
+        "name": "别被标签糊弄",
+        "note": null
+      },
+      {
+        "name": "看懂这个世界",
+        "note": null
+      }
+    ],
+    "lead_by_example": [
+      {
+        "name": "以身作则",
+        "note": null
+      }
+    ],
+    "delegate": [
+      {
+        "name": "永远不要做微观管理",
+        "note": null
+      }
+    ],
+    "rank_and_yank": [
+      {
+        "name": "淘汰末位",
+        "note": null
+      }
+    ],
+    "output_first": [
+      {
+        "name": "用产出当目标",
+        "note": null
+      },
+      {
+        "name": "招聘看资历之后看成果",
+        "note": null
+      }
+    ],
+    "retention_fail": [
+      {
+        "name": "团队大于个人",
+        "note": null
+      },
+      {
+        "name": "别试图激励没自驱力的人",
+        "note": null
+      }
+    ],
+    "keep_simple": [
+      {
+        "name": "让生意简单点",
+        "note": null
+      }
+    ],
+    "exit_clause": [
+      {
+        "name": "始终要有终止条款",
+        "note": null
+      },
+      {
+        "name": "始终有限责任",
+        "note": null
+      }
+    ],
+    "no_exclusivity": [
+      {
+        "name": "拒绝独家",
+        "note": null
+      }
+    ],
+    "passive_bd": [
+      {
+        "name": "被动做业务拓展",
+        "note": null
+      }
+    ],
+    "partner_burned": [
+      {
+        "name": "早点对无用合作说「不」",
+        "note": null
+      },
+      {
+        "name": "始终要有终止条款",
+        "note": null
+      }
+    ],
+    "user_first": [
+      {
+        "name": "专注于用户",
+        "note": null
+      }
+    ],
+    "scalable_only": [
+      {
+        "name": "只做能扩大的产品",
+        "note": null
+      }
+    ],
+    "over_polish": [
+      {
+        "name": "不延迟发布，好了就宣布",
+        "note": null
+      }
+    ],
+    "ship_fast": [
+      {
+        "name": "人人都是产品经理",
+        "note": null
+      },
+      {
+        "name": "快速推进",
+        "note": null
+      }
+    ],
+    "make_whole": [
+      {
+        "name": "守住底线",
+        "note": null
+      },
+      {
+        "name": "专注于用户",
+        "note": null
+      }
+    ],
+    "fast_response": [
+      {
+        "name": "快速回应负面新闻",
+        "note": null
+      }
+    ],
+    "silent_crisis": [
+      {
+        "name": "回应记者",
+        "note": null
+      },
+      {
+        "name": "快速回应负面新闻",
+        "note": null
+      }
+    ],
+    "near_zero": [
+      {
+        "name": "正面心态",
+        "note": null
+      },
+      {
+        "name": "让有限的资源发挥出价值",
+        "note": null
+      }
+    ],
+    "regulatory_hit": [
+      {
+        "name": "硬规则",
+        "note": null
+      },
+      {
+        "name": "看懂这个世界",
+        "note": null
+      }
+    ],
+    "calm": [
+      {
+        "name": "性格冷静",
+        "note": null
+      }
+    ],
+    "time_anxiety": [
+      {
+        "name": "别浪费时间",
+        "note": null
+      }
+    ],
+    "peak_to_trough": [
+      {
+        "name": "别把目标太当回事",
+        "note": null
+      },
+      {
+        "name": "别只盯着钱",
+        "note": null
+      }
+    ]
+  }
+}

@@ -26,7 +26,8 @@
     "titleAccountRedeem": "현장 교환 · 바이낸스 인생 북클럽",
     "titleAccountInvoices": "결제 증빙 · 바이낸스 인생 북클럽",
     "titlePurchaseSuccess": "결제 완료 · 바이낸스 인생 북클럽",
-    "titleNotFound": "페이지를 찾을 수 없음 · 바이낸스 인생 북클럽"
+    "titleNotFound": "페이지를 찾을 수 없음 · 바이낸스 인생 북클럽",
+    "titleChronicle": "크립토 연대기 · Freedom of Money Book Club"
   },
   "nftDetailModal": {
     "openDetail": "NFT 상세 보기",
@@ -113,12 +114,36 @@
     "agendaColSegment": "环节",
     "agendaColContent": "내용",
     "agendaRows": [
-      { "time": "17:00–17:10", "segment": "환영사", "content": "상무인서관(홍콩) 총경리 마오융보(Mao Yongbo) 님의 개회사." },
-      { "time": "17:10–17:25", "segment": "기조 연설", "content": "DataDance 창립자·IPDEX 이사 Geoffrey의 Web3 혁신과 전망." },
-      { "time": "17:25–17:55", "segment": "창업 이야기와 시대적 기회", "content": "Web3 게스트의 창업 여정과 업계 통찰 공유." },
-      { "time": "17:55–18:05", "segment": "커뮤니티 공동 창작 영상", "content": "글로벌 커뮤니티가 공동 제작한 《바이낸스 인생》 테마 영상 상영." },
-      { "time": "18:05–18:25", "segment": "북클럽 런칭식", "content": "글로벌 북클럽 공식 출범 및 회원 체계·전용 혜택 공개." },
-      { "time": "18:25–19:00", "segment": "교류 및 단체 사진", "content": "게스트와 독자 교류 및 기념 촬영." }
+      {
+        "time": "17:00–17:10",
+        "segment": "환영사",
+        "content": "상무인서관(홍콩) 총경리 마오융보(Mao Yongbo) 님의 개회사."
+      },
+      {
+        "time": "17:10–17:25",
+        "segment": "기조 연설",
+        "content": "DataDance 창립자·IPDEX 이사 Geoffrey의 Web3 혁신과 전망."
+      },
+      {
+        "time": "17:25–17:55",
+        "segment": "창업 이야기와 시대적 기회",
+        "content": "Web3 게스트의 창업 여정과 업계 통찰 공유."
+      },
+      {
+        "time": "17:55–18:05",
+        "segment": "커뮤니티 공동 창작 영상",
+        "content": "글로벌 커뮤니티가 공동 제작한 《바이낸스 인생》 테마 영상 상영."
+      },
+      {
+        "time": "18:05–18:25",
+        "segment": "북클럽 런칭식",
+        "content": "글로벌 북클럽 공식 출범 및 회원 체계·전용 혜택 공개."
+      },
+      {
+        "time": "18:25–19:00",
+        "segment": "교류 및 단체 사진",
+        "content": "게스트와 독자 교류 및 기념 촬영."
+      }
     ],
     "highlightsTitle": "행사 하이라이트",
     "highlights": [
@@ -131,9 +156,18 @@
     ],
     "partnersTitle": "파트너",
     "partners": [
-      { "title": "상무인서관 소개", "body": "1897년 상하이에서 설립된 중국 최고(最古)의 근대 출판 기관. 1914년 홍콩 지점 설립, 1988년 홍콩 지점 유한회사 등록. 편집 출판 및 교육 훈련 사업." },
-      { "title": "IPDEX 소개", "body": "IP 권익 거래 분야 선도 Web3 플랫폼 기업. 홍콩 기반·글로벌 IP 권익 거래소 및 체인-클라우드 일체형 SaaS 제공." },
-      { "title": "DDC 소개", "body": "DataDance(DDC)은 소비자 데이터 중심의 탈중앙화 데이터 거래 플랫폼으로 개인의 데이터 통제와 기업의 프라이버시 보호형 인사이트를 지원합니다." }
+      {
+        "title": "상무인서관 소개",
+        "body": "1897년 상하이에서 설립된 중국 최고(最古)의 근대 출판 기관. 1914년 홍콩 지점 설립, 1988년 홍콩 지점 유한회사 등록. 편집 출판 및 교육 훈련 사업."
+      },
+      {
+        "title": "IPDEX 소개",
+        "body": "IP 권익 거래 분야 선도 Web3 플랫폼 기업. 홍콩 기반·글로벌 IP 권익 거래소 및 체인-클라우드 일체형 SaaS 제공."
+      },
+      {
+        "title": "DDC 소개",
+        "body": "DataDance(DDC)은 소비자 데이터 중심의 탈중앙화 데이터 거래 플랫폼으로 개인의 데이터 통제와 기업의 프라이버시 보호형 인사이트를 지원합니다."
+      }
     ],
     "scanTitle": "QR로 그룹 참여·신청",
     "scanHint": "휴대폰 카메라 또는 Telegram으로 스캔해 그룹에 참여하고 신청하세요",
@@ -347,7 +381,8 @@
     "inscriptionTitle": "북클럽 제자",
     "inscriptionSubtitle": "북클럽을 위해 CZ가 직접 쓴 「幣安人生 Club」.",
     "inscriptionAlt": "CZ 친필 제자: 幣安人生 Club",
-    "inscriptionCredit": "CZ 제자"
+    "inscriptionCredit": "CZ 제자",
+    "chronicleCta": "크립토 연대기"
   },
   "principles": {
     "title": "CZ 원칙",
@@ -826,5 +861,202 @@
     "close": "닫기",
     "confirm": "확인",
     "cancel": "취소"
+  },
+  "chronicle": {
+    "backClub": "북클럽으로",
+    "kicker": "《바이낸스 인생》 함께 읽기",
+    "decodeCz": "CZ 디코드",
+    "introLead": "CZ의 인생 노드를 눌러 당신만의 크립토 연대기를 남기세요.",
+    "participants": "{{count}}명이 자신의 크립토 연대기를 완성했습니다",
+    "startCta": "내 크립토 연대기 시작",
+    "fillTitle": "나의 크립토 연대기",
+    "fillHint": "(Optional) Open a milestone and write what you were doing — and what changed you. The more detail, the richer your chronicle.",
+    "filledProgress": "{{count}} / {{total}} milestones filled",
+    "savedMark": "Saved",
+    "yourEventLabel": "YOU",
+    "yourEventTitle": "Your milestone",
+    "inputLabel": "Your crypto story",
+    "inputPlaceholder": "What were you doing in this period? What event shaped you?",
+    "save": "Save",
+    "savedToast": "Saved to local draft",
+    "distillCta": "내 연대기 증류하기",
+    "needOneEntry": "Fill in at least one milestone",
+    "resultKicker": "Result",
+    "resultTitle": "나의 크립토 연대기",
+    "myTimeline": "My crypto chronicle",
+    "keywords": "Keywords",
+    "matchedPrinciples": "매칭된 CZ 원칙",
+    "principleN": "Principle {{n}}",
+    "shareCardTitle": "My crypto chronicle",
+    "shareCardSub": "CZ’s Binance life × the same timeline",
+    "shareCardCzLife": "Me on the same timeline",
+    "capsuleCta": "캡슐 봉인",
+    "againCta": "다시 작성",
+    "createMine": "내 연대기 만들기",
+    "shareCta": "결과 공유",
+    "copied": "Share text copied",
+    "copyFailed": "Copy failed — share the link manually",
+    "shareBlank": "____",
+    "shareMyLifeFallback": "still being written",
+    "shareTextZh": ".@CZ 的幣安人生：賣房 all in、封神、入獄、翻身。\n我的加密人生：{{myLife}}\n同一條時間軸，你的加密人生是什麼樣？\n創建你的加密編年史 👇\n{{link}}",
+    "shareTextEn": ".@cz_binance's Binance Life: sold his house, went all-in, built an empire, went to prison, bounced back.\nMy crypto life: {{myLife}}\nSame timeline, what does yours look like?\nCreate your own crypto life 👇\n{{link}}",
+    "nodes": {
+      "n2013": {
+        "title": "Three firsts",
+        "event": "First heard of BTC, went all-in on BTC, entered crypto.",
+        "bullets": [
+          "First heard of BTC",
+          "First all-in on BTC",
+          "First step into crypto"
+        ],
+        "year": "2013"
+      },
+      "n2014": {
+        "title": "OKCoin chapter",
+        "event": "Briefly served as OKCoin CTO.",
+        "bullets": [
+          "Briefly served as OKCoin CTO"
+        ],
+        "year": "2014"
+      },
+      "n2017_06": {
+        "title": "Hotpot decision",
+        "event": "An ICO talk over Chengdu hotpot became the spark for Binance.",
+        "bullets": [
+          "ICO talk over Chengdu hotpot",
+          "The spark that led to Binance"
+        ],
+        "year": "2017.6"
+      },
+      "n2017_07": {
+        "title": "Binance launch",
+        "event": "On July 14, Binance exchange went live; BNB launched alongside.",
+        "bullets": [
+          "Binance launched on July 14",
+          "BNB issued at the same time"
+        ],
+        "year": "2017.7"
+      },
+      "n2017_09": {
+        "title": "Leaving the mainland",
+        "event": "After the Sept 4 ban, overnight exit; used personal assets to compensate users.",
+        "bullets": [
+          "Sept 4 ban",
+          "Overnight exit",
+          "Personal assets used to compensate users"
+        ],
+        "year": "2017.9"
+      },
+      "n2017_end": {
+        "title": "Binance on top",
+        "event": "Within six months, Binance volume ranked No.1 globally.",
+        "bullets": [
+          "No.1 global volume within six months"
+        ],
+        "year": "Late 2017"
+      },
+      "n2019_safu": {
+        "title": "BTC hack",
+        "event": "7,000 BTC stolen; full make-good and SAFU launched.",
+        "bullets": [
+          "7,000 BTC stolen",
+          "Full make-good",
+          "SAFU launched"
+        ],
+        "year": "2019"
+      },
+      "n2019_eco": {
+        "title": "Ecosystem expansion",
+        "event": "BSC, Launchpad, and futures — from exchange to ecosystem.",
+        "bullets": [
+          "Binance Smart Chain",
+          "Launchpad & futures",
+          "Exchange → ecosystem"
+        ],
+        "year": "2019"
+      },
+      "n2021": {
+        "title": "Empire peak",
+        "event": "Largest global share; BNB highs; regulators close in.",
+        "bullets": [
+          "Largest global volume share",
+          "BNB near highs",
+          "Regulators close in"
+        ],
+        "year": "2021"
+      },
+      "n2022_11": {
+        "title": "FTX collapse",
+        "event": "Announced a deal for FTX, walked away the next day; the storm turned toward him.",
+        "bullets": [
+          "Announced FTX deal",
+          "Walked away next day",
+          "Storm turned toward him"
+        ],
+        "year": "2022.11"
+      },
+      "n2023": {
+        "title": "Under siege",
+        "event": "CFTC and SEC suits; pressure worldwide; Binance exited or shrunk markets.",
+        "bullets": [
+          "CFTC & SEC actions",
+          "Global regulatory pressure",
+          "Market exits and shrinkage"
+        ],
+        "year": "2023"
+      },
+      "n2023_11": {
+        "title": "Plea & resignation",
+        "event": "Binance fined ~$4.3B; personal fine $50M; resigned as CEO.",
+        "bullets": [
+          "Binance fined ~$4.3B",
+          "Personal fine $50M",
+          "Resigned as CEO"
+        ],
+        "year": "2023.11"
+      },
+      "n2024_06": {
+        "title": "Prison",
+        "event": "Four-month sentence; drafted Freedom of Money in custody.",
+        "bullets": [
+          "Four-month sentence",
+          "Drafted the book in custody"
+        ],
+        "year": "2024.6"
+      },
+      "n2024_09": {
+        "title": "Freedom again",
+        "event": "Released on Sept 27; time and freedom felt most precious.",
+        "bullets": [
+          "Released on Sept 27",
+          "Time and freedom felt most precious"
+        ],
+        "year": "2024.9"
+      },
+      "n2024_end": {
+        "title": "Turn to education",
+        "event": "Continued Giggle Academy free education.",
+        "bullets": [
+          "Continued Giggle Academy free education"
+        ],
+        "year": "Late 2024"
+      }
+    },
+    "identityTitle": "어디에 더 가깝나요?",
+    "identityHint": "정체성에 따라 행동 태그 풀이 달라집니다. 이후에도 태그를 수정할 수 있습니다.",
+    "audienceRetail": "리테일 / 트레이더",
+    "audienceRetailDesc": "진입·포지션·홀딩과 시장 경험",
+    "audienceFounder": "Founder / 빌더",
+    "audienceFounderDesc": "방향·팀·제품·위기 대응",
+    "distilling": "증류 중…",
+    "confirmTitle": "행동 태그 확인",
+    "confirmHint": "작성 내용으로 추정한 태그입니다. 선택 후 원칙을 생성하세요.",
+    "suggestedTags": "추정 태그",
+    "moreTags": "더 많은 태그",
+    "backFill": "수정으로 돌아가기",
+    "generatePrinciples": "내 원칙 생성",
+    "needOneTag": "태그를 하나 이상 선택하세요",
+    "behaviorTags": "행동 태그",
+    "fromTags": "태그 출처"
   }
 }

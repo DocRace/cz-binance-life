@@ -4,6 +4,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 import { loadBffEnv, ipdexFacadeFetch, ipdexPublicApiFetch } from './ipdexClient.js';
+import { suggestChronicleTags } from './chronicleSuggestTags.js';
 
 const PORT = Number(process.env.BFF_PORT || 8787);
 const AT_COOKIE = 'bff_ipdex_at';
@@ -600,6 +601,25 @@ async function boot() {
       idempotencyKey,
     });
     res.status(out.json?.code === 0 ? 200 : 400).json(out.json);
+  });
+
+  app.post('/api/bff/chronicle/suggest-tags', async (req, res) => {
+    const audience = `${req.body?.audience ?? ''}`.trim() === 'founder' ? 'founder' : 'retail';
+    const text = `${req.body?.text ?? ''}`.trim();
+    const candidateIds = Array.isArray(req.body?.candidateIds)
+      ? req.body.candidateIds.filter((x) => typeof x === 'string').slice(0, 80)
+      : [];
+    if (!text || text.length < 2) {
+      return res.status(400).json({ code: -10001, message: 'text_required', data: null });
+    }
+    try {
+      const tagIds = await suggestChronicleTags({ audience, text, candidateIds });
+      return res.json({ code: 0, message: 'ok', data: { tagIds }, tagIds });
+    } catch (err) {
+      console.error('[bff] chronicle suggest-tags failed', err?.message || err);
+      // Soft-fail: client continues with rule-based tags.
+      return res.json({ code: 0, message: 'fallback', data: { tagIds: [] }, tagIds: [] });
+    }
   });
 
   app.listen(PORT, () => {
