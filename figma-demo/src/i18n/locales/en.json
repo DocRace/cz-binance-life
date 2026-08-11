@@ -12,7 +12,8 @@
     "siteTitle": "Freedom of Money",
     "siteSubtitle": "Book club",
     "openMenu": "Open menu",
-    "menuLabel": "Main navigation"
+    "menuLabel": "Main navigation",
+    "chronicle": "Chronicle"
   },
   "meta": {
     "siteName": "Freedom of Money Book Club",
@@ -202,7 +203,12 @@
     "stat3Label": "Members",
     "stat3Unit": "",
     "stat4Label": "Badges",
-    "stat4Unit": ""
+    "stat4Unit": "",
+    "chronicleBannerKicker": "Live campaign",
+    "chronicleBannerTitle": "My Binance Life · Crypto Chronicle",
+    "chronicleBannerDesc": "Map your crypto journey on CZ's timeline, distill matching principles, and invite friends to join.",
+    "chronicleBannerCta": "Start your chronicle",
+    "chronicleHeroCta": "Write my crypto chronicle"
   },
   "membershipTiers": {
     "kicker": "Membership",
@@ -901,13 +907,13 @@
     "capsuleCta": "Seal capsule",
     "againCta": "Fill again",
     "createMine": "Create mine",
-    "shareCta": "Share result",
+    "shareCta": "Copy share text",
     "copied": "Share text copied",
     "copyFailed": "Copy failed — share the link manually",
     "shareBlank": "____",
     "shareMyLifeFallback": "still being written",
-    "shareTextZh": ".@CZ 的幣安人生：賣房 all in、封神、入獄、翻身。\n我的加密人生：{{myLife}}\n同一條時間軸，你的加密人生是什麼樣？\n創建你的加密編年史 👇\n{{link}}",
-    "shareTextEn": ".@cz_binance's Binance Life: sold his house, went all-in, built an empire, went to prison, bounced back.\nMy crypto life: {{myLife}}\nSame timeline, what does yours look like?\nCreate your own crypto life 👇\n{{link}}",
+    "shareTextZh": ".@CZ 的幣安人生：賣房 all in、封神、入獄、翻身。\n我的加密人生：{{myLife}}\n邀請你參與「我的幣安人生」加密編年史 👇\n{{link}}",
+    "shareTextEn": ".@cz_binance's Binance Life: all-in, built an empire, prison, comeback.\nMy crypto life: {{myLife}}\nJoin \"My Binance Life\" crypto chronicle 👇\n{{link}}",
     "nodes": {
       "n2013": {
         "title": "Three firsts",
@@ -1065,6 +1071,12 @@
     "generatePrinciples": "Generate my principles",
     "needOneTag": "Select at least one behavior tag",
     "behaviorTags": "Behavior tags",
-    "fromTags": "From tags"
+    "fromTags": "From tags",
+    "shareXCta": "Share on X",
+    "shareWechatCta": "Share to WeChat",
+    "shareWechatHint": "For WeChat: screenshot the share card above, or copy the invite text into Moments / a chat.",
+    "inviteCopied": "Invite text copied — paste into WeChat",
+    "shareInviteZh": "邀請你參與「我的幣安人生」——撰寫每個人的加密編年史\n同一條時間軸，你的加密人生是什麼樣？\n點開一起寫 👇\n{{link}}",
+    "shareInviteEn": "You're invited to \"My Binance Life\" — write your crypto chronicle\nSame timeline as CZ. What's yours?\nJoin here 👇\n{{link}}"
   }
 }

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router";
 import { motion } from "motion/react";
-import { BookOpen, ChevronRight, Gift, MapPin, ShoppingBag } from "lucide-react";
+import { BookOpen, ChevronRight, Gift, MapPin, ShoppingBag, Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PurchaseModal from "../components/PurchaseModal";
 import AirdropClaimModal from "../components/AirdropClaimModal";
@@ -46,6 +46,32 @@ export default function Home() {
   return (
     <>
       <div className={PAGE_SHELL_HOME}>
+        <motion.section
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55 }}
+          className={`relative overflow-hidden rounded-2xl border border-gold/40 bg-gradient-to-br from-gold/20 via-gold/10 to-transparent p-5 sm:p-7 ${SECTION_SPACING_LG}`}
+        >
+          <div className="pointer-events-none absolute -right-8 -top-10 h-40 w-40 rounded-full bg-gold/25 blur-3xl" aria-hidden />
+          <p className="mb-2 text-[11px] font-tech uppercase tracking-[0.2em] text-gold">
+            {t("home.chronicleBannerKicker")}
+          </p>
+          <h2 className="font-display text-2xl sm:text-3xl md:text-4xl tracking-tight text-foreground mb-3">
+            {t("home.chronicleBannerTitle")}
+          </h2>
+          <p className="max-w-2xl text-sm sm:text-base text-muted-foreground leading-relaxed mb-5">
+            {t("home.chronicleBannerDesc")}
+          </p>
+          <Link
+            to="/club/chronicle"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-gold/95 px-6 py-3.5 text-sm font-body font-medium tracking-wide text-primary-foreground shadow-sm transition-colors hover:bg-gold no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            <Sparkles className="h-4 w-4 shrink-0" aria-hidden />
+            {t("home.chronicleBannerCta")}
+            <ChevronRight className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
+          </Link>
+        </motion.section>
+
         {/* Hero */}
         <div className={`grid grid-cols-1 items-center lg:grid-cols-2 ${GRID_GAP} gap-y-14 lg:gap-x-20 xl:gap-x-28 ${SECTION_SPACING_LG}`}>
           {/* Book */}
@@ -116,12 +142,20 @@ export default function Home() {
               transition={{ delay: 0.85 }}
               className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3"
             >
+              <Link
+                to="/club/chronicle"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-gold/90 px-5 py-3.5 text-sm font-body font-medium tracking-wide text-primary-foreground shadow-sm transition-colors duration-300 hover:bg-gold whitespace-nowrap sm:px-7 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                <Sparkles className="h-4 w-4 shrink-0" aria-hidden />
+                {t("home.chronicleHeroCta")}
+              </Link>
+
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 onClick={() => setPurchaseOpen(true)}
-                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-gold/90 px-5 py-3.5 text-sm font-body font-medium tracking-wide text-primary-foreground shadow-sm transition-colors duration-300 hover:bg-gold whitespace-nowrap sm:px-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-gold/60 px-5 py-3.5 text-sm font-body font-medium tracking-wide text-foreground transition-colors duration-300 hover:bg-gold/10 whitespace-nowrap sm:px-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <ShoppingBag className="h-4 w-4 shrink-0" aria-hidden />
                 {t("home.joinPurchaseClubButton")}
@@ -132,7 +166,7 @@ export default function Home() {
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 onClick={openStandardTier}
-                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-gold/60 px-5 py-3.5 text-sm font-body font-medium tracking-wide text-foreground transition-colors duration-300 hover:bg-gold/10 whitespace-nowrap sm:px-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-border px-5 py-3.5 text-sm font-body font-medium tracking-wide text-muted-foreground transition-colors duration-300 hover:border-gold/40 hover:text-foreground whitespace-nowrap sm:px-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <Gift className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
                 {t("home.joinFreeClubButton")}

@@ -1,6 +1,6 @@
 import { Outlet, Link, useLocation } from "react-router";
 import { useState } from "react";
-import { Users, List, User, Home, Clock, MapPin, Globe, SquareArrowOutUpRight } from "lucide-react";
+import { Users, List, User, Home, Clock, MapPin, Globe, SquareArrowOutUpRight, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import bookCover from "../../assets/book-cover-hero.png";
@@ -43,12 +43,18 @@ export default function Layout() {
     "inline-flex items-center gap-1 font-tech text-[11px] text-muted-foreground/90 transition-colors hover:text-gold";
 
   const navItems = [
-    { path: "/", label: t("nav.home"), icon: Home },
-    { path: "/club", label: t("nav.joinClub"), icon: Users },
-    { path: "/event", label: t("nav.offlineEvent"), icon: MapPin },
-    { path: "/principles", label: t("nav.principles"), icon: List },
-    { path: "/timeline", label: t("nav.timeline"), icon: Clock },
-    { path: "/account", label: t("nav.account"), icon: User },
+    { path: "/", label: t("nav.home"), icon: Home, match: (p: string) => p === "/" },
+    {
+      path: "/club/chronicle",
+      label: t("nav.chronicle"),
+      icon: Sparkles,
+      match: (p: string) => p === "/club/chronicle" || p.startsWith("/club/chronicle"),
+    },
+    { path: "/club", label: t("nav.joinClub"), icon: Users, match: (p: string) => p === "/club" },
+    { path: "/event", label: t("nav.offlineEvent"), icon: MapPin, match: (p: string) => p === "/event" },
+    { path: "/principles", label: t("nav.principles"), icon: List, match: (p: string) => p === "/principles" },
+    { path: "/timeline", label: t("nav.timeline"), icon: Clock, match: (p: string) => p === "/timeline" },
+    { path: "/account", label: t("nav.account"), icon: User, match: (p: string) => p.startsWith("/account") },
   ];
 
   return (
@@ -111,7 +117,7 @@ export default function Layout() {
               >
                 {navItems.map((item) => {
                   const Icon = item.icon;
-                  const isActive = location.pathname === item.path;
+                  const isActive = item.match(location.pathname);
                   return (
                     <Link
                       key={item.path}
@@ -174,7 +180,7 @@ export default function Layout() {
           >
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = location.pathname === item.path;
+              const isActive = item.match(location.pathname);
               return (
                 <Link
                   key={item.path}

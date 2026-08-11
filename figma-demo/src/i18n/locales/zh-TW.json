@@ -12,7 +12,8 @@
     "siteTitle": "幣安人生書友會",
     "siteSubtitle": "FREEDOM OF MONEY BOOK CLUB",
     "openMenu": "開啟選單",
-    "menuLabel": "主要導覽"
+    "menuLabel": "主要導覽",
+    "chronicle": "加密編年史"
   },
   "meta": {
     "siteName": "幣安人生書友會",
@@ -202,7 +203,12 @@
     "stat3Label": "書友會成員",
     "stat3Unit": "人",
     "stat4Label": "已發放徽章",
-    "stat4Unit": "枚"
+    "stat4Unit": "枚",
+    "chronicleBannerKicker": "活動進行中",
+    "chronicleBannerTitle": "我的幣安人生 · 加密編年史",
+    "chronicleBannerDesc": "對照 CZ 時間軸，寫下你的加密經歷，蒸餾出適配的 CZ 原則，並分享邀請朋友一起參與。",
+    "chronicleBannerCta": "立即參與編年史",
+    "chronicleHeroCta": "撰寫我的加密編年史"
   },
   "membershipTiers": {
     "kicker": "會員權益",
@@ -901,13 +907,13 @@
     "capsuleCta": "封裝膠囊",
     "againCta": "再填一次",
     "createMine": "創建我的編年史",
-    "shareCta": "分享結果",
+    "shareCta": "複製分享文案",
     "copied": "分享文案已複製",
     "copyFailed": "複製失敗，請手動分享連結",
     "shareBlank": "____",
     "shareMyLifeFallback": "仍在書寫中",
-    "shareTextZh": ".@CZ 的幣安人生：賣房 all in、封神、入獄、翻身。\n我的加密人生：{{myLife}}\n同一條時間軸，你的加密人生是什麼樣？\n創建你的加密編年史 👇\n{{link}}",
-    "shareTextEn": ".@cz_binance's Binance Life: sold his house, went all-in, built an empire, went to prison, bounced back.\nMy crypto life: {{myLife}}\nSame timeline, what does yours look like?\nCreate your own crypto life 👇\n{{link}}",
+    "shareTextZh": ".@CZ 的幣安人生：賣房 all in、封神、入獄、翻身。\n我的加密人生：{{myLife}}\n邀請你參與「我的幣安人生」加密編年史 👇\n{{link}}",
+    "shareTextEn": ".@cz_binance's Binance Life: all-in, built an empire, prison, comeback.\nMy crypto life: {{myLife}}\nJoin \"My Binance Life\" crypto chronicle 👇\n{{link}}",
     "nodes": {
       "n2013": {
         "title": "三個第一次",
@@ -1065,6 +1071,12 @@
     "generatePrinciples": "生成我的原則",
     "needOneTag": "請至少選擇一個行為標籤",
     "behaviorTags": "行為標籤",
-    "fromTags": "來自標籤"
+    "fromTags": "來自標籤",
+    "shareXCta": "分享到 X",
+    "shareWechatCta": "分享到微信",
+    "shareWechatHint": "微信請長按/截圖上方分享卡，或複製下方邀請文案發到朋友圈／群聊。",
+    "inviteCopied": "邀請文案已複製，可貼到微信",
+    "shareInviteZh": "邀請你參與「我的幣安人生」——撰寫每個人的加密編年史\n同一條時間軸，你的加密人生是什麼樣？\n點開一起寫 👇\n{{link}}",
+    "shareInviteEn": "You're invited to \"My Binance Life\" — write your crypto chronicle\nSame timeline as CZ. What's yours?\nJoin here 👇\n{{link}}"
   }
 }

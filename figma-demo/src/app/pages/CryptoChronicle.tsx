@@ -8,6 +8,7 @@ import {
   Check,
   Copy,
   FlaskConical,
+  MessageCircle,
   RefreshCw,
   Share2,
   Sparkles,
@@ -26,6 +27,10 @@ import {
   mergeSuggestedTagIds,
   suggestTagsFromEntries,
 } from "../../lib/chronicle/distill";
+import {
+  buildCapsuleHandoffPayload,
+  buildLifeCapsuleImportUrl,
+} from "../../lib/chronicle/capsuleHandoff";
 import { buildShareUrl, decodeSharePayload } from "../../lib/chronicle/shareCodec";
 import { fetchLlmTagSuggestions } from "../../lib/chronicle/suggestTagsClient";
 import {
@@ -49,8 +54,6 @@ import {
   PAGE_SHELL,
 } from "../layout/pageLayout";
 
-const LIFE_CAPSULE_URL = "https://lifecapsule.ai";
-
 export default function CryptoChronicle() {
   const { t, i18n } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -65,6 +68,7 @@ export default function CryptoChronicle() {
   const [result, setResult] = useState<ChronicleResult | null>(null);
   const [participants, setParticipants] = useState(getParticipantCount);
   const [copied, setCopied] = useState(false);
+  const [wechatHint, setWechatHint] = useState(false);
   const [readOnlyShare, setReadOnlyShare] = useState(false);
   const [distilling, setDistilling] = useState(false);
 
@@ -192,16 +196,45 @@ export default function CryptoChronicle() {
     setStep("identity");
   };
 
-  const shareCopy = async () => {
+  const isZhUi = (i18n.resolvedLanguage || i18n.language || "").startsWith("zh");
+
+  const inviteLink = () => `${window.location.origin}/club/chronicle`;
+
+  const resultShareLink = () => {
     const ids = result?.confirmedTagIds || confirmedTagIds;
-    const link = buildShareUrl(audience, entries, ids);
+    return buildShareUrl(audience, entries, ids);
+  };
+
+  const buildResultShareText = () => {
+    const link = resultShareLink();
     const blank = t("chronicle.shareBlank");
     const myLine = result?.nodes[0]?.text?.slice(0, 40) || t("chronicle.shareMyLifeFallback");
-    const isZh = (i18n.resolvedLanguage || i18n.language || "").startsWith("zh");
-    const text = isZh
+    return isZhUi
       ? t("chronicle.shareTextZh", { myLife: myLine || blank, link })
       : t("chronicle.shareTextEn", { myLife: myLine || blank, link });
+  };
 
+  const buildInviteText = () => {
+    const link = inviteLink();
+    return isZhUi
+      ? t("chronicle.shareInviteZh", { link })
+      : t("chronicle.shareInviteEn", { link });
+  };
+
+  const copyText = async (text: string, okKey: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      toast.success(t(okKey));
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error(t("chronicle.copyFailed"));
+    }
+  };
+
+  const shareCopy = async () => {
+    const text = buildResultShareText();
+    const link = resultShareLink();
     try {
       if (navigator.share) {
         await navigator.share({ title: t("chronicle.resultTitle"), text, url: link });
@@ -210,14 +243,40 @@ export default function CryptoChronicle() {
     } catch {
       /* clipboard */
     }
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      toast.success(t("chronicle.copied"));
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      toast.error(t("chronicle.copyFailed"));
+    await copyText(text, "chronicle.copied");
+  };
+
+  const shareToX = () => {
+    const text = buildResultShareText();
+    const url = new URL("https://twitter.com/intent/tweet");
+    url.searchParams.set("text", text);
+    window.open(url.toString(), "_blank", "noopener,noreferrer");
+  };
+
+  const shareToWechat = async () => {
+    setWechatHint(true);
+    document.getElementById("chronicle-share-card")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    await copyText(buildInviteText(), "chronicle.inviteCopied");
+  };
+
+  const openLifeCapsule = () => {
+    if (!result) return;
+    const tagLabels: Record<string, string> = {};
+    for (const id of result.confirmedTagIds) {
+      const tag = catalogById.get(id) || result.tags.find((x) => x.id === id);
+      if (tag) tagLabels[id] = tag.label;
     }
+    const nodeTitles: Record<string, string> = {};
+    for (const node of result.nodes) {
+      nodeTitles[node.nodeId] = t(`chronicle.nodes.${node.nodeId}.title`);
+    }
+    const payload = buildCapsuleHandoffPayload(result, {
+      locale: isZhUi ? "zh" : "en",
+      tagLabels,
+      nodeTitles,
+      shareUrl: resultShareLink(),
+    });
+    window.open(buildLifeCapsuleImportUrl(payload), "_blank", "noopener,noreferrer");
   };
 
   const yearLabel = (id: ChronicleNodeId) =>
@@ -658,7 +717,10 @@ export default function CryptoChronicle() {
               </ol>
             </div>
 
-            <div className="mb-10 overflow-hidden rounded-2xl border border-gold/30 bg-gradient-to-b from-[#3d3832] to-[#2a2622] p-6 sm:p-8">
+            <div
+              id="chronicle-share-card"
+              className="mb-10 overflow-hidden rounded-2xl border border-gold/30 bg-gradient-to-b from-[#3d3832] to-[#2a2622] p-6 sm:p-8"
+            >
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gold/20 ring-1 ring-gold/40">
                   <User className="h-6 w-6 text-gold" aria-hidden />
@@ -691,15 +753,42 @@ export default function CryptoChronicle() {
               </div>
             </div>
 
+            {wechatHint ? (
+              <p className="mb-4 text-center text-xs text-muted-foreground">{t("chronicle.shareWechatHint")}</p>
+            ) : null}
+
             <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
-              <a
-                href={LIFE_CAPSULE_URL}
-                target="_blank"
-                rel="noreferrer"
+              <button
+                type="button"
+                onClick={shareToX}
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-gold/50 px-6 py-3 text-sm text-gold transition-colors hover:bg-gold/10"
+              >
+                <Share2 className="h-4 w-4" aria-hidden />
+                {t("chronicle.shareXCta")}
+              </button>
+              <button
+                type="button"
+                onClick={() => void shareToWechat()}
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-gold/50 px-6 py-3 text-sm text-gold transition-colors hover:bg-gold/10"
+              >
+                <MessageCircle className="h-4 w-4" aria-hidden />
+                {t("chronicle.shareWechatCta")}
+              </button>
+              <button
+                type="button"
+                onClick={() => void shareCopy()}
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-border px-6 py-3 text-sm transition-colors hover:border-gold/40 hover:bg-gold/10"
+              >
+                {copied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
+                {t("chronicle.shareCta")}
+              </button>
+              <button
+                type="button"
+                onClick={openLifeCapsule}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-gold/90 px-6 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-gold"
               >
                 {t("chronicle.capsuleCta")}
-              </a>
+              </button>
               {!readOnlyShare ? (
                 <button
                   type="button"
@@ -722,14 +811,6 @@ export default function CryptoChronicle() {
                   {t("chronicle.createMine")}
                 </button>
               )}
-              <button
-                type="button"
-                onClick={shareCopy}
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-gold/50 px-6 py-3 text-sm text-gold transition-colors hover:bg-gold/10"
-              >
-                {copied ? <Copy className="h-4 w-4" aria-hidden /> : <Share2 className="h-4 w-4" aria-hidden />}
-                {t("chronicle.shareCta")}
-              </button>
             </div>
           </motion.section>
         )}

@@ -12,7 +12,8 @@
     "siteTitle": "바이낸스 인생 북클럽",
     "siteSubtitle": "FREEDOM OF MONEY BOOK CLUB",
     "openMenu": "메뉴 열기",
-    "menuLabel": "메인 탐색"
+    "menuLabel": "메인 탐색",
+    "chronicle": "연대기"
   },
   "meta": {
     "siteName": "바이낸스 인생 북클럽",
@@ -202,7 +203,12 @@
     "stat3Label": "북클럽 회원",
     "stat3Unit": "명",
     "stat4Label": "발급된 배지",
-    "stat4Unit": "개"
+    "stat4Unit": "개",
+    "chronicleBannerKicker": "진행 중",
+    "chronicleBannerTitle": "나의 바이낸스 인생 · 크립토 연대기",
+    "chronicleBannerDesc": "CZ 타임라인에 맞춰 당신의 크립토 여정을 쓰고, 원칙을 증류해 친구를 초대하세요.",
+    "chronicleBannerCta": "연대기 참여하기",
+    "chronicleHeroCta": "내 크립토 연대기 쓰기"
   },
   "membershipTiers": {
     "kicker": "회원 혜택",
@@ -893,13 +899,13 @@
     "capsuleCta": "캡슐 봉인",
     "againCta": "다시 작성",
     "createMine": "내 연대기 만들기",
-    "shareCta": "결과 공유",
+    "shareCta": "공유 문구 복사",
     "copied": "Share text copied",
     "copyFailed": "Copy failed — share the link manually",
     "shareBlank": "____",
     "shareMyLifeFallback": "still being written",
-    "shareTextZh": ".@CZ 的幣安人生：賣房 all in、封神、入獄、翻身。\n我的加密人生：{{myLife}}\n同一條時間軸，你的加密人生是什麼樣？\n創建你的加密編年史 👇\n{{link}}",
-    "shareTextEn": ".@cz_binance's Binance Life: sold his house, went all-in, built an empire, went to prison, bounced back.\nMy crypto life: {{myLife}}\nSame timeline, what does yours look like?\nCreate your own crypto life 👇\n{{link}}",
+    "shareTextZh": ".@CZ 的幣安人生：賣房 all in、封神、入獄、翻身。\n我的加密人生：{{myLife}}\n邀請你參與「我的幣安人生」加密編年史 👇\n{{link}}",
+    "shareTextEn": ".@cz_binance's Binance Life: all-in, built an empire, prison, comeback.\nMy crypto life: {{myLife}}\nJoin \"My Binance Life\" crypto chronicle 👇\n{{link}}",
     "nodes": {
       "n2013": {
         "title": "Three firsts",
@@ -1057,6 +1063,12 @@
     "generatePrinciples": "내 원칙 생성",
     "needOneTag": "태그를 하나 이상 선택하세요",
     "behaviorTags": "행동 태그",
-    "fromTags": "태그 출처"
+    "fromTags": "태그 출처",
+    "shareXCta": "X에 공유",
+    "shareWechatCta": "위챗 공유",
+    "shareWechatHint": "위챗: 위 공유 카드를 캡처하거나 초대 문구를 복사해 보내세요.",
+    "inviteCopied": "초대 문구가 복사되었습니다",
+    "shareInviteZh": "邀請你參與「我的幣安人生」——撰寫每個人的加密編年史\n同一條時間軸，你的加密人生是什麼樣？\n點開一起寫 👇\n{{link}}",
+    "shareInviteEn": "You're invited to \"My Binance Life\" — write your crypto chronicle\nSame timeline as CZ. What's yours?\nJoin here 👇\n{{link}}"
   }
 }
