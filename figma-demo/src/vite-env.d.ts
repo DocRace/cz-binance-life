@@ -11,10 +11,14 @@ interface ImportMetaEnv {
   readonly VITE_IPDEX_BOOK_PRIMARY_LISTING_ID?: string;
   /** Optional HK$ unit price hint for checkout UI until sale detail resolves (whole dollars, e.g. `100`). */
   readonly VITE_IPDEX_BOOK_PRIMARY_PRICE_HKD?: string;
-  /** Airdrop campaign publicCode for free STANDARD tier claim flow. */
+  /** Airdrop campaign publicCode for free STANDARD membership claim flow. */
   readonly VITE_IPDEX_BOOK_STANDARD_AIRDROP_PUBLIC_CODE?: string;
-  /** Optional collection UUID sanity check for free-tier airdrop (defaults in code). */
+  /** Optional collection UUID sanity check for free STANDARD membership airdrop. */
   readonly VITE_IPDEX_BOOK_STANDARD_COLLECTION_ID?: string;
+  /** Airdrop campaign publicCode for My Binance Life chronicle activity FD (separate from membership). */
+  readonly VITE_IPDEX_BOOK_CHRONICLE_AIRDROP_PUBLIC_CODE?: string;
+  /** Collection UUID for My Binance Life chronicle activity FD series. */
+  readonly VITE_IPDEX_BOOK_CHRONICLE_COLLECTION_ID?: string;
   /** Free STANDARD tier primary sale when airdrop publicCode is unset. */
   readonly VITE_IPDEX_BOOK_STANDARD_PRIMARY_SALE_ID?: string;
   readonly VITE_IPDEX_BOOK_STANDARD_PRIMARY_LISTING_ID?: string;

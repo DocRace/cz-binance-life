@@ -6,6 +6,8 @@ export type CapsuleHandoffPayload = {
   source: "cz-chronicle";
   audience: ChronicleAudience;
   locale: "zh" | "en";
+  authorName?: string;
+  priceUsdt?: number;
   nodes: Array<{ year: string; title?: string; text: string; tags?: string[] }>;
   tags: Array<{ id: string; label: string }>;
   principles: Array<{ name: string; note?: string | null }>;
@@ -33,27 +35,44 @@ export function buildCapsuleHandoffPayload(
     tagLabels: Record<string, string>;
     nodeTitles?: Record<string, string>;
     shareUrl?: string;
+    authorName?: string;
+    priceUsdt?: number;
+    selectedTagIds?: string[];
+    selectedPrinciples?: string[];
   },
 ): CapsuleHandoffPayload {
+  const tagIds = (opts.selectedTagIds?.length ? opts.selectedTagIds : result.confirmedTagIds).slice(
+    0,
+    3,
+  );
+  const principleNames = opts.selectedPrinciples?.length
+    ? opts.selectedPrinciples
+    : result.principles.map((p) => p.name);
+  const principleSet = new Set(principleNames);
   return {
     v: 1,
     source: "cz-chronicle",
     audience: result.audience,
     locale: opts.locale,
+    authorName: opts.authorName?.trim() || undefined,
+    priceUsdt: opts.priceUsdt,
     nodes: result.nodes.slice(0, 15).map((n) => ({
       year: CHRONICLE_NODE_YEAR[n.nodeId] || n.nodeId,
       title: opts.nodeTitles?.[n.nodeId],
       text: n.text.slice(0, 800),
       tags: n.keywords.slice(0, 8),
     })),
-    tags: result.confirmedTagIds.slice(0, 16).map((id) => ({
+    tags: tagIds.map((id) => ({
       id,
       label: opts.tagLabels[id] || result.tags.find((t) => t.id === id)?.label || id,
     })),
-    principles: result.principles.slice(0, 6).map((p) => ({
-      name: p.name,
-      note: p.note,
-    })),
+    principles: result.principles
+      .filter((p) => principleSet.has(p.name))
+      .slice(0, 3)
+      .map((p) => ({
+        name: p.name,
+        note: p.note,
+      })),
     shareUrl: opts.shareUrl,
   };
 }

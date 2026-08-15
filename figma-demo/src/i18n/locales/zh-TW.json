@@ -3,17 +3,17 @@
     "home": "首頁",
     "book": "書籍介紹",
     "club": "書友會",
-    "joinClub": "加入書友會",
-    "offlineEvent": "線下活動",
+    "joinClub": "加入",
+    "offlineEvent": "活動",
     "principles": "CZ原則",
     "timeline": "CZ時間線",
-    "account": "我的帳戶",
+    "account": "我的",
     "redeemOnSite": "現場核銷",
     "siteTitle": "幣安人生書友會",
     "siteSubtitle": "FREEDOM OF MONEY BOOK CLUB",
     "openMenu": "開啟選單",
     "menuLabel": "主要導覽",
-    "chronicle": "加密編年史"
+    "chronicle": "我的幣安人生"
   },
   "meta": {
     "siteName": "幣安人生書友會",
@@ -28,7 +28,7 @@
     "titleAccountInvoices": "付款憑證 · 幣安人生書友會",
     "titlePurchaseSuccess": "付款完成 · 幣安人生書友會",
     "titleNotFound": "找不到頁面 · 幣安人生書友會",
-    "titleChronicle": "加密編年史 · 幣安人生書友會"
+    "titleChronicle": "我的幣安人生 · 幣安人生書友會"
   },
   "nftDetailModal": {
     "openDetail": "查看 NFT 詳情",
@@ -73,7 +73,10 @@
     "subtitlePrincipleFallback": "原則徽章",
     "typeStandard": "普通",
     "titleStandard": "標準會員徽章",
-    "subtitleStandard": "標準紀念徽章"
+    "subtitleStandard": "標準紀念徽章",
+    "typeChronicle": "書友會",
+    "titleChronicle": "書友會 NFT",
+    "subtitleChronicle": "免費紀念 NFT"
   },
   "platform": {
     "settlementStack": "資產交易：{{dex}} · {{chain}}（鏈編號 {{chainId}}）",
@@ -205,10 +208,11 @@
     "stat4Label": "已發放徽章",
     "stat4Unit": "枚",
     "chronicleBannerKicker": "活動進行中",
-    "chronicleBannerTitle": "我的幣安人生 · 加密編年史",
-    "chronicleBannerDesc": "對照 CZ 時間軸，寫下你的加密經歷，蒸餾出適配的 CZ 原則，並分享邀請朋友一起參與。",
-    "chronicleBannerCta": "立即參與編年史",
-    "chronicleHeroCta": "撰寫我的加密編年史"
+    "chronicleBannerTitle": "我的幣安人生",
+    "chronicleBannerDesc": "CZ 出版了他的《幣安人生》，你的呢？對照同一條時間軸寫下經歷，生成關鍵詞與系統估價，裝訂成冊後分享；還可領取書友會 NFT、登上人氣新銳作者榜。",
+    "chronicleBannerCta": "創建我的幣安人生",
+    "chronicleRankCta": "人氣新銳作者榜",
+    "chronicleHeroCta": "創建我的幣安人生"
   },
   "membershipTiers": {
     "kicker": "會員權益",
@@ -388,7 +392,8 @@
     "inscriptionSubtitle": "書友會獲 CZ 親筆題字「幣安人生 Club」。",
     "inscriptionAlt": "CZ 親筆題字：幣安人生 Club",
     "inscriptionCredit": "CZ 題字",
-    "chronicleCta": "加密編年史"
+    "chronicleCta": "我的幣安人生",
+    "chronicleRankCta": "人氣新銳作者榜"
   },
   "principles": {
     "title": "CZ 原則",
@@ -671,7 +676,7 @@
     "verifyAndContinue": "驗證並繼續",
     "bffCheckoutNote": "主要銷售訂單由 BFF 以 httpOnly 工作階段建立；若 API 回傳付款連結將開啟 Stripe。",
     "payWithBffStripe": "透過 BFF 以 Stripe 付款",
-    "bffOffline": "無法連線書城 BFF。本機開發：執行 npm run dev:with-bff，或另開終端機執行 npm run bff:dev（Vite 會將 /api/bff 代理到 8787）。請確認已有 bff/.env。線上環境須將 /api/bff 轉發到 BFF。",
+    "bffOffline": "暫時無法載入待付款訂單，請稍後再試。若持續出現，請重新登入。",
     "bffAuthError": "登入失敗，請確認驗證碼後重試。",
     "emailLabel": "電子郵件",
     "otpLabel": "驗證碼",
@@ -692,7 +697,8 @@
       "expired": "此發售已在 IPDEX 過期。請在後台建立新發售或延長期間。",
       "delisted": "此發售已在 IPDEX 下架。請重新上架，或將書站指向使用中發售 UUID。",
       "notStarted": "此發售尚未在 IPDEX 開始。請等待開始時間或更新設定。"
-    }
+    },
+    "bffOfflineDev": "Book BFF unreachable. Local: npm run dev:with-bff / npm run bff:dev (proxy /api/bff → 8787). Need bff/.env. Hosted: nginx must forward /api/bff."
   },
   "purchaseSuccess": {
     "documentTitle": "付款完成 · 幣安人生書友會",
@@ -849,7 +855,27 @@
     "redeemSelectedLabel": "已選 NFT",
     "redeemPickAnother": "改選其他",
     "redeemNoEligibleNfts": "此帳號目前沒有可核銷的憑證，或資料尚未同步。",
-    "redeemBack": "返回帳戶"
+    "redeemBack": "返回帳戶",
+    "czSignedNft": {
+      "title": "書友會 NFT",
+      "subtitle": "封裝膠囊後可免費領取。獨立於普通／付費會員體系，不會沖掉既有徽章。",
+      "claimCta": "領取書友會 NFT",
+      "viewCta": "查看",
+      "rightsTitle": "NFT 權益說明",
+      "rightsIntro": "持有本 NFT，即可享有以下權益：",
+      "benefits": [
+        "《幣安人生》全球書友會活動優先權：所有活動優先報名通道",
+        "後續抽獎 +10% 的中獎權重",
+        "未來合作項目的專屬權益",
+        "合作夥伴 DataDance Wallet：一次性激勵積分 100 Points",
+        "合作夥伴 DataDance Wallet：日常數據上傳獎勵積分 +5%"
+      ],
+      "rightsFootnote": "最終以活動規則與合作方公告為準；權益可能隨活動階段調整。"
+    },
+    "nftChronicleFd": "書友會 NFT",
+    "chronicleAcquiredDate": "領取時間",
+    "chronicleFdOk": "書友會 NFT",
+    "chronicleFdNote": "書友會免費紀念 NFT，獨立於普通／付費會員體系，不會取代既有徽章。"
   },
   "giftPurchase": {
     "modeSelf": "自己購買",
@@ -879,12 +905,12 @@
   "chronicle": {
     "backClub": "返回書友會",
     "kicker": "《幣安人生》共讀計劃",
-    "decodeCz": "解碼 CZ",
-    "introLead": "點擊 CZ 關鍵人生節點，記錄你最難忘的加密經歷。",
-    "participants": "已有 {{count}} 人完成自己的加密編年史",
-    "startCta": "開始我的加密編年史",
-    "fillTitle": "你的加密編年史",
-    "fillHint": "（選填）點擊節點時間，寫下那個階段你在做什麼、什麼事影響了你。寫得越細，編年史越完整。",
+    "decodeCz": "《幣安人生》共讀計劃",
+    "introLead": "CZ 出版了他的《幣安人生》，你的呢？",
+    "participants": "已有 {{count}} 人出版自己的幣安人生",
+    "startCta": "創建我的幣安人生",
+    "fillTitle": "你的幣安人生",
+    "fillHint": "（選填）點擊 CZ 的關鍵人生節點，記錄你的加密經歷／感悟。寫得越細，你的幣安人生越完整。",
     "filledProgress": "已填寫 {{count}} / {{total}} 個節點",
     "savedMark": "已記錄",
     "yourEventLabel": "YOU",
@@ -893,21 +919,22 @@
     "inputPlaceholder": "這個時間段，你在幹什麼？有什麼影響你的大事件？",
     "save": "保存",
     "savedToast": "已保存到本地草稿",
-    "distillCta": "蒸餾我的加密編年史",
+    "distillCta": "生成我的幣安人生",
     "needOneEntry": "請至少填寫一個時間節點",
     "resultKicker": "結果",
-    "resultTitle": "我的加密編年史",
-    "myTimeline": "我的加密編年史",
+    "resultTitle": "我的幣安人生",
+    "myTimeline": "我的幣安人生",
     "keywords": "關鍵詞",
     "matchedPrinciples": "我適配的 CZ 原則",
     "principleN": "原則{{n}}",
-    "shareCardTitle": "我的加密編年史",
+    "shareCardTitle": "我的幣安人生",
     "shareCardSub": "CZ 的幣安人生 × 同一條時間軸",
     "shareCardCzLife": "同一條時間軸上的我",
     "capsuleCta": "封裝膠囊",
     "againCta": "再填一次",
-    "createMine": "創建我的編年史",
+    "createMine": "創建我的幣安人生",
     "shareCta": "複製分享文案",
+    "shareAction": "分享",
     "copied": "分享文案已複製",
     "copyFailed": "複製失敗，請手動分享連結",
     "shareBlank": "____",
@@ -924,14 +951,6 @@
           "第一次進入加密行業"
         ],
         "year": "2013"
-      },
-      "n2014": {
-        "title": "OKCoin 時期",
-        "event": "短暫出任 OKCoin CTO。",
-        "bullets": [
-          "短暫出任 OKCoin CTO"
-        ],
-        "year": "2014"
       },
       "n2017_06": {
         "title": "火鍋桌上的決定",
@@ -971,11 +990,10 @@
       },
       "n2019_safu": {
         "title": "BTC 被盜",
-        "event": "被盜七千枚 BTC，選擇全額兜底，推出 SAFU。",
+        "event": "被盜七千枚 BTC，選擇全額兜底。",
         "bullets": [
           "被盜七千枚 BTC",
-          "全額兜底",
-          "推出 SAFU"
+          "選擇全額兜底"
         ],
         "year": "2019"
       },
@@ -1054,6 +1072,16 @@
           "繼續 Giggle Academy 免費教育項目"
         ],
         "year": "2024末"
+      },
+      "n2022": {
+        "title": "全球斡旋",
+        "event": "滿世界見監管與政要，為幣安爭取合規身份，風暴前的最後奔走。",
+        "bullets": [
+          "滿世界見監管與政要",
+          "為幣安爭取合規身份",
+          "風暴前的最後奔走"
+        ],
+        "year": "2022"
       }
     },
     "identityTitle": "你更像哪一類？",
@@ -1076,7 +1104,237 @@
     "shareWechatCta": "分享到微信",
     "shareWechatHint": "微信請長按/截圖上方分享卡，或複製下方邀請文案發到朋友圈／群聊。",
     "inviteCopied": "邀請文案已複製，可貼到微信",
-    "shareInviteZh": "邀請你參與「我的幣安人生」——撰寫每個人的加密編年史\n同一條時間軸，你的加密人生是什麼樣？\n點開一起寫 👇\n{{link}}",
-    "shareInviteEn": "You're invited to \"My Binance Life\" — write your crypto chronicle\nSame timeline as CZ. What's yours?\nJoin here 👇\n{{link}}"
+    "shareInviteZh": "邀請你參與「我的幣安人生」共讀計劃 👇\n{{link}}",
+    "shareInviteEn": "Join the My Binance Life reading plan 👇\n{{link}}",
+    "partnerKicker": "幣安人生書友會 × DataDance",
+    "authorTitle": "出版之前，先填寫你的作者信息",
+    "authorHint": "選擇身份頭像並填寫署名（視覺風格暫定風格 C，後續可換獨立切圖）。",
+    "stylePick": "頭像／封面風格（四選一，獨立切圖週三四到位）",
+    "stylePendingNote": "目前先用風格總覽圖；獨立角色圖就緒後會自動替換。",
+    "rolePick": "作者頭像／身份",
+    "genderPick": "頭像形象",
+    "gender": {
+      "male": "男性",
+      "female": "女性"
+    },
+    "authorNameLabel": "作者署名",
+    "authorNamePlaceholder": "填寫署名",
+    "authorContinue": "開始書寫",
+    "needRole": "請先選擇一個身份頭像",
+    "needAuthorName": "請填寫作者署名",
+    "anonymousAuthor": "匿名作者",
+    "showcaseAuthor": "你的署名",
+    "editAuthor": "編輯署名",
+    "lifeTagsTitle": "我的三個關鍵詞",
+    "lifeTagsHint": "點選最能代表你的 3 個關鍵詞",
+    "myPrinciplesTitle": "我的幣安原則",
+    "myPrinciplesHint": "點擊選擇你最堅持的 3 個原則",
+    "needThreeTags": "請選擇 3 個關鍵詞",
+    "needThreePrinciples": "請選擇 3 個原則",
+    "timelineEditHint": "可編輯自己的內容；也可刪除某個年份節點。",
+    "removeNode": "刪除節點",
+    "bindCta": "裝訂成冊",
+    "viewBookCta": "查看成書",
+    "bookOf": "{{name}} 的",
+    "bookTitle": "我的幣安人生",
+    "bookByline": "{{name}} 著",
+    "bookTaglineFallback": "我的幣安人生回憶錄",
+    "bookPublisher": "幣安人生書友會 × DataDance 出版",
+    "priceVsCz": "對標 CZ 定價 ${{cz}}",
+    "capsuleNftHint": "先前往 Life Capsules 封裝膠囊，再於此處（或我的帳戶）領取書友會 NFT。",
+    "lifeCapsuleCta": "前往 Life Capsules",
+    "lifeCapsuleCtaAgain": "再次打開 Life Capsules",
+    "lifeCapsuleOpened": "已打開 Life Capsules — 可以繼續領取書友會 NFT。",
+    "nftLoginBackEmail": "更換郵箱",
+    "nftLoginCta": "登錄後領取書友會 NFT",
+    "nftClaimCta": "領取書友會 NFT",
+    "nftLoginTitle": "登錄以領取",
+    "nftLoginIntro": "使用本站帳號登錄後，即可在封裝膠囊後領取書友會 NFT。",
+    "nftClaimTitle": "領取書友會 NFT",
+    "nftClaimIntro": "確認後將免費領取書友會 NFT。",
+    "nftClaimStubNote": "鑄造活動尚未配置 — 此步驟為佔位流程。",
+    "nftClaimStubTitle": "已登記領取",
+    "nftClaimStubOk": "領取意向已保存。活動上線後，請到我的帳戶查收。",
+    "nftLoggedInSavedHint": "已登錄 — 你的人生草稿會保留在本機。",
+    "publishCta": "公開「發售」",
+    "shareTextLowZh": "📚 @cz_binance 的幣安人生：幸運、韌性、保護用戶，定價 $19.99；\n我的幣安人生：{{tags}}，系統估價僅 ${{price}} 🤦🏻‍♂️🤦🏻‍♀️\n同一條時間軸，你的幣安人生能值多少？\n創建你的幣安人生 👇\n{{link}}",
+    "shareTextHighZh": "📚 @cz_binance 的幣安人生：幸運、韌性、保護用戶，定價 $19.99；\n我的幣安人生：{{tags}}，系統估價高達 ${{price}} 👀\n同一條時間軸，你的幣安人生能值多少？\n創建你的幣安人生 👇\n{{link}}",
+    "shareTextLowEn": "📚 @cz_binance's Binance Life: luck, resilience, protecting users.\nPriced at $19.99.\nMy Binance Life: {{tags}}.\nValued at just ${{price}} 🤦🏻‍♂️🤦🏻‍♀️\nSame timeline, what's your Binance Life worth?\nCreate yours 👇\n{{link}}",
+    "shareTextHighEn": "📚 @cz_binance's Binance Life: luck, resilience, protecting users.\nPriced at $19.99.\nMy Binance Life: {{tags}}.\nValued as high as ${{price}} 👀\nSame timeline, what's your Binance Life worth?\nCreate yours 👇\n{{link}}",
+    "styles": {
+      "a": "風格 A",
+      "b": "風格 B",
+      "c": "風格 C",
+      "d": "風格 D"
+    },
+    "roles": {
+      "founder": {
+        "name": "創始人",
+        "desc": "創立或運營 BNB Chain 項目，長期負責產品、融資、生態合作和增長。"
+      },
+      "buidler": {
+        "name": "碼農",
+        "desc": "開發部署在 BNB Chain 上的 DApp、智能合約或基礎設施。"
+      },
+      "onchain-detective": {
+        "name": "鏈上偵探",
+        "desc": "研究 BNB Chain 生態項目、Tokenomics、鏈上數據與治理。"
+      },
+      "degen": {
+        "name": "P 大將",
+        "desc": "活躍交易 BNB 生態資產，關注行情與市場機會。"
+      },
+      "hodler": {
+        "name": "信仰者",
+        "desc": "堅持長期持有 BNB 或優質資產，更關注週期而非短期波動。"
+      },
+      "diamond-hands": {
+        "name": "鑽石手",
+        "desc": "穿越波動，鑽石手持倉。"
+      },
+      "investor": {
+        "name": "投資人",
+        "desc": "尋找 BNB 生態早期項目，關注團隊、賽道與商業模式。"
+      },
+      "whale": {
+        "name": "巨鯨",
+        "desc": "大資金參與生態流動。"
+      },
+      "miner": {
+        "name": "礦工",
+        "desc": "維護網絡運行與基礎設施。"
+      },
+      "creator": {
+        "name": "內容創作者",
+        "desc": "持續輸出 BNB/幣安生態內容，影響社區。"
+      },
+      "fren": {
+        "name": "Fren",
+        "desc": "活躍於社區，組織活動、連接項目與用戶。"
+      },
+      "farmer": {
+        "name": "擼毛黨",
+        "desc": "長期參與積分、Quest 與生態激勵活動。"
+      },
+      "alpha-hunter": {
+        "name": "Alpha 獵手",
+        "desc": "長期參與 Alpha、Launchpool、Megadrop、Quest 等激勵活動。"
+      },
+      "black-hat": {
+        "name": "科學家",
+        "desc": "以安全視角探索系統邊界。"
+      },
+      "white-hat": {
+        "name": "漏洞獵人",
+        "desc": "尋找漏洞，守護生態安全。"
+      }
+    },
+    "exploreClub": "探索書友會",
+    "h5Credit": "本活動由幣安人生書友會 × DataDance 提供",
+    "rank": {
+      "enterCta": "新書打榜",
+      "publicBoardCta": "人氣新銳作者榜",
+      "modalTitle": "參與人氣新銳作者打榜",
+      "modalHint": "分享你的版本拉票，或直接查看排行榜。",
+      "shareX": "分享到 X",
+      "shareWechat": "分享到微信",
+      "copyShare": "複製分享文案",
+      "viewBoard": "查看我的排行榜",
+      "createCta": "創建我的幣安人生",
+      "callCta": "打 Call",
+      "callForThem": "為 TA 打 Call",
+      "voted": "已打 Call",
+      "voteOk": "打 Call 成功",
+      "voteFailed": "打 Call 失敗",
+      "alreadyVoted": "你已為這本書打過 Call",
+      "noVotesLeft": "沒有次數了（最多投 3 本）",
+      "notActive": "打榜尚未開放或已結束",
+      "bookPopularityLabel": "本書人氣值",
+      "popularity": "人氣值 {{value}}",
+      "votesLeft": "剩餘 {{remain}} / {{max}} 次打 Call",
+      "boardKicker": "《我的幣安人生》",
+      "boardTitle": "人氣新銳作者排行榜",
+      "boardLiveHint": "榜單盡量即時；否則約每半小時刷新。",
+      "boardEndedHint": "活動已結束，TOP 10 可領取獎勵。",
+      "emptyBoard": "榜上還沒有作品，快來出版你的吧！",
+      "joinHint": "加入榜單？創建你的幣安人生！",
+      "rewardsTitle": "人氣新銳作者 TOP 10 激勵",
+      "rewardSyncTop3": "TOP 3：書友會下一場線下活動門票 ×1",
+      "rewardSyncTop10": "TOP 4–10：書友會周邊禮物兌換權益 ×1",
+      "rewardAsync": "TOP 10：書友會周邊禮物兌換權益 ×1",
+      "claimCta": "領取獎勵",
+      "claimed": "已領取",
+      "pendingClaim": "待領取",
+      "claimFailed": "領取失敗",
+      "loginToClaim": "請先登入後再領取",
+      "claimNotOwner": "僅打榜時已登入的作者本人可領取",
+      "claimTicketMsg": "恭喜成為《我的幣安人生》人氣新銳作者 TOP {{rank}}，點擊我的帳戶查看你的門票權益。",
+      "claimMerchMsg": "恭喜成為《我的幣安人生》人氣新銳作者 TOP {{rank}}，點擊我的帳戶查看你的權益。",
+      "goAccount": "前往我的帳戶",
+      "backChronicle": "返回",
+      "accountTitle": "人氣新銳作者獎勵",
+      "accountRankLine": "TOP {{rank}} · {{name}}",
+      "accountTicketHint": "線下活動門票（可轉贈）。活動開放後顯示票面資訊。",
+      "accountMerchHint": "周邊兌換券：未來開放周邊時可免費兌換任意一件。",
+      "shareTextZh": "讀完 @cz_binance 的幣安人生，我也「出版」了自己 ${{ticker}} 的版本 😄\n人家寫的是百億帝國，我的是百日摸爬滾打。\n戳進來 👇🏻 為我打 Call，距離「人氣新銳作者」只差你的投票 👀\n{{link}}\nBTW，來都來了，也來「出版」你自己的幣安人生！",
+      "shareTextEn": "After reading @cz_binance's Binance Life, I \"published\" my own ${{ticker}} edition 😄\nHis is a billion-dollar empire, while mine is hundreds of days of crypto building.\nTap in 👇🏻 and vote me up. I'm this close to \"Rising Star Author\" 👀\n{{link}}\nBTW, since you're here, why not go \"publish\" your own Binance Life too?"
+    },
+    "nftClaimDdcHint": "書友會免費領取活動。圖片可後續替換。",
+    "nftClaimSuccessTitle": "領取已提交",
+    "nftClaimSuccessDistributed": "鑄造成功，請到「我的帳戶」查看徽章。",
+    "nftClaimSuccessPending": "領取已登記，請稍後到「我的帳戶」查看徽章。",
+    "tagLabels": {
+      "early_entry": "早期入場",
+      "late_entry": "後知後覺",
+      "bluechip_only": "只碰主流",
+      "chase_new": "愛衝新幣",
+      "onchain_degen": "鏈上老炮",
+      "buy_dip": "逆勢加倉",
+      "fomo_buy": "追高買入",
+      "all_in": "全倉豪賭",
+      "diversified": "分散保守",
+      "long_hold": "長期扛單",
+      "cut_loss": "割肉快",
+      "swing_trade": "高拋低吸",
+      "cant_hold": "拿不住",
+      "emotion_driven": "情緒驅動",
+      "disciplined": "紀律型",
+      "stoic": "鈍感扛壓",
+      "liquidated": "爆過倉",
+      "rugged": "踩過雷",
+      "underwater": "被套過",
+      "survived_bear": "熬過熊",
+      "missed_bull": "錯過牛",
+      "left_and_returned": "離場又回歸",
+      "researcher": "研究型",
+      "social_follower": "社交型",
+      "early_bet": "早期押注",
+      "fast_pivot": "快速轉向",
+      "long_termism": "長期主義",
+      "chase_narrative": "追熱點",
+      "first_principles": "第一性思考",
+      "lead_by_example": "以身作則",
+      "delegate": "善於放權",
+      "rank_and_yank": "末位淘汰",
+      "output_first": "重用產出",
+      "retention_fail": "留人失敗",
+      "keep_simple": "簡單直接",
+      "exit_clause": "留退路",
+      "no_exclusivity": "拒絕排他",
+      "passive_bd": "被動 BD",
+      "partner_burned": "踩過合作坑",
+      "user_first": "用戶優先",
+      "scalable_only": "只做可規模化",
+      "over_polish": "過度打磨",
+      "ship_fast": "迭代快",
+      "make_whole": "兜底擔責",
+      "fast_response": "快速回應",
+      "silent_crisis": "沉默吃虧",
+      "near_zero": "扛過至暗",
+      "regulatory_hit": "被監管打過",
+      "calm": "冷靜克制",
+      "time_anxiety": "時間焦慮",
+      "peak_to_trough": "盛極轉折"
+    }
   }
 }

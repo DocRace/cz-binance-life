@@ -12,12 +12,12 @@ import {
   Gift,
   MapPin,
   ChevronRight,
-  Sparkles,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PurchaseModal from "../components/PurchaseModal";
 import AirdropClaimModal from "../components/AirdropClaimModal";
 import MembershipTiers from "../components/MembershipTiers";
+import ChronicleCampaignBanner from "../components/ChronicleCampaignBanner";
 import ClubStoryCard from "../components/ClubStoryCard";
 import ClubStoryDetailModal from "../components/ClubStoryDetailModal";
 import { ClubStoryTranslationsProvider } from "../context/ClubStoryTranslationsContext";
@@ -169,15 +169,10 @@ export default function BookClub() {
             <Gift className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
             {t("club.joinFreeClubCta")}
           </button>
-          <Link
-            to="/club/chronicle"
-            className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-gold/35 px-8 py-3.5 text-sm font-body font-medium tracking-wide text-foreground transition-colors hover:bg-gold/10 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >
-            <Sparkles className="h-4 w-4 shrink-0 text-gold" aria-hidden />
-            {t("club.chronicleCta")}
-          </Link>
         </div>
       </motion.div>
+
+      <ChronicleCampaignBanner className={SECTION_SPACING} />
 
       <MembershipTiers
         onPremiumClick={() => setPurchaseOpen(true)}

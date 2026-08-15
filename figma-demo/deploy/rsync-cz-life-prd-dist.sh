@@ -130,11 +130,26 @@ fi
 
 IPDEX_ENV=/home/ubuntu/backend/ipdex-backend-v1/.env.market.server
 if [[ -f "\$IPDEX_ENV" ]]; then
-  if grep -q '^COBRAND_BOOK_STRIPE_CALLBACK=' "\$IPDEX_ENV"; then
-    sed -i "s|^COBRAND_BOOK_STRIPE_CALLBACK=.*|COBRAND_BOOK_STRIPE_CALLBACK=https://czlife.club,https://www.czlife.club,https://cz-life.ipdex.vip|" "\$IPDEX_ENV"
-  else
-    echo "COBRAND_BOOK_STRIPE_CALLBACK=https://czlife.club,https://www.czlife.club,https://cz-life.ipdex.vip" >> "\$IPDEX_ENV"
-  fi
+  # Merge only — do not wipe other partner callback origins on this host.
+  python3 - <<'PY'
+import re
+from pathlib import Path
+path = Path("/home/ubuntu/backend/ipdex-backend-v1/.env.market.server")
+text = path.read_text()
+add = ["https://czlife.club", "https://www.czlife.club", "https://cz-life.ipdex.vip"]
+for key in ("COBRAND_BOOK_STRIPE_CALLBACK", "PARTNER_STRIPE_CALLBACK_ORIGINS"):
+    m = re.search(rf"^{re.escape(key)}=(.*)$", text, re.M)
+    if not m:
+        text += f"\n{key}={','.join(add)}\n"
+        continue
+    cur = [x.strip() for x in m.group(1).strip().strip('"').split(",") if x.strip()]
+    for o in add:
+        if o not in cur:
+            cur.append(o)
+    text = re.sub(rf"^{re.escape(key)}=.*$", f"{key}={','.join(cur)}", text, count=1, flags=re.M)
+path.write_text(text)
+print("prd stripe callback allowlist merged")
+PY
   for kv in \
     "BOOK_CLUB_REDEEM_ENABLED=1" \
     "BOOK_CLUB_SOURCE_COLLECTION_IDS=47899bab-b481-4560-9584-dbff3086651f" \

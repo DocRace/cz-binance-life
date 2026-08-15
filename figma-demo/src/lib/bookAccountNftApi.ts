@@ -6,6 +6,7 @@ import { bookBffJsonWithRefresh } from "./bookBffWithRefresh";
 import { bookBffIsTransportIssue } from "./bookBffClient";
 import {
   getAttendanceStubCollectionIdSet,
+  isChronicleFdCollectionId,
   isCzLifeBookCollectionId,
   isPremiumVoucherCollectionId,
   isStandardMembershipCollectionId,
@@ -260,7 +261,7 @@ export function classifyNft(row: Record<string, unknown>): {
 
 const principleColors = ["gold", "cyan", "purple"] as const;
 
-export type MembershipTier = "premium" | "standard";
+export type MembershipTier = "premium" | "standard" | "chronicle";
 
 export type DisplayNft = {
   key: string;
@@ -268,7 +269,7 @@ export type DisplayNft = {
   /** IPDEX collection UUID (required for `/club/redeem`). */
   collectionId?: string;
   badge: "original" | "redeemed" | "principle";
-  /** Paid voucher vs free standard commemorative — drives Account redeem UI. */
+  /** Paid voucher / free standard / chronicle FD — drives Account sections. */
   membershipTier?: MembershipTier;
   /** When true, NFT is payout/stub series from env — commemorative attendance, never a redeemable voucher. */
   attendanceStub?: boolean;
@@ -281,9 +282,10 @@ export type DisplayNft = {
   originalTokenId?: string;
 };
 
-/** Premium account section: paid vouchers + post-redeem attendance stubs (not free standard). */
+/** Premium account section: paid vouchers + post-redeem attendance stubs (not free standard / chronicle FD). */
 export function isPremiumAccountNft(nft: DisplayNft): boolean {
   if (nft.badge === "principle") return false;
+  if (isChronicleFdNft(nft)) return false;
   if (isStandardMembershipNft(nft)) return false;
   if (nft.attendanceStub) return true;
   if (nft.badge === "redeemed") return true;
@@ -296,6 +298,11 @@ export function isPremiumAttendanceStub(nft: DisplayNft): boolean {
 
 export function isStandardMembershipNft(nft: DisplayNft): boolean {
   return nft.membershipTier === "standard" || isStandardMembershipCollectionId(nft.collectionId);
+}
+
+/** My Binance Life activity FD proof — free, outside membership tiers. */
+export function isChronicleFdNft(nft: DisplayNft): boolean {
+  return nft.membershipTier === "chronicle" || isChronicleFdCollectionId(nft.collectionId);
 }
 
 export function isPremiumVoucherNft(nft: DisplayNft): boolean {
@@ -319,7 +326,7 @@ export function filterCzLifeDisplayNfts(nfts: DisplayNft[]): DisplayNft[] {
 export function isRedeemEligible(nft: DisplayNft): boolean {
   const cid = (nft.collectionId || "").trim();
   if (isSyntheticNftBalanceToken(nft.tokenId)) return false;
-  if (isStandardMembershipNft(nft)) return false;
+  if (isStandardMembershipNft(nft) || isChronicleFdNft(nft)) return false;
   return (
     nft.badge === "original" &&
     isPremiumVoucherNft(nft) &&
@@ -352,6 +359,7 @@ export function mapNftRow(row: Record<string, unknown>, index: number): DisplayN
   })();
   const membershipTier: MembershipTier | undefined = (() => {
     if (!collectionId) return attendanceStub ? "premium" : undefined;
+    if (isChronicleFdCollectionId(collectionId)) return badge === "original" ? "chronicle" : undefined;
     if (isStandardMembershipCollectionId(collectionId)) return badge === "original" ? "standard" : undefined;
     if (isPremiumVoucherCollectionId(collectionId)) return "premium";
     if (attendanceStub) return "premium";

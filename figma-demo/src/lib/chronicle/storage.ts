@@ -1,27 +1,131 @@
-import type { ChronicleAudience, UserEntries } from "./types";
+import {
+  DEFAULT_AVATAR_GENDER,
+  isAvatarGenderId,
+  type AvatarGenderId,
+} from "./roleArt";
+import {
+  audienceForRole,
+  isAvatarRoleId,
+  isAvatarStyleId,
+  type AvatarRoleId,
+  type AvatarStyleId,
+} from "./roles";
+import { DEFAULT_AVATAR_STYLE } from "./roleVisuals";
+import type { ChronicleAudience, ChronicleStep, UserEntries } from "./types";
 
-const DRAFT_KEY = "czlife.chronicle.draft.v2";
+const DRAFT_KEY = "czlife.chronicle.draft.v3";
 const DONE_KEY = "czlife.chronicle.completions.v1";
 const BASE_PARTICIPANTS = 1286;
+
+const STEPS: ChronicleStep[] = ["intro", "author", "fill", "result", "book"];
+
+function isChronicleStep(value: unknown): value is ChronicleStep {
+  return typeof value === "string" && (STEPS as string[]).includes(value);
+}
+
+/** Map pre-Sheet2 role ids → current pack ids. */
+const LEGACY_ROLE_MAP: Record<string, AvatarRoleId> = {
+  developer: "buidler",
+  researcher: "onchain-detective",
+  trader: "degen",
+  holder: "hodler",
+  validator: "miner",
+  community: "fren",
+  hunter: "alpha-hunter",
+  blackhacker: "black-hat",
+};
+
+function normalizeRoleId(value: unknown): AvatarRoleId | null {
+  if (typeof value !== "string") return null;
+  if (isAvatarRoleId(value)) return value;
+  return LEGACY_ROLE_MAP[value] ?? null;
+}
 
 export type ChronicleDraft = {
   audience: ChronicleAudience;
   entries: UserEntries;
   confirmedTagIds: string[];
+  authorName: string;
+  roleId: AvatarRoleId | null;
+  styleId: AvatarStyleId;
+  gender: AvatarGenderId;
+  selectedTagIds: string[];
+  selectedPrinciples: string[];
+  /** Last wizard step — used to resume like Life Capsule personality quiz. */
+  step?: ChronicleStep;
 };
+
+const EMPTY: ChronicleDraft = {
+  audience: "retail",
+  entries: {},
+  confirmedTagIds: [],
+  authorName: "",
+  roleId: null,
+  styleId: DEFAULT_AVATAR_STYLE,
+  gender: DEFAULT_AVATAR_GENDER,
+  selectedTagIds: [],
+  selectedPrinciples: [],
+  step: "intro",
+};
+
+/** Resume target when the user already created a chronicle locally. */
+export function resumeStepFromDraft(draft: ChronicleDraft): ChronicleStep | null {
+  const filled = Object.values(draft.entries || {}).some((t) => `${t || ""}`.trim());
+  const hasIdentity = Boolean(draft.roleId && `${draft.authorName || ""}`.trim());
+  if (
+    (draft.step === "result" || draft.step === "book") &&
+    filled &&
+    hasIdentity
+  ) {
+    return draft.step;
+  }
+  // Legacy drafts without step, but already distilled / picked tags
+  if (
+    filled &&
+    hasIdentity &&
+    (draft.selectedTagIds.length > 0 ||
+      draft.selectedPrinciples.length > 0 ||
+      draft.confirmedTagIds.length > 0)
+  ) {
+    return "result";
+  }
+  if (filled && hasIdentity) return "fill";
+  if (draft.roleId || `${draft.authorName || ""}`.trim()) return "author";
+  return null;
+}
 
 export function loadDraft(): ChronicleDraft {
   try {
-    const raw = localStorage.getItem(DRAFT_KEY);
-    if (!raw) return { audience: "retail", entries: {}, confirmedTagIds: [] };
-    const parsed = JSON.parse(raw) as Partial<ChronicleDraft>;
+    const raw = localStorage.getItem(DRAFT_KEY) || localStorage.getItem("czlife.chronicle.draft.v2");
+    if (!raw) return { ...EMPTY };
+    const parsed = JSON.parse(raw) as Partial<ChronicleDraft> & { audience?: string };
+    const roleId = normalizeRoleId(parsed.roleId);
+    const styleId =
+      parsed.styleId && isAvatarStyleId(parsed.styleId) ? parsed.styleId : DEFAULT_AVATAR_STYLE;
+    const gender =
+      parsed.gender && isAvatarGenderId(parsed.gender) ? parsed.gender : DEFAULT_AVATAR_GENDER;
+    const audience =
+      roleId != null
+        ? audienceForRole(roleId)
+        : parsed.audience === "founder"
+          ? "founder"
+          : "retail";
     return {
-      audience: parsed.audience === "founder" ? "founder" : "retail",
+      audience,
       entries: parsed.entries && typeof parsed.entries === "object" ? parsed.entries : {},
       confirmedTagIds: Array.isArray(parsed.confirmedTagIds) ? parsed.confirmedTagIds : [],
+      authorName: typeof parsed.authorName === "string" ? parsed.authorName.slice(0, 40) : "",
+      roleId,
+      styleId,
+      gender,
+      selectedTagIds: Array.isArray(parsed.selectedTagIds) ? parsed.selectedTagIds : [],
+      selectedPrinciples: Array.isArray(parsed.selectedPrinciples)
+        ? parsed.selectedPrinciples
+        : [],
+      step: isChronicleStep(parsed.step) ? parsed.step : undefined,
     };
   } catch {
-    return { audience: "retail", entries: {}, confirmedTagIds: [] };
+    return { ...EMPTY };
   }
 }
 
@@ -36,6 +140,7 @@ export function saveDraft(draft: ChronicleDraft) {
 export function clearDraft() {
   try {
     localStorage.removeItem(DRAFT_KEY);
+    localStorage.removeItem("czlife.chronicle.draft.v2");
   } catch {
     /* ignore */
   }

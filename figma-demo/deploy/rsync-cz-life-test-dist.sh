@@ -89,17 +89,43 @@ if grep -q '^BOOK_STRIPE_CALLBACK_ORIGIN=' "\$BFF_ENV" 2>/dev/null; then
 else
   echo "BOOK_STRIPE_CALLBACK_ORIGIN=${CZ_LIFE_SITE_URL}" >> "\$BFF_ENV"
 fi
+# Keep STANDARD membership airdrop on the original free series; chronicle FD is separate.
+if grep -q '^BOOK_STANDARD_AIRDROP_PUBLIC_CODE=' "\$BFF_ENV" 2>/dev/null; then
+  sed -i "s|^BOOK_STANDARD_AIRDROP_PUBLIC_CODE=.*|BOOK_STANDARD_AIRDROP_PUBLIC_CODE=${VITE_IPDEX_BOOK_STANDARD_AIRDROP_PUBLIC_CODE:-cz-nft-free-test-2}|" "\$BFF_ENV"
+else
+  echo "BOOK_STANDARD_AIRDROP_PUBLIC_CODE=${VITE_IPDEX_BOOK_STANDARD_AIRDROP_PUBLIC_CODE:-cz-nft-free-test-2}" >> "\$BFF_ENV"
+fi
+if grep -q '^BOOK_CHRONICLE_AIRDROP_PUBLIC_CODE=' "\$BFF_ENV" 2>/dev/null; then
+  sed -i "s|^BOOK_CHRONICLE_AIRDROP_PUBLIC_CODE=.*|BOOK_CHRONICLE_AIRDROP_PUBLIC_CODE=${VITE_IPDEX_BOOK_CHRONICLE_AIRDROP_PUBLIC_CODE:-czlife-chronicle-fd-test}|" "\$BFF_ENV"
+else
+  echo "BOOK_CHRONICLE_AIRDROP_PUBLIC_CODE=${VITE_IPDEX_BOOK_CHRONICLE_AIRDROP_PUBLIC_CODE:-czlife-chronicle-fd-test}" >> "\$BFF_ENV"
+fi
 if ! grep -q 'czlife.club' "\$BFF_ENV" 2>/dev/null; then
   sed -i "s|^BOOK_ALLOWED_ORIGINS=\\(.*\\)|BOOK_ALLOWED_ORIGINS=\\1,${CZ_LIFE_SITE_URL},https://www.czlife.club|" "\$BFF_ENV"
 fi
 
 IPDEX_ENV=/home/ubuntu/dev-backend/ipdex-backend-v1/.env.market.server
+# Merge czlife into Stripe return-URL allowlist — never replace the whole CSV (Souling THB partners share it).
 if [[ -f "\$IPDEX_ENV" ]]; then
-  if grep -q '^COBRAND_BOOK_STRIPE_CALLBACK=' "\$IPDEX_ENV"; then
-    sed -i "s|^COBRAND_BOOK_STRIPE_CALLBACK=.*|COBRAND_BOOK_STRIPE_CALLBACK=${CZ_LIFE_SITE_URL}|" "\$IPDEX_ENV"
-  else
-    echo "COBRAND_BOOK_STRIPE_CALLBACK=${CZ_LIFE_SITE_URL}" >> "\$IPDEX_ENV"
-  fi
+  python3 - <<'PY'
+import re
+from pathlib import Path
+path = Path("/home/ubuntu/dev-backend/ipdex-backend-v1/.env.market.server")
+text = path.read_text()
+add = ["https://czlife.club", "https://www.czlife.club"]
+for key in ("COBRAND_BOOK_STRIPE_CALLBACK", "PARTNER_STRIPE_CALLBACK_ORIGINS"):
+    m = re.search(rf"^{re.escape(key)}=(.*)$", text, re.M)
+    if not m:
+        text += f"\n{key}={','.join(add)}\n"
+        continue
+    cur = [x.strip() for x in m.group(1).strip().strip('"').split(",") if x.strip()]
+    for o in add:
+        if o not in cur:
+            cur.append(o)
+    text = re.sub(rf"^{re.escape(key)}=.*$", f"{key}={','.join(cur)}", text, count=1, flags=re.M)
+path.write_text(text)
+print("stripe callback allowlist merged")
+PY
 fi
 
 pm2 restart cz-booksite-bff

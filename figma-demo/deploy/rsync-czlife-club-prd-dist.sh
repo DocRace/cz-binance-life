@@ -44,6 +44,7 @@ export VITE_BOOK_BFF_URL="${VITE_BOOK_BFF_URL:-}"
 
 LISTING_ID="${VITE_IPDEX_BOOK_PRIMARY_LISTING_ID:-}"
 AIRDROP_CODE="${VITE_IPDEX_BOOK_STANDARD_AIRDROP_PUBLIC_CODE:-}"
+CHRONICLE_AIRDROP_CODE="${VITE_IPDEX_BOOK_CHRONICLE_AIRDROP_PUBLIC_CODE:-}"
 
 read_prd_bff_var() {
   local name="$1"
@@ -131,6 +132,9 @@ if [[ -n "${LISTING_ID}" ]]; then
 fi
 if [[ -n "${AIRDROP_CODE}" ]]; then
   set_kv BOOK_STANDARD_AIRDROP_PUBLIC_CODE "${AIRDROP_CODE}"
+fi
+if [[ -n "${CHRONICLE_AIRDROP_CODE}" ]]; then
+  set_kv BOOK_CHRONICLE_AIRDROP_PUBLIC_CODE "${CHRONICLE_AIRDROP_CODE}"
 fi
 
 npm ci --omit=dev --no-audit --no-fund 2>/dev/null || npm install --omit=dev --no-audit --no-fund

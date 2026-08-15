@@ -5,6 +5,11 @@ import cookieParser from 'cookie-parser';
 
 import { loadBffEnv, ipdexFacadeFetch, ipdexPublicApiFetch } from './ipdexClient.js';
 import { suggestChronicleTags } from './chronicleSuggestTags.js';
+import {
+  clientIp,
+  createChronicleRankStore,
+  loadRankConfigFromEnv,
+} from './chronicleRankStore.js';
 
 const PORT = Number(process.env.BFF_PORT || 8787);
 const AT_COOKIE = 'bff_ipdex_at';
@@ -622,8 +627,104 @@ async function boot() {
     }
   });
 
+  const rankCfg = loadRankConfigFromEnv(process.env);
+  const rankStore = createChronicleRankStore(rankCfg);
+
+  async function resolveUserId(req) {
+    const accessToken = bearer(req);
+    if (!accessToken) return null;
+    try {
+      const out = await ipdexFacadeFetch(env, {
+        method: 'GET',
+        suffixPath: '/user/profile',
+        accessToken,
+      });
+      const id = out.json?.data?.userId || out.json?.data?.id || out.json?.data?.uuid;
+      return id ? `${id}` : null;
+    } catch {
+      return null;
+    }
+  }
+
+  app.get('/api/bff/chronicle/rank/config', (_req, res) => {
+    res.json({ code: 0, message: 'ok', data: rankStore.config() });
+  });
+
+  app.get('/api/bff/chronicle/rank/leaderboard', (req, res) => {
+    const limit = pageInt(req.query?.limit) || 50;
+    const entryId = `${req.query?.entryId || ''}`.trim() || null;
+    const data = rankStore.leaderboard({ limit, entryId });
+    res.json({ code: 0, message: 'ok', data });
+  });
+
+  app.get('/api/bff/chronicle/rank/entry/:entryId', (req, res) => {
+    const entry = rankStore.getEntry(req.params.entryId);
+    if (!entry) return res.status(404).json({ code: -10004, message: 'ENTRY_NOT_FOUND', data: null });
+    res.json({ code: 0, message: 'ok', data: entry });
+  });
+
+  app.get('/api/bff/chronicle/rank/voter-status', async (req, res) => {
+    const userId = await resolveUserId(req);
+    const status = rankStore.voterStatus({ userId, ip: clientIp(req) });
+    res.json({ code: 0, message: 'ok', data: status });
+  });
+
+  app.post('/api/bff/chronicle/rank/enroll', async (req, res) => {
+    const userId = await resolveUserId(req);
+    const out = rankStore.enroll({
+      shareToken: req.body?.shareToken,
+      authorName: req.body?.authorName,
+      roleId: req.body?.roleId,
+      styleId: req.body?.styleId,
+      price: req.body?.price,
+      tags: req.body?.tags,
+      ownerUserId: userId,
+    });
+    if (!out.ok) {
+      return res.status(400).json({ code: -10001, message: out.code, data: null });
+    }
+    res.json({ code: 0, message: 'ok', data: out.entry });
+  });
+
+  app.post('/api/bff/chronicle/rank/vote', async (req, res) => {
+    const userId = await resolveUserId(req);
+    const out = rankStore.vote({
+      entryId: req.body?.entryId,
+      userId,
+      ip: clientIp(req),
+    });
+    if (!out.ok) {
+      return res.status(400).json({ code: -10001, message: out.code, data: out.status || null });
+    }
+    res.json({ code: 0, message: 'ok', data: { entry: out.entry, status: out.status } });
+  });
+
+  app.post('/api/bff/chronicle/rank/claim', async (req, res) => {
+    const userId = await resolveUserId(req);
+    if (!userId) {
+      return res.status(401).json({ code: -10005, message: 'LOGIN_REQUIRED', data: null });
+    }
+    const out = rankStore.claim({ entryId: req.body?.entryId, userId });
+    if (!out.ok) {
+      return res.status(400).json({ code: -10001, message: out.code, data: null });
+    }
+    res.json({ code: 0, message: 'ok', data: out });
+  });
+
+  app.get('/api/bff/chronicle/rank/my-rewards', async (req, res) => {
+    const userId = await resolveUserId(req);
+    if (!userId) {
+      return res.status(401).json({ code: -10005, message: 'LOGIN_REQUIRED', data: null });
+    }
+    res.json({ code: 0, message: 'ok', data: { rewards: rankStore.myRewards(userId) } });
+  });
+
   app.listen(PORT, () => {
+    const rankInfo = rankStore.config();
     console.error(`[bff] listening ${PORT} -> IPDEX ${env.IPDEX_CLIENT_ORIGIN}${env.COBRAND_ROOT}`);
+    console.error(
+      `[bff] chronicle-rank enabled=${rankInfo.enabled} mode=${rankInfo.mode} phase=${rankInfo.phase}`,
+    );
   });
 }
 

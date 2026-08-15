@@ -68,9 +68,17 @@ export function getBookNftRedemptionRuleId(): string {
   return envString("VITE_IPDEX_NFT_REDEMPTION_RULE_ID");
 }
 
-/** Standard (free) tier — IPDEX airdrop campaign `publicCode` (Admin → Airdrop campaign). */
+/** Standard (free) membership tier — IPDEX airdrop campaign `publicCode` (Admin → Airdrop campaign). */
 export function getBookStandardAirdropPublicCode(): string {
   return envString("VITE_IPDEX_BOOK_STANDARD_AIRDROP_PUBLIC_CODE");
+}
+
+/**
+ * My Binance Life (chronicle) activity FD proof — free airdrop, separate from standard/premium membership.
+ * Admin → Airdrop campaign `publicCode`.
+ */
+export function getBookChronicleAirdropPublicCode(): string {
+  return envString("VITE_IPDEX_BOOK_CHRONICLE_AIRDROP_PUBLIC_CODE");
 }
 
 /** Free STANDARD tier primary sale UUID (HK$0.01 «免費版» when airdrop publicCode is unset). */
@@ -83,21 +91,29 @@ export function getBookStandardPrimaryListingId(): string {
   return envString("VITE_IPDEX_BOOK_STANDARD_PRIMARY_LISTING_ID");
 }
 
-/** Expected collection UUID for the free-tier series (sanity check after campaign load). */
+/** Expected collection UUID for the free STANDARD membership series. */
 export function getBookStandardCollectionId(): string {
   const fromEnv = envString("VITE_IPDEX_BOOK_STANDARD_COLLECTION_ID");
   if (fromEnv) return fromEnv;
   return "b8b65708-7a66-4547-9041-b7a47d3d2c90";
 }
 
+/** Expected collection UUID for My Binance Life chronicle FD proof series. */
+export function getBookChronicleCollectionId(): string {
+  const fromEnv = envString("VITE_IPDEX_BOOK_CHRONICLE_COLLECTION_ID");
+  if (fromEnv) return fromEnv;
+  return "57f86bb7-7d42-4ab1-be10-86578c5f61bd";
+}
+
 let standardCollectionMemo: string | undefined;
+let chronicleCollectionMemo: string | undefined;
 let premiumVoucherCollectionMemo: ReadonlySet<string> | undefined;
 
 function normalizeCollectionUuid(id: string): string {
   return `${id}`.trim().toLowerCase();
 }
 
-/** Free STANDARD tier series — commemorative only, no on-site redeem. */
+/** Free STANDARD membership series — commemorative only, no on-site redeem. */
 export function getBookStandardCollectionIdNormalized(): string {
   if (!standardCollectionMemo) {
     standardCollectionMemo = normalizeCollectionUuid(getBookStandardCollectionId());
@@ -108,6 +124,19 @@ export function getBookStandardCollectionIdNormalized(): string {
 export function isStandardMembershipCollectionId(collectionId?: string): boolean {
   const c = normalizeCollectionUuid(`${collectionId ?? ""}`);
   return c !== "" && c === getBookStandardCollectionIdNormalized();
+}
+
+/** My Binance Life activity FD proof — free, outside standard/premium membership. */
+export function getBookChronicleCollectionIdNormalized(): string {
+  if (!chronicleCollectionMemo) {
+    chronicleCollectionMemo = normalizeCollectionUuid(getBookChronicleCollectionId());
+  }
+  return chronicleCollectionMemo;
+}
+
+export function isChronicleFdCollectionId(collectionId?: string): boolean {
+  const c = normalizeCollectionUuid(`${collectionId ?? ""}`);
+  return c !== "" && c === getBookChronicleCollectionIdNormalized();
 }
 
 /**
@@ -166,12 +195,13 @@ export function isAttendanceStubCollectionId(collectionId?: string): boolean {
 
 let czLifeCollectionMemo: ReadonlySet<string> | undefined;
 
-/** Union of premium voucher, standard free, and attendance-stub series configured for this book site. */
+/** Union of premium, standard, chronicle FD, and attendance-stub series for this book site. */
 export function getCzLifeBookCollectionIdSet(): ReadonlySet<string> {
   if (czLifeCollectionMemo) return czLifeCollectionMemo;
   const out = new Set<string>();
   for (const id of getBookPremiumVoucherCollectionIdSet()) out.add(id);
   out.add(getBookStandardCollectionIdNormalized());
+  out.add(getBookChronicleCollectionIdNormalized());
   for (const id of getAttendanceStubCollectionIdSet()) out.add(id);
   czLifeCollectionMemo = out;
   return czLifeCollectionMemo;

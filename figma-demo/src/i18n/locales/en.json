@@ -3,17 +3,17 @@
     "home": "Home",
     "book": "The book",
     "club": "Book club",
-    "joinClub": "Join book club",
-    "offlineEvent": "Offline event",
+    "joinClub": "Join",
+    "offlineEvent": "Event",
     "principles": "Principles",
     "timeline": "Timeline",
-    "account": "Account",
+    "account": "Mine",
     "redeemOnSite": "Redeem",
     "siteTitle": "Freedom of Money",
     "siteSubtitle": "Book club",
     "openMenu": "Open menu",
     "menuLabel": "Main navigation",
-    "chronicle": "Chronicle"
+    "chronicle": "My Binance Life"
   },
   "meta": {
     "siteName": "Freedom of Money Book Club",
@@ -28,7 +28,7 @@
     "titleAccountInvoices": "Payment vouchers · Freedom of Money Book Club",
     "titlePurchaseSuccess": "Payment received · Freedom of Money Book Club",
     "titleNotFound": "Page not found · Freedom of Money Book Club",
-    "titleChronicle": "Crypto Chronicle · Freedom of Money Book Club"
+    "titleChronicle": "My Binance Life · Book Club"
   },
   "nftDetailModal": {
     "openDetail": "View NFT details",
@@ -73,7 +73,10 @@
     "subtitlePrincipleFallback": "Principle badge",
     "typeStandard": "STANDARD",
     "titleStandard": "Member badge",
-    "subtitleStandard": "Free commemorative"
+    "subtitleStandard": "Free commemorative",
+    "typeChronicle": "BOOK CLUB",
+    "titleChronicle": "Book club NFT",
+    "subtitleChronicle": "Free commemorative NFT"
   },
   "platform": {
     "settlementStack": "Trading on {{dex}} · {{chain}} (chain {{chainId}})",
@@ -205,10 +208,11 @@
     "stat4Label": "Badges",
     "stat4Unit": "",
     "chronicleBannerKicker": "Live campaign",
-    "chronicleBannerTitle": "My Binance Life · Crypto Chronicle",
-    "chronicleBannerDesc": "Map your crypto journey on CZ's timeline, distill matching principles, and invite friends to join.",
-    "chronicleBannerCta": "Start your chronicle",
-    "chronicleHeroCta": "Write my crypto chronicle"
+    "chronicleBannerTitle": "My Binance Life",
+    "chronicleBannerDesc": "CZ published his Binance Life. Where's yours? Write against the same timeline, get your tags and system price, bind your book and share it — then claim a book club NFT or climb the Rising Star board.",
+    "chronicleBannerCta": "Create my Binance Life",
+    "chronicleRankCta": "Rising Star Author board",
+    "chronicleHeroCta": "Create my Binance Life"
   },
   "membershipTiers": {
     "kicker": "Membership",
@@ -388,7 +392,8 @@
     "inscriptionSubtitle": "Handwritten by CZ for the book club — 「幣安人生 Club」.",
     "inscriptionAlt": "Handwritten inscription by CZ: 幣安人生 Club",
     "inscriptionCredit": "Inscription by CZ",
-    "chronicleCta": "Crypto chronicle"
+    "chronicleCta": "My Binance Life",
+    "chronicleRankCta": "Author leaderboard"
   },
   "principles": {
     "title": "CZ Principles",
@@ -671,7 +676,7 @@
     "verifyAndContinue": "Verify & continue",
     "bffCheckoutNote": "Primary checkout is created through the BFF with your session cookie — Stripe opens when the API returns a payment URL.",
     "payWithBffStripe": "Pay with Stripe (via BFF)",
-    "bffOffline": "Book-site BFF unreachable. Local dev: run npm run dev:with-bff, or in a second terminal npm run bff:dev (Vite proxies /api/bff to port 8787). Ensure bff/.env exists. Hosted test: this host must expose /api/bff to your BFF.",
+    "bffOffline": "Could not load pending orders. Please try again shortly, or sign in again.",
     "bffAuthError": "Sign-in failed. Check the code and try again.",
     "emailLabel": "Email",
     "otpLabel": "Verification code",
@@ -692,7 +697,8 @@
       "expired": "This Primary Sale has expired on IPDEX. Configure a new sale or extend the window in Admin.",
       "delisted": "This Primary Sale has been delisted on IPDEX. Relist it or point the book site at an active sale UUID.",
       "notStarted": "This Primary Sale has not started yet on IPDEX. Wait for the start time or update the configuration."
-    }
+    },
+    "bffOfflineDev": "Book BFF unreachable. Local: npm run dev:with-bff / npm run bff:dev (proxy /api/bff → 8787). Need bff/.env. Hosted: nginx must forward /api/bff."
   },
   "purchaseSuccess": {
     "documentTitle": "Payment received · Freedom of Money Book Club",
@@ -849,7 +855,27 @@
     "redeemSelectedLabel": "Selected NFT",
     "redeemPickAnother": "Change selection",
     "redeemNoEligibleNfts": "There are no voucher NFTs in this account eligible for redemption, or holdings have not synced yet.",
-    "redeemBack": "Back to account"
+    "redeemBack": "Back to account",
+    "czSignedNft": {
+      "title": "Book club NFT",
+      "subtitle": "Free claim after sealing your capsule. Separate from standard/premium membership — existing badges stay unchanged.",
+      "claimCta": "Claim book club NFT",
+      "viewCta": "View",
+      "rightsTitle": "NFT benefits",
+      "rightsIntro": "Holding this NFT unlocks:",
+      "benefits": [
+        "Priority access to global Binance Life book-club events (priority registration)",
+        "+10% weight in future raffles",
+        "Exclusive perks in future partner programs",
+        "DataDance Wallet: one-time 100 Points bonus",
+        "DataDance Wallet: +5% Points on daily data uploads"
+      ],
+      "rightsFootnote": "Subject to campaign rules and partner announcements; benefits may change by phase."
+    },
+    "nftChronicleFd": "Book club NFT",
+    "chronicleAcquiredDate": "Claimed",
+    "chronicleFdOk": "Book club NFT",
+    "chronicleFdNote": "Free book-club commemorative NFT — separate from standard/premium membership."
   },
   "giftPurchase": {
     "modeSelf": "Buy for myself",
@@ -879,12 +905,12 @@
   "chronicle": {
     "backClub": "Back to book club",
     "kicker": "Freedom of Money reading plan",
-    "decodeCz": "Decode CZ",
-    "introLead": "Tap CZ’s milestones and record the crypto moments that shaped you.",
-    "participants": "{{count}} people have finished their crypto chronicle",
-    "startCta": "Start my crypto chronicle",
-    "fillTitle": "Your crypto chronicle",
-    "fillHint": "(Optional) Open a milestone and write what you were doing — and what changed you. The more detail, the richer your chronicle.",
+    "decodeCz": "Freedom of Money · Reading Plan",
+    "introLead": "CZ published his Binance Life. Where’s yours?",
+    "participants": "{{count}} people have published their Binance Life",
+    "startCta": "Create my Binance Life",
+    "fillTitle": "Your Binance Life",
+    "fillHint": "(Optional) Tap CZ’s milestones and record your crypto moments. More detail makes a fuller life story.",
     "filledProgress": "{{count}} / {{total}} milestones filled",
     "savedMark": "Saved",
     "yourEventLabel": "YOU",
@@ -893,21 +919,22 @@
     "inputPlaceholder": "What were you doing in this period? What event shaped you?",
     "save": "Save",
     "savedToast": "Saved to local draft",
-    "distillCta": "Distill my crypto chronicle",
+    "distillCta": "Generate my Binance Life",
     "needOneEntry": "Fill in at least one milestone",
     "resultKicker": "Result",
-    "resultTitle": "My crypto chronicle",
-    "myTimeline": "My crypto chronicle",
+    "resultTitle": "My Binance Life",
+    "myTimeline": "My Binance Life",
     "keywords": "Keywords",
     "matchedPrinciples": "CZ principles I match",
     "principleN": "Principle {{n}}",
-    "shareCardTitle": "My crypto chronicle",
+    "shareCardTitle": "My Binance Life",
     "shareCardSub": "CZ’s Binance life × the same timeline",
     "shareCardCzLife": "Me on the same timeline",
     "capsuleCta": "Seal capsule",
     "againCta": "Fill again",
-    "createMine": "Create mine",
+    "createMine": "Create my Binance Life",
     "shareCta": "Copy share text",
+    "shareAction": "Share",
     "copied": "Share text copied",
     "copyFailed": "Copy failed — share the link manually",
     "shareBlank": "____",
@@ -924,14 +951,6 @@
           "First step into crypto"
         ],
         "year": "2013"
-      },
-      "n2014": {
-        "title": "OKCoin chapter",
-        "event": "Briefly served as OKCoin CTO.",
-        "bullets": [
-          "Briefly served as OKCoin CTO"
-        ],
-        "year": "2014"
       },
       "n2017_06": {
         "title": "Hotpot decision",
@@ -971,11 +990,10 @@
       },
       "n2019_safu": {
         "title": "BTC hack",
-        "event": "7,000 BTC stolen; full make-good and SAFU launched.",
+        "event": "7,000 BTC stolen; chose a full make-good.",
         "bullets": [
           "7,000 BTC stolen",
-          "Full make-good",
-          "SAFU launched"
+          "Full make-good"
         ],
         "year": "2019"
       },
@@ -1054,6 +1072,16 @@
           "Continued Giggle Academy free education"
         ],
         "year": "Late 2024"
+      },
+      "n2022": {
+        "title": "Global diplomacy",
+        "event": "Meeting regulators and officials worldwide to secure Binance’s compliance path — the last stretch before the storm.",
+        "bullets": [
+          "Meet regulators worldwide",
+          "Push for compliance",
+          "Last stretch before the storm"
+        ],
+        "year": "2022"
       }
     },
     "identityTitle": "Which fits you better?",
@@ -1076,7 +1104,237 @@
     "shareWechatCta": "Share to WeChat",
     "shareWechatHint": "For WeChat: screenshot the share card above, or copy the invite text into Moments / a chat.",
     "inviteCopied": "Invite text copied — paste into WeChat",
-    "shareInviteZh": "邀請你參與「我的幣安人生」——撰寫每個人的加密編年史\n同一條時間軸，你的加密人生是什麼樣？\n點開一起寫 👇\n{{link}}",
-    "shareInviteEn": "You're invited to \"My Binance Life\" — write your crypto chronicle\nSame timeline as CZ. What's yours?\nJoin here 👇\n{{link}}"
+    "shareInviteZh": "邀請你參與「我的幣安人生」共讀計劃 👇\n{{link}}",
+    "shareInviteEn": "Join the My Binance Life reading plan 👇\n{{link}}",
+    "partnerKicker": "Binance Life Book Club × DataDance",
+    "authorTitle": "Before publishing, set your author profile",
+    "authorHint": "Pick a role avatar and byline (visual style locked to Style C until cutouts land).",
+    "stylePick": "Avatar / cover style (pick one — cutouts land Wed/Thu)",
+    "stylePendingNote": "Using style boards for now; per-role art will swap in when ready.",
+    "rolePick": "Author avatar / role",
+    "genderPick": "Avatar look",
+    "gender": {
+      "male": "Male",
+      "female": "Female"
+    },
+    "authorNameLabel": "Author name",
+    "authorNamePlaceholder": "Your byline",
+    "authorContinue": "Start writing",
+    "needRole": "Please pick a role avatar",
+    "needAuthorName": "Please enter your author name",
+    "anonymousAuthor": "Anonymous",
+    "showcaseAuthor": "Your Name",
+    "editAuthor": "Edit name",
+    "lifeTagsTitle": "My 3 keywords",
+    "lifeTagsHint": "Pick the 3 keywords that best describe you",
+    "myPrinciplesTitle": "My Binance principles",
+    "myPrinciplesHint": "Pick the 3 principles you hold most",
+    "needThreeTags": "Please pick 3 keywords",
+    "needThreePrinciples": "Please pick 3 principles",
+    "timelineEditHint": "Edit your entries, or remove a year node.",
+    "removeNode": "Remove",
+    "bindCta": "Bind into a book",
+    "viewBookCta": "View book",
+    "bookOf": "{{name}}'s",
+    "bookTitle": "My Binance Life",
+    "bookByline": "by {{name}}",
+    "bookTaglineFallback": "A memoir of my Binance Life",
+    "bookPublisher": "Binance Life Book Club × DataDance",
+    "priceVsCz": "vs CZ at ${{cz}}",
+    "capsuleNftHint": "Open Life Capsules to seal, then claim the book club NFT here (or in My Account).",
+    "lifeCapsuleCta": "Open Life Capsules",
+    "lifeCapsuleCtaAgain": "Open Life Capsules again",
+    "lifeCapsuleOpened": "Life Capsules opened — you can claim the book club NFT next.",
+    "nftLoginBackEmail": "Use a different email",
+    "nftLoginCta": "Log in to claim book club NFT",
+    "nftClaimCta": "Claim book club NFT",
+    "nftLoginTitle": "Sign in to claim",
+    "nftLoginIntro": "Sign in with your book-club account to claim the book club NFT after sealing a capsule.",
+    "nftClaimTitle": "Claim book club NFT",
+    "nftClaimIntro": "Confirm to claim your free book club NFT.",
+    "nftClaimStubNote": "Campaign mint is not configured yet — this step is a placeholder.",
+    "nftClaimStubTitle": "Claim recorded",
+    "nftClaimStubOk": "Your claim intent is saved. When the campaign goes live, check My Account to receive it.",
+    "nftLoggedInSavedHint": "You're signed in — your chronicle draft stays saved on this device.",
+    "publishCta": "Publish / “list”",
+    "shareTextLowZh": "",
+    "shareTextHighZh": "",
+    "shareTextLowEn": "📚 @cz_binance's Binance Life: luck, resilience, protecting users.\nPriced at $19.99.\nMy Binance Life: {{tags}}.\nValued at just ${{price}} 🤦🏻‍♂️🤦🏻‍♀️\nSame timeline, what's your Binance Life worth?\nCreate yours 👇\n{{link}}",
+    "shareTextHighEn": "📚 @cz_binance's Binance Life: luck, resilience, protecting users.\nPriced at $19.99.\nMy Binance Life: {{tags}}.\nValued as high as ${{price}} 👀\nSame timeline, what's your Binance Life worth?\nCreate yours 👇\n{{link}}",
+    "styles": {
+      "a": "Style A",
+      "b": "Style B",
+      "c": "Style C",
+      "d": "Style D"
+    },
+    "roles": {
+      "founder": {
+        "name": "Founder",
+        "desc": "Shipping a BNB Chain product — fundraising, BD, and growing the ecosystem."
+      },
+      "buidler": {
+        "name": "BUIDLer",
+        "desc": "Writing Solidity / shipping DApps and infra on BNB Chain. BUIDL mode."
+      },
+      "onchain-detective": {
+        "name": "On-chain Detective",
+        "desc": "Living on BscScan & Dune — tokenomics, wallets, and on-chain alpha."
+      },
+      "degen": {
+        "name": "Degen",
+        "desc": "Aping charts, perps, and new listings. Pure degen energy."
+      },
+      "hodler": {
+        "name": "HODLer",
+        "desc": "HODLing through the bear. Conviction > short-term noise."
+      },
+      "diamond-hands": {
+        "name": "Diamond Hands",
+        "desc": "Never paper-handing. Bags stay locked when the market shakes."
+      },
+      "investor": {
+        "name": "Investor",
+        "desc": "Backing early BNB ecosystem teams — thesis, diligence, long-term bags."
+      },
+      "whale": {
+        "name": "Whale",
+        "desc": "Moving size. Big bags, OTC flow, market-moving capital."
+      },
+      "miner": {
+        "name": "Miner",
+        "desc": "Running nodes / validators — keeping the chain secure and online."
+      },
+      "creator": {
+        "name": "Creator",
+        "desc": "CT / Square / YouTube — posting alpha and shaping narrative."
+      },
+      "fren": {
+        "name": "Fren",
+        "desc": "Community fren — TG, Discord, meetups, connecting builders and users."
+      },
+      "farmer": {
+        "name": "Farmer",
+        "desc": "Farming points, quests, and airdrop seasons. Points meta enjoyooor."
+      },
+      "alpha-hunter": {
+        "name": "Alpha Hunter",
+        "desc": "Grinding Binance Alpha, Launchpool, Megadrop, and Quest for yield."
+      },
+      "black-hat": {
+        "name": "Black Hat",
+        "desc": "Finding the edge cases. Exploits, 0-days, and dark-forest instincts."
+      },
+      "white-hat": {
+        "name": "White Hat",
+        "desc": "Bug bounties and responsible disclosure — securing the ecosystem."
+      }
+    },
+    "exploreClub": "Explore book club",
+    "h5Credit": "Presented by Binance Life Book Club × DataDance",
+    "rank": {
+      "enterCta": "New book ranking",
+      "publicBoardCta": "Rising Star Author board",
+      "modalTitle": "Join the Rising Star Author ranking",
+      "modalHint": "Share your edition to get votes, or open the live board.",
+      "shareX": "Share on X",
+      "shareWechat": "Share via WeChat",
+      "copyShare": "Copy share text",
+      "viewBoard": "View my leaderboard",
+      "createCta": "Create my Binance Life",
+      "callCta": "Call",
+      "callForThem": "Call for them",
+      "voted": "Called",
+      "voteOk": "Call recorded",
+      "voteFailed": "Could not record the call",
+      "alreadyVoted": "You already called for this book",
+      "noVotesLeft": "No calls left (3 books max)",
+      "notActive": "Ranking is not open",
+      "bookPopularityLabel": "Popularity",
+      "popularity": "Popularity {{value}}",
+      "votesLeft": "{{remain}} / {{max}} calls left",
+      "boardKicker": "My Binance Life",
+      "boardTitle": "Rising Star Author board",
+      "boardLiveHint": "Live board — refreshes about every 30 minutes.",
+      "boardEndedHint": "Campaign ended — Top 10 can claim rewards.",
+      "emptyBoard": "No editions on the board yet. Publish yours!",
+      "joinHint": "Want on the board? Create your Binance Life!",
+      "rewardsTitle": "Top 10 rewards",
+      "rewardSyncTop3": "Top 3: 1 offline book-club event ticket",
+      "rewardSyncTop10": "Top 4–10: 1 merch redemption right",
+      "rewardAsync": "Top 10: 1 merch redemption right each",
+      "claimCta": "Claim reward",
+      "claimed": "Claimed",
+      "pendingClaim": "Pending claim",
+      "claimFailed": "Claim failed",
+      "loginToClaim": "Log in to claim your reward",
+      "claimNotOwner": "Only the author (logged in when ranking) can claim this reward",
+      "claimTicketMsg": "Congrats — Rising Star Author TOP {{rank}}. Check My Account for your event ticket.",
+      "claimMerchMsg": "Congrats — Rising Star Author TOP {{rank}}. Check My Account for your merch voucher.",
+      "goAccount": "Go to My Account",
+      "backChronicle": "Back",
+      "accountTitle": "Rising Star Author rewards",
+      "accountRankLine": "TOP {{rank}} · {{name}}",
+      "accountTicketHint": "Offline event ticket — transferable if you cannot attend. Shown when the event opens.",
+      "accountMerchHint": "Merch voucher — redeem any one item when merch opens.",
+      "shareTextZh": "读完 @cz_binance 的币安人生，我也「出版」了自己 ${{ticker}} 的版本 😄\n人家写的是百亿帝国，我的是百日摸爬滚打。\n戳进来 👇🏻 为我打 Call，距离「人气新锐作者」只差你的投票 👀\n{{link}}\nBTW，来都来了，也来「出版」你自己的币安人生！",
+      "shareTextEn": "After reading @cz_binance's Binance Life, I \"published\" my own ${{ticker}} edition 😄\nHis is a billion-dollar empire, while mine is hundreds of days of crypto building.\nTap in 👇🏻 and vote me up. I'm this close to \"Rising Star Author\" 👀\n{{link}}\nBTW, since you're here, why not go \"publish\" your own Binance Life too?"
+    },
+    "nftClaimDdcHint": "Book club free-claim campaign. Artwork can be updated later.",
+    "nftClaimSuccessTitle": "Claim submitted",
+    "nftClaimSuccessDistributed": "Minted successfully. Check My Account for your badge.",
+    "nftClaimSuccessPending": "Claim registered. Check My Account shortly for your badge.",
+    "tagLabels": {
+      "early_entry": "Early entry",
+      "late_entry": "Late to the party",
+      "bluechip_only": "Blue chips only",
+      "chase_new": "Chases new listings",
+      "onchain_degen": "On-chain degen",
+      "buy_dip": "Buys the dip",
+      "fomo_buy": "FOMO buys",
+      "all_in": "All-in",
+      "diversified": "Diversified & cautious",
+      "long_hold": "Holds through pain",
+      "cut_loss": "Cuts losses fast",
+      "swing_trade": "Swing trader",
+      "cant_hold": "Can't hold",
+      "emotion_driven": "Emotion-driven",
+      "disciplined": "Disciplined",
+      "stoic": "Stoic under pressure",
+      "liquidated": "Been liquidated",
+      "rugged": "Been rugged",
+      "underwater": "Been underwater",
+      "survived_bear": "Survived a bear",
+      "missed_bull": "Missed a bull",
+      "left_and_returned": "Left and returned",
+      "researcher": "Researcher",
+      "social_follower": "Social follower",
+      "early_bet": "Early bet",
+      "fast_pivot": "Fast pivot",
+      "long_termism": "Long-termism",
+      "chase_narrative": "Chases narratives",
+      "first_principles": "First principles",
+      "lead_by_example": "Leads by example",
+      "delegate": "Delegates well",
+      "rank_and_yank": "Rank and yank",
+      "output_first": "Output first",
+      "retention_fail": "Retention struggles",
+      "keep_simple": "Keep it simple",
+      "exit_clause": "Leaves an exit",
+      "no_exclusivity": "No exclusivity",
+      "passive_bd": "Passive BD",
+      "partner_burned": "Burned by partners",
+      "user_first": "Users first",
+      "scalable_only": "Scalable only",
+      "over_polish": "Over-polishes",
+      "ship_fast": "Ships fast",
+      "make_whole": "Makes users whole",
+      "fast_response": "Fast response",
+      "silent_crisis": "Silent through crisis",
+      "near_zero": "Through the darkest hour",
+      "regulatory_hit": "Hit by regulation",
+      "calm": "Calm & restrained",
+      "time_anxiety": "Time anxiety",
+      "peak_to_trough": "Peak to trough"
+    }
   }
 }

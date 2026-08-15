@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { BookOpen, FileText, LogIn, LogOut, Package, Award, Loader2 } from "lucide-react";
 import AccountPendingOrders from "../components/AccountPendingOrders";
+import CzSignedNftPanel from "../components/CzSignedNftPanel";
+import ChronicleRankRewardsPanel from "../components/ChronicleRankRewardsPanel";
 import { useTranslation } from "react-i18next";
 import { Link, useSearchParams } from "react-router";
 import NFTBadge from "../components/NFTBadge";
@@ -33,6 +35,7 @@ import {
   isPremiumVoucherNft,
   isRedeemEligible,
   isStandardMembershipNft,
+  isChronicleFdNft,
   isSyntheticNftBalanceToken,
   mapNftRow,
   strField,
@@ -78,7 +81,7 @@ export default function Account() {
   const [purchaseOpen, setPurchaseOpen] = useState(false);
   const [detailNft, setDetailNft] = useState<DisplayNft | null>(null);
   const [giftNft, setGiftNft] = useState<DisplayNft | null>(null);
-  const [tierFallbackCovers, setTierFallbackCovers] = useState({ premium: "", standard: "" });
+  const [tierFallbackCovers, setTierFallbackCovers] = useState({ premium: "", standard: "", chronicle: "" });
   const [ordersRefreshKey, setOrdersRefreshKey] = useState(0);
   const [postPurchaseSyncing, setPostPurchaseSyncing] = useState(false);
   const [redeemScanPending, setRedeemScanPending] = useState(() => isRedeemScanDeepLink(searchParams));
@@ -89,8 +92,13 @@ export default function Account() {
     const premiumUnredeemed: DisplayNft[] = [];
     const premiumStubs: DisplayNft[] = [];
     const standardNfts: DisplayNft[] = [];
+    const chronicleNfts: DisplayNft[] = [];
     for (const n of displayNfts) {
       if (n.badge === "principle") continue;
+      if (isChronicleFdNft(n)) {
+        if (n.badge === "original") chronicleNfts.push(n);
+        continue;
+      }
       if (isStandardMembershipNft(n)) {
         if (n.badge === "original") standardNfts.push(n);
         continue;
@@ -104,6 +112,7 @@ export default function Account() {
       premiumStubs,
       premiumVouchers: [...premiumUnredeemed, ...premiumStubs],
       standardNfts,
+      chronicleNfts,
     };
   }, [displayNfts]);
 
@@ -432,7 +441,7 @@ export default function Account() {
     nfts: DisplayNft[],
     opts: {
       showRedeem?: boolean;
-      variant?: "premium" | "standard";
+      variant?: "premium" | "standard" | "chronicle";
       delayBase?: number;
       indexOffset?: number;
       gridClass?: string;
@@ -465,6 +474,7 @@ export default function Account() {
                   imageUrl={nft.imageUrl}
                   displayName={nft.name}
                   standardMember={opts.variant === "standard" || isStandardMembershipNft(nft)}
+                  chronicleFd={opts.variant === "chronicle" || isChronicleFdNft(nft)}
                   stubTicket={isPremiumAttendanceStub(nft)}
                   size="md"
                   animated={false}
@@ -473,6 +483,24 @@ export default function Account() {
                 />
               </button>
               <div className="space-y-2 w-full max-w-[240px]">
+                {nft.badge === "original" && opts.variant === "chronicle" && (
+                  <>
+                    {isMeaningfulNftDateLabel(nft.dateLabel) ? (
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">{t("account.chronicleAcquiredDate")}</span>
+                        <span className="font-tech">{nft.dateLabel}</span>
+                      </div>
+                    ) : null}
+                    <div className="flex justify-center">
+                      <span className="inline-flex items-center rounded-full bg-cyan-500/15 px-3 py-1.5 text-xs text-cyan-200">
+                        ✓ {t("account.chronicleFdOk")}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground text-center leading-snug">
+                      {t("account.chronicleFdNote")}
+                    </p>
+                  </>
+                )}
                 {nft.badge === "original" && opts.variant === "standard" && (
                   <>
                     {isMeaningfulNftDateLabel(nft.dateLabel) ? (
@@ -491,7 +519,7 @@ export default function Account() {
                     </p>
                   </>
                 )}
-                {nft.badge === "original" && opts.variant !== "standard" && (
+                {nft.badge === "original" && opts.variant === "premium" && (
                   <>
                     {isMeaningfulNftDateLabel(nft.dateLabel) ? (
                       <div className="flex items-center justify-between text-sm">
@@ -568,7 +596,7 @@ export default function Account() {
   const renderNftSection = (
     title: string,
     nfts: DisplayNft[],
-    opts: { showRedeem?: boolean; variant?: "premium" | "standard"; delayBase?: number },
+    opts: { showRedeem?: boolean; variant?: "premium" | "standard" | "chronicle"; delayBase?: number },
   ) => {
     const delayBase = opts.delayBase ?? 0.9;
     if (nfts.length === 0) return null;
@@ -836,7 +864,7 @@ export default function Account() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.15 }}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12"
+            className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12"
           >
             {[
               {
@@ -854,6 +882,14 @@ export default function Account() {
                 nfts: grouped.standardNfts,
                 fallbackCover: tierFallbackCovers.standard,
                 color: "from-stone-500 to-stone-700",
+              },
+              {
+                icon: BookOpen,
+                label: t("account.nftChronicleFd"),
+                value: grouped.chronicleNfts.length,
+                nfts: grouped.chronicleNfts,
+                fallbackCover: tierFallbackCovers.chronicle,
+                color: "from-cyan-700 to-stone-800",
               },
             ].map((stat, index) => {
               const Icon = stat.icon;
@@ -900,7 +936,12 @@ export default function Account() {
             onChanged={() => void loadDashboard()}
           />
 
-          {grouped.premiumVouchers.length === 0 && grouped.standardNfts.length === 0 && (
+          <CzSignedNftPanel />
+          <ChronicleRankRewardsPanel />
+
+          {grouped.premiumVouchers.length === 0 &&
+            grouped.standardNfts.length === 0 &&
+            grouped.chronicleNfts.length === 0 && (
             <p className="text-center text-muted-foreground mb-12">{t("account.noNfts")}</p>
           )}
 
@@ -908,6 +949,10 @@ export default function Account() {
           {renderNftSection(t("account.nftStandardMembership"), grouped.standardNfts, {
             variant: "standard",
             delayBase: 0.35,
+          })}
+          {renderNftSection(t("account.nftChronicleFd"), grouped.chronicleNfts, {
+            variant: "chronicle",
+            delayBase: 0.4,
           })}
         </>
       )}

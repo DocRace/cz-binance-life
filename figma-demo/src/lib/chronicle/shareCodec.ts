@@ -1,5 +1,12 @@
 import { isChronicleNodeId } from "./distill";
-import type { ChronicleAudience, SharePayloadV2, UserEntries } from "./types";
+import { isAvatarGenderId, type AvatarGenderId } from "./roleArt";
+import { isAvatarRoleId, isAvatarStyleId } from "./roles";
+import type {
+  ChronicleAudience,
+  SharePayloadV2,
+  SharePayloadV3,
+  UserEntries,
+} from "./types";
 
 function toBase64Url(json: string): string {
   const bytes = new TextEncoder().encode(json);
@@ -28,31 +35,78 @@ function compactEntries(entries: UserEntries): UserEntries {
   return out;
 }
 
-export function encodeSharePayload(
-  audience: ChronicleAudience,
-  entries: UserEntries,
-  confirmedTagIds: string[],
-): string {
-  const payload: SharePayloadV2 = {
-    v: 2,
-    audience,
-    entries: compactEntries(entries),
-    confirmedTagIds: confirmedTagIds.slice(0, 12),
+export type ShareEncodeInput = {
+  audience: ChronicleAudience;
+  entries: UserEntries;
+  confirmedTagIds: string[];
+  authorName?: string;
+  roleId?: string | null;
+  styleId?: string;
+  gender?: AvatarGenderId;
+  selectedTagIds?: string[];
+  selectedPrinciples?: string[];
+  price?: number;
+};
+
+export function encodeSharePayload(input: ShareEncodeInput): string {
+  const payload: SharePayloadV3 = {
+    v: 3,
+    audience: input.audience,
+    entries: compactEntries(input.entries),
+    confirmedTagIds: input.confirmedTagIds.slice(0, 12),
+    authorName: `${input.authorName || ""}`.trim().slice(0, 40) || undefined,
+    roleId: input.roleId && isAvatarRoleId(input.roleId) ? input.roleId : undefined,
+    styleId: input.styleId && isAvatarStyleId(input.styleId) ? input.styleId : undefined,
+    gender: input.gender && isAvatarGenderId(input.gender) ? input.gender : undefined,
+    selectedTagIds: (input.selectedTagIds || []).slice(0, 3),
+    selectedPrinciples: (input.selectedPrinciples || []).slice(0, 3),
+    price:
+      typeof input.price === "number" && Number.isFinite(input.price)
+        ? Math.round(input.price * 100) / 100
+        : undefined,
   };
   return toBase64Url(JSON.stringify(payload));
 }
 
-export function decodeSharePayload(token: string): SharePayloadV2 | null {
+export function decodeSharePayload(token: string): SharePayloadV3 | null {
   try {
     const raw = JSON.parse(fromBase64Url(token));
 
+    if (raw && raw.v === 3 && (raw.audience === "retail" || raw.audience === "founder")) {
+      return {
+        v: 3,
+        audience: raw.audience,
+        entries: compactEntries(raw.entries || {}),
+        confirmedTagIds: Array.isArray(raw.confirmedTagIds)
+          ? raw.confirmedTagIds.filter((x: unknown) => typeof x === "string").slice(0, 12)
+          : [],
+        authorName: typeof raw.authorName === "string" ? raw.authorName.slice(0, 40) : undefined,
+        roleId: typeof raw.roleId === "string" && isAvatarRoleId(raw.roleId) ? raw.roleId : undefined,
+        styleId:
+          typeof raw.styleId === "string" && isAvatarStyleId(raw.styleId) ? raw.styleId : undefined,
+        gender:
+          typeof raw.gender === "string" && isAvatarGenderId(raw.gender) ? raw.gender : undefined,
+        selectedTagIds: Array.isArray(raw.selectedTagIds)
+          ? raw.selectedTagIds.filter((x: unknown) => typeof x === "string").slice(0, 3)
+          : [],
+        selectedPrinciples: Array.isArray(raw.selectedPrinciples)
+          ? raw.selectedPrinciples.filter((x: unknown) => typeof x === "string").slice(0, 3)
+          : [],
+        price: typeof raw.price === "number" ? raw.price : undefined,
+      };
+    }
+
     // v2
     if (raw && raw.v === 2 && (raw.audience === "retail" || raw.audience === "founder")) {
-      const entries = compactEntries(raw.entries || {});
-      const confirmedTagIds = Array.isArray(raw.confirmedTagIds)
-        ? raw.confirmedTagIds.filter((x: unknown) => typeof x === "string").slice(0, 12)
-        : [];
-      return { v: 2, audience: raw.audience, entries, confirmedTagIds };
+      const v2 = raw as SharePayloadV2;
+      return {
+        v: 3,
+        audience: v2.audience,
+        entries: compactEntries(v2.entries || {}),
+        confirmedTagIds: Array.isArray(v2.confirmedTagIds)
+          ? v2.confirmedTagIds.filter((x: unknown) => typeof x === "string").slice(0, 12)
+          : [],
+      };
     }
 
     // v1 legacy: array of [nodeId, text]
@@ -65,7 +119,7 @@ export function decodeSharePayload(token: string): SharePayloadV2 | null {
         const t = `${text || ""}`.trim().slice(0, 280);
         if (t) entries[id] = t;
       }
-      return { v: 2, audience: "retail", entries, confirmedTagIds: [] };
+      return { v: 3, audience: "retail", entries, confirmedTagIds: [] };
     }
 
     return null;
@@ -74,12 +128,8 @@ export function decodeSharePayload(token: string): SharePayloadV2 | null {
   }
 }
 
-export function buildShareUrl(
-  audience: ChronicleAudience,
-  entries: UserEntries,
-  confirmedTagIds: string[],
-): string {
-  const token = encodeSharePayload(audience, entries, confirmedTagIds);
+export function buildShareUrl(input: ShareEncodeInput): string {
+  const token = encodeSharePayload(input);
   const url = new URL("/club/chronicle", window.location.origin);
   url.searchParams.set("share", token);
   return url.toString();

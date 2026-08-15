@@ -1,11 +1,12 @@
 import { Outlet, Link, useLocation } from "react-router";
 import { useState } from "react";
-import { Users, List, User, Home, Clock, MapPin, Globe, SquareArrowOutUpRight, Sparkles } from "lucide-react";
+import { Globe, SquareArrowOutUpRight } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import bookCover from "../../assets/book-cover-hero.png";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { DataDanceWordmark } from "./DataDanceWordmark";
+import { SiteNavDrawer, SiteNavMenuButton, useSiteNavItems } from "./SiteNavDrawer";
 import {
   BOOK_CLUB_TELEGRAM_HANDLE,
   BOOK_CLUB_TELEGRAM_QR_SRC,
@@ -15,12 +16,6 @@ import {
   getIpdexSiteUrl,
   getIpdexSocialXUrl,
 } from "../../config/platform";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "./ui/sheet";
 import { Toaster } from "sonner";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import { SITE_CONTAINER_X, SITE_HEADER_X } from "../layout/pageLayout";
@@ -31,6 +26,8 @@ export default function Layout() {
   const { t } = useTranslation();
   useDocumentTitle();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  /** Viral H5 shell: no site chrome (nav / footer / partner strip). */
+  const isH5Shell = location.pathname === "/club/chronicle" || location.pathname.startsWith("/club/chronicle/");
 
   const ipdexBrandHref = getIpdexSiteUrl();
   const datadanceHref = getDatadanceSiteUrl();
@@ -42,43 +39,35 @@ export default function Layout() {
   const partnerBrandLinkClass =
     "inline-flex items-center gap-1 font-tech text-[11px] text-muted-foreground/90 transition-colors hover:text-gold";
 
-  const navItems = [
-    { path: "/", label: t("nav.home"), icon: Home, match: (p: string) => p === "/" },
-    {
-      path: "/club/chronicle",
-      label: t("nav.chronicle"),
-      icon: Sparkles,
-      match: (p: string) => p === "/club/chronicle" || p.startsWith("/club/chronicle"),
-    },
-    { path: "/club", label: t("nav.joinClub"), icon: Users, match: (p: string) => p === "/club" },
-    { path: "/event", label: t("nav.offlineEvent"), icon: MapPin, match: (p: string) => p === "/event" },
-    { path: "/principles", label: t("nav.principles"), icon: List, match: (p: string) => p === "/principles" },
-    { path: "/timeline", label: t("nav.timeline"), icon: Clock, match: (p: string) => p === "/timeline" },
-    { path: "/account", label: t("nav.account"), icon: User, match: (p: string) => p.startsWith("/account") },
-  ];
+  const navItems = useSiteNavItems();
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Background effects */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gold opacity-10 blur-[120px] rounded-full" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-stone-400 opacity-10 blur-[120px] rounded-full" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-stone-500 opacity-5 blur-[150px] rounded-full" />
-      </div>
+      {!isH5Shell ? (
+        <>
+          <div className="fixed inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-gold opacity-10 blur-[120px] rounded-full" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-stone-400 opacity-10 blur-[120px] rounded-full" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-stone-500 opacity-5 blur-[150px] rounded-full" />
+          </div>
 
-      {/* Grid pattern overlay */}
-      <div
-        className="fixed inset-0 pointer-events-none opacity-[0.03]"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: '50px 50px'
-        }}
-      />
+          {/* Grid pattern overlay */}
+          <div
+            className="fixed inset-0 pointer-events-none opacity-[0.03]"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+              `,
+              backgroundSize: "50px 50px",
+            }}
+          />
+        </>
+      ) : null}
 
       {/* Header */}
+      {!isH5Shell ? (
       <motion.header
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -150,74 +139,28 @@ export default function Layout() {
               </div>
             </div>
 
-            <button
-              type="button"
-              className="shrink-0 -mr-1 p-2 text-muted-foreground hover:text-foreground lg:hidden"
-              aria-label={t("nav.openMenu")}
-              aria-expanded={mobileNavOpen}
+            <SiteNavMenuButton
+              className="-mr-1 lg:hidden"
+              open={mobileNavOpen}
               onClick={() => setMobileNavOpen(true)}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
+            />
           </div>
         </div>
       </motion.header>
+      ) : null}
 
-      <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
-        <SheetContent
-          side="right"
-          className="flex w-[min(100%,20rem)] flex-col gap-6 border-border/50 bg-background/95 pt-14"
-          aria-describedby={undefined}
-        >
-          <SheetHeader className="px-5 text-left border-b border-border/40 pb-4">
-            <SheetTitle className="font-display text-lg">{t("nav.siteTitle")}</SheetTitle>
-          </SheetHeader>
-          <nav
-            className="mx-4 flex flex-col gap-0.5 rounded-2xl border border-border/40 bg-muted/35 p-1.5 shadow-inner backdrop-blur-md"
-            aria-label={t("nav.menuLabel")}
-          >
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = item.match(location.pathname);
-              return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  onClick={() => setMobileNavOpen(false)}
-                  className={`relative flex min-w-0 items-center gap-3 rounded-full px-3.5 py-2.5 text-sm transition-colors duration-300 ${
-                    isActive
-                      ? "text-gold"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeMobileNav"
-                      className="absolute inset-0 rounded-full bg-gold/12 ring-1 ring-gold/35"
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                    />
-                  )}
-                  <Icon className="relative h-4 w-4 shrink-0 text-current" />
-                  <span className="relative min-w-0 flex-1 text-balance leading-snug">{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
-          <div className="relative z-[1] mx-4 border-t border-border/40 pt-4">
-            <LanguageSwitcher />
-          </div>
-        </SheetContent>
-      </Sheet>
+      {!isH5Shell ? (
+        <SiteNavDrawer open={mobileNavOpen} onOpenChange={setMobileNavOpen} />
+      ) : null}
 
       {/* Main content */}
-      <main className="relative">
+      <main className={`relative ${isH5Shell ? "min-h-dvh" : ""}`}>
         <Outlet />
         <Toaster richColors position="top-center" toastOptions={{ className: "z-[230]" }} style={{ zIndex: 230 }} />
       </main>
 
       {/* Footer */}
+      {!isH5Shell ? (
       <footer
         className={`relative border-t border-border/50 backdrop-blur-xl bg-background/80 ${
           location.pathname === "/timeline" ? "mt-0" : "mt-20"
@@ -362,6 +305,7 @@ export default function Layout() {
           </div>
         </div>
       </footer>
+      ) : null}
     </div>
   );
 }

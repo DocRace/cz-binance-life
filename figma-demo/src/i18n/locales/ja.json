@@ -3,17 +3,17 @@
     "home": "ホーム",
     "book": "書籍紹介",
     "club": "ブッククラブ",
-    "joinClub": "ブッククラブに参加",
-    "offlineEvent": "オフラインイベント",
+    "joinClub": "参加",
+    "offlineEvent": "イベント",
     "principles": "CZ原則",
     "timeline": "CZタイムライン",
-    "account": "マイアカウント",
+    "account": "マイ",
     "redeemOnSite": "現地で受領",
     "siteTitle": "バイナンスライフブッククラブ",
     "siteSubtitle": "FREEDOM OF MONEY BOOK CLUB",
     "openMenu": "メニューを開く",
     "menuLabel": "メインナビゲーション",
-    "chronicle": "編年史"
+    "chronicle": "私のバイナンス人生"
   },
   "meta": {
     "siteName": "バイナンスライフブッククラブ",
@@ -73,7 +73,10 @@
     "subtitlePrincipleFallback": "原則バッジ",
     "typeStandard": "スタンダード",
     "titleStandard": "会員記念章",
-    "subtitleStandard": "無料記念バッジ"
+    "subtitleStandard": "無料記念バッジ",
+    "typeChronicle": "BOOK CLUB",
+    "titleChronicle": "Book club NFT",
+    "subtitleChronicle": "Free commemorative NFT"
   },
   "platform": {
     "settlementStack": "{{dex}}での取引 · {{chain}}（チェーンID {{chainId}}）",
@@ -205,10 +208,11 @@
     "stat4Label": "発行済みバッジ",
     "stat4Unit": "個",
     "chronicleBannerKicker": "開催中",
-    "chronicleBannerTitle": "私のバイナンス人生 · 暗号編年史",
-    "chronicleBannerDesc": "CZのタイムラインに沿ってあなたの暗号人生を書き、原則を蒸留して友人を招待しましょう。",
-    "chronicleBannerCta": "編年史に参加",
-    "chronicleHeroCta": "暗号編年史を書く"
+    "chronicleBannerTitle": "My Binance Life",
+    "chronicleBannerDesc": "CZは『バイナンス人生』を出版した。あなたのは？同じタイムラインに沿って書き、キーワードとシステム価格を出して一冊にまとめ、シェアしよう。書友会NFTの受け取りや Rising Star ボードにも参加できる。",
+    "chronicleBannerCta": "Create my Binance Life",
+    "chronicleRankCta": "Rising Star リーダーボード",
+    "chronicleHeroCta": "Create my Binance Life"
   },
   "membershipTiers": {
     "kicker": "会員特典",
@@ -388,7 +392,8 @@
     "inscriptionSubtitle": "ブッククラブのために CZ が直筆で記した「幣安人生 Club」。",
     "inscriptionAlt": "CZ 直筆題字：幣安人生 Club",
     "inscriptionCredit": "CZ 題字",
-    "chronicleCta": "暗号年表"
+    "chronicleCta": "暗号年表",
+    "chronicleRankCta": "Rising Star ボード"
   },
   "principles": {
     "title": "CZ原則",
@@ -671,7 +676,7 @@
     "verifyAndContinue": "確認して続行",
     "bffCheckoutNote": "プライマリ注文は BFF と httpOnly セッションで作成します。決済 URL が返れば Stripe に遷移します。",
     "payWithBffStripe": "BFF 経由で Stripe 決済",
-    "bffOffline": "書城 BFF に接続できません。開発時は npm run dev:with-bff、または別ターミナルで npm run bff:dev（Vite が /api/bff を 8787 にプロキシ）。bff/.env を用意してください。本番／検証環境では /api/bff を BFF に届ける必要があります。",
+    "bffOffline": "未払い注文を読み込めませんでした。しばらくしてから再試行するか、再ログインしてください。",
     "bffAuthError": "サインインに失敗しました。コードを確認してください。",
     "emailLabel": "メール",
     "otpLabel": "認証コード",
@@ -692,7 +697,8 @@
       "expired": "この Primary Sale は IPDEX 上で期限切れです。管理画面で新しいセールを設定するか、期間を延長してください。",
       "delisted": "この Primary Sale は IPDEX から掲載解除されています。再掲載するか、アクティブなセール UUID をサイト側に設定してください。",
       "notStarted": "この Primary Sale は IPDEX 上でまだ開始していません。開始時刻になるまでお待ちいただくか、設定を更新してください。"
-    }
+    },
+    "bffOfflineDev": "Book BFF unreachable. Local: npm run dev:with-bff / npm run bff:dev (proxy /api/bff → 8787). Need bff/.env. Hosted: nginx must forward /api/bff."
   },
   "purchaseSuccess": {
     "documentTitle": "お支払い完了 · バイナンスライフブッククラブ",
@@ -841,7 +847,27 @@
     "redeemSelectedLabel": "選択中の NFT",
     "redeemPickAnother": "別のバウチャーを選ぶ",
     "redeemNoEligibleNfts": "引き換え可能な NFT がありません、またはまだ一覧に同期されていません。",
-    "redeemBack": "アカウントに戻る"
+    "redeemBack": "アカウントに戻る",
+    "czSignedNft": {
+      "title": "Book club NFT",
+      "subtitle": "Free claim after sealing your capsule. Separate from standard/premium membership — existing badges stay unchanged.",
+      "claimCta": "Claim book club NFT",
+      "viewCta": "View",
+      "rightsTitle": "NFT benefits",
+      "rightsIntro": "Holding this NFT unlocks:",
+      "benefits": [
+        "Priority access to global Binance Life book-club events (priority registration)",
+        "+10% weight in future raffles",
+        "Exclusive perks in future partner programs",
+        "DataDance Wallet: one-time 100 Points bonus",
+        "DataDance Wallet: +5% Points on daily data uploads"
+      ],
+      "rightsFootnote": "Subject to campaign rules and partner announcements; benefits may change by phase."
+    },
+    "nftChronicleFd": "Book club NFT",
+    "chronicleAcquiredDate": "Claimed",
+    "chronicleFdOk": "Book club NFT",
+    "chronicleFdNote": "Free book-club commemorative NFT — separate from standard/premium membership."
   },
   "giftPurchase": {
     "modeSelf": "自分用に購入",
@@ -900,6 +926,7 @@
     "againCta": "もう一度書く",
     "createMine": "自分の年表を作る",
     "shareCta": "シェア文をコピー",
+    "shareAction": "シェア",
     "copied": "Share text copied",
     "copyFailed": "Copy failed — share the link manually",
     "shareBlank": "____",
@@ -916,14 +943,6 @@
           "First step into crypto"
         ],
         "year": "2013"
-      },
-      "n2014": {
-        "title": "OKCoin chapter",
-        "event": "Briefly served as OKCoin CTO.",
-        "bullets": [
-          "Briefly served as OKCoin CTO"
-        ],
-        "year": "2014"
       },
       "n2017_06": {
         "title": "Hotpot decision",
@@ -1046,6 +1065,16 @@
           "Continued Giggle Academy free education"
         ],
         "year": "Late 2024"
+      },
+      "n2022": {
+        "title": "Global diplomacy",
+        "event": "Meeting regulators and officials worldwide to secure Binance’s compliance path — the last stretch before the storm.",
+        "bullets": [
+          "Meet regulators worldwide",
+          "Push for compliance",
+          "Last stretch before the storm"
+        ],
+        "year": "2022"
       }
     },
     "identityTitle": "どちらに近いですか？",
@@ -1069,6 +1098,236 @@
     "shareWechatHint": "WeChat：上のカードをスクショするか、招待文をコピーして送信してください。",
     "inviteCopied": "招待文をコピーしました",
     "shareInviteZh": "邀請你參與「我的幣安人生」——撰寫每個人的加密編年史\n同一條時間軸，你的加密人生是什麼樣？\n點開一起寫 👇\n{{link}}",
-    "shareInviteEn": "You're invited to \"My Binance Life\" — write your crypto chronicle\nSame timeline as CZ. What's yours?\nJoin here 👇\n{{link}}"
+    "shareInviteEn": "You're invited to \"My Binance Life\" — write your crypto chronicle\nSame timeline as CZ. What's yours?\nJoin here 👇\n{{link}}",
+    "partnerKicker": "Binance Life Book Club × DataDance",
+    "authorTitle": "Before publishing, set your author profile",
+    "authorHint": "Pick a cover style and role, then add your byline.",
+    "stylePick": "Avatar / cover style (pick one — cutouts land Wed/Thu)",
+    "stylePendingNote": "Using style boards for now; per-role art will swap in when ready.",
+    "rolePick": "Author avatar / role",
+    "genderPick": "アバター",
+    "gender": {
+      "male": "男性",
+      "female": "女性"
+    },
+    "authorNameLabel": "Author name",
+    "authorNamePlaceholder": "Your byline",
+    "authorContinue": "Start writing",
+    "needRole": "Please pick a role avatar",
+    "needAuthorName": "Please enter your author name",
+    "anonymousAuthor": "Anonymous",
+    "showcaseAuthor": "Your Name",
+    "editAuthor": "Edit name",
+    "lifeTagsTitle": "My 3 keywords",
+    "lifeTagsHint": "Pick the 3 keywords that best describe you",
+    "myPrinciplesTitle": "My Binance principles",
+    "myPrinciplesHint": "Pick the 3 principles you hold most",
+    "needThreeTags": "Please pick 3 keywords",
+    "needThreePrinciples": "Please pick 3 principles",
+    "timelineEditHint": "Edit your entries, or remove a year node.",
+    "removeNode": "Remove",
+    "bindCta": "Bind into a book",
+    "viewBookCta": "View book",
+    "bookOf": "{{name}}'s",
+    "bookTitle": "My Binance Life",
+    "bookTaglineFallback": "A memoir of my Binance Life",
+    "bookByline": "by {{name}}",
+    "bookPublisher": "Binance Life Book Club × DataDance",
+    "priceVsCz": "vs CZ at ${{cz}}",
+    "capsuleNftHint": "Open Life Capsules to seal, then claim the book club NFT here (or in My Account).",
+    "lifeCapsuleCta": "Open Life Capsules",
+    "lifeCapsuleCtaAgain": "Open Life Capsules again",
+    "lifeCapsuleOpened": "Life Capsules opened — you can claim the book club NFT next.",
+    "nftLoginBackEmail": "Use a different email",
+    "nftLoginCta": "Log in to claim book club NFT",
+    "nftClaimCta": "Claim book club NFT",
+    "nftLoginTitle": "Sign in to claim",
+    "nftLoginIntro": "Sign in with your book-club account to claim the book club NFT after sealing a capsule.",
+    "nftClaimTitle": "Claim book club NFT",
+    "nftClaimIntro": "Confirm to claim your free book club NFT.",
+    "nftClaimStubNote": "Campaign mint is not configured yet — this step is a placeholder.",
+    "nftClaimStubTitle": "Claim recorded",
+    "nftClaimStubOk": "Your claim intent is saved. When the campaign goes live, check My Account to receive it.",
+    "nftLoggedInSavedHint": "You're signed in — your chronicle draft stays saved on this device.",
+    "publishCta": "Publish / “list”",
+    "shareTextLowZh": "",
+    "shareTextHighZh": "",
+    "shareTextLowEn": "📚 @cz_binance's Binance Life: luck, resilience, protecting users.\nPriced at $19.99.\nMy Binance Life: {{tags}}.\nValued at just ${{price}} 🤦🏻‍♂️🤦🏻‍♀️\nSame timeline, what's your Binance Life worth?\nCreate yours 👇\n{{link}}",
+    "shareTextHighEn": "📚 @cz_binance's Binance Life: luck, resilience, protecting users.\nPriced at $19.99.\nMy Binance Life: {{tags}}.\nValued as high as ${{price}} 👀\nSame timeline, what's your Binance Life worth?\nCreate yours 👇\n{{link}}",
+    "styles": {
+      "a": "Style A",
+      "b": "Style B",
+      "c": "Style C",
+      "d": "Style D"
+    },
+    "roles": {
+      "founder": {
+        "name": "Founder",
+        "desc": "Build and grow a BNB Chain project — product, fundraising, and ecosystem."
+      },
+      "buidler": {
+        "name": "BUIDLer",
+        "desc": "Ship DApps, contracts, or infra on BNB Chain."
+      },
+      "onchain-detective": {
+        "name": "On-chain Detective",
+        "desc": "Analyze BNB ecosystem projects, tokenomics, and on-chain data."
+      },
+      "degen": {
+        "name": "Degen",
+        "desc": "Actively trade BNB ecosystem assets and chase market opportunities."
+      },
+      "hodler": {
+        "name": "HODLer",
+        "desc": "Hold for the long term — conviction over short-term noise."
+      },
+      "diamond-hands": {
+        "name": "Diamond Hands",
+        "desc": "Stay through volatility with diamond hands."
+      },
+      "investor": {
+        "name": "Investor",
+        "desc": "Back early BNB ecosystem teams and theses."
+      },
+      "whale": {
+        "name": "Whale",
+        "desc": "Move size — large capital shaping ecosystem flows."
+      },
+      "miner": {
+        "name": "Miner",
+        "desc": "Run infra and help keep the network humming."
+      },
+      "creator": {
+        "name": "Creator",
+        "desc": "Create content that shapes the Binance / BNB community."
+      },
+      "fren": {
+        "name": "Fren",
+        "desc": "Organize communities and connect projects with users."
+      },
+      "farmer": {
+        "name": "Farmer",
+        "desc": "Farm points, quests, and ecosystem incentives."
+      },
+      "alpha-hunter": {
+        "name": "Alpha Hunter",
+        "desc": "Hunt Alpha, Launchpool, Megadrop, and Quest rewards."
+      },
+      "black-hat": {
+        "name": "Black Hat",
+        "desc": "Probe systems — security research with an edge."
+      },
+      "white-hat": {
+        "name": "White Hat",
+        "desc": "Hunt vulnerabilities to make the ecosystem safer."
+      }
+    },
+    "exploreClub": "書友会を見る",
+    "h5Credit": "Binance Life Book Club × DataDance",
+    "rank": {
+      "enterCta": "新刊ランキング",
+      "publicBoardCta": "Rising Star リーダーボード",
+      "modalTitle": "Rising Star Author ランキング",
+      "modalHint": "シェアして投票を集め、リーダーボードを確認しましょう。",
+      "shareX": "X でシェア",
+      "shareWechat": "WeChat でシェア",
+      "copyShare": "シェア文をコピー",
+      "viewBoard": "リーダーボードを見る",
+      "createCta": "自分の Binance Life を作る",
+      "callCta": "Call",
+      "callForThem": "Call する",
+      "voted": "Call 済み",
+      "voteOk": "Call 完了",
+      "voteFailed": "Call に失敗しました",
+      "alreadyVoted": "この本には既に Call 済みです",
+      "noVotesLeft": "残り Call がありません（最大 3 冊）",
+      "notActive": "ランキングは開催中ではありません",
+      "bookPopularityLabel": "人気値",
+      "popularity": "人気値 {{value}}",
+      "votesLeft": "残り {{remain}} / {{max}} Call",
+      "boardKicker": "My Binance Life",
+      "boardTitle": "Rising Star Author ボード",
+      "boardLiveHint": "ほぼリアルタイム（最大約 30 分）",
+      "boardEndedHint": "終了 — TOP10 は報酬を受け取れます",
+      "emptyBoard": "まだ作品がありません",
+      "joinHint": "ボードに載るには作成しよう！",
+      "rewardsTitle": "TOP10 報酬",
+      "rewardSyncTop3": "TOP3: オフラインイベントチケット ×1",
+      "rewardSyncTop10": "TOP4–10: グッズ交換権 ×1",
+      "rewardAsync": "TOP10: グッズ交換権 ×1",
+      "claimCta": "報酬を受け取る",
+      "claimed": "受取済み",
+      "pendingClaim": "未受取",
+      "claimFailed": "受取に失敗",
+      "loginToClaim": "ログインして受け取ってください",
+      "claimNotOwner": "ランキング登録時にログインした作者のみ受け取れます",
+      "claimTicketMsg": "Rising Star Author TOP {{rank}} おめでとう。アカウントでチケットを確認。",
+      "claimMerchMsg": "Rising Star Author TOP {{rank}} おめでとう。アカウントで特典を確認。",
+      "goAccount": "アカウントへ",
+      "backChronicle": "戻る",
+      "accountTitle": "Rising Star Author 報酬",
+      "accountRankLine": "TOP {{rank}} · {{name}}",
+      "accountTicketHint": "オフラインチケット（譲渡可）",
+      "accountMerchHint": "グッズ交換券",
+      "shareTextZh": "读完 @cz_binance 的币安人生，我也「出版」了自己 ${{ticker}} 的版本 😄\n人家写的是百亿帝国，我的是百日摸爬滚打。\n戳进来 👇🏻 为我打 Call，距离「人气新锐作者」只差你的投票 👀\n{{link}}\nBTW，来都来了，也来「出版」你自己的币安人生！",
+      "shareTextEn": "After reading @cz_binance's Binance Life, I \"published\" my own ${{ticker}} edition 😄\nHis is a billion-dollar empire, while mine is hundreds of days of crypto building.\nTap in 👇🏻 and vote me up. I'm this close to \"Rising Star Author\" 👀\n{{link}}\nBTW, since you're here, why not go \"publish\" your own Binance Life too?"
+    },
+    "nftClaimDdcHint": "Book club free-claim campaign. Artwork can be updated later.",
+    "nftClaimSuccessTitle": "Claim submitted",
+    "nftClaimSuccessDistributed": "Minted successfully. Check My Account for your badge.",
+    "nftClaimSuccessPending": "Claim registered. Check My Account shortly for your badge.",
+    "tagLabels": {
+      "early_entry": "早期参入",
+      "late_entry": "後発組",
+      "bluechip_only": "青チップのみ",
+      "chase_new": "新通貨追い",
+      "onchain_degen": "オンチェーン勢",
+      "buy_dip": "押し目買い",
+      "fomo_buy": "FOMO買い",
+      "all_in": "オールイン",
+      "diversified": "分散・慎重",
+      "long_hold": "長期ホルダー",
+      "cut_loss": "損切り早い",
+      "swing_trade": "スイング勢",
+      "cant_hold": "持てない",
+      "emotion_driven": "感情駆動",
+      "disciplined": "規律型",
+      "stoic": "鈍感力",
+      "liquidated": "ロスカット経験",
+      "rugged": "ラグ経験",
+      "underwater": "含み損経験",
+      "survived_bear": "ベアを耐えた",
+      "missed_bull": "ブルを逃した",
+      "left_and_returned": "離れて復帰",
+      "researcher": "リサーチ型",
+      "social_follower": "ソーシャル型",
+      "early_bet": "早期ベット",
+      "fast_pivot": "迅速ピボット",
+      "long_termism": "長期主義",
+      "chase_narrative": "ナラティブ追い",
+      "first_principles": "第一原理",
+      "lead_by_example": "率先垂範",
+      "delegate": "委任上手",
+      "rank_and_yank": "下位淘汰",
+      "output_first": "アウトプット優先",
+      "retention_fail": "定着に苦戦",
+      "keep_simple": "シンプルに",
+      "exit_clause": "出口を残す",
+      "no_exclusivity": "排他拒否",
+      "passive_bd": "受け身BD",
+      "partner_burned": "提携で火傷",
+      "user_first": "ユーザー優先",
+      "scalable_only": "拡張性重視",
+      "over_polish": "磨きすぎ",
+      "ship_fast": "高速出荷",
+      "make_whole": "全額補填気質",
+      "fast_response": "即応",
+      "silent_crisis": "黙って耐える",
+      "near_zero": "最暗部を耐えた",
+      "regulatory_hit": "規制で打たれた",
+      "calm": "冷静克己",
+      "time_anxiety": "時間焦燥",
+      "peak_to_trough": "頂点から谷へ"
+    }
   }
 }

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 
@@ -9,6 +10,8 @@ interface NFTBadgeProps {
   displayName?: string;
   /** Free STANDARD tier — commemorative member badge, not a redeemable premium voucher. */
   standardMember?: boolean;
+  /** My Binance Life chronicle activity FD proof — free, outside membership tiers. */
+  chronicleFd?: boolean;
   /** Attendance NFT minted after on-site redemption (stub / ticket root)—distinct label vs generic “attendance commemorative”. */
   stubTicket?: boolean;
   size?: "sm" | "md" | "lg";
@@ -23,6 +26,7 @@ export default function NFTBadge({
   imageUrl,
   displayName,
   standardMember = false,
+  chronicleFd = false,
   stubTicket = false,
   size = "md",
   animated = true,
@@ -44,9 +48,12 @@ export default function NFTBadge({
     pink: "from-stone-500 via-stone-400 to-stone-600",
   };
 
-  const standardMode = type === "original" && standardMember;
+  const chronicleMode = type === "original" && chronicleFd;
+  const standardMode = type === "original" && standardMember && !chronicleFd;
   const bgGradient =
-    standardMode
+    chronicleMode
+      ? "from-cyan-800 via-stone-700 to-stone-900"
+      : standardMode
       ? "from-stone-500 via-stone-600 to-stone-800"
       : type === "original"
         ? "from-gold via-gold-light to-gold-dark"
@@ -56,7 +63,9 @@ export default function NFTBadge({
 
   const stubMode = type === "redeemed" && stubTicket;
   const badgeType =
-    standardMode
+    chronicleMode
+      ? t("nftBadge.typeChronicle")
+      : standardMode
       ? t("nftBadge.typeStandard")
       : type === "original"
         ? t("nftBadge.typeReservation")
@@ -67,7 +76,9 @@ export default function NFTBadge({
             : t("nftBadge.typeAttendance");
 
   const badgeTitle =
-    standardMode
+    chronicleMode
+      ? t("nftBadge.titleChronicle")
+      : standardMode
       ? t("nftBadge.titleStandard")
       : type === "original"
         ? t("nftBadge.titleReservation")
@@ -78,7 +89,9 @@ export default function NFTBadge({
             : t("nftBadge.titleAttendance");
 
   const badgeSubtitle =
-    standardMode
+    chronicleMode
+      ? t("nftBadge.subtitleChronicle")
+      : standardMode
       ? t("nftBadge.subtitleStandard")
       : type === "original"
         ? t("nftBadge.subtitleReservation")
@@ -89,13 +102,19 @@ export default function NFTBadge({
             : t("nftBadge.subtitleAttendance");
 
   const artUrl = imageUrl?.trim() || "";
-  const hasArt = artUrl.length > 0;
+  const [artFailed, setArtFailed] = useState(false);
+  const hasArt = artUrl.length > 0 && !artFailed;
 
   const BadgeContent = (
     <div className={`${sizeClasses[size]} relative rounded-2xl overflow-hidden`}>
       {hasArt ? (
         <>
-          <img src={artUrl} alt={displayName || badgeTitle} className="absolute inset-0 h-full w-full object-cover" />
+          <img
+            src={artUrl}
+            alt={displayName || badgeTitle}
+            className="absolute inset-0 h-full w-full object-cover"
+            onError={() => setArtFailed(true)}
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/10" />
         </>
       ) : (

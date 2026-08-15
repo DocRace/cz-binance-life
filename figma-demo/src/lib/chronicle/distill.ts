@@ -208,7 +208,8 @@ export function mapTagsToPrinciples(
   }
 
   const ranked = [...agg.values()].sort((a, b) => b.score - a.score);
-  if (ranked.length > 0) return ranked.slice(0, 3);
+  // Candidates for user pick (up to 10); UI selects top 3 when available.
+  if (ranked.length > 0) return ranked.slice(0, 10);
 
   // Soft fallback if user confirmed nothing useful
   return [

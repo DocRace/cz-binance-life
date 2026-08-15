@@ -1,10 +1,12 @@
-export type ChronicleStep = "intro" | "identity" | "fill" | "confirm" | "result";
+import type { AvatarGenderId } from "./roleArt";
+import type { AvatarRoleId, AvatarStyleId } from "./roles";
+
+export type ChronicleStep = "intro" | "author" | "fill" | "result" | "book";
 
 export type ChronicleAudience = "retail" | "founder";
 
 export type ChronicleNodeId =
   | "n2013"
-  | "n2014"
   | "n2017_06"
   | "n2017_07"
   | "n2017_09"
@@ -12,6 +14,7 @@ export type ChronicleNodeId =
   | "n2019_safu"
   | "n2019_eco"
   | "n2021"
+  | "n2022"
   | "n2022_11"
   | "n2023"
   | "n2023_11"
@@ -70,6 +73,22 @@ export type ChronicleResult = {
   principles: MatchedPrinciple[];
 };
 
+export type SharePayloadV3 = {
+  v: 3;
+  audience: ChronicleAudience;
+  entries: UserEntries;
+  confirmedTagIds: string[];
+  authorName?: string;
+  roleId?: AvatarRoleId;
+  styleId?: AvatarStyleId;
+  /** male | female — book-club avatar pack variant */
+  gender?: AvatarGenderId;
+  selectedTagIds?: string[];
+  selectedPrinciples?: string[];
+  price?: number;
+};
+
+/** @deprecated prefer SharePayloadV3 */
 export type SharePayloadV2 = {
   v: 2;
   audience: ChronicleAudience;
