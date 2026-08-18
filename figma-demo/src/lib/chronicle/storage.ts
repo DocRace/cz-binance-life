@@ -17,7 +17,7 @@ const DRAFT_KEY = "czlife.chronicle.draft.v3";
 const DONE_KEY = "czlife.chronicle.completions.v1";
 const BASE_PARTICIPANTS = 1286;
 
-const STEPS: ChronicleStep[] = ["intro", "author", "fill", "result", "book"];
+const STEPS: ChronicleStep[] = ["intro", "fill", "result", "author", "book"];
 
 function isChronicleStep(value: unknown): value is ChronicleStep {
   return typeof value === "string" && (STEPS as string[]).includes(value);
@@ -68,29 +68,20 @@ const EMPTY: ChronicleDraft = {
   step: "intro",
 };
 
-/** Resume target when the user already created a chronicle locally. */
+/** Resume the last wizard step. Identity is no longer required before writing. */
 export function resumeStepFromDraft(draft: ChronicleDraft): ChronicleStep | null {
   const filled = Object.values(draft.entries || {}).some((t) => `${t || ""}`.trim());
-  const hasIdentity = Boolean(draft.roleId && `${draft.authorName || ""}`.trim());
-  if (
-    (draft.step === "result" || draft.step === "book") &&
-    filled &&
-    hasIdentity
-  ) {
-    return draft.step;
-  }
-  // Legacy drafts without step, but already distilled / picked tags
-  if (
-    filled &&
-    hasIdentity &&
-    (draft.selectedTagIds.length > 0 ||
-      draft.selectedPrinciples.length > 0 ||
-      draft.confirmedTagIds.length > 0)
-  ) {
-    return "result";
-  }
-  if (filled && hasIdentity) return "fill";
-  if (draft.roleId || `${draft.authorName || ""}`.trim()) return "author";
+  const hasPicks =
+    draft.selectedTagIds.length > 0 ||
+    draft.selectedPrinciples.length > 0 ||
+    draft.confirmedTagIds.length > 0;
+  if (draft.step === "book" && filled) return "book";
+  if (draft.step === "author" && filled && hasPicks) return "author";
+  if (draft.step === "result" && filled) return "result";
+  if (draft.step === "fill" && filled) return "fill";
+  if (filled && hasPicks) return "result";
+  if (filled) return "fill";
+  if (draft.step === "intro") return "intro";
   return null;
 }
 

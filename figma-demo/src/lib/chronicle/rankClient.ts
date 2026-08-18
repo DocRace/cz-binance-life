@@ -23,6 +23,7 @@ export type RankEntry = {
   tags: string[];
   price: number | null;
   voteCount: number;
+  inviteCount?: number;
   popularity: number;
   shareToken: string;
   rank: number | null;
@@ -119,24 +120,18 @@ export async function fetchVoterStatus(): Promise<VoterStatus | null> {
   return out.code === 0 ? out.data : null;
 }
 
-export async function voteRankEntry(entryId: string): Promise<{
-  ok: boolean;
-  message: string;
-  entry?: RankEntry | null;
-  status?: VoterStatus | null;
-}> {
-  const out = await bookBffJson<{ entry: RankEntry; status: VoterStatus }>(
-    "/api/bff/chronicle/rank/vote",
-    { method: "POST", body: JSON.stringify({ entryId }) },
+export async function attributeInvite(body: {
+  refEntryId: string;
+  completerEntryId?: string;
+}): Promise<{ ok: boolean; already?: boolean; message: string }> {
+  const out = await bookBffJson<{ already?: boolean }>(
+    "/api/bff/chronicle/rank/attribute",
+    { method: "POST", body: JSON.stringify(body) },
   );
-  if (out.code === 0 && out.data) {
-    return { ok: true, message: "ok", entry: out.data.entry, status: out.data.status };
+  if (out.code === 0) {
+    return { ok: true, already: Boolean(out.data?.already), message: "ok" };
   }
-  return {
-    ok: false,
-    message: out.message || "VOTE_FAILED",
-    status: (out.data as unknown as VoterStatus) || null,
-  };
+  return { ok: false, message: out.message || "ATTRIBUTE_FAILED" };
 }
 
 export async function claimRankReward(entryId: string): Promise<{

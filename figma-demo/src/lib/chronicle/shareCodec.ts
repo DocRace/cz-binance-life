@@ -52,7 +52,8 @@ export function encodeSharePayload(input: ShareEncodeInput): string {
   const payload: SharePayloadV3 = {
     v: 3,
     audience: input.audience,
-    entries: compactEntries(input.entries),
+    // Public share URL must not carry raw writing (meeting: no BNB review dump).
+    entries: {},
     confirmedTagIds: input.confirmedTagIds.slice(0, 12),
     authorName: `${input.authorName || ""}`.trim().slice(0, 40) || undefined,
     roleId: input.roleId && isAvatarRoleId(input.roleId) ? input.roleId : undefined,
@@ -128,9 +129,11 @@ export function decodeSharePayload(token: string): SharePayloadV3 | null {
   }
 }
 
-export function buildShareUrl(input: ShareEncodeInput): string {
+export function buildShareUrl(input: ShareEncodeInput, opts?: { ref?: string }): string {
   const token = encodeSharePayload(input);
   const url = new URL("/club/chronicle", window.location.origin);
   url.searchParams.set("share", token);
+  const ref = `${opts?.ref || ""}`.trim();
+  if (ref) url.searchParams.set("ref", ref);
   return url.toString();
 }

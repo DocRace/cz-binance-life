@@ -16,6 +16,30 @@ function figmaAssetResolver() {
   }
 }
 
+/** Serve isolated static pages — never let the SPA swallow them. */
+function isolatedStaticPages() {
+  const pages = ['/partner-deck', '/cover-showcase']
+  const rewrite = (req: { url?: string }, _res: unknown, next: () => void) => {
+    const url = req.url || ''
+    for (const page of pages) {
+      if (url === page || url === `${page}/`) {
+        req.url = `${page}/index.html`
+        break
+      }
+    }
+    next()
+  }
+  return {
+    name: 'isolated-static-pages',
+    configureServer(server: { middlewares: { use: (fn: typeof rewrite) => void } }) {
+      server.middlewares.use(rewrite)
+    },
+    configurePreviewServer(server: { middlewares: { use: (fn: typeof rewrite) => void } }) {
+      server.middlewares.use(rewrite)
+    },
+  }
+}
+
 export default defineConfig(({ mode }) => {
   const envDir = path.resolve(__dirname)
   const loaded = loadEnv(mode, envDir, '')
@@ -37,6 +61,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       figmaAssetResolver(),
+      isolatedStaticPages(),
       // The React and Tailwind plugins are both required for Make, even if
       // Tailwind is not being actively used – do not remove them
       react(),

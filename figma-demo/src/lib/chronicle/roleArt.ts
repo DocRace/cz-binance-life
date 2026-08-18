@@ -28,8 +28,8 @@ export function rolePackSrc(role: AvatarRoleId, gender: AvatarGenderId = DEFAULT
 }
 
 /** Warm browser cache for showcase cycling so art + label can swap in lockstep. */
-export function preloadRolePack(roles: AvatarRoleId[]): void {
-  if (typeof window === "undefined") return;
+export function preloadRolePack(roles: AvatarRoleId[] = []): void {
+  if (typeof window === "undefined" || !Array.isArray(roles)) return;
   const urls = new Set<string>();
   for (const role of roles) {
     if (UNISEX_ROLES.includes(role)) {

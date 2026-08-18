@@ -6,7 +6,6 @@ import cookieParser from 'cookie-parser';
 import { loadBffEnv, ipdexFacadeFetch, ipdexPublicApiFetch } from './ipdexClient.js';
 import { suggestChronicleTags } from './chronicleSuggestTags.js';
 import {
-  clientIp,
   createChronicleRankStore,
   loadRankConfigFromEnv,
 } from './chronicleRankStore.js';
@@ -663,10 +662,28 @@ async function boot() {
     res.json({ code: 0, message: 'ok', data: entry });
   });
 
-  app.get('/api/bff/chronicle/rank/voter-status', async (req, res) => {
+  app.get('/api/bff/chronicle/rank/voter-status', async (_req, res) => {
+    res.json({
+      code: 0,
+      message: 'ok',
+      data: { votesUsed: 0, votesRemaining: 0, votedEntryIds: [], maxVotes: 0 },
+    });
+  });
+
+  app.post('/api/bff/chronicle/rank/attribute', async (req, res) => {
     const userId = await resolveUserId(req);
-    const status = rankStore.voterStatus({ userId, ip: clientIp(req) });
-    res.json({ code: 0, message: 'ok', data: status });
+    if (!userId) {
+      return res.status(401).json({ code: -10005, message: 'LOGIN_REQUIRED', data: null });
+    }
+    const out = rankStore.attributeInvite({
+      refEntryId: req.body?.refEntryId,
+      userId,
+      completerEntryId: req.body?.completerEntryId,
+    });
+    if (!out.ok) {
+      return res.status(400).json({ code: -10001, message: out.code, data: null });
+    }
+    res.json({ code: 0, message: 'ok', data: out });
   });
 
   app.post('/api/bff/chronicle/rank/enroll', async (req, res) => {
@@ -686,17 +703,8 @@ async function boot() {
     res.json({ code: 0, message: 'ok', data: out.entry });
   });
 
-  app.post('/api/bff/chronicle/rank/vote', async (req, res) => {
-    const userId = await resolveUserId(req);
-    const out = rankStore.vote({
-      entryId: req.body?.entryId,
-      userId,
-      ip: clientIp(req),
-    });
-    if (!out.ok) {
-      return res.status(400).json({ code: -10001, message: out.code, data: out.status || null });
-    }
-    res.json({ code: 0, message: 'ok', data: { entry: out.entry, status: out.status } });
+  app.post('/api/bff/chronicle/rank/vote', (_req, res) => {
+    res.status(400).json({ code: -10001, message: 'VOTE_DISABLED', data: null });
   });
 
   app.post('/api/bff/chronicle/rank/claim', async (req, res) => {

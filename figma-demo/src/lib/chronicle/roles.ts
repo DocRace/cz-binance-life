@@ -76,3 +76,25 @@ export function isAvatarRoleId(value: string): value is AvatarRoleId {
 export function isAvatarStyleId(value: string): value is AvatarStyleId {
   return (AVATAR_STYLE_IDS as string[]).includes(value);
 }
+
+/** Soft match after writing — user can still change on the author step. */
+export function suggestRoleFromTags(
+  tagIds: string[],
+  audience: ChronicleAudience,
+): AvatarRoleId {
+  const blob = tagIds.join(" ").toLowerCase();
+  if (/founder|ceo|startup|launch/.test(blob)) return "founder";
+  if (/buidl|dev|code|solidity|contract/.test(blob)) return "buidler";
+  if (/detect|research|onchain|dune/.test(blob)) return "onchain-detective";
+  if (/degen|trade|perp|leverage/.test(blob)) return "degen";
+  if (/diamond|hold/.test(blob)) return "diamond-hands";
+  if (/invest|vc|thesis/.test(blob)) return "investor";
+  if (/whale|otc/.test(blob)) return "whale";
+  if (/creat|content|kol/.test(blob)) return "creator";
+  if (/farm|quest|airdrop|point/.test(blob)) return "farmer";
+  if (/alpha|launchpool|megadrop/.test(blob)) return "alpha-hunter";
+  if (/white.?hat|bounty|audit/.test(blob)) return "white-hat";
+  if (/black.?hat|exploit/.test(blob)) return "black-hat";
+  if (audience === "founder") return "founder";
+  return "hodler";
+}

@@ -98,6 +98,10 @@ Runtime env: copy from `bff/.env.example`. Critical values:
 
 The app is a **client-side router**. The HTTP server **must** resolve unknown paths to `index.html`. The included nginx config does that (`try_files`).
 
+**Isolated partner deck:** `https://<host>/partner-deck/` is a static PPT/PDF page (not a React route). Nginx serves it from `partner-deck/` only and does not fall through to the SPA, other subpaths, or other hostnames.
+
+**Isolated cover fan (roll-up / 易拉宝):** `https://<host>/cover-showcase/` is a static 3D-cover artboard. Same isolation rules.
+
 ## 5. Checklist before go-live
 
 - [ ] TLS certificate on the public hostname.

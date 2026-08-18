@@ -1,64 +1,59 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import { motion } from "motion/react";
-import { ChevronLeft, Loader2, Megaphone, Trophy } from "lucide-react";
+import { ChevronLeft, Loader2, Trophy } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import LanguageSwitcher from "../components/LanguageSwitcher";
 import RoleAvatar from "../components/RoleAvatar";
 import type { AvatarRoleId } from "../../lib/chronicle/roles";
+import { persistInviteRef } from "../../lib/chronicle/wizardNav";
 import {
   claimRankReward,
   fetchLeaderboard,
   fetchRankConfig,
-  fetchVoterStatus,
-  isRankVotingOpen,
   type RankConfig,
   type RankEntry,
-  type VoterStatus,
-  voteRankEntry,
 } from "../../lib/chronicle/rankClient";
 
 const H5_STAGE =
   "relative mx-auto flex min-h-dvh w-full max-w-[430px] flex-col px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[max(0.75rem,env(safe-area-inset-top))]";
 const H5_RADIUS = "rounded-[1.75rem]";
 const H5_CARD =
-  `${H5_RADIUS} border border-gold/20 bg-[#2c2824]/92 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-md`;
+  `${H5_RADIUS} border border-gold/20 bg-[#2c2824]/92 shadow-[0_18px_50px_rgba(0,0,0,0.35)]`;
 const H5_CTA =
   "inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gold to-gold-light px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-[0_10px_28px_rgba(240,185,11,0.28)] transition-transform active:scale-[0.98]";
-
-function voteErrorKey(code: string): string {
-  if (code === "NO_VOTES_LEFT") return "chronicle.rank.noVotesLeft";
-  if (code === "ALREADY_VOTED") return "chronicle.rank.alreadyVoted";
-  if (code === "RANK_ENDED" || code === "RANK_NOT_ACTIVE") return "chronicle.rank.notActive";
-  return "chronicle.rank.voteFailed";
-}
 
 export default function ChronicleLeaderboard() {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const focusEntryId = searchParams.get("entryId") || "";
+  const from = searchParams.get("from") || "";
 
   const [cfg, setCfg] = useState<RankConfig | null>(null);
   const [items, setItems] = useState<RankEntry[]>([]);
   const [me, setMe] = useState<RankEntry | null>(null);
-  const [status, setStatus] = useState<VoterStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [claimOpen, setClaimOpen] = useState<RankEntry | null>(null);
 
+  const backTo = (() => {
+    if (from === "intro") return "/club/chronicle";
+    if (focusEntryId) return `/club/chronicle?entryId=${encodeURIComponent(focusEntryId)}`;
+    if (from === "club") return "/club";
+    return "/club/chronicle";
+  })();
+
   const reload = useCallback(async () => {
-    const [c, board, st] = await Promise.all([
+    const [c, board] = await Promise.all([
       fetchRankConfig(true),
       fetchLeaderboard({ limit: 50, entryId: focusEntryId || undefined }),
-      fetchVoterStatus(),
     ]);
     setCfg(c);
     if (board) {
       setItems(board.items);
       setMe(board.me);
     }
-    setStatus(st);
     setLoading(false);
   }, [focusEntryId]);
 
@@ -67,20 +62,6 @@ export default function ChronicleLeaderboard() {
     const timer = window.setInterval(() => void reload(), 30_000);
     return () => window.clearInterval(timer);
   }, [reload]);
-
-  const onVote = async (entryId: string) => {
-    setBusyId(entryId);
-    const out = await voteRankEntry(entryId);
-    setBusyId(null);
-    if (!out.ok) {
-      toast.error(t(voteErrorKey(out.message)));
-      if (out.status) setStatus(out.status);
-      return;
-    }
-    toast.success(t("chronicle.rank.voteOk"));
-    if (out.status) setStatus(out.status);
-    await reload();
-  };
 
   const onClaim = async (entry: RankEntry) => {
     setBusyId(entry.entryId);
@@ -100,7 +81,6 @@ export default function ChronicleLeaderboard() {
     await reload();
   };
 
-  const votingOpen = isRankVotingOpen(cfg);
   const ended = cfg?.phase === "ended";
 
   return (
@@ -114,10 +94,7 @@ export default function ChronicleLeaderboard() {
       />
       <div className={H5_STAGE}>
         <header className="mb-4 flex items-center justify-between gap-2">
-          <Link
-            to={focusEntryId ? `/club/chronicle?entryId=${encodeURIComponent(focusEntryId)}` : "/club/chronicle"}
-            className="inline-flex items-center gap-1 text-xs text-muted-foreground"
-          >
+          <Link to={backTo} className="inline-flex items-center gap-1 text-xs text-muted-foreground">
             <ChevronLeft className="h-4 w-4" aria-hidden />
             {t("chronicle.rank.backChronicle")}
           </Link>
@@ -138,14 +115,6 @@ export default function ChronicleLeaderboard() {
           <p className="mt-2 text-center text-xs text-muted-foreground">
             {ended ? t("chronicle.rank.boardEndedHint") : t("chronicle.rank.boardLiveHint")}
           </p>
-          {status ? (
-            <p className="mt-3 text-center text-[11px] text-gold-light/90">
-              {t("chronicle.rank.votesLeft", {
-                remain: status.votesRemaining,
-                max: status.maxVotes,
-              })}
-            </p>
-          ) : null}
 
           {loading ? (
             <div className="flex flex-1 items-center justify-center py-16">
@@ -159,7 +128,6 @@ export default function ChronicleLeaderboard() {
           ) : (
             <ul className="mt-5 flex-1 space-y-2.5 overflow-y-auto">
               {items.map((row) => {
-                const voted = status?.votedEntryIds?.includes(row.entryId);
                 const isMe = me?.entryId === row.entryId;
                 return (
                   <li
@@ -181,7 +149,10 @@ export default function ChronicleLeaderboard() {
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{row.authorName}</p>
                       <p className="text-[11px] text-muted-foreground">
-                        {t("chronicle.rank.popularity", { value: row.popularity })}
+                        {t("chronicle.rank.togetherLine", {
+                          name: row.authorName,
+                          count: row.inviteCount ?? row.popularity ?? 0,
+                        })}
                       </p>
                     </div>
                     {ended && row.rewardType ? (
@@ -196,20 +167,13 @@ export default function ChronicleLeaderboard() {
                           : t("chronicle.rank.claimCta")}
                       </button>
                     ) : (
-                      <button
-                        type="button"
-                        disabled={
-                          !votingOpen ||
-                          busyId === row.entryId ||
-                          Boolean(voted) ||
-                          (status?.votesRemaining ?? 0) <= 0
-                        }
-                        onClick={() => void onVote(row.entryId)}
-                        className="inline-flex shrink-0 items-center gap-1 rounded-full bg-gold/15 px-3 py-1.5 text-[11px] text-gold disabled:opacity-40"
+                      <Link
+                        to={`/club/chronicle?ref=${encodeURIComponent(row.entryId)}`}
+                        onClick={() => persistInviteRef(row.entryId)}
+                        className="shrink-0 rounded-full bg-gold/15 px-3 py-1.5 text-[11px] text-gold"
                       >
-                        <Megaphone className="h-3 w-3" aria-hidden />
-                        {voted ? t("chronicle.rank.voted") : t("chronicle.rank.callCta")}
-                      </button>
+                        {t("chronicle.rank.writeYours")}
+                      </Link>
                     )}
                   </li>
                 );
@@ -229,6 +193,7 @@ export default function ChronicleLeaderboard() {
           <div className={`mt-5 ${H5_RADIUS} border border-white/8 bg-black/25 p-3.5`}>
             <p className="text-xs font-medium text-gold-light">{t("chronicle.rank.rewardsTitle")}</p>
             <ul className="mt-2 space-y-1.5 text-[11px] text-muted-foreground">
+              <li>{t("chronicle.rank.rewardTop50")}</li>
               {cfg?.mode === "async" ? (
                 <li>{t("chronicle.rank.rewardAsync")}</li>
               ) : (
@@ -237,6 +202,7 @@ export default function ChronicleLeaderboard() {
                   <li>{t("chronicle.rank.rewardSyncTop10")}</li>
                 </>
               )}
+              <li>{t("chronicle.rank.rewardSunshine")}</li>
             </ul>
           </div>
         </motion.section>

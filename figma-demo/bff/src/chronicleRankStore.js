@@ -2,15 +2,15 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const POPULARITY_PER_VOTE = 10;
-const MAX_VOTES_PER_VOTER = 3;
+const TOP_PRIZE = 50;
+const TOP_TICKET = 3;
+const TOP_MERCH = 10;
 
 function defaultDb() {
   return {
-    version: 1,
+    version: 2,
     entries: {},
-    votes: {},
-    voters: {},
+    invites: {},
     rewards: {},
     finalized: false,
     finalizedAt: null,
@@ -30,8 +30,6 @@ export function loadRankConfigFromEnv(env = process.env) {
     startMs: Number.isFinite(startMs) ? startMs : null,
     endMs: Number.isFinite(endMs) ? endMs : null,
     dataPath: path.join(dataDir, 'chronicle-rank.json'),
-    popularityPerVote: POPULARITY_PER_VOTE,
-    maxVotesPerVoter: MAX_VOTES_PER_VOTER,
   };
 }
 
@@ -40,6 +38,10 @@ export function resolveRankPhase(cfg, now = Date.now()) {
   if (cfg.startMs != null && now < cfg.startMs) return 'upcoming';
   if (cfg.endMs != null && now > cfg.endMs) return 'ended';
   return 'active';
+}
+
+function inviteScore(e) {
+  return Number(e.inviteCount || e.voteCount || 0);
 }
 
 export function createChronicleRankStore(cfg) {
@@ -56,8 +58,7 @@ export function createChronicleRankStore(cfg) {
           ...defaultDb(),
           ...raw,
           entries: raw.entries && typeof raw.entries === 'object' ? raw.entries : {},
-          votes: raw.votes && typeof raw.votes === 'object' ? raw.votes : {},
-          voters: raw.voters && typeof raw.voters === 'object' ? raw.voters : {},
+          invites: raw.invites && typeof raw.invites === 'object' ? raw.invites : {},
           rewards: raw.rewards && typeof raw.rewards === 'object' ? raw.rewards : {},
         };
       } else {
@@ -87,16 +88,13 @@ export function createChronicleRankStore(cfg) {
     return crypto.createHash('sha256').update(`${shareToken}`).digest('hex').slice(0, 16);
   }
 
-  function hashIp(ip) {
-    return crypto.createHash('sha256').update(`ip:${ip || 'unknown'}`).digest('hex').slice(0, 24);
-  }
-
   function listSorted() {
     const state = ensureLoaded();
     return Object.values(state.entries)
       .map((e) => ({
         ...e,
-        popularity: (e.voteCount || 0) * cfg.popularityPerVote,
+        inviteCount: inviteScore(e),
+        popularity: inviteScore(e),
       }))
       .sort((a, b) => {
         if (b.popularity !== a.popularity) return b.popularity - a.popularity;
@@ -105,11 +103,12 @@ export function createChronicleRankStore(cfg) {
   }
 
   function rewardTypeForRank(rank, mode) {
+    if (rank < 1 || rank > TOP_PRIZE) return null;
     if (mode === 'async') {
-      return rank >= 1 && rank <= 10 ? 'merch' : null;
+      return rank <= TOP_MERCH ? 'merch' : null;
     }
-    if (rank >= 1 && rank <= 3) return 'ticket';
-    if (rank >= 4 && rank <= 10) return 'merch';
+    if (rank <= TOP_TICKET) return 'ticket';
+    if (rank <= TOP_MERCH) return 'merch';
     return null;
   }
 
@@ -117,7 +116,7 @@ export function createChronicleRankStore(cfg) {
     const state = ensureLoaded();
     const phase = resolveRankPhase(cfg, now);
     if (phase !== 'ended' || state.finalized) return state;
-    const sorted = listSorted().slice(0, 10);
+    const sorted = listSorted().slice(0, TOP_PRIZE);
     sorted.forEach((entry, idx) => {
       const rank = idx + 1;
       const rewardType = rewardTypeForRank(rank, cfg.mode);
@@ -140,7 +139,6 @@ export function createChronicleRankStore(cfg) {
           state.rewards[e.ownerUserId] = list;
         }
       } else if (rewardType && !e.ownerUserId) {
-        // Eligible but unbound — author must enroll while logged in before claim.
         e.claimStatus = 'unbound';
       }
     });
@@ -151,6 +149,7 @@ export function createChronicleRankStore(cfg) {
   }
 
   function publicEntry(e, rank = null) {
+    const invites = inviteScore(e);
     return {
       entryId: e.entryId,
       authorName: e.authorName,
@@ -158,8 +157,9 @@ export function createChronicleRankStore(cfg) {
       styleId: e.styleId || null,
       tags: Array.isArray(e.tags) ? e.tags : [],
       price: typeof e.price === 'number' ? e.price : null,
-      voteCount: e.voteCount || 0,
-      popularity: (e.voteCount || 0) * cfg.popularityPerVote,
+      voteCount: invites,
+      inviteCount: invites,
+      popularity: invites,
       shareToken: e.shareToken,
       rank,
       rewardType: e.rewardType || null,
@@ -177,12 +177,12 @@ export function createChronicleRankStore(cfg) {
         phase,
         startAt: cfg.startMs != null ? new Date(cfg.startMs).toISOString() : null,
         endAt: cfg.endMs != null ? new Date(cfg.endMs).toISOString() : null,
-        popularityPerVote: cfg.popularityPerVote,
-        maxVotesPerVoter: cfg.maxVotesPerVoter,
+        popularityPerVote: 1,
+        maxVotesPerVoter: 0,
         rewards:
           cfg.mode === 'async'
-            ? { top10: 'merch' }
-            : { top3: 'ticket', top4to10: 'merch' },
+            ? { top10: 'merch', top50: 'listed' }
+            : { top3: 'ticket', top4to10: 'merch', top50: 'listed' },
       };
     },
 
@@ -208,7 +208,6 @@ export function createChronicleRankStore(cfg) {
       const state = ensureLoaded();
       const entryId = entryIdFromShareToken(token);
       const existing = state.entries[entryId];
-      // After campaign end: only allow binding owner / refreshing metadata on existing entries.
       if (phase === 'ended' && !existing) {
         return { ok: false, code: 'RANK_ENDED' };
       }
@@ -223,7 +222,8 @@ export function createChronicleRankStore(cfg) {
         tags: Array.isArray(tags)
           ? tags.filter((x) => typeof x === 'string').map((x) => x.slice(0, 40)).slice(0, 3)
           : [],
-        voteCount: existing?.voteCount || 0,
+        inviteCount: existing?.inviteCount || existing?.voteCount || 0,
+        voteCount: existing?.inviteCount || existing?.voteCount || 0,
         createdAt: existing?.createdAt || nowIso,
         updatedAt: nowIso,
         ownerUserId: existing?.ownerUserId || ownerUserId || null,
@@ -231,7 +231,6 @@ export function createChronicleRankStore(cfg) {
         rewardType: existing?.rewardType || null,
         rankAtEnd: existing?.rankAtEnd || null,
       };
-      // First logged-in enroll binds ownership (cannot steal an already-bound entry).
       if (!existing?.ownerUserId && ownerUserId) {
         next.ownerUserId = ownerUserId;
         if (next.claimStatus === 'unbound' && next.rewardType) {
@@ -270,7 +269,7 @@ export function createChronicleRankStore(cfg) {
       const phase = resolveRankPhase(cfg);
       const state = ensureLoaded();
       const sorted = listSorted();
-      const cap = phase === 'ended' ? Math.min(limit, 10) : Math.min(Math.max(limit, 1), 100);
+      const cap = phase === 'ended' ? Math.min(limit, TOP_PRIZE) : Math.min(Math.max(limit, 1), 100);
       const items = sorted.slice(0, cap).map((e, idx) => publicEntry(e, idx + 1));
       let me = null;
       if (entryId && state.entries[entryId]) {
@@ -280,72 +279,34 @@ export function createChronicleRankStore(cfg) {
       return { items, me, phase, total: sorted.length, finalized: state.finalized };
     },
 
-    voterStatus({ userId, ip }) {
-      finalizeIfNeeded();
-      const state = ensureLoaded();
-      const keys = [];
-      if (userId) keys.push(`u:${userId}`);
-      keys.push(`ip:${hashIp(ip)}`);
-      let used = 0;
-      const votedEntryIds = new Set();
-      for (const key of keys) {
-        const v = state.voters[key];
-        if (!v) continue;
-        for (const id of v.entryIds || []) votedEntryIds.add(id);
-        used = Math.max(used, (v.entryIds || []).length);
-      }
-      return {
-        votesUsed: used,
-        votesRemaining: Math.max(0, cfg.maxVotesPerVoter - used),
-        votedEntryIds: [...votedEntryIds],
-        maxVotes: cfg.maxVotesPerVoter,
-      };
-    },
-
-    vote({ entryId, userId, ip }) {
+    attributeInvite({ refEntryId, userId, completerEntryId }) {
       const phase = resolveRankPhase(cfg);
       if (phase !== 'active') {
         return { ok: false, code: phase === 'ended' ? 'RANK_ENDED' : 'RANK_NOT_ACTIVE' };
       }
-      const id = `${entryId || ''}`.trim();
+      if (!userId) return { ok: false, code: 'LOGIN_REQUIRED' };
+      const refId = `${refEntryId || ''}`.trim();
       const state = ensureLoaded();
-      if (!state.entries[id]) return { ok: false, code: 'ENTRY_NOT_FOUND' };
-
-      const status = this.voterStatus({ userId, ip });
-      if (status.votedEntryIds.includes(id)) {
-        return { ok: false, code: 'ALREADY_VOTED', status };
+      const ref = state.entries[refId];
+      if (!ref) return { ok: false, code: 'ENTRY_NOT_FOUND' };
+      if (ref.ownerUserId && ref.ownerUserId === userId) {
+        return { ok: false, code: 'SELF_INVITE' };
       }
-      if (status.votesRemaining <= 0) {
-        return { ok: false, code: 'NO_VOTES_LEFT', status };
+      const existing = state.invites[userId];
+      if (existing) {
+        return { ok: true, already: true, entry: this.getEntry(existing.refEntryId) };
       }
-
-      const voterKeys = [];
-      if (userId) voterKeys.push(`u:${userId}`);
-      voterKeys.push(`ip:${hashIp(ip)}`);
-
-      // Block if either identity already voted this book or exhausted quota
-      for (const key of voterKeys) {
-        const v = state.voters[key] || { entryIds: [] };
-        if ((v.entryIds || []).includes(id)) {
-          return { ok: false, code: 'ALREADY_VOTED', status: this.voterStatus({ userId, ip }) };
-        }
-        if ((v.entryIds || []).length >= cfg.maxVotesPerVoter) {
-          return { ok: false, code: 'NO_VOTES_LEFT', status: this.voterStatus({ userId, ip }) };
-        }
-      }
-
       const nowIso = new Date().toISOString();
-      for (const key of voterKeys) {
-        const v = state.voters[key] || { entryIds: [] };
-        v.entryIds = [...(v.entryIds || []), id];
-        state.voters[key] = v;
-        state.votes[`${key}:${id}`] = { entryId: id, voterKey: key, createdAt: nowIso };
-      }
-      state.entries[id].voteCount = (state.entries[id].voteCount || 0) + 1;
-      state.entries[id].updatedAt = nowIso;
+      state.invites[userId] = {
+        refEntryId: refId,
+        completerEntryId: `${completerEntryId || ''}`.trim() || null,
+        createdAt: nowIso,
+      };
+      ref.inviteCount = inviteScore(ref) + 1;
+      ref.voteCount = ref.inviteCount;
+      ref.updatedAt = nowIso;
       void persist();
-      const entry = this.getEntry(id);
-      return { ok: true, entry, status: this.voterStatus({ userId, ip }) };
+      return { ok: true, already: false, entry: this.getEntry(refId) };
     },
 
     claim({ entryId, userId }) {
@@ -357,7 +318,7 @@ export function createChronicleRankStore(cfg) {
       const id = `${entryId || ''}`.trim();
       const e = state.entries[id];
       if (!e) return { ok: false, code: 'ENTRY_NOT_FOUND' };
-      if (!e.rewardType || !e.rankAtEnd || e.rankAtEnd > 10) {
+      if (!e.rewardType || !e.rankAtEnd || e.rankAtEnd > TOP_PRIZE) {
         return { ok: false, code: 'NOT_ELIGIBLE' };
       }
       if (!e.ownerUserId) {

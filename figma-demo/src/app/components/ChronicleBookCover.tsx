@@ -344,6 +344,13 @@ export default function ChronicleBookCover({
                   {face.keywords.join(" · ")}
                 </p>
               ) : null}
+              <p
+                className={`font-cjk mt-2 text-[0.58rem] leading-tight ${
+                  face.darkByline ? "text-white/55" : "text-[#1a1a1a]/50"
+                }`}
+              >
+                {t("chronicle.coverPartners")}
+              </p>
             </div>
           </div>
         </div>

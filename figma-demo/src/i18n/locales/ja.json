@@ -208,11 +208,20 @@
     "stat4Label": "発行済みバッジ",
     "stat4Unit": "個",
     "chronicleBannerKicker": "開催中",
+    "chronicleBannerBrand": "BINANCE LIFE BOOK CLUB  ×  DATADANCE",
     "chronicleBannerTitle": "My Binance Life",
-    "chronicleBannerDesc": "CZは『バイナンス人生』を出版した。あなたのは？同じタイムラインに沿って書き、キーワードとシステム価格を出して一冊にまとめ、シェアしよう。書友会NFTの受け取りや Rising Star ボードにも参加できる。",
+    "chronicleBannerDesc": "CZの人生の節目をたどり、同じタイムラインに自分の暗号資産の物語を書く。あなたのバイナンス人生はいくらだろう。",
     "chronicleBannerCta": "Create my Binance Life",
-    "chronicleRankCta": "Rising Star リーダーボード",
-    "chronicleHeroCta": "Create my Binance Life"
+    "chronicleRankCta": "Together board",
+    "chronicleHeroCta": "Create my Binance Life",
+    "chronicleFaceKw": {
+      "founder": "粘り強さ · ユーザー保護 · 長期",
+      "creator": "物語 · コンテンツ · コミュニティ",
+      "degen": "先物 · まだ場にいる",
+      "whale": "規模 · OTC",
+      "diamondHands": "長期",
+      "whiteHat": "セキュリティ · 開示"
+    }
   },
   "membershipTiers": {
     "kicker": "会員特典",
@@ -895,7 +904,7 @@
     "cancel": "キャンセル"
   },
   "chronicle": {
-    "backClub": "ブッククラブへ戻る",
+    "backClub": "ホームに戻る",
     "kicker": "『バイナンス人生』共読プラン",
     "decodeCz": "CZをデコード",
     "introLead": "CZの人生ノードを開き、忘れられない暗号資産の体験を記録しましょう。",
@@ -1226,7 +1235,7 @@
     "h5Credit": "Binance Life Book Club × DataDance",
     "rank": {
       "enterCta": "新刊ランキング",
-      "publicBoardCta": "Rising Star リーダーボード",
+      "publicBoardCta": "Together board",
       "modalTitle": "Rising Star Author ランキング",
       "modalHint": "シェアして投票を集め、リーダーボードを確認しましょう。",
       "shareX": "X でシェア",
@@ -1246,12 +1255,12 @@
       "popularity": "人気値 {{value}}",
       "votesLeft": "残り {{remain}} / {{max}} Call",
       "boardKicker": "My Binance Life",
-      "boardTitle": "Rising Star Author ボード",
+      "boardTitle": "Books written together",
       "boardLiveHint": "ほぼリアルタイム（最大約 30 分）",
       "boardEndedHint": "終了 — TOP10 は報酬を受け取れます",
       "emptyBoard": "まだ作品がありません",
       "joinHint": "ボードに載るには作成しよう！",
-      "rewardsTitle": "TOP10 報酬",
+      "rewardsTitle": "Together-board rewards",
       "rewardSyncTop3": "TOP3: オフラインイベントチケット ×1",
       "rewardSyncTop10": "TOP4–10: グッズ交換権 ×1",
       "rewardAsync": "TOP10: グッズ交換権 ×1",
@@ -1270,7 +1279,11 @@
       "accountTicketHint": "オフラインチケット（譲渡可）",
       "accountMerchHint": "グッズ交換券",
       "shareTextZh": "读完 @cz_binance 的币安人生，我也「出版」了自己 ${{ticker}} 的版本 😄\n人家写的是百亿帝国，我的是百日摸爬滚打。\n戳进来 👇🏻 为我打 Call，距离「人气新锐作者」只差你的投票 👀\n{{link}}\nBTW，来都来了，也来「出版」你自己的币安人生！",
-      "shareTextEn": "After reading @cz_binance's Binance Life, I \"published\" my own ${{ticker}} edition 😄\nHis is a billion-dollar empire, while mine is hundreds of days of crypto building.\nTap in 👇🏻 and vote me up. I'm this close to \"Rising Star Author\" 👀\n{{link}}\nBTW, since you're here, why not go \"publish\" your own Binance Life too?"
+      "shareTextEn": "After reading @cz_binance's Binance Life, I \"published\" my own ${{ticker}} edition 😄\nHis is a billion-dollar empire, while mine is hundreds of days of crypto building.\nTap in 👇🏻 and vote me up. I'm this close to \"Rising Star Author\" 👀\n{{link}}\nBTW, since you're here, why not go \"publish\" your own Binance Life too?",
+      "togetherLine": "{{name}} wrote a book with {{count}} fellow readers",
+      "writeYours": "Write mine",
+      "rewardTop50": "Top 50: listed on the together board (see campaign prizes)",
+      "rewardSunshine": "Everyone who finishes earns the campaign commemorative badge"
     },
     "nftClaimDdcHint": "Book club free-claim campaign. Artwork can be updated later.",
     "nftClaimSuccessTitle": "Claim submitted",
@@ -1328,6 +1341,19 @@
       "calm": "冷静克己",
       "time_anxiety": "時間焦燥",
       "peak_to_trough": "頂点から谷へ"
-    }
+    },
+    "filledProgressMin": "{{count}} / {{total}} filled (need {{need}})",
+    "needSixEntries": "Too few entries — please fill at least {{count}} milestones",
+    "backStep": "Back",
+    "resultNoReviewHint": "We match keywords and principles from what you wrote. Your raw text stays on this device.",
+    "authorTitleAfter": "Confirm author and cover before binding",
+    "authorHintAfter": "We matched a role from your writing — you can change the name and portrait.",
+    "authorFinish": "Bind into a book",
+    "downloadPoster": "Download result image",
+    "posterSaved": "Poster saved to your photos / downloads",
+    "posterFailed": "Could not generate the poster. Try again.",
+    "posterTogether": "{{name}} wrote a book with {{count}} fellow readers",
+    "claimAndCapsuleCta": "Claim digital NFT and save to Life Capsule",
+    "coverPartners": "The Commercial Press · Binance Life Book Club · DataDance"
   }
 }

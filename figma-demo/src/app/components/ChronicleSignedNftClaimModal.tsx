@@ -12,6 +12,8 @@ type Props = {
   onClose: () => void;
   /** Called after a successful login so the parent can refresh session state. */
   onAuthed?: () => void;
+  /** After NFT claim succeeds — parent opens Life Capsule in the background. */
+  onSealed?: () => void;
 };
 
 type Step = "login" | "claim" | "success";
@@ -25,7 +27,7 @@ type AirdropClaimRow = {
  * Free My Binance Life activity FD claim on the chronicle result page.
  * Uses a dedicated airdrop campaign — not the standard/premium membership series.
  */
-export default function ChronicleSignedNftClaimModal({ open, onClose, onAuthed }: Props) {
+export default function ChronicleSignedNftClaimModal({ open, onClose, onAuthed, onSealed }: Props) {
   const { t } = useTranslation();
   const publicCode = useMemo(() => getBookChronicleAirdropPublicCode(), []);
   const [step, setStep] = useState<Step>("login");
@@ -43,18 +45,14 @@ export default function ChronicleSignedNftClaimModal({ open, onClose, onAuthed }
     setApiError(null);
     setLoginSubStep("email");
     setClaimStatus(null);
+    setStep("login");
     (async () => {
       try {
         const s = await bookBffJson<{ authenticated?: boolean }>("/api/bff/auth/session");
         if (cancel) return;
-        if (s.code === 0 && s.data?.authenticated) {
-          setStep("claim");
-          onAuthed?.();
-        } else {
-          setStep("login");
-        }
+        if (s.code === 0 && s.data?.authenticated) onAuthed?.();
       } catch {
-        if (!cancel) setStep("login");
+        /* still collect email — do not advertise login state */
       }
     })();
     return () => {
@@ -132,6 +130,7 @@ export default function ChronicleSignedNftClaimModal({ open, onClose, onAuthed }
       if (out.code === 0) {
         setClaimStatus(out.data?.claim?.c_status ?? "pending");
         setStep("success");
+        onSealed?.();
         return;
       }
       const msg = out.message || "";

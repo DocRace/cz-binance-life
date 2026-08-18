@@ -17,6 +17,23 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
+    # Isolated partner deck — static only, never falls through to the SPA.
+    location = /partner-deck {
+        return 301 /partner-deck/;
+    }
+    location /partner-deck/ {
+        try_files $uri $uri/ /partner-deck/index.html;
+        add_header Cache-Control "no-cache";
+    }
+
+    location = /cover-showcase {
+        return 301 /cover-showcase/;
+    }
+    location /cover-showcase/ {
+        try_files $uri $uri/ /cover-showcase/index.html;
+        add_header Cache-Control "no-cache";
+    }
+
     location / {
         try_files $uri $uri/ /index.html;
     }

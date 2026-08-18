@@ -1,0 +1,54 @@
+{
+  "meta": {
+    "kicker": "BINANCE LIFE BOOK CLUB  ×  DATADANCE",
+    "title": "我的币安人生",
+    "titleEn": "My Binance Life",
+    "lead": "CZ 出版了他的《币安人生》，你的呢？",
+    "countLabel": "26 种封面组合",
+    "publisher": "币安人生书友会 × DataDance 出版",
+    "cta": "创建我的币安人生"
+  },
+  "rows": [
+    {
+      "id": "back",
+      "editions": [
+        { "src": "/assets/chronicle/roles/pack/buidler-male.png", "name": "陈启明", "role": "码农", "roleEn": "BUIDLer", "keywords": "Solidity · DApp", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/degen-female.png", "name": "Jules", "role": "P 大将", "roleEn": "Degen", "keywords": "合约 · 还在场", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/hodler-female.png", "name": "沈青", "role": "信仰者", "roleEn": "HODLer", "keywords": "周期 · 持有", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/diamond-hands-female.png", "name": "Ava", "role": "钻石手", "roleEn": "Diamond Hands", "keywords": "不割 · 长期", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/investor-male.png", "name": "Ellis", "role": "投资人", "roleEn": "Investor", "keywords": "早期 · 尽调", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/miner-female.png", "name": "周南", "role": "矿工", "roleEn": "Miner", "keywords": "节点 · 在线", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/farmer-male.png", "name": "Ren", "role": "撸毛党", "roleEn": "Farmer", "keywords": "积分 · Quest", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/alpha-hunter-male.png", "name": "Nova", "role": "Alpha 猎手", "roleEn": "Alpha Hunter", "keywords": "Launchpool", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/black-hat.png", "name": "夜行", "role": "科学家", "roleEn": "Black Hat", "keywords": "边界 · 0-day", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/onchain-detective-female.png", "name": "顾星", "role": "链上侦探", "roleEn": "On-chain Detective", "keywords": "BscScan · Dune", "dark": true }
+      ]
+    },
+    {
+      "id": "mid",
+      "editions": [
+        { "src": "/assets/chronicle/roles/pack/founder-male.png", "name": "周予安", "role": "创始人", "roleEn": "Founder", "keywords": "产品 · 融资", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/buidler-female.png", "name": "林晚", "role": "码农", "roleEn": "BUIDLer", "keywords": "合约 · 基础设施", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/hodler-male.png", "name": "梁川", "role": "信仰者", "roleEn": "HODLer", "keywords": "BNB · 长期", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/alpha-hunter-female.png", "name": "程一", "role": "Alpha 猎手", "roleEn": "Alpha Hunter", "keywords": "Megadrop", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/fren.png", "name": "阿树", "role": "Fren", "roleEn": "Fren", "keywords": "社群 · Meetup", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/miner-male.png", "name": "吴昭", "role": "矿工", "roleEn": "Miner", "keywords": "验证者", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/creator-male.png", "name": "顾星河", "role": "内容创作者", "roleEn": "Creator", "keywords": "叙事 · 社群", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/farmer-female.png", "name": "小满", "role": "撸毛党", "roleEn": "Farmer", "keywords": "空投季", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/onchain-detective-male.png", "name": "沈南", "role": "链上侦探", "roleEn": "On-chain Detective", "keywords": "治理 · 数据", "dark": true }
+      ]
+    },
+    {
+      "id": "front",
+      "editions": [
+        { "src": "/assets/chronicle/roles/pack/founder-female.png", "name": "苏晴", "role": "创始人", "roleEn": "Founder", "keywords": "韧性 · 长期主义", "dark": false },
+        { "src": "/assets/chronicle/roles/pack/creator-female.png", "name": "墨九", "role": "内容创作者", "roleEn": "Creator", "keywords": "叙事 · 社群", "dark": false },
+        { "src": "/assets/chronicle/roles/pack/diamond-hands-male.png", "name": "赵衡", "role": "钻石手", "roleEn": "Diamond Hands", "keywords": "不割 · 穿越", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/whale.png", "name": "何予", "role": "巨鲸", "roleEn": "Whale", "keywords": "体量 · OTC", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/degen-male.png", "name": "Kai", "role": "P 大将", "roleEn": "Degen", "keywords": "合约 · 还在场", "dark": true },
+        { "src": "/assets/chronicle/roles/pack/investor-female.png", "name": "陈夏", "role": "投资人", "roleEn": "Investor", "keywords": "早期 · 赛道", "dark": false },
+        { "src": "/assets/chronicle/roles/pack/white-hat.png", "name": "白泽", "role": "漏洞猎人", "roleEn": "White Hat", "keywords": "安全 · 披露", "dark": true }
+      ]
+    }
+  ]
+}
