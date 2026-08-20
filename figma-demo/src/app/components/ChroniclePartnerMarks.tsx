@@ -1,24 +1,31 @@
-import { DataDanceWordmark } from "./DataDanceWordmark";
+import czClubMark from "../../assets/cz-club-mark.png";
+import PartnerLogoMark from "./PartnerLogoMark";
 
 type Props = {
   className?: string;
 };
 
-/** Commercial Press × book club × DataDance lockup (intro + cover). */
+/** Original three-mark lockup: Press · CZ Club mark · DataDance. */
 export default function ChroniclePartnerMarks({ className = "" }: Props) {
   return (
     <div
-      className={`flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-[10px] tracking-wide text-gold/75 ${className}`}
+      className={`flex flex-nowrap items-center justify-center gap-x-2 text-[10px] tracking-wide text-gold-light ${className}`.trim()}
     >
-      <span className="font-cjk font-medium">商务印书馆</span>
-      <span className="text-gold/35" aria-hidden>
+      <PartnerLogoMark id="press" size="sm" className="!h-[15px] shrink-0" />
+      <span className="shrink-0 text-[9px] text-gold/35" aria-hidden>
         ·
       </span>
-      <span className="font-cjk font-medium">币安人生书友会</span>
-      <span className="text-gold/35" aria-hidden>
+      <img
+        src={czClubMark}
+        alt="币安人生 Club"
+        width={1600}
+        height={340}
+        className="h-[17px] w-auto shrink-0 object-contain object-center"
+      />
+      <span className="shrink-0 text-[9px] text-gold/35" aria-hidden>
         ·
       </span>
-      <DataDanceWordmark className="h-3 w-auto text-gold/80" />
+      <PartnerLogoMark id="datadance" size="sm" className="!h-3 shrink-0" />
     </div>
   );
 }

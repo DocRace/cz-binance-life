@@ -177,8 +177,8 @@ export default function ChronicleBookCover({
 
   const capBase: React.CSSProperties = {
     position: "absolute",
-    left: "2.5%",
-    right: "2.5%",
+    left: 0,
+    right: 0,
     height: THICKNESS,
     top: "50%",
     marginTop: -halfT,

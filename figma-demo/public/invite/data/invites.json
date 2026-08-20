@@ -1,0 +1,109 @@
+{
+  "event": {
+    "book": "《幣安人生》",
+    "meeting": "書友線下見面會",
+    "date": "2026年8月27日",
+    "time": "09:30–11:00",
+    "venue": "香港中環交易廣場第二座40樓4005–07室",
+    "speakers": "謝亞芳 × CZ",
+    "host": "《幣安人生》書友會 敬邀",
+    "detailsTitle": "線下書友見面會",
+    "dateLabel": "日期",
+    "timeLabel": "時間",
+    "venueLabel": "地點",
+    "formatLabel": "形式",
+    "inviteSuffix": "邀請函",
+    "partnersLabel": "支持機構",
+    "venueSupportLabel": "生態夥伴",
+    "blastVenueSupportLabel": "場地支持",
+    "qrLabel": "掃碼訪問官網",
+    "qrUrl": "https://czlife.club"
+  },
+  "types": {
+    "media": {
+      "id": "media",
+      "label": "媒體邀請函",
+      "subtitle": "媒體邀請函",
+      "nameLabel": "媒體／收件人",
+      "namePlaceholder": "如：某某日報、王編輯",
+      "greetingPrefix": "尊敬的",
+      "lead": "誠邀貴媒體出席《幣安人生》書友見面會，與CZ及書友們見面交流。",
+      "body": "《幣安人生》記錄了CZ一路走來的經歷與思考。本次見面會將圍繞「選擇、成長、創業與長期主義」，由資深媒體人謝亞芳與CZ展開對談，並與現場嘉賓和書友分享交流。",
+      "closing": "",
+      "format": "媒體定向邀請",
+      "note": ""
+    },
+    "guest": {
+      "id": "guest",
+      "label": "嘉賓邀請函",
+      "subtitle": "嘉賓邀請函",
+      "nameLabel": "嘉賓姓名",
+      "namePlaceholder": "如：陳先生、Jason",
+      "greetingPrefix": "尊敬的",
+      "lead": "誠邀閣下作為特邀嘉賓，出席《幣安人生》書友見面會，與CZ及書友們見面交流。",
+      "body": "《幣安人生》記錄了CZ一路走來的經歷與思考。本次見面會將圍繞「選擇、成長、創業與長期主義」，由資深媒體人謝亞芳與CZ展開對談，並與現場嘉賓和書友分享交流。",
+      "closing": "期待與您見面，共度一場真誠而有啟發的書友相聚。",
+      "format": "定向邀請｜閉門交流",
+      "note": ""
+    },
+    "yafang": {
+      "id": "yafang",
+      "label": "亞芳對外",
+      "pack": true,
+      "nameLockedBlank": true,
+      "contact": {
+        "title": "媒體／嘉賓聯絡（亞芳創變派）",
+        "wechatLabel": "微信",
+        "wechat": "yafanghk",
+        "emailLabel": "電郵",
+        "email": "avonh1212@gmail.com",
+        "note": "本函由亞芳創變派對外發出。活動諮詢請聯絡以上方式，勿經官網邀請渠道回覆。"
+      }
+    },
+    "blast": {
+      "id": "blast",
+      "label": "郵件推送",
+      "subtitle": "書友見面會",
+      "nameLabel": "",
+      "namePlaceholder": "",
+      "greetingPrefix": "",
+      "lead": "從一本書，走近一段真實的人生。",
+      "body": "資深媒體人謝亞芳與CZ深度對談，從人生選擇、創業成長到長期主義，\n分享在變化與不確定中如何判斷、行動與堅持。",
+      "closing": "",
+      "format": "定向邀請｜閉門交流",
+      "note": ""
+    }
+  },
+  "partners": [
+    { "id": "press", "name": "商務印書館" },
+    { "id": "hash", "name": "HASH GLOBAL" },
+    { "id": "datadance", "name": "DataDance" },
+    { "id": "yafang", "name": "亞芳創變派" },
+    { "id": "ipdex", "name": "IPDEX" },
+    { "id": "onebook", "name": "一本讀書會" },
+    { "id": "hku", "name": "香港大學創立方" }
+  ],
+  "venuePartners": [
+    { "id": "bnb", "name": "BNB Chain" }
+  ],
+  "blastPartners": [
+    { "id": "press", "name": "商務印書館" },
+    { "id": "bnb", "name": "BNB Chain" },
+    { "id": "hash", "name": "HASH GLOBAL" },
+    { "id": "yafang", "name": "亞芳創變派" },
+    { "id": "datadance", "name": "DataDance" },
+    { "id": "ipdex", "name": "IPDEX" },
+    { "id": "onebook", "name": "一本讀書會" },
+    { "id": "hku", "name": "香港大學創立方" }
+  ],
+  "blastVenuePartners": [],
+  "mediaBatch": [
+    "信報",
+    "經濟日報",
+    "南華早報",
+    "明報",
+    "香港商報",
+    "Bloomberg",
+    "吳説"
+  ]
+}

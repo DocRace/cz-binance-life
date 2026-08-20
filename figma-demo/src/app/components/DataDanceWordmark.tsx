@@ -1,16 +1,20 @@
+import type { CSSProperties } from "react";
+
 type DataDanceWordmarkProps = {
   className?: string;
   title?: string;
+  style?: CSSProperties;
 };
 
 /** DataDance wordmark (icon + logotype). Uses currentColor for theme-aware fills. */
-export function DataDanceWordmark({ className, title = "DataDance" }: DataDanceWordmarkProps) {
+export function DataDanceWordmark({ className, title = "DataDance", style }: DataDanceWordmarkProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 144 25"
       fill="none"
       className={className}
+      style={style}
       role="img"
       aria-label={title}
     >

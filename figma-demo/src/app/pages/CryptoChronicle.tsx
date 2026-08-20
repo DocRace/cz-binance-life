@@ -12,6 +12,7 @@ import {
   RefreshCw,
   Share2,
   Sparkles,
+  X,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -45,6 +46,8 @@ import {
 } from "../../lib/chronicle/capsuleHandoff";
 import { bookBffJson } from "../../lib/bookBffClient";
 import ChronicleSignedNftClaimModal from "../components/ChronicleSignedNftClaimModal";
+import OverlayPortal from "../components/OverlayPortal";
+import { overlayBackdropClassLight } from "../lib/overlayLayers";
 import { buildShareUrl, decodeSharePayload } from "../../lib/chronicle/shareCodec";
 import { fetchLlmTagSuggestions } from "../../lib/chronicle/suggestTagsClient";
 import {
@@ -139,6 +142,7 @@ export default function CryptoChronicle() {
   const [showcaseRoleIdx, setShowcaseRoleIdx] = useState(0);
   const [showcaseGender, setShowcaseGender] = useState<AvatarGenderId>("male");
   const [readOnlyShare, setReadOnlyShare] = useState(false);
+  const [sharedPrice, setSharedPrice] = useState<number | null>(null);
   const [distilling, setDistilling] = useState(false);
   const [rankCfg, setRankCfg] = useState<RankConfig | null>(null);
   const [rankEntry, setRankEntry] = useState<RankEntry | null>(null);
@@ -242,6 +246,9 @@ export default function CryptoChronicle() {
         setGender(decoded.gender || draft.gender || DEFAULT_AVATAR_GENDER);
         setResult(distilled);
         setReadOnlyShare(true);
+        setSharedPrice(
+          typeof decoded.price === "number" && Number.isFinite(decoded.price) ? decoded.price : null,
+        );
         setStep("book");
         window.history.replaceState({ czWizard: true, step: "book" }, "", chroniclePath(searchParams.toString()));
         return;
@@ -258,6 +265,7 @@ export default function CryptoChronicle() {
     setSelectedTagIds(draft.selectedTagIds);
     setSelectedPrinciples(draft.selectedPrinciples);
     setReadOnlyShare(false);
+    setSharedPrice(null);
 
     const target = resume || "intro";
     if (target === "result" || target === "author" || target === "book") {
@@ -309,13 +317,21 @@ export default function CryptoChronicle() {
   const filledCount = useMemo(() => countFilled(entries), [entries]);
   const pricing = useMemo(() => {
     if (!result) return null;
-    return computeChroniclePrice({
+    const computed = computeChroniclePrice({
       entries,
-      roleId,
+      role: roleId,
       principles: result.principles,
       selectedPrincipleCount: selectedPrinciples.length || result.principles.length,
     });
-  }, [entries, roleId, result, selectedPrinciples.length]);
+    const locked =
+      readOnlyShare &&
+      ((sharedPrice != null && Number.isFinite(sharedPrice) ? sharedPrice : null) ??
+        (typeof rankEntry?.price === "number" && Number.isFinite(rankEntry.price)
+          ? rankEntry.price
+          : null));
+    if (locked == null) return computed;
+    return { ...computed, price: locked };
+  }, [entries, roleId, result, selectedPrinciples.length, readOnlyShare, sharedPrice, rankEntry?.price]);
 
   const keywordChoices = useMemo(() => {
     if (!result) return [] as { id: string; label: string }[];
@@ -464,6 +480,7 @@ export default function CryptoChronicle() {
 
   const startMine = () => {
     setReadOnlyShare(false);
+    setSharedPrice(null);
     setResult(null);
     setEntries({});
     setConfirmedTagIds([]);
@@ -611,16 +628,14 @@ export default function CryptoChronicle() {
         authorName: authorName.trim() || t("chronicle.anonymousAuthor"),
         roleId,
         gender,
+        roleLabel: roleId ? t(`chronicle.roles.${roleId}.name`) : "",
+        publisher: t("chronicle.bookPublisher"),
         keywords: coverKeywords,
         principles: selectedPrinciples,
-        priceLabel: `$${formatUsdt(pricing?.price ?? 0)}`,
+        priceLabel: t("chronicle.posterPrice", { price: formatUsdt(pricing?.price ?? 0) }),
         inviteUrl: resultShareLink(),
         title: t("chronicle.bookTitle"),
         subtitle: t("chronicle.kicker"),
-        togetherLine: t("chronicle.posterTogether", {
-          name: authorName.trim() || t("chronicle.anonymousAuthor"),
-          count: rankEntry?.inviteCount ?? participants,
-        }),
         partners: t("chronicle.coverPartners"),
       });
       if (ok) toast.success(t("chronicle.posterSaved"));
@@ -1045,12 +1060,6 @@ export default function CryptoChronicle() {
                 <ChroniclePartnerMarks className="mt-3" />
               </div>
 
-              {wechatHint ? (
-                <p className="mb-4 text-center text-xs text-muted-foreground">
-                  {t("chronicle.shareWechatHint")}
-                </p>
-              ) : null}
-
               <div className="mt-auto flex flex-col gap-2.5">
                 {readOnlyShare ? (
                   <button type="button" onClick={startMine} className={H5_CTA}>
@@ -1072,14 +1081,59 @@ export default function CryptoChronicle() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => setShareOpen((v) => !v)}
+                      onClick={() => {
+                        setWechatHint(false);
+                        setShareOpen(true);
+                      }}
                       className={H5_CTA_GHOST}
                     >
                       <Share2 className="h-4 w-4" aria-hidden />
                       {t("chronicle.shareAction")}
                     </button>
-                    {shareOpen ? (
-                      <div className="grid gap-2">
+                    <button
+                      type="button"
+                      onClick={startMine}
+                      className="inline-flex items-center justify-center gap-2 rounded-full border border-border px-6 py-3 text-sm text-muted-foreground"
+                    >
+                      <RefreshCw className="h-4 w-4" aria-hidden />
+                      {t("chronicle.againCta")}
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {shareOpen ? (
+                <OverlayPortal>
+                  <div
+                    className={overlayBackdropClassLight}
+                    role="presentation"
+                    onClick={() => setShareOpen(false)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Escape") setShareOpen(false);
+                    }}
+                  >
+                    <div
+                      role="dialog"
+                      aria-modal="true"
+                      aria-labelledby="chronicle-share-title"
+                      className="relative z-[1] w-full max-w-[400px] rounded-[1.75rem] border border-gold/20 bg-[#2c2824] p-5 shadow-xl"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => setShareOpen(false)}
+                        className="absolute right-3 top-3 rounded-full p-1.5 text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                        aria-label={t("common.close")}
+                      >
+                        <X className="h-5 w-5" />
+                      </button>
+                      <h2
+                        id="chronicle-share-title"
+                        className="mb-4 pr-8 font-display text-xl text-foreground"
+                      >
+                        {t("chronicle.shareAction")}
+                      </h2>
+                      <div className="grid gap-2.5">
                         <button type="button" onClick={() => void shareToX()} className={H5_CTA_GHOST}>
                           <Share2 className="h-4 w-4" aria-hidden />
                           {t("chronicle.shareXCta")}
@@ -1097,18 +1151,15 @@ export default function CryptoChronicle() {
                           {t("chronicle.shareCta")}
                         </button>
                       </div>
-                    ) : null}
-                    <button
-                      type="button"
-                      onClick={startMine}
-                      className="inline-flex items-center justify-center gap-2 rounded-full border border-border px-6 py-3 text-sm text-muted-foreground"
-                    >
-                      <RefreshCw className="h-4 w-4" aria-hidden />
-                      {t("chronicle.againCta")}
-                    </button>
-                  </>
-                )}
-              </div>
+                      {wechatHint ? (
+                        <p className="mt-3 text-center text-xs leading-relaxed text-muted-foreground">
+                          {t("chronicle.shareWechatHint")}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+                </OverlayPortal>
+              ) : null}
 
               <ChronicleSignedNftClaimModal
                 open={nftClaimOpen}

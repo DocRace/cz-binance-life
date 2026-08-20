@@ -20,7 +20,7 @@
     "titleHome": "Freedom of Money Book Club",
     "titleBook": "The Book · Freedom of Money Book Club",
     "titleClub": "Book Club · Freedom of Money Book Club",
-    "titleOfflineEvent": "Offline Event · Freedom of Money Book Club",
+    "titleOfflineEvent": "August book meetup · Freedom of Money Book Club",
     "titlePrinciples": "CZ Principles · Freedom of Money Book Club",
     "titleTimeline": "CZ Timeline · Freedom of Money Book Club",
     "titleAccount": "Account · Freedom of Money Book Club",
@@ -85,79 +85,64 @@
   },
   "offlineEvent": {
     "backHome": "Back to home",
-    "title": "Freedom of Money Book Club Launch & Sharing Session",
-    "launchHeadline": "The global Freedom of Money book club sets sail",
-    "launchTagline": "Hong Kong premiere on 28 June — witness the first NFT member benefits and the global reader community",
-    "subtitle": "The Commercial Press · My Book One Club · IPDEX",
+    "brand": "CZ LIFE · YOUNG FOUNDERS",
+    "title": "Freedom of Money book meetup",
+    "launchHeadline": "Freedom of Money book meetup",
+    "launchTagline": "Young founders: choice, growth, and long-termism",
+    "subtitle": "Host: Tse Ah Fong · Invite-only, closed-door",
     "dateLabel": "Date",
-    "date": "Sunday, 28 June 2026",
+    "date": "Thursday, 27 August 2026",
     "timeLabel": "Time",
-    "time": "17:00 – 19:00",
+    "time": "09:30 – 11:00 (about 90 minutes; wrap by 11:15)",
     "venueLabel": "Venue",
-    "venue": "The Commercial Press · Tsim Sha Tsui flagship store",
-    "address": "Shop 25, G/F & Whole Floor, 1/F, Miramar Tower, 83–97 Nathan Road, Tsim Sha Tsui, Kowloon\n(MTR Tsim Sha Tsui Station Exit A1, turn right)",
+    "venue": "Exchange Square Tower 2, 40/F, Central, Hong Kong",
+    "address": "Rooms 4005–07, 40/F, Exchange Square Tower 2, Central, Hong Kong\n(MTR Central / Hong Kong Station)",
+    "hostLabel": "Host",
+    "host": "Tse Ah Fong",
     "languageLabel": "Language",
     "language": "Mandarin",
     "flowParagraphs": [
-      "A great book inspires thought; a strong reader community keeps ideas growing.",
-      "On 28 June, the global Freedom of Money book club launch ceremony will be held at The Commercial Press Tsim Sha Tsui flagship in Hong Kong, bringing together guests from publishing, technology, investment, and content creation to mark the club's official founding and open a new chapter of reader exchange and co-creation.",
-      "Freedom of Money records Changpeng Zhao (CZ)'s growth and entrepreneurial path and reflects how digital-era innovators think and act. The global book club will build an open, diverse platform so readers from different regions and backgrounds can discuss reading, entrepreneurship, innovation, and our times — and grow together through sharing.",
-      "As a key innovation, the event will release exclusive digital member benefits. Attendees receive a Freedom of Money digital certificate issued by the book club (powered by DataDance and IPDEX) for membership proof and collectibility. Everyone at this offline launch receives a limited-edition NFT. More activities, exclusive content, and community perks will follow.",
-      "The programme includes keynote sharing, a roundtable, and open networking. Guests from the author team, industry, and leading voices will explore entrepreneurship, long-term thinking, content value, and cultural innovation in the digital age.",
-      "From one book to one community, from reading to co-creation — the global book club invites everyone who loves reading and innovation to connect ideas and create value through sharing.",
-      "Join us on 28 June at The Commercial Press Tsim Sha Tsui flagship to witness the launch of the global Freedom of Money book club."
+      "This meetup is themed “Young founders: choice, growth, and long-termism.” Senior journalist Tse Ah Fong will converse with CZ, followed by the launch of #MyBinanceLife.",
+      "The event takes place on the morning of 27 August 2026 at Exchange Square, Central, Hong Kong. The main programme is about 75 minutes, with 15 minutes of buffer, ending before 11:15. Seats are limited; this is an invite-only, closed-door gathering.",
+      "Freedom of Money records Changpeng Zhao (CZ)’s growth and entrepreneurial path. The conversation is not about a short-term industry headline, but questions every founder faces: how to choose, how to grow through change, and how to stay with what truly matters.",
+      "#MyBinanceLife invites more readers to start from the book’s themes of choice and growth, and to tell their own stories, judgments, and long-term commitments.",
+      "Founders and university students will ask questions on site — about 60 students are expected. The morning closes with CZ’s remarks, a recap, and an official group photo."
     ],
-    "agendaTitle": "Agenda",
+    "agendaTitle": "Agenda · 09:30–11:00",
     "agendaTopicLabel": "Theme: ",
-    "agendaTopic": "Global Freedom of Money Book Club launch ceremony & sharing session",
+    "agendaTopic": "Young founders: choice, growth, and long-termism",
     "agendaTimeLabel": "Time: ",
-    "agendaTime": "Sunday, 28 June 2026, 17:00–19:00",
+    "agendaTime": "Thursday, 27 August 2026, 09:30–11:00 · about 90 minutes · wrap by 11:15",
     "agendaVenueLabel": "Venue: ",
-    "agendaVenue": "The Commercial Press Tsim Sha Tsui flagship store",
+    "agendaVenue": "Rooms 4005–07, 40/F, Exchange Square Tower 2, Central, Hong Kong",
+    "agendaHostLabel": "Host: ",
+    "agendaHost": "Tse Ah Fong",
     "agendaColTime": "Time",
     "agendaColSegment": "Segment",
     "agendaColContent": "Details",
     "agendaRows": [
       {
-        "time": "17:00–17:10",
-        "segment": "Welcome remarks",
-        "content": "Opening address by Mr. Mao Yongbo, General Manager of The Commercial Press (Hong Kong)."
+        "time": "09:45–10:15",
+        "segment": "Tse Ah Fong × CZ conversation",
+        "content": "Interview: choice, growth, entrepreneurship, and long-termism."
       },
       {
-        "time": "17:10–17:25",
-        "segment": "Keynote sharing",
-        "content": "Geoffrey, Founder of DataDance and Director of IPDEX, on Web3 innovation and the road ahead."
+        "time": "10:15–10:35",
+        "segment": "#MyBinanceLife launch",
+        "content": "Campaign details and current progress."
       },
       {
-        "time": "17:25–17:55",
-        "segment": "Entrepreneurship & the times",
-        "content": "Web3 guests share entrepreneurial journeys and industry insights."
+        "time": "10:35–10:50",
+        "segment": "Founder / student Q&A",
+        "content": "Selected live questions · about 15 minutes."
       },
       {
-        "time": "17:55–18:05",
-        "segment": "Community co-creation film",
-        "content": "Premiere of a Freedom of Money theme film co-created by the global community."
-      },
-      {
-        "time": "18:05–18:25",
-        "segment": "Book club launch ceremony",
-        "content": "Official launch of the global book club and release of the membership system and exclusive benefits."
-      },
-      {
-        "time": "18:25–19:00",
-        "segment": "Networking & group photo",
-        "content": "Guests and readers mingle and take photos together."
+        "time": "10:50–11:00",
+        "segment": "Close",
+        "content": "CZ’s remarks, recap, and group photo · about 10 minutes."
       }
     ],
-    "highlightsTitle": "Highlights",
-    "highlights": [
-      "Official launch of the global Freedom of Money book club",
-      "First release of book-club NFT member benefits",
-      "The Commercial Press Hong Kong premiere event",
-      "Cross-industry guest sharing",
-      "Premiere of the Freedom of Money community film",
-      "Face-to-face reader interaction"
-    ],
+    "supportersTitle": "Supporting organizations",
     "partnersTitle": "Partners",
     "partners": [
       {
@@ -173,8 +158,8 @@
         "body": "DataDance (DDC) is a decentralised data trading platform built around consumer data, helping individuals control and share data safely while giving enterprises trusted, privacy-aware insights."
       }
     ],
-    "scanTitle": "Scan to join & register",
-    "scanHint": "Scan with your phone camera or Telegram to join the group and register",
+    "scanTitle": "Join the book-club community",
+    "scanHint": "This meetup is invite-only. Scan to join the book-club Telegram for later updates.",
     "qrAlt": "Telegram book club group QR code"
   },
   "home": {
@@ -196,8 +181,8 @@
     "journeyTitle": "From Programmer to Crypto Giant",
     "journeyDesc": "Freedom of Money chronicles CZ's legendary journey from an ordinary programmer to creating the world's largest cryptocurrency exchange. This book is not only an entrepreneurial history but also a life guide about perseverance, innovation, and vision.",
     "bookDetailsCta": "Book details",
-    "offlineEventTitle": "The global Freedom of Money book club sets sail",
-    "offlineEventDesc": "Launch ceremony on 28 June at The Commercial Press Tsim Sha Tsui flagship — witness the first NFT member benefits. Register to join.",
+    "offlineEventTitle": "Freedom of Money book meetup",
+    "offlineEventDesc": "Morning of 27 August at Exchange Square, Central, Hong Kong. Tse Ah Fong × CZ on choice, growth, entrepreneurship, and long-termism, plus the #MyBinanceLife launch. Invite-only, closed-door.",
     "offlineEventCta": "Offline event details",
     "stat1Label": "Reservations",
     "stat1Unit": "",
@@ -932,6 +917,7 @@
     "posterSaved": "Poster saved to your photos / downloads",
     "posterFailed": "Could not generate the poster. Try again.",
     "posterTogether": "{{name}} wrote a book with {{count}} fellow readers",
+    "posterPrice": "Value ¥ {{price}}",
     "claimAndCapsuleCta": "Claim digital NFT and save to Life Capsule",
     "coverPartners": "The Commercial Press · Binance Life Book Club · DataDance",
     "savedMark": "Saved",

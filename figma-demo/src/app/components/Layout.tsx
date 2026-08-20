@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import bookCover from "../../assets/book-cover-hero.png";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { DataDanceWordmark } from "./DataDanceWordmark";
+import PartnerLogoMark from "./PartnerLogoMark";
 import { SiteNavDrawer, SiteNavMenuButton, useSiteNavItems } from "./SiteNavDrawer";
 import {
   BOOK_CLUB_TELEGRAM_HANDLE,
@@ -218,6 +219,7 @@ export default function Layout() {
             <div className="grid grid-cols-1 gap-8 md:gap-6 lg:grid-cols-3 lg:gap-0 lg:items-start">
               {/* Commercial Press — left on wide screens */}
               <div className="flex flex-col items-center gap-3 text-center lg:items-start lg:text-left lg:pr-8">
+                <PartnerLogoMark id="press" size="sm" />
                 <h4 className={partnerTitleClass}>{t("footer.publisherSocialTitle")}</h4>
                 <p className={partnerDescClass}>{t("footer.publisherDesc")}</p>
                 <div className="flex items-center gap-2">
@@ -237,6 +239,7 @@ export default function Layout() {
 
               {/* IPDEX — center */}
               <div className="flex flex-col items-center gap-3 border-border/50 border-t pt-8 text-center lg:border-t-0 lg:border-x lg:px-8 lg:pt-0">
+                <PartnerLogoMark id="ipdex" size="sm" />
                 <h4 className={partnerTitleClass}>IPDEX</h4>
                 <p className={partnerDescClass}>{t("footer.poweredByIpdex")}</p>
                 <div className="flex flex-wrap items-center justify-center gap-2">

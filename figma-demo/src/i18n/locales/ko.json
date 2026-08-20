@@ -20,7 +20,7 @@
     "titleHome": "바이낸스 인생 북클럽",
     "titleBook": "도서 소개 · 바이낸스 인생 북클럽",
     "titleClub": "북클럽 · 바이낸스 인생 북클럽",
-    "titleOfflineEvent": "오프라인 행사 · 바이낸스 인생 북클럽",
+    "titleOfflineEvent": "8월 북클럽 밋업 · 바이낸스 인생 북클럽",
     "titlePrinciples": "CZ 원칙 · 바이낸스 인생 북클럽",
     "titleTimeline": "CZ 타임라인 · 바이낸스 인생 북클럽",
     "titleAccount": "내 계정 · 바이낸스 인생 북클럽",
@@ -85,79 +85,64 @@
   },
   "offlineEvent": {
     "backHome": "홈으로 돌아가기",
-    "title": "《바이낸스 인생》 북클럽 런칭식 & 셰어링 세션",
-    "launchHeadline": "《바이낸스 인생》 글로벌 북클럽 곧 출범",
-    "launchTagline": "6월 28일 홍콩 첫 개최 — 최초 NFT 회원 혜택 공개 및 글로벌 독서 커뮤니티 탄생",
-    "subtitle": "상무인서관 · 일본독서회 · IPDEX",
+    "brand": "CZ LIFE · YOUNG FOUNDERS",
+    "title": "《바이낸스 인생》 북클럽 밋업",
+    "launchHeadline": "《바이낸스 인생》 북클럽 밋업",
+    "launchTagline": "청년의 창업과 성장: 선택, 성장, 장기주의",
+    "subtitle": "사회: 셰야팡｜초대제 · 비공개",
     "dateLabel": "날짜",
-    "date": "2026년 6월 28일 (일)",
+    "date": "2026년 8월 27일 (목)",
     "timeLabel": "시간",
-    "time": "17:00 – 19:00",
+    "time": "09:30 – 11:00 (약 90분, 11:15 이전 종료)",
     "venueLabel": "장소",
-    "venue": "상무인서관 · 침사추이 플래그십 스토어",
-    "address": "구룡 침사추이 미돈로 83–97 화윈빌딩 지하 25호 및 1층 전층\n(MTR 침사추이역 A1 출구에서 우회전)",
+    "venue": "홍콩 중환 거래광장 2좌 40층",
+    "address": "홍콩 중환 거래광장 2좌 40층 4005–07실\n(MTR 중환역 / 홍콩역)",
+    "hostLabel": "사회",
+    "host": "셰야팡",
     "languageLabel": "언어",
     "language": "표준 중국어(만다린)",
     "flowParagraphs": [
-      "좋은 책은 사고를 일깨우고, 훌륭한 독자 커뮤니티는 사상을 계속 자라게 합니다.",
-      "6월 28일 홍콩 상무인서관 침사추이 플래그십에서 《바이낸스 인생》 글로벌 북클럽 창립식이 열립니다.",
-      "본서는 CZ의 성장과 창업을 기록하며 디지털 시대 혁신가의 실천을 보여 줍니다.",
-      "현장에서 디지털 회원 혜택을 공개합니다. IPDEX·DataDance 기술의 디지털 증명서를 받을 수 있습니다.",
-      "기조 연설, 원탁, 교류가 예정되어 있습니다.",
-      "한 권의 책에서 커뮤니티로 — 독서와 공동 창작의 가능성을 탐색합니다.",
-      "6월 28일 침사추이 플래그십에서 함께 출범의 순간을 맞이해 주세요."
+      "이번 밋업의 주제는 「청년의 창업과 성장: 선택, 성장, 장기주의」입니다. 시니어 언론인 셰야팡이 CZ와 대담하고 「#나의 바이낸스 인생」을 발표합니다.",
+      "2026년 8월 27일 오전, 홍콩 중환 거래광장에서 진행합니다. 본 프로그램 약 75분, 예비 15분, 11:15 이전 종료. 좌석이 제한되어 초대제·비공개입니다.",
+      "《바이낸스 인생》은 자오창펑(CZ)의 성장과 창업을 기록합니다. 단기 업계 이슈가 아니라, 창업자가 마주하는 선택, 변화 속 성장, 정말 중요한 일의 지속을 이야기합니다.",
+      "「#나의 바이낸스 인생」은 책의 선택과 성장에서 출발해, 독자 자신의 경험·판단·장기 고수를 이야기하도록 초대합니다.",
+      "창업자와 대학생이 현장에서 질문합니다(대학생 약 60명 예정). CZ의 메시지, 총평, 공식 단체 사진으로 마무리합니다."
     ],
-    "agendaTitle": "행사 일정",
+    "agendaTitle": "행사 일정｜09:30–11:00",
     "agendaTopicLabel": "주제: ",
-    "agendaTopic": "《바이낸스 인생》 글로벌 북클럽 창립식 & 셰어링 세션",
+    "agendaTopic": "청년의 창업과 성장: 선택, 성장, 장기주의",
     "agendaTimeLabel": "일시: ",
-    "agendaTime": "2026년 6월 28일(일) 17:00–19:00",
+    "agendaTime": "2026년 8월 27일(목) 09:30–11:00｜약 90분｜11:15 이전 종료",
     "agendaVenueLabel": "장소: ",
-    "agendaVenue": "상무인서관 침사추이 플래그십 스토어",
+    "agendaVenue": "홍콩 중환 거래광장 2좌 40층 4005–07실",
+    "agendaHostLabel": "사회: ",
+    "agendaHost": "셰야팡",
     "agendaColTime": "시간",
     "agendaColSegment": "环节",
     "agendaColContent": "내용",
     "agendaRows": [
       {
-        "time": "17:00–17:10",
-        "segment": "환영사",
-        "content": "상무인서관(홍콩) 총경리 마오융보(Mao Yongbo) 님의 개회사."
+        "time": "09:45–10:15",
+        "segment": "셰야팡 × CZ 대담",
+        "content": "인물 인터뷰: 선택, 성장, 창업, 장기주의."
       },
       {
-        "time": "17:10–17:25",
-        "segment": "기조 연설",
-        "content": "DataDance 창립자·IPDEX 이사 Geoffrey의 Web3 혁신과 전망."
+        "time": "10:15–10:35",
+        "segment": "#나의 바이낸스 인생 발표식",
+        "content": "캠페인 상세와 진행 상황 소개."
       },
       {
-        "time": "17:25–17:55",
-        "segment": "창업 이야기와 시대적 기회",
-        "content": "Web3 게스트의 창업 여정과 업계 통찰 공유."
+        "time": "10:35–10:50",
+        "segment": "창업자 / 대학생 Q&A",
+        "content": "선별된 현장 질문｜약 15분."
       },
       {
-        "time": "17:55–18:05",
-        "segment": "커뮤니티 공동 창작 영상",
-        "content": "글로벌 커뮤니티가 공동 제작한 《바이낸스 인생》 테마 영상 상영."
-      },
-      {
-        "time": "18:05–18:25",
-        "segment": "북클럽 런칭식",
-        "content": "글로벌 북클럽 공식 출범 및 회원 체계·전용 혜택 공개."
-      },
-      {
-        "time": "18:25–19:00",
-        "segment": "교류 및 단체 사진",
-        "content": "게스트와 독자 교류 및 기념 촬영."
+        "time": "10:50–11:00",
+        "segment": "마무리",
+        "content": "CZ 메시지, 총평 및 단체 사진｜약 10분."
       }
     ],
-    "highlightsTitle": "행사 하이라이트",
-    "highlights": [
-      "글로벌 북클럽 공식 출범",
-      "최초 북클럽 NFT 회원 혜택 공개",
-      "상무인서관 홍콩 첫 행사",
-      "다양한 분야 게스트 공유",
-      "커뮤니티 영상 시사",
-      "독자 대면 교류"
-    ],
+    "supportersTitle": "후원 · 협력",
     "partnersTitle": "파트너",
     "partners": [
       {
@@ -173,8 +158,8 @@
         "body": "DataDance(DDC)은 소비자 데이터 중심의 탈중앙화 데이터 거래 플랫폼으로 개인의 데이터 통제와 기업의 프라이버시 보호형 인사이트를 지원합니다."
       }
     ],
-    "scanTitle": "QR로 그룹 참여·신청",
-    "scanHint": "휴대폰 카메라 또는 Telegram으로 스캔해 그룹에 참여하고 신청하세요",
+    "scanTitle": "북클럽 커뮤니티 참여",
+    "scanHint": "이번 밋업은 초대제입니다. QR로 Telegram에 참여해 이후 안내를 받아 주세요.",
     "qrAlt": "Telegram 북클럽 입群 QR 코드"
   },
   "home": {
@@ -196,8 +181,8 @@
     "journeyTitle": "프로그래머에서 암호화폐 거물로",
     "journeyDesc": "《바이낸스 인생》은 CZ가 평범한 프로그래머에서 세계 최대 암호화폐 거래소를 창립하기까지의 전설적인 여정을 기록합니다. 이 책은 창업 역사일 뿐만 아니라 인내, 혁신 및 비전에 관한 인생 안내서입니다.",
     "bookDetailsCta": "도서 상세 보기",
-    "offlineEventTitle": "《바이낸스 인생》 글로벌 북클럽 곧 출범",
-    "offlineEventDesc": "6월 28일 홍콩 침사추이 플래그십에서 창립식 — 최초 NFT 회원 혜택을 확인하세요.",
+    "offlineEventTitle": "《바이낸스 인생》 북클럽 밋업",
+    "offlineEventDesc": "8월 27일 오전, 홍콩 중환 거래광장. 셰야팡 × CZ가 선택·성장·창업과 장기주의를 대담하고 「#나의 바이낸스 인생」을 발표합니다. 초대제·비공개.",
     "offlineEventCta": "오프라인 행사 보기",
     "stat1Label": "활동 예약 인원",
     "stat1Unit": "명",
@@ -1353,6 +1338,7 @@
     "posterSaved": "Poster saved to your photos / downloads",
     "posterFailed": "Could not generate the poster. Try again.",
     "posterTogether": "{{name}} wrote a book with {{count}} fellow readers",
+    "posterPrice": "가치 ¥ {{price}}",
     "claimAndCapsuleCta": "Claim digital NFT and save to Life Capsule",
     "coverPartners": "The Commercial Press · Binance Life Book Club · DataDance"
   }

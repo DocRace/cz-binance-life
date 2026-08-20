@@ -1,7 +1,7 @@
 (() => {
-  const DATA_URL = './data/editions.json?v=2';
+  const DATA_URL = './data/editions.json?v=3';
   const BOARD = { w: 800, h: 2000 };
-  const TITLE = '我的币安人生';
+  const TITLE = '我的幣安人生';
 
   const ROW_LAYOUT = {
     back: { cy: 1120, radiusX: 360, radiusY: 88, spread: 104, scale: 0.66 },
@@ -34,12 +34,12 @@
       <div class="chrome">
         <div class="chrome-left">
           <span class="chrome-brand">Cover Fan</span>
-          <span class="chrome-note">易拉宝 80×200 · ${count} 本 3D 书</span>
+          <span class="chrome-note">易拉寶 80×200 · ${count} 本 3D 書</span>
         </div>
         <div class="chrome-right">
-          <a class="chrome-link" href="/club/chronicle" target="_blank" rel="noopener">打开活动</a>
-          <button type="button" class="chrome-btn" id="captureBtn">隐藏工具条截图</button>
-          <button type="button" class="chrome-btn gold" id="pngBtn">下载 PNG</button>
+          <a class="chrome-link" href="/club/chronicle" target="_blank" rel="noopener">打開活動</a>
+          <button type="button" class="chrome-btn" id="captureBtn">隱藏工具條截圖</button>
+          <button type="button" class="chrome-btn gold" id="pngBtn">下載 PNG</button>
         </div>
       </div>
       <div class="stage" id="stage">
@@ -53,7 +53,7 @@
           <div class="fan" id="fan"></div>
           <footer class="foot">
             <div class="foot-cta">${esc(meta.cta || '')}</div>
-            <p class="foot-count">${esc(meta.countLabel || `${count} 种封面组合`)}</p>
+            <p class="foot-count">${esc(meta.countLabel || `${count} 種封面組合`)}</p>
             <p class="foot-pub">${esc(meta.publisher || '')}</p>
             <img class="sig" src="/partner-deck/assets/cz-signature-gold.png" alt="" />
           </footer>
@@ -151,7 +151,7 @@
   function bind() {
     $('#captureBtn')?.addEventListener('click', () => {
       document.body.classList.add('is-capture');
-      alert('工具条已隐藏。截完图后按 Esc 或点页面空白处可恢复。');
+      alert('工具條已隱藏。截完圖後按 Esc 或點頁面空白處可恢復。');
     });
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') document.body.classList.remove('is-capture');
@@ -162,7 +162,7 @@
     $('#pngBtn')?.addEventListener('click', () => {
       downloadPng().catch((err) => {
         console.error(err);
-        alert('PNG 导出失败，请改用「隐藏工具条截图」。');
+        alert('PNG 匯出失敗，請改用「隱藏工具條截圖」。');
       });
     });
   }
@@ -196,7 +196,7 @@
     const btn = $('#pngBtn');
     if (btn) {
       btn.disabled = true;
-      btn.textContent = '导出中…';
+      btn.textContent = '匯出中…';
     }
     document.body.classList.add('is-capture');
     try {
@@ -223,13 +223,13 @@
       document.body.classList.remove('is-capture');
       if (btn) {
         btn.disabled = false;
-        btn.textContent = '下载 PNG';
+        btn.textContent = '下載 PNG';
       }
     }
   }
 
   init().catch((err) => {
     console.error(err);
-    $('#app').innerHTML = '<div class="boot">封面加载失败，请刷新重试。</div>';
+    $('#app').innerHTML = '<div class="boot">封面載入失敗，請重新整理再試。</div>';
   });
 })();

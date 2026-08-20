@@ -102,6 +102,8 @@ The app is a **client-side router**. The HTTP server **must** resolve unknown pa
 
 **Isolated cover fan (roll-up / 易拉宝):** `https://<host>/cover-showcase/` is a static 3D-cover artboard. Same isolation rules.
 
+**Isolated invitation generator:** `https://<host>/invite/` is a static page for media / guest / email invitations. Same isolation rules.
+
 ## 5. Checklist before go-live
 
 - [ ] TLS certificate on the public hostname.

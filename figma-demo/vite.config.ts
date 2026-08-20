@@ -18,7 +18,7 @@ function figmaAssetResolver() {
 
 /** Serve isolated static pages — never let the SPA swallow them. */
 function isolatedStaticPages() {
-  const pages = ['/partner-deck', '/cover-showcase']
+  const pages = ['/partner-deck', '/cover-showcase', '/invite']
   const rewrite = (req: { url?: string }, _res: unknown, next: () => void) => {
     const url = req.url || ''
     for (const page of pages) {

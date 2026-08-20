@@ -2,19 +2,13 @@ import { useMemo } from "react";
 import { Link } from "react-router";
 import { motion } from "motion/react";
 import {
-  Award,
-  Building2,
   Calendar,
   ChevronLeft,
-  Clapperboard,
   Clock,
-  Handshake,
   Home,
   Languages,
   MapPin,
   Mic,
-  Users,
-  type LucideIcon,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
@@ -31,12 +25,12 @@ import {
   PAGE_SHELL,
   SECTION_SPACING,
 } from "../layout/pageLayout";
+import PartnerLogoMark from "../components/PartnerLogoMark";
+import PartnerLogoRow from "../components/PartnerLogoRow";
+import { partnerLogoIdFromTitle } from "../../lib/partnerLogos";
 
 type AgendaRow = { time: string; segment: string; content: string };
 type PartnerAbout = { title: string; body: string };
-
-/** Icons aligned with `offlineEvent.highlights` order across locales */
-const HIGHLIGHT_ICONS: LucideIcon[] = [Users, Award, Building2, Mic, Clapperboard, Handshake];
 
 export default function OfflineEvent() {
   const { t } = useTranslation();
@@ -45,6 +39,7 @@ export default function OfflineEvent() {
     { icon: Calendar, label: t("offlineEvent.dateLabel"), value: t("offlineEvent.date") },
     { icon: Clock, label: t("offlineEvent.timeLabel"), value: t("offlineEvent.time") },
     { icon: MapPin, label: t("offlineEvent.venueLabel"), value: t("offlineEvent.venue") },
+    { icon: Mic, label: t("offlineEvent.hostLabel"), value: t("offlineEvent.host") },
     { icon: Languages, label: t("offlineEvent.languageLabel"), value: t("offlineEvent.language") },
   ];
 
@@ -56,11 +51,6 @@ export default function OfflineEvent() {
   const agendaRows = useMemo(() => {
     const raw = t("offlineEvent.agendaRows", { returnObjects: true });
     return Array.isArray(raw) ? (raw as AgendaRow[]) : [];
-  }, [t]);
-
-  const highlights = useMemo(() => {
-    const raw = t("offlineEvent.highlights", { returnObjects: true });
-    return Array.isArray(raw) ? (raw as string[]) : [];
   }, [t]);
 
   const partners = useMemo(() => {
@@ -85,6 +75,9 @@ export default function OfflineEvent() {
         animate={{ opacity: 1, y: 0 }}
         className={`${PAGE_HEADER} ${CONTENT_NARROW}`}
       >
+        <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-gold/80">
+          {t("offlineEvent.brand")}
+        </p>
         <h1 className="font-display text-4xl md:text-5xl leading-tight">
           <span className="bg-gradient-to-r from-gold to-gold-light bg-clip-text text-transparent">
             {t("offlineEvent.launchHeadline")}
@@ -93,6 +86,18 @@ export default function OfflineEvent() {
         <p className="mt-4 text-lg text-gold/90 leading-relaxed">{t("offlineEvent.launchTagline")}</p>
         <p className="mt-3 text-sm text-muted-foreground">{t("offlineEvent.subtitle")}</p>
       </motion.header>
+
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.06 }}
+        className={`${CONTENT_DEFAULT} mb-10`}
+      >
+        <p className="mb-4 text-center text-xs font-medium uppercase tracking-[0.18em] text-gold/80">
+          {t("offlineEvent.supportersTitle")}
+        </p>
+        <PartnerLogoRow size="md" />
+      </motion.div>
 
       <div className={`${CONTENT_DEFAULT} grid grid-cols-1 items-start lg:grid-cols-2 ${GRID_GAP}`}>
         <motion.div
@@ -187,12 +192,20 @@ export default function OfflineEvent() {
             {t("offlineEvent.partnersTitle")}
           </h2>
           <div className={`grid grid-cols-1 gap-4 md:grid-cols-3 ${GRID_GAP}`}>
-            {partners.map((partner) => (
-              <article key={partner.title} className={`p-6 md:p-7 ${CARD_SURFACE}`}>
-                <h3 className="font-display text-lg text-gold mb-3">{partner.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{partner.body}</p>
-              </article>
-            ))}
+            {partners.map((partner) => {
+              const logoId = partnerLogoIdFromTitle(partner.title);
+              return (
+                <article key={partner.title} className={`p-6 md:p-7 ${CARD_SURFACE}`}>
+                  {logoId ? (
+                    <div className="mb-4 flex min-h-12 items-center">
+                      <PartnerLogoMark id={logoId} size="md" />
+                    </div>
+                  ) : null}
+                  <h3 className="font-display text-lg text-gold mb-3">{partner.title}</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{partner.body}</p>
+                </article>
+              );
+            })}
           </div>
         </motion.section>
       ) : null}
@@ -220,6 +233,10 @@ export default function OfflineEvent() {
             <span className="font-medium text-foreground">{t("offlineEvent.agendaVenueLabel")}</span>
             {t("offlineEvent.agendaVenue")}
           </p>
+          <p className="text-sm text-muted-foreground">
+            <span className="font-medium text-foreground">{t("offlineEvent.agendaHostLabel")}</span>
+            {t("offlineEvent.agendaHost")}
+          </p>
         </div>
 
         <div className={`overflow-x-auto ${CARD_SURFACE}`}>
@@ -246,31 +263,6 @@ export default function OfflineEvent() {
         </div>
       </motion.section>
 
-      <motion.section
-        initial={{ opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-40px" }}
-        className={`${CONTENT_DEFAULT} ${SECTION_SPACING}`}
-        aria-labelledby="offline-event-highlights"
-      >
-        <h2 id="offline-event-highlights" className="mb-6 font-display text-2xl md:text-3xl text-foreground">
-          {t("offlineEvent.highlightsTitle")}
-        </h2>
-        <ul className={`grid grid-cols-1 gap-3 sm:grid-cols-2 ${GRID_GAP}`}>
-          {highlights.map((item, index) => {
-            const HighlightIcon = HIGHLIGHT_ICONS[index] ?? Users;
-            return (
-              <li
-                key={item}
-                className={`flex items-start gap-3 p-4 md:p-5 ${CARD_SURFACE}`}
-              >
-                <HighlightIcon className="mt-0.5 h-8 w-8 shrink-0 text-gold" aria-hidden />
-                <span className="text-sm leading-relaxed text-foreground">{item}</span>
-              </li>
-            );
-          })}
-        </ul>
-      </motion.section>
     </div>
   );
 }
