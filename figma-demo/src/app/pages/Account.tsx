@@ -492,7 +492,7 @@ export default function Account() {
                       </div>
                     ) : null}
                     <div className="flex justify-center">
-                      <span className="inline-flex items-center rounded-full bg-cyan-500/15 px-3 py-1.5 text-xs text-cyan-200">
+                      <span className="inline-flex items-center rounded-full bg-gold/10 px-3 py-1.5 text-xs text-gold">
                         ✓ {t("account.chronicleFdOk")}
                       </span>
                     </div>

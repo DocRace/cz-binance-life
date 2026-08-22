@@ -1,5 +1,5 @@
 (() => {
-  const DATA_URL = './data/invites.json?v=20';
+  const DATA_URL = './data/invites.json?v=21';
   const PORTRAIT = { w: 1080, h: 2200 };
   const WIDE = { w: 1920, h: 1080 };
   const SITE_URL = 'https://czlife.club';
@@ -228,7 +228,7 @@
             <div class="blast-details">
               <p><span>${esc(ev.dateLabel)}</span>${esc(ev.date)}</p>
               <p><span>${esc(ev.timeLabel)}</span>${esc(ev.time)}</p>
-              <p><span>${esc(ev.venueLabel)}</span>${esc(ev.venue)}</p>
+              <p><span>${esc(ev.venueLabel)}</span>${esc(ev.blastVenue || ev.venue)}</p>
             </div>
             <div class="blast-foot">
               ${renderPartnerMarks({ compact: true })}
@@ -356,7 +356,8 @@
     lines.push(t.lead, t.body);
     if (t.closing) lines.push(t.closing);
     if (typeId === 'blast') lines.push(ev.speakers);
-    lines.push(`日期：${ev.date}`, `時間：${ev.time}`, `地點：${ev.venue}`, `形式：${t.format}`);
+    const venue = typeId === 'blast' ? (ev.blastVenue || ev.venue) : ev.venue;
+    lines.push(`日期：${ev.date}`, `時間：${ev.time}`, `地點：${venue}`, `形式：${t.format}`);
     if (t.note) lines.push(t.note);
     if (t.contact) {
       lines.push(t.contact.title);
@@ -610,14 +611,13 @@
     }));
     prev.forEach((item) => {
       const el = item.el;
-      const cell = el.closest('.logo-cell');
-      const cellW = cell?.clientWidth || el.clientWidth;
+      const rect = el.getBoundingClientRect();
+      const boxW = Math.max(1, Math.round(el.clientWidth || rect.width));
+      const boxH = Math.max(1, Math.round(el.clientHeight || rect.height));
       if (el.tagName === 'IMG') {
         const nw = el.naturalWidth;
         const nh = el.naturalHeight;
-        if (!nw || !nh || !cellW) return;
-        const boxW = Math.min(el.clientWidth || cellW, cellW);
-        const boxH = el.clientHeight || nh;
+        if (!nw || !nh) return;
         const scale = Math.min(boxW / nw, boxH / nh);
         const w = Math.max(1, Math.round(nw * scale));
         const h = Math.max(1, Math.round(nh * scale));
@@ -629,18 +629,16 @@
         canvas.setAttribute('aria-hidden', 'true');
         canvas.style.width = `${w}px`;
         canvas.style.height = `${h}px`;
-        canvas.style.maxWidth = '100%';
+        canvas.style.maxWidth = 'none';
         canvas.style.flex = 'none';
         canvas.getContext('2d').drawImage(el, 0, 0, canvas.width, canvas.height);
         el.replaceWith(canvas);
         item.canvas = canvas;
         return;
       }
-      const w = Math.min(el.clientWidth || el.getBoundingClientRect().width, cellW || Infinity);
-      const h = el.clientHeight || el.getBoundingClientRect().height;
-      el.style.width = `${w}px`;
-      el.style.height = `${h}px`;
-      el.style.maxWidth = '100%';
+      el.style.width = `${boxW}px`;
+      el.style.height = `${boxH}px`;
+      el.style.maxWidth = 'none';
       el.style.flex = 'none';
     });
     return () => {

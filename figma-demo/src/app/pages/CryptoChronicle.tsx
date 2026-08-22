@@ -12,6 +12,7 @@ import {
   RefreshCw,
   Share2,
   Sparkles,
+  ListOrdered,
   X,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -34,11 +35,13 @@ import { CHRONICLE_NODE_IDS, CHRONICLE_NODE_YEAR } from "../../lib/chronicle/nod
 import {
   countFilled,
   distillChronicle,
+  getPrincipleCatalog,
   getTagCatalog,
   mergeSuggestedTagIds,
   suggestTagsFromEntries,
 } from "../../lib/chronicle/distill";
 import { localizedBehaviorTagLabel } from "../../lib/chronicle/tagI18n";
+import { localizedPrincipleLabel } from "../../lib/chronicle/principleI18n";
 import {
   buildCapsuleHandoffPayload,
   buildLifeCapsuleImportUrl,
@@ -75,7 +78,12 @@ import {
 import { DEFAULT_AVATAR_STYLE } from "../../lib/chronicle/roleVisuals";
 import { computeChroniclePrice, formatUsdt, isChroniclePriceHigh } from "../../lib/chronicle/pricing";
 import RoleAvatar from "../components/RoleAvatar";
-import { downloadChroniclePoster } from "../../lib/chronicle/invitePoster";
+import {
+  blobToDataUrl,
+  buildChroniclePosterBlob,
+  isWeChatBrowser,
+  shareOrDownloadPoster,
+} from "../../lib/chronicle/invitePoster";
 import {
   MIN_FILLED_NODES,
   WIZARD_PREV,
@@ -108,6 +116,8 @@ const H5_CTA =
   "inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gold to-gold-light px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-[0_10px_28px_rgba(240,185,11,0.28)] transition-transform active:scale-[0.98]";
 const H5_CTA_GHOST =
   "inline-flex w-full items-center justify-center gap-2 rounded-full border border-gold/40 bg-gold/5 px-6 py-3 text-sm text-gold transition-colors active:bg-gold/10";
+const H5_CTA_ICON_LEFT =
+  "pointer-events-none absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2";
 
 const MAX_PICK = 3;
 
@@ -127,12 +137,15 @@ export default function CryptoChronicle() {
   const [step, setStep] = useState<ChronicleStep>("intro");
   const [audience, setAudience] = useState<ChronicleAudience>("retail");
   const [entries, setEntries] = useState<UserEntries>({});
+  const entriesRef = useRef<UserEntries>({});
+  entriesRef.current = entries;
   const [openId, setOpenId] = useState<ChronicleNodeId | null>(null);
   const [confirmedTagIds, setConfirmedTagIds] = useState<string[]>([]);
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
   const [selectedPrinciples, setSelectedPrinciples] = useState<string[]>([]);
   const [authorName, setAuthorName] = useState("");
   const [roleId, setRoleId] = useState<AvatarRoleId | null>(null);
+  const [suggestedRoleId, setSuggestedRoleId] = useState<AvatarRoleId | null>(null);
   const [styleId, setStyleId] = useState<AvatarStyleId>(DEFAULT_AVATAR_STYLE);
   const [gender, setGender] = useState<AvatarGenderId>(DEFAULT_AVATAR_GENDER);
   const [result, setResult] = useState<ChronicleResult | null>(null);
@@ -142,6 +155,12 @@ export default function CryptoChronicle() {
   const [showcaseRoleIdx, setShowcaseRoleIdx] = useState(0);
   const [showcaseGender, setShowcaseGender] = useState<AvatarGenderId>("male");
   const [readOnlyShare, setReadOnlyShare] = useState(false);
+  const readOnlyShareRef = useRef(false);
+  readOnlyShareRef.current = readOnlyShare;
+  const authorNameRef = useRef("");
+  authorNameRef.current = authorName;
+  const roleIdRef = useRef<AvatarRoleId | null>(null);
+  roleIdRef.current = roleId;
   const [sharedPrice, setSharedPrice] = useState<number | null>(null);
   const [distilling, setDistilling] = useState(false);
   const [rankCfg, setRankCfg] = useState<RankConfig | null>(null);
@@ -150,6 +169,7 @@ export default function CryptoChronicle() {
   const [siteNavOpen, setSiteNavOpen] = useState(false);
   const [posterBusy, setPosterBusy] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [posterPreviewUrl, setPosterPreviewUrl] = useState<string | null>(null);
 
   const catalog = useMemo(() => getTagCatalog(audience), [audience]);
   const rankEntryParam = searchParams.get("entryId") || searchParams.get("rankEntry");
@@ -158,12 +178,14 @@ export default function CryptoChronicle() {
   const catalogMap = useMemo(() => new Map(catalog.map((x) => [x.id, x])), [catalog]);
 
   const persist = (patch: Partial<ChronicleDraft>) => {
+    // Viewing someone else's book must not become this visitor's draft.
+    if (readOnlyShareRef.current) return;
     const draft: ChronicleDraft = {
       audience: patch.audience ?? audience,
-      entries: patch.entries ?? entries,
+      entries: patch.entries ?? entriesRef.current,
       confirmedTagIds: patch.confirmedTagIds ?? confirmedTagIds,
-      authorName: patch.authorName ?? authorName,
-      roleId: patch.roleId === undefined ? roleId : patch.roleId,
+      authorName: patch.authorName !== undefined ? patch.authorName : authorNameRef.current,
+      roleId: patch.roleId === undefined ? roleIdRef.current : patch.roleId,
       styleId: patch.styleId ?? styleId,
       gender: patch.gender ?? gender,
       selectedTagIds: patch.selectedTagIds ?? selectedTagIds,
@@ -315,6 +337,15 @@ export default function CryptoChronicle() {
 
   const showcaseRoleId = AVATAR_ROLE_IDS[showcaseRoleIdx] || "founder";
   const filledCount = useMemo(() => countFilled(entries), [entries]);
+  const coverKeywords = useMemo(
+    () =>
+      selectedTagIds.map((id) => {
+        const fallback =
+          catalogMap.get(id)?.label || result?.tags.find((x) => x.id === id)?.label || "";
+        return localizedBehaviorTagLabel(id, fallback, t);
+      }),
+    [selectedTagIds, catalogMap, result, t],
+  );
   const pricing = useMemo(() => {
     if (!result) return null;
     const computed = computeChroniclePrice({
@@ -322,16 +353,35 @@ export default function CryptoChronicle() {
       role: roleId,
       principles: result.principles,
       selectedPrincipleCount: selectedPrinciples.length || result.principles.length,
+      nodeTexts: result.nodes.map((n) => n.text),
+      extraTexts: [
+        ...coverKeywords,
+        ...selectedPrinciples,
+        roleId ? t(`chronicle.roles.${roleId}.name`) : "",
+      ],
+      finished: step === "book" || Boolean(roleId && selectedTagIds.length),
     });
-    const locked =
-      readOnlyShare &&
-      ((sharedPrice != null && Number.isFinite(sharedPrice) ? sharedPrice : null) ??
+    const lockedPrice = readOnlyShare
+      ? ((sharedPrice != null && Number.isFinite(sharedPrice) ? sharedPrice : null) ??
         (typeof rankEntry?.price === "number" && Number.isFinite(rankEntry.price)
           ? rankEntry.price
-          : null));
-    if (locked == null) return computed;
-    return { ...computed, price: locked };
-  }, [entries, roleId, result, selectedPrinciples.length, readOnlyShare, sharedPrice, rankEntry?.price]);
+          : null))
+      : null;
+    if (lockedPrice == null || lockedPrice === 0) return computed;
+    return { ...computed, price: lockedPrice };
+  }, [
+    entries,
+    roleId,
+    result,
+    selectedPrinciples,
+    selectedTagIds.length,
+    coverKeywords,
+    step,
+    t,
+    readOnlyShare,
+    sharedPrice,
+    rankEntry?.price,
+  ]);
 
   const keywordChoices = useMemo(() => {
     if (!result) return [] as { id: string; label: string }[];
@@ -350,15 +400,25 @@ export default function CryptoChronicle() {
     return out;
   }, [result, catalogMap, t]);
 
-  const coverKeywords = useMemo(
-    () =>
-      selectedTagIds.map((id) => {
-        const fallback =
-          catalogMap.get(id)?.label || result?.tags.find((x) => x.id === id)?.label || "";
-        return localizedBehaviorTagLabel(id, fallback, t);
-      }),
-    [selectedTagIds, catalogMap, result, t],
-  );
+  const principleChoices = useMemo(() => {
+    const catalog = getPrincipleCatalog();
+    const matched = (result?.principles || []).map((p) => p.name).filter(Boolean);
+    const seen = new Set<string>();
+    const out: { name: string; matched: boolean }[] = [];
+    for (const name of [...matched, ...catalog]) {
+      if (!name || seen.has(name)) continue;
+      seen.add(name);
+      out.push({ name, matched: matched.includes(name) });
+    }
+    return out;
+  }, [result]);
+
+  const roleChoices = useMemo(() => {
+    const pinned = [roleId, suggestedRoleId].filter(
+      (id, i, arr): id is AvatarRoleId => Boolean(id) && arr.indexOf(id) === i,
+    );
+    return [...pinned, ...AVATAR_ROLE_IDS.filter((id) => !pinned.includes(id))];
+  }, [roleId, suggestedRoleId]);
 
   const updateEntry = (id: ChronicleNodeId, value: string) => {
     setEntries((prev) => {
@@ -404,28 +464,21 @@ export default function CryptoChronicle() {
       const distilled = distillChronicle(entries, audience, preselect, merged);
       const tagPick = preselect.slice(0, MAX_PICK);
       const principlePick = distilled.principles.slice(0, MAX_PICK).map((p) => p.name);
+      const suggested = suggestRoleFromTags(tagPick, audience, allText);
+      const nextAudience = audienceForRole(suggested);
       setSelectedTagIds(tagPick);
       setSelectedPrinciples(principlePick);
-      if (!roleId) {
-        const suggested = suggestRoleFromTags(tagPick, audience);
-        setRoleId(suggested);
-        setAudience(audienceForRole(suggested));
-        persist({
-          confirmedTagIds: preselect,
-          selectedTagIds: tagPick,
-          selectedPrinciples: principlePick,
-          roleId: suggested,
-          audience: audienceForRole(suggested),
-          step: "result",
-        });
-      } else {
-        persist({
-          confirmedTagIds: preselect,
-          selectedTagIds: tagPick,
-          selectedPrinciples: principlePick,
-          step: "result",
-        });
-      }
+      setRoleId(suggested);
+      setSuggestedRoleId(suggested);
+      setAudience(nextAudience);
+      persist({
+        confirmedTagIds: preselect,
+        selectedTagIds: tagPick,
+        selectedPrinciples: principlePick,
+        roleId: suggested,
+        audience: nextAudience,
+        step: "result",
+      });
       setResult(distilled);
       setParticipants(bumpCompletionCount());
       goStep("result");
@@ -440,7 +493,7 @@ export default function CryptoChronicle() {
       toast.error(t("chronicle.needThreeTags"));
       return;
     }
-    if (result.principles.length >= MAX_PICK && selectedPrinciples.length < MAX_PICK) {
+    if (principleChoices.length >= MAX_PICK && selectedPrinciples.length < MAX_PICK) {
       toast.error(t("chronicle.needThreePrinciples"));
       return;
     }
@@ -469,16 +522,17 @@ export default function CryptoChronicle() {
       selectedPrinciples,
       step: "book",
     });
-    const url = buildShareUrl(shareEncodeBase(), { ref: rankEntry?.entryId || inviteRef || undefined });
-    const token = new URL(url).searchParams.get("share") || "";
     const next = new URLSearchParams();
-    if (token) next.set("share", token);
     if (inviteRef) next.set("ref", inviteRef);
     setSearchParams(next, { replace: true });
     goStep("book", "push", next.toString());
   };
 
   const startMine = () => {
+    readOnlyShareRef.current = false;
+    authorNameRef.current = "";
+    roleIdRef.current = null;
+    entriesRef.current = {};
     setReadOnlyShare(false);
     setSharedPrice(null);
     setResult(null);
@@ -488,13 +542,15 @@ export default function CryptoChronicle() {
     setSelectedPrinciples([]);
     setAuthorName("");
     setRoleId(null);
+    setSuggestedRoleId(null);
+    setStyleId(DEFAULT_AVATAR_STYLE);
+    setGender(DEFAULT_AVATAR_GENDER);
     setOpenId(CHRONICLE_NODE_IDS[0]);
     const next = new URLSearchParams();
     if (inviteRef) {
       persistInviteRef(inviteRef);
       next.set("ref", inviteRef);
     }
-    setSearchParams(next, { replace: true });
     persist({
       entries: {},
       confirmedTagIds: [],
@@ -502,8 +558,11 @@ export default function CryptoChronicle() {
       selectedPrinciples: [],
       authorName: "",
       roleId: null,
+      styleId: DEFAULT_AVATAR_STYLE,
+      gender: DEFAULT_AVATAR_GENDER,
       step: "intro",
     });
+    setSearchParams(next, { replace: true });
     goStep("intro", "replace", next.toString());
   };
 
@@ -575,7 +634,8 @@ export default function CryptoChronicle() {
   };
 
   const shareToX = async () => {
-    await downloadPoster();
+    const mode = await deliverPoster();
+    if (mode !== "downloaded") return;
     const text = buildResultShareText();
     const url = new URL("https://twitter.com/intent/tweet");
     url.searchParams.set("text", text);
@@ -583,8 +643,9 @@ export default function CryptoChronicle() {
   };
 
   const shareToWechat = async () => {
-    await downloadPoster();
-    setWechatHint(true);
+    const mode = await deliverPoster();
+    if (!mode) return;
+    if (mode === "downloaded") setWechatHint(true);
     await copyText(buildResultShareText(), "chronicle.inviteCopied");
   };
 
@@ -620,29 +681,55 @@ export default function CryptoChronicle() {
     persist({});
   };
 
-  const downloadPoster = async () => {
-    if (posterBusy) return;
+  const closePosterPreview = () => {
+    setPosterPreviewUrl((prev) => {
+      if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
+      return null;
+    });
+  };
+
+  const deliverPoster = async (): Promise<"preview" | "downloaded" | null> => {
+    if (posterBusy) return null;
     setPosterBusy(true);
     try {
-      const ok = await downloadChroniclePoster({
+      const blob = await buildChroniclePosterBlob({
         authorName: authorName.trim() || t("chronicle.anonymousAuthor"),
+        creditLine: t("chronicle.posterBy", {
+          name: authorName.trim() || t("chronicle.anonymousAuthor"),
+        }),
         roleId,
         gender,
         roleLabel: roleId ? t(`chronicle.roles.${roleId}.name`) : "",
         publisher: t("chronicle.bookPublisher"),
         keywords: coverKeywords,
-        principles: selectedPrinciples,
+        principles: selectedPrinciples.map((name) => localizedPrincipleLabel(name, t)),
         priceLabel: t("chronicle.posterPrice", { price: formatUsdt(pricing?.price ?? 0) }),
         inviteUrl: resultShareLink(),
         title: t("chronicle.bookTitle"),
         subtitle: t("chronicle.kicker"),
         partners: t("chronicle.coverPartners"),
+        qrHint: t("chronicle.posterQrHint"),
       });
-      if (ok) toast.success(t("chronicle.posterSaved"));
-      else toast.error(t("chronicle.posterFailed"));
+      if (!blob) {
+        toast.error(t("chronicle.posterFailed"));
+        return null;
+      }
+      const mode = await shareOrDownloadPoster(blob);
+      if (mode === "preview" || isWeChatBrowser()) {
+        setShareOpen(false);
+        closePosterPreview();
+        setPosterPreviewUrl(await blobToDataUrl(blob));
+        return "preview";
+      }
+      toast.success(t("chronicle.posterSaved"));
+      return "downloaded";
     } finally {
       setPosterBusy(false);
     }
+  };
+
+  const downloadPoster = async () => {
+    await deliverPoster();
   };
 
   const yearLabel = (id: ChronicleNodeId) =>
@@ -704,13 +791,14 @@ export default function CryptoChronicle() {
                   />
                 </div>
                 <div className="mt-auto space-y-3">
-                  <button type="button" onClick={() => goStep("fill")} className={H5_CTA}>
-                    <Sparkles className="h-4 w-4" aria-hidden />
-                    {t("chronicle.startCta")}
+                  <button type="button" onClick={() => goStep("fill")} className={`${H5_CTA} relative`}>
+                    <BookOpen className={H5_CTA_ICON_LEFT} aria-hidden />
+                    <span>{t("chronicle.startCta")}</span>
                   </button>
                   {rankLive ? (
-                    <Link to="/club/chronicle/rank?from=intro" className={H5_CTA_GHOST}>
-                      {t("chronicle.rank.publicBoardCta")}
+                    <Link to="/club/chronicle/rank?from=intro" className={`${H5_CTA_GHOST} relative`}>
+                      <ListOrdered className={H5_CTA_ICON_LEFT} aria-hidden />
+                      <span>{t("chronicle.rank.publicBoardCta")}</span>
                     </Link>
                   ) : null}
                 </div>
@@ -901,7 +989,7 @@ export default function CryptoChronicle() {
                 </div>
               ) : null}
 
-              {result.principles.length > 0 ? (
+              {principleChoices.length > 0 ? (
                 <div className={`${H5_PANEL} mb-4 p-4`}>
                   <h2 className="font-display mb-2 flex items-center gap-2 text-xl">
                     <Sparkles className="h-5 w-5 text-gold" aria-hidden />
@@ -909,7 +997,7 @@ export default function CryptoChronicle() {
                   </h2>
                   <p className="mb-4 text-sm text-muted-foreground">{t("chronicle.myPrinciplesHint")}</p>
                   <div className="space-y-3">
-                    {result.principles.map((p, idx) => {
+                    {principleChoices.map((p) => {
                       const on = selectedPrinciples.includes(p.name);
                       return (
                         <button
@@ -924,9 +1012,16 @@ export default function CryptoChronicle() {
                             on ? "border-gold/45 bg-gold/10" : "border-border/50 hover:border-gold/30"
                           }`}
                         >
-                          <p className="font-display text-base text-gold">
-                            {t("chronicle.principleN", { n: idx + 1 })}：{p.name}
-                          </p>
+                          <div className="flex items-center gap-2">
+                            <p className={`font-display text-base ${on ? "text-gold" : "text-foreground"}`}>
+                              {localizedPrincipleLabel(p.name, t)}
+                            </p>
+                            {p.matched ? (
+                              <span className="ml-auto shrink-0 rounded-full border border-gold/40 bg-gold/15 px-2 py-0.5 text-[10px] text-gold">
+                                {t("chronicle.roleSuggested")}
+                              </span>
+                            ) : null}
+                          </div>
                         </button>
                       );
                     })}
@@ -1004,9 +1099,10 @@ export default function CryptoChronicle() {
               </div>
 
               <div className="mb-8">
-                <p className="mb-3 text-sm text-gold/85">{t("chronicle.rolePick")}</p>
+                <p className="mb-1 text-sm text-gold/85">{t("chronicle.rolePick")}</p>
+                <p className="mb-3 text-xs text-muted-foreground">{t("chronicle.rolePickHint")}</p>
                 <div className="grid gap-2.5">
-                  {AVATAR_ROLE_IDS.map((id) => {
+                  {roleChoices.map((id) => {
                     const active = roleId === id;
                     return (
                       <button
@@ -1027,6 +1123,11 @@ export default function CryptoChronicle() {
                         <div className="mb-2 flex items-center gap-3">
                           <RoleAvatar roleId={id} gender={gender} size="md" />
                           <span className="font-display text-base">{t(`chronicle.roles.${id}.name`)}</span>
+                          {id === suggestedRoleId ? (
+                            <span className="ml-auto rounded-full border border-gold/40 bg-gold/15 px-2 py-0.5 text-[10px] text-gold">
+                              {t("chronicle.roleSuggested")}
+                            </span>
+                          ) : null}
                         </div>
                         <p className="text-xs leading-relaxed text-muted-foreground">
                           {t(`chronicle.roles.${id}.desc`)}
@@ -1055,15 +1156,23 @@ export default function CryptoChronicle() {
                   keywords={coverKeywords}
                 />
                 <p className="mt-4 break-all text-center font-tech text-xl text-gold sm:text-2xl">
-                  ${formatUsdt(pricing.price)}
+                  {t("chronicle.posterPrice", { price: formatUsdt(pricing.price) })}
                 </p>
+                <p className="mt-2 text-center font-cjk text-sm text-foreground/80">
+                  {t("chronicle.posterBy", { name: displayName })}
+                </p>
+                {coverKeywords.length > 0 ? (
+                  <p className="mt-1.5 text-center font-cjk text-xs leading-snug text-muted-foreground">
+                    {coverKeywords.join(" · ")}
+                  </p>
+                ) : null}
                 <ChroniclePartnerMarks className="mt-3" />
               </div>
 
               <div className="mt-auto flex flex-col gap-2.5">
                 {readOnlyShare ? (
-                  <button type="button" onClick={startMine} className={H5_CTA}>
-                    {t("chronicle.createMine")}
+                  <button type="button" onClick={startMine} className={`${H5_CTA} text-center leading-snug`}>
+                    {t("chronicle.createMineWith", { name: displayName })}
                   </button>
                 ) : (
                   <>
@@ -1101,6 +1210,44 @@ export default function CryptoChronicle() {
                   </>
                 )}
               </div>
+
+              {posterPreviewUrl ? (
+                <OverlayPortal>
+                  <div
+                    className={overlayBackdropClassLight}
+                    role="presentation"
+                    onClick={closePosterPreview}
+                    onKeyDown={(e) => {
+                      if (e.key === "Escape") closePosterPreview();
+                    }}
+                  >
+                    <div
+                      role="dialog"
+                      aria-modal="true"
+                      aria-labelledby="chronicle-poster-preview-hint"
+                      className="relative z-[1] flex w-full max-w-[360px] flex-col items-center"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <img
+                        src={posterPreviewUrl}
+                        alt={t("chronicle.downloadPoster")}
+                        className="max-h-[72vh] w-full select-none object-contain"
+                        style={{ WebkitTouchCallout: "default", WebkitUserSelect: "auto" }}
+                        draggable={false}
+                      />
+                      <p
+                        id="chronicle-poster-preview-hint"
+                        className="mt-3 text-center text-sm leading-relaxed text-gold-light"
+                      >
+                        {t("chronicle.posterLongPress")}
+                      </p>
+                      <button type="button" onClick={closePosterPreview} className={`${H5_CTA_GHOST} mt-3`}>
+                        {t("common.close")}
+                      </button>
+                    </div>
+                  </div>
+                </OverlayPortal>
+              ) : null}
 
               {shareOpen ? (
                 <OverlayPortal>

@@ -18,6 +18,9 @@ export type PosterInput = {
   title: string;
   subtitle: string;
   partners: string;
+  qrHint?: string;
+  /** Line under the price, e.g. "By: Race Li". Falls back to "By: {authorName}". */
+  creditLine?: string;
 };
 
 type Pt = [number, number];
@@ -40,36 +43,38 @@ const GOLD = "#c9a76a";
 const GOLD_LIGHT = "#ddc48e";
 const CREAM = "#f4f1ea";
 const INK = "#1a1a1a";
-/** Same stacks as src/styles/fonts.css — Cormorant / Instrument / Orbitron + CJK. */
-const DISPLAY = '"Cormorant Garamond", "Noto Serif TC", "Noto Serif SC", Georgia, serif';
-const SANS = '"Instrument Sans", "Noto Sans TC", "Noto Sans SC", "PingFang TC", sans-serif';
-const CJK = '"Noto Sans TC", "Noto Sans SC", "PingFang TC", "PingFang SC", sans-serif';
+/** One sans stack for every poster title/body (Latin + CJK). Price digits stay Orbitron. */
+const SANS = '"Instrument Sans", "Noto Sans TC", "Noto Sans SC", "PingFang TC", "PingFang SC", sans-serif';
 const TECH = '"Orbitron", "Instrument Sans", "Noto Sans TC", sans-serif';
 
-const COVER_W = 720;
-const COVER_H = 966;
+const COVER_W = 600;
+const COVER_H = 805;
+const TITLE_INK = "#f3e6c8";
+const TITLE_PX = 88;
 
 async function ensurePosterFonts() {
   const fonts = document.fonts;
   if (!fonts?.load) return;
   await Promise.all(
     [
-      `500 88px ${DISPLAY}`,
-      `500 32px ${DISPLAY}`,
-      `500 36px ${SANS}`,
-      `400 26px ${SANS}`,
-      `500 28px ${CJK}`,
-      `600 64px ${TECH}`,
+      `500 ${TITLE_PX}px ${SANS}`,
+      `500 76px ${SANS}`,
+      `500 72px ${SANS}`,
+      `500 64px ${SANS}`,
+      `500 40px ${SANS}`,
+      `400 28px ${SANS}`,
+      `500 26px ${SANS}`,
+      `600 56px ${TECH}`,
     ].map((spec) => fonts.load(spec).catch(() => undefined)),
   );
   await fonts.ready.catch(() => undefined);
 }
 
-/** 9:16 result poster at 2x — closed 3D book matching ChronicleBookCover. */
-export async function downloadChroniclePoster(input: PosterInput): Promise<boolean> {
+/** 4:5 result poster at 2x — WeChat / IG / X all crop this ratio cleanly. */
+export async function buildChroniclePosterBlob(input: PosterInput): Promise<Blob | null> {
   const scale = 2;
   const W = 1080 * scale;
-  const H = 1920 * scale;
+  const H = 1350 * scale;
   const canvas = document.createElement("canvas");
   canvas.width = W;
   canvas.height = H;
@@ -79,14 +84,21 @@ export async function downloadChroniclePoster(input: PosterInput): Promise<boole
   await ensurePosterFonts();
   paintBackdrop(ctx, W, H);
 
-  ctx.textAlign = "center";
-  ctx.fillStyle = GOLD;
-  ctx.font = `500 ${32 * scale}px ${DISPLAY}`;
-  ctx.fillText(input.subtitle, W / 2, 58 * scale);
+  const [pressLogo, clubLogo, ddLogo] = await Promise.all([
+    loadImage(PRESS_LOGO_SRC, true).then(knockOutNearBlack),
+    loadImage(czClubMarkSrc, true).then(knockOutNearBlack),
+    loadImage(datadanceWordmarkSrc, true),
+  ]);
 
-  ctx.fillStyle = "#f3e6c8";
-  ctx.font = `500 ${88 * scale}px ${DISPLAY}`;
-  ctx.fillText(input.title, W / 2, 172 * scale);
+  ctx.textAlign = "center";
+  const latinTitle = !/[\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af]/.test(`${input.title || ""}`);
+  const titleSize = latinTitle ? 76 : 64;
+  const titleMaxW = W - 64 * scale;
+  let cursor = 100 * scale;
+  cursor = fillWrappedTitle(ctx, input.subtitle, W / 2, cursor, titleMaxW, scale, titleSize, 52);
+  cursor += 88 * scale;
+  fillMatchingTitle(ctx, input.title, W / 2, cursor, W, scale, titleSize);
+  cursor += latinTitle ? 64 * scale : 56 * scale;
 
   const artSrc = input.roleId ? rolePackSrc(input.roleId, input.gender) : "";
   const coverArt = artSrc ? await loadImage(artSrc, true) : null;
@@ -108,64 +120,220 @@ export async function downloadChroniclePoster(input: PosterInput): Promise<boole
     darkByline,
   });
 
-  drawClosedBook(ctx, {
+  const bookW = 328 * scale;
+  const bookH = Math.round(bookW * (COVER_H / COVER_W));
+  const bookOpts = {
     cx: W / 2,
-    cy: 748 * scale,
-    coverW: COVER_W * scale,
-    coverH: COVER_H * scale,
-    thickness: Math.round(COVER_W * scale * (50 / 228)),
+    cy: cursor + bookH / 2,
+    coverW: bookW,
+    coverH: bookH,
+    thickness: Math.round(bookW * (50 / 228)),
     yawDeg: 24,
     pitchDeg: 2,
+  };
+  drawClosedBook(ctx, {
+    ...bookOpts,
     face,
     spineTitle: input.title,
     spinePublisher: input.publisher || input.partners,
   });
 
-  drawPriceLabel(ctx, input.priceLabel, W / 2, 1358 * scale, scale);
+  const midY = closedBookMaxY(bookOpts) + 92 * scale;
+
+  drawPriceLabel(ctx, input.priceLabel, W / 2, midY, scale, 56);
 
   ctx.textAlign = "center";
   ctx.fillStyle = "#e8dfd0";
-  ctx.font = `500 ${36 * scale}px ${SANS}`;
-  ctx.fillText(signature, W / 2, 1442 * scale);
+  ctx.font = `500 ${40 * scale}px ${SANS}`;
+  const credit = `${input.creditLine || (signature ? `By: ${signature}` : "")}`.trim();
+  ctx.fillText(credit, W / 2, midY + 54 * scale);
 
   const principles = input.principles.filter(Boolean).slice(0, 3).join("  ·  ");
   if (principles) {
-    ctx.fillStyle = "rgba(232,223,208,0.78)";
-    ctx.font = `400 ${26 * scale}px ${SANS}`;
-    wrapCenter(ctx, principles, W / 2, 1526 * scale, W - 140 * scale, 48 * scale);
+    ctx.fillStyle = "rgba(232,223,208,0.86)";
+    ctx.font = `400 ${28 * scale}px ${SANS}`;
+    wrapCenter(ctx, principles, W / 2, midY + 102 * scale, W - 80 * scale, 40 * scale);
   }
 
-  const qr = await loadImage(qrImageUrl(input.inviteUrl, 280), true);
-  const qrSize = 220 * scale;
-  const qrX = (W - qrSize) / 2;
-  const qrY = 1578 * scale;
-  ctx.fillStyle = "#fff";
-  roundRect(ctx, qrX - 14 * scale, qrY - 14 * scale, qrSize + 28 * scale, qrSize + 28 * scale, 12 * scale);
-  ctx.fill();
+  const qrSize = 200 * scale;
+  const sidePad = 228 * scale;
+  const bottomPad = 80 * scale;
+  const qrX = W - sidePad - qrSize;
+  const qrY = H - bottomPad - qrSize;
+  const qr = await loadImage(qrImageUrl(input.inviteUrl, 440), true).then(tintQrBlushWhite);
   if (qr) ctx.drawImage(qr, qrX, qrY, qrSize, qrSize);
 
-  const [pressLogo, clubLogo, ddLogo] = await Promise.all([
-    loadImage(PRESS_LOGO_SRC, true).then(knockOutNearBlack),
-    loadImage(czClubMarkSrc, true).then(knockOutNearBlack),
-    loadImage(datadanceWordmarkSrc, true),
-  ]);
-  drawPartnerLockup(ctx, [pressLogo, clubLogo, ddLogo], W / 2, 1860 * scale, scale);
+  const qrHint = `${input.qrHint || ""}`.trim();
+  let hintSize = 0;
+  const hintLift = 18 * scale;
+  if (qrHint) {
+    ctx.textAlign = "center";
+    ctx.fillStyle = "rgba(232,223,208,0.86)";
+    hintSize = 26 * scale;
+    ctx.font = `400 ${hintSize}px ${SANS}`;
+    const hintW = ctx.measureText(qrHint).width;
+    if (hintW > qrSize * 1.08) {
+      hintSize *= (qrSize * 1.08) / hintW;
+      ctx.font = `400 ${hintSize}px ${SANS}`;
+    }
+    ctx.fillText(qrHint, qrX + qrSize / 2, qrY - hintLift);
+  }
 
-  return new Promise((resolve) => {
-    canvas.toBlob((blob) => {
-      if (!blob) {
-        resolve(false);
-        return;
-      }
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "my-binance-life.png";
-      a.click();
-      window.setTimeout(() => URL.revokeObjectURL(url), 1500);
-      resolve(true);
-    }, "image/png");
+  const groupTop = qrHint ? qrY - hintLift - hintSize : qrY;
+  const groupH = qrY + qrSize - groupTop;
+  const groupMid = groupTop + groupH / 2;
+  drawPartnerStack(ctx, [pressLogo, clubLogo, ddLogo], sidePad, groupMid, scale, W * 0.42, groupH);
+
+  return canvasToImageBlob(canvas);
+}
+
+export async function downloadChroniclePoster(input: PosterInput): Promise<boolean> {
+  const blob = await buildChroniclePosterBlob(input);
+  if (!blob) return false;
+  triggerBlobDownload(blob, posterFilename());
+  return true;
+}
+
+export function isWeChatBrowser(): boolean {
+  return /MicroMessenger/i.test(navigator.userAgent || "");
+}
+
+export function posterFilename(): string {
+  return "my-binance-life.jpg";
+}
+
+export function blobToDataUrl(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ""));
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
   });
+}
+
+export function canvasToImageBlob(canvas: HTMLCanvasElement, quality = 0.88): Promise<Blob | null> {
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => resolve(blob), "image/jpeg", quality);
+  });
+}
+
+export function triggerBlobDownload(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.rel = "noopener";
+  a.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 2500);
+}
+
+export async function shareOrDownloadPoster(blob: Blob): Promise<"shared" | "downloaded" | "preview"> {
+  // WeChat cannot download files — show a long-press preview instead.
+  if (isWeChatBrowser()) return "preview";
+  triggerBlobDownload(blob, posterFilename());
+  return "downloaded";
+}
+
+function fillMatchingTitle(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  _canvasW: number,
+  scale: number,
+  sizePx = TITLE_PX,
+) {
+  ctx.fillStyle = TITLE_INK;
+  ctx.font = `500 ${sizePx * scale}px ${SANS}`;
+  ctx.fillText(text, x, y);
+}
+
+/** Same size as the main title; wraps instead of shrinking the first line. */
+function fillWrappedTitle(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  startY: number,
+  maxW: number,
+  scale: number,
+  sizePx: number,
+  gapPx: number,
+): number {
+  ctx.fillStyle = TITLE_INK;
+  ctx.font = `500 ${sizePx * scale}px ${SANS}`;
+  ctx.textAlign = "center";
+  const raw = `${text || ""}`.trim();
+  const step = (sizePx + gapPx) * scale;
+  const lines: string[] = [];
+  if (!raw) return startY;
+  if (ctx.measureText(raw).width <= maxW) {
+    lines.push(raw);
+  } else if (/\s/.test(raw)) {
+    let line = "";
+    for (const word of raw.split(/\s+/)) {
+      const next = line ? `${line} ${word}` : word;
+      if (ctx.measureText(next).width > maxW && line) {
+        lines.push(line);
+        line = word;
+      } else {
+        line = next;
+      }
+    }
+    if (line) lines.push(line);
+  } else {
+    let line = "";
+    for (const ch of raw) {
+      const next = line + ch;
+      if (ctx.measureText(next).width > maxW && line) {
+        lines.push(line);
+        line = ch;
+      } else {
+        line = next;
+      }
+    }
+    if (line) lines.push(line);
+  }
+  const shown = lines.slice(0, 2);
+  let y = startY;
+  shown.forEach((line, i) => {
+    ctx.fillText(line, x, y);
+    if (i < shown.length - 1) y += step;
+  });
+  return y;
+}
+
+function closedBookMaxY(opts: {
+  cx: number;
+  cy: number;
+  coverW: number;
+  coverH: number;
+  thickness: number;
+  yawDeg: number;
+  pitchDeg: number;
+}): number {
+  const { cx, cy, coverW: w, coverH: h, thickness: t } = opts;
+  const yaw = (opts.yawDeg * Math.PI) / 180;
+  const pitch = (opts.pitchDeg * Math.PI) / 180;
+  const depth = w * 3.4;
+  const originY = -h * 0.08;
+  const project = (x: number, y: number, z: number): number => {
+    const x1 = x * Math.cos(yaw) + z * Math.sin(yaw);
+    const z1 = -x * Math.sin(yaw) + z * Math.cos(yaw);
+    const y1 = y * Math.cos(pitch) - z1 * Math.sin(pitch);
+    const z2 = y * Math.sin(pitch) + z1 * Math.cos(pitch);
+    const s = depth / (depth - z2);
+    return cy + originY + (y1 - originY) * s;
+  };
+  const hw = w / 2;
+  const hh = h / 2;
+  const ht = t / 2;
+  const ys = [
+    project(-hw, hh, ht),
+    project(hw, hh, ht),
+    project(-hw, hh, -ht),
+    project(hw, hh, -ht),
+  ];
+  return Math.max(...ys) + 22 * (w / 328);
 }
 
 /** object-fit: cover; object-position: top — crop sides, never stretch. */
@@ -252,7 +420,7 @@ function paintCoverFace(opts: {
   ctx.textAlign = "left";
   if (opts.corner) {
     ctx.fillStyle = INK;
-    ctx.font = `500 ${24 * s}px ${CJK}`;
+    ctx.font = `500 ${24 * s}px ${SANS}`;
     ctx.fillText(truncate(ctx, opts.corner, w * 0.62), 26 * s, 46 * s);
   }
 
@@ -261,18 +429,18 @@ function paintCoverFace(opts: {
   const faint = opts.darkByline ? "rgba(255,255,255,0.55)" : "rgba(26,26,26,0.48)";
   ctx.textAlign = "right";
   ctx.fillStyle = GOLD;
-  ctx.font = `500 ${46 * s}px ${DISPLAY}`;
-  ctx.fillText(opts.title, w - 26 * s, h - 128 * s);
+  ctx.font = `500 ${72 * s}px ${SANS}`;
+  ctx.fillText(opts.title, w - 26 * s, h - 148 * s);
   ctx.fillStyle = ink;
-  ctx.font = `500 ${30 * s}px ${CJK}`;
-  ctx.fillText(truncate(ctx, opts.byline, w - 56 * s), w - 26 * s, h - 82 * s);
+  ctx.font = `500 ${38 * s}px ${SANS}`;
+  ctx.fillText(truncate(ctx, opts.byline, w - 56 * s), w - 26 * s, h - 92 * s);
   if (opts.keywords.length) {
     ctx.fillStyle = muted;
-    ctx.font = `500 ${20 * s}px ${CJK}`;
-    ctx.fillText(truncate(ctx, opts.keywords.join(" · "), w - 56 * s), w - 26 * s, h - 52 * s);
+    ctx.font = `500 ${24 * s}px ${SANS}`;
+    ctx.fillText(truncate(ctx, opts.keywords.join(" · "), w - 56 * s), w - 26 * s, h - 56 * s);
   }
   ctx.fillStyle = faint;
-  ctx.font = `400 ${15 * s}px ${CJK}`;
+  ctx.font = `400 ${18 * s}px ${SANS}`;
   ctx.fillText(truncate(ctx, opts.partners, w - 56 * s), w - 26 * s, h - 26 * s);
 
   ctx.strokeStyle = "rgba(0,0,0,0.14)";
@@ -328,9 +496,18 @@ function drawClosedBook(
   const pages: Pt[] = [project(R, T, F), project(R, T, K), project(R, B, K), project(R, B, F)];
 
   ctx.save();
-  ctx.fillStyle = "rgba(0,0,0,0.42)";
+  const shadowRx = w * 0.62;
+  const shadowRy = Math.max(56, w * 0.12);
+  ctx.translate(cx + 22, cy + hh + 48);
+  ctx.scale(1, shadowRy / shadowRx);
+  const shadow = ctx.createRadialGradient(0, 0, shadowRx * 0.1, 0, 0, shadowRx);
+  shadow.addColorStop(0, "rgba(0,0,0,0.4)");
+  shadow.addColorStop(0.42, "rgba(0,0,0,0.2)");
+  shadow.addColorStop(0.74, "rgba(0,0,0,0.07)");
+  shadow.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = shadow;
   ctx.beginPath();
-  ctx.ellipse(cx + 22, cy + hh + 32, w * 0.48, 36, 0, 0, Math.PI * 2);
+  ctx.arc(0, 0, shadowRx, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 
@@ -369,7 +546,7 @@ function drawClosedBook(
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillStyle = GOLD;
-  ctx.font = `500 ${spineSize}px ${DISPLAY}`;
+  ctx.font = `500 ${spineSize}px ${SANS}`;
   ctx.fillText(truncate(ctx, opts.spineTitle, spineAlong * 0.78), 0, 0);
   ctx.restore();
 }
@@ -507,24 +684,36 @@ function truncate(ctx: CanvasRenderingContext2D, text: string, maxW: number): st
   return `${s}…`;
 }
 
-function roundRect(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  w: number,
-  h: number,
-  r: number,
-) {
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.arcTo(x + w, y, x + w, y + h, r);
-  ctx.arcTo(x + w, y + h, x, y + h, r);
-  ctx.arcTo(x, y + h, x, y, r);
-  ctx.arcTo(x, y, x + w, y, r);
-  ctx.closePath();
-}
-
 type Mark = HTMLImageElement | HTMLCanvasElement;
+
+/** Black-on-white QR: drop the plate and paint modules a blush off-white. */
+function tintQrBlushWhite(img: HTMLImageElement | null): Mark | null {
+  if (!img) return null;
+  const w = img.naturalWidth || img.width;
+  const h = img.naturalHeight || img.height;
+  if (!w || !h) return img;
+  const c = document.createElement("canvas");
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext("2d");
+  if (!ctx) return img;
+  ctx.drawImage(img, 0, 0);
+  const data = ctx.getImageData(0, 0, w, h);
+  const px = data.data;
+  for (let i = 0; i < px.length; i += 4) {
+    const lum = (px[i] + px[i + 1] + px[i + 2]) / 3;
+    if (lum > 190) {
+      px[i + 3] = 0;
+    } else {
+      px[i] = 244;
+      px[i + 1] = 230;
+      px[i + 2] = 216;
+      px[i + 3] = 255;
+    }
+  }
+  ctx.putImageData(data, 0, 0);
+  return c;
+}
 
 /** Gold-on-black partner PNGs: drop the black plate so they sit on the poster. */
 function knockOutNearBlack(img: HTMLImageElement | null): Mark | null {
@@ -552,15 +741,17 @@ function markSize(img: Mark): { w: number; h: number } {
   return { w: img.naturalWidth || img.width, h: img.naturalHeight || img.height };
 }
 
-/** Same three-mark lockup as ChroniclePartnerMarks: Press · Club · DataDance. */
-function drawPartnerLockup(
+/** Vertical left-stack for the poster footer: Press / Club / DataDance. */
+function drawPartnerStack(
   ctx: CanvasRenderingContext2D,
   marks: Array<Mark | null>,
-  cx: number,
-  top: number,
+  left: number,
+  centerY: number,
   scale: number,
+  maxW: number,
+  targetH?: number,
 ) {
-  const heights = [34 * scale, 40 * scale, 44 * scale];
+  const heights = [48 * scale, 56 * scale, 52 * scale];
   const items = marks
     .map((img, i) => {
       if (!img) return null;
@@ -572,63 +763,77 @@ function drawPartnerLockup(
     .filter((x): x is { img: Mark; w: number; h: number } => Boolean(x));
   if (!items.length) return;
 
-  const gap = 18 * scale;
-  const dotR = 2.4 * scale;
-  const dotSlot = gap * 2 + dotR * 2;
-  let total = items.reduce((s, it) => s + it.w, 0) + dotSlot * (items.length - 1);
-  const maxW = ctx.canvas.width - 80 * scale;
-  if (total > maxW) {
-    const k = maxW / total;
+  for (const it of items) {
+    if (it.w > maxW) {
+      const k = maxW / it.w;
+      it.w *= k;
+      it.h *= k;
+    }
+  }
+
+  let gap = 22 * scale;
+  let totalH = items.reduce((s, it) => s + it.h, 0) + gap * (items.length - 1);
+  if (targetH && totalH > 0 && targetH > totalH) {
+    const k = targetH / totalH;
     for (const it of items) {
       it.w *= k;
       it.h *= k;
     }
-    total = maxW;
+    gap *= k;
+    totalH = targetH;
   }
 
-  let x = cx - total / 2;
-  const rowH = Math.max(...items.map((it) => it.h));
-  items.forEach((it, i) => {
-    ctx.drawImage(it.img, x, top + (rowH - it.h) / 2, it.w, it.h);
-    x += it.w;
-    if (i < items.length - 1) {
-      ctx.beginPath();
-      ctx.fillStyle = "rgba(201,167,106,0.45)";
-      ctx.arc(x + gap + dotR, top + rowH / 2, dotR, 0, Math.PI * 2);
-      ctx.fill();
-      x += dotSlot;
-    }
-  });
+  const stackW = Math.max(...items.map((it) => it.w));
+  const cx = left + stackW / 2;
+  let y = centerY - totalH / 2;
+  for (const it of items) {
+    ctx.drawImage(it.img, cx - it.w / 2, y, it.w, it.h);
+    y += it.h + gap;
+  }
 }
 
-/** "價值 ¥ 2,888" — CJK prefix in display, amount in Orbitron like the result page. */
+function splitPriceLabel(label: string): { prefix: string; amount: string } {
+  const raw = `${label || ""}`.trim();
+  const match = raw.match(/^(.*?)([¥$€]\s*)?([\d][\d,.\s]*)$/);
+  if (!match) return { prefix: raw, amount: "" };
+  return {
+    prefix: `${match[1] || ""}`.trim(),
+    amount: `${match[2] || ""}${match[3] || ""}`.trim(),
+  };
+}
+
+/** “價值” / “Worth” uses the poster sans; only the number stays Orbitron. */
 function drawPriceLabel(
   ctx: CanvasRenderingContext2D,
   label: string,
   cx: number,
   y: number,
   scale: number,
+  sizePx = 56,
 ) {
-  const m = label.match(/^(\S+\s+)(.+)$/);
-  const prefix = m ? m[1] : "";
-  const rest = m ? m[2] : label;
-  const prefixSize = 46 * scale;
-  const numSize = 64 * scale;
+  const { prefix, amount } = splitPriceLabel(label);
+  const size = sizePx * scale;
   ctx.textBaseline = "alphabetic";
-  ctx.textAlign = "left";
   ctx.fillStyle = GOLD_LIGHT;
-  ctx.font = `500 ${prefixSize}px ${DISPLAY}`;
-  const pw = prefix ? ctx.measureText(prefix).width : 0;
-  ctx.font = `600 ${numSize}px ${TECH}`;
-  const rw = ctx.measureText(rest).width;
-  const x0 = cx - (pw + rw) / 2;
-  if (prefix) {
-    ctx.font = `500 ${prefixSize}px ${DISPLAY}`;
-    ctx.fillText(prefix, x0, y);
+  if (!amount) {
+    ctx.textAlign = "center";
+    ctx.font = `500 ${size}px ${SANS}`;
+    ctx.fillText(prefix, cx, y);
+    return;
   }
-  ctx.font = `600 ${numSize}px ${TECH}`;
-  ctx.fillText(rest, x0 + pw, y);
-  ctx.textAlign = "center";
+  ctx.textAlign = "left";
+  ctx.font = `500 ${size}px ${SANS}`;
+  const prefixW = prefix ? ctx.measureText(`${prefix} `).width : 0;
+  ctx.font = `600 ${size}px ${TECH}`;
+  const amountW = ctx.measureText(amount).width;
+  let x = cx - (prefixW + amountW) / 2;
+  if (prefix) {
+    ctx.font = `500 ${size}px ${SANS}`;
+    ctx.fillText(`${prefix} `, x, y);
+    x += prefixW;
+  }
+  ctx.font = `600 ${size}px ${TECH}`;
+  ctx.fillText(amount, x, y);
 }
 
 function wrapCenter(
@@ -638,7 +843,7 @@ function wrapCenter(
   y: number,
   maxW: number,
   lineH: number,
-) {
+): number {
   const words = text.split("  ·  ");
   let line = "";
   let yy = y;
@@ -653,4 +858,5 @@ function wrapCenter(
     }
   }
   if (line) ctx.fillText(line, cx, yy);
+  return yy;
 }

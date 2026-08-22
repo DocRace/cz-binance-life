@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import { motion } from "motion/react";
-import { ChevronLeft, Loader2, Trophy } from "lucide-react";
+import { BookOpen, ChevronLeft, Loader2, Trophy } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import LanguageSwitcher from "../components/LanguageSwitcher";
@@ -106,6 +106,15 @@ export default function ChronicleLeaderboard() {
           animate={{ opacity: 1, y: 0 }}
           className={`${H5_CARD} flex flex-1 flex-col p-5`}
         >
+          <div className={`mb-5 ${H5_RADIUS} border border-white/8 bg-black/25 p-3.5`}>
+            <p className="text-xs font-medium text-gold-light">{t("chronicle.rank.rewardsTitle")}</p>
+            <ul className="mt-2 space-y-1.5 text-[11px] text-muted-foreground">
+              <li>{t("chronicle.rank.rewardSyncTop3")}</li>
+              <li>{t("chronicle.rank.rewardSyncTop10")}</li>
+              <li>{t("chronicle.rank.rewardSunshine")}</li>
+            </ul>
+          </div>
+
           <p className="text-center text-[11px] uppercase text-gold/80">
             {t("chronicle.rank.boardKicker")}
           </p>
@@ -185,25 +194,10 @@ export default function ChronicleLeaderboard() {
             <p className="mb-2 text-center text-xs text-muted-foreground">
               {t("chronicle.rank.joinHint")}
             </p>
-            <Link to="/club/chronicle" className={H5_CTA}>
-              {t("chronicle.rank.createCta")}
+            <Link to="/club/chronicle" className={`${H5_CTA} relative`}>
+              <BookOpen className="pointer-events-none absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2" aria-hidden />
+              <span>{t("chronicle.rank.createCta")}</span>
             </Link>
-          </div>
-
-          <div className={`mt-5 ${H5_RADIUS} border border-white/8 bg-black/25 p-3.5`}>
-            <p className="text-xs font-medium text-gold-light">{t("chronicle.rank.rewardsTitle")}</p>
-            <ul className="mt-2 space-y-1.5 text-[11px] text-muted-foreground">
-              <li>{t("chronicle.rank.rewardTop50")}</li>
-              {cfg?.mode === "async" ? (
-                <li>{t("chronicle.rank.rewardAsync")}</li>
-              ) : (
-                <>
-                  <li>{t("chronicle.rank.rewardSyncTop3")}</li>
-                  <li>{t("chronicle.rank.rewardSyncTop10")}</li>
-                </>
-              )}
-              <li>{t("chronicle.rank.rewardSunshine")}</li>
-            </ul>
           </div>
         </motion.section>
 

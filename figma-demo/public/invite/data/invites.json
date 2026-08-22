@@ -4,7 +4,8 @@
     "meeting": "書友線下見面會",
     "date": "2026年8月27日",
     "time": "09:30–11:00",
-    "venue": "香港中環交易廣場第二座40樓4005–07室",
+    "venue": "香港中環交易廣場",
+    "blastVenue": "香港中環交易廣場第二座40樓4005–07室",
     "speakers": "謝亞芳 × CZ",
     "host": "《幣安人生》書友會 敬邀",
     "detailsTitle": "線下書友見面會",
@@ -76,9 +77,9 @@
   },
   "partners": [
     { "id": "press", "name": "商務印書館" },
-    { "id": "hash", "name": "HASH GLOBAL" },
     { "id": "datadance", "name": "DataDance" },
     { "id": "yafang", "name": "亞芳創變派" },
+    { "id": "hash", "name": "HASH GLOBAL" },
     { "id": "ipdex", "name": "IPDEX" },
     { "id": "onebook", "name": "一本讀書會" },
     { "id": "hku", "name": "香港大學創立方" }

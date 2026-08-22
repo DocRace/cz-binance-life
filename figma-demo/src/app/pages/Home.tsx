@@ -7,6 +7,7 @@ import PurchaseModal from "../components/PurchaseModal";
 import AirdropClaimModal from "../components/AirdropClaimModal";
 import MembershipTiers from "../components/MembershipTiers";
 import ChronicleCampaignBanner from "../components/ChronicleCampaignBanner";
+import { SHOW_CHRONICLE_CAMPAIGN } from "../../config/platform";
 import Book3DCover from "../components/Book3DCover";
 import BookPickupStores from "../components/BookPickupStores";
 import bookCover from "../../assets/book-cover-hero.png";
@@ -47,7 +48,9 @@ export default function Home() {
   return (
     <>
       <div className={PAGE_SHELL_HOME}>
-        <ChronicleCampaignBanner className={SECTION_SPACING_LG} />
+        {SHOW_CHRONICLE_CAMPAIGN ? (
+          <ChronicleCampaignBanner className={SECTION_SPACING_LG} />
+        ) : null}
 
         {/* Hero */}
         <div className={`grid grid-cols-1 items-center lg:grid-cols-2 ${GRID_GAP} gap-y-14 lg:gap-x-20 xl:gap-x-28 ${SECTION_SPACING_LG}`}>

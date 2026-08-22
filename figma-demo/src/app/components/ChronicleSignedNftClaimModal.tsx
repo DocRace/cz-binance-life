@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import OverlayPortal from "./OverlayPortal";
 import { overlayBackdropClassLight } from "../lib/overlayLayers";
 import { bookBffIsTransportIssue, bookBffJson } from "../../lib/bookBffClient";
+import { bookBffJsonWithRefresh } from "../../lib/bookBffWithRefresh";
 import { getBookChronicleAirdropPublicCode } from "../../config/platform";
 
 type Props = {
@@ -16,7 +17,16 @@ type Props = {
   onSealed?: () => void;
 };
 
-type Step = "login" | "claim" | "success";
+type Step = "login" | "confirm" | "claim" | "success";
+
+function emailFromProfile(data: Record<string, unknown> | null | undefined): string {
+  if (!data) return "";
+  for (const key of ["email", "userEmail", "mail", "c_email"]) {
+    const value = data[key];
+    if (typeof value === "string" && value.includes("@")) return value.trim();
+  }
+  return "";
+}
 
 type AirdropClaimRow = {
   c_status?: string;
@@ -34,6 +44,8 @@ export default function ChronicleSignedNftClaimModal({ open, onClose, onAuthed, 
   const [loginSubStep, setLoginSubStep] = useState<"email" | "otp">("email");
   const [emailInput, setEmailInput] = useState("");
   const [otpInput, setOtpInput] = useState("");
+  const [sessionEmail, setSessionEmail] = useState("");
+  const [checkingSession, setCheckingSession] = useState(false);
   const [authBusy, setAuthBusy] = useState(false);
   const [claimBusy, setClaimBusy] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -45,20 +57,55 @@ export default function ChronicleSignedNftClaimModal({ open, onClose, onAuthed, 
     setApiError(null);
     setLoginSubStep("email");
     setClaimStatus(null);
+    setSessionEmail("");
     setStep("login");
+    setCheckingSession(true);
     (async () => {
       try {
         const s = await bookBffJson<{ authenticated?: boolean }>("/api/bff/auth/session");
         if (cancel) return;
-        if (s.code === 0 && s.data?.authenticated) onAuthed?.();
+        if (s.code !== 0 || !s.data?.authenticated) {
+          setCheckingSession(false);
+          return;
+        }
+        onAuthed?.();
+        const me = await bookBffJsonWithRefresh<Record<string, unknown>>("/api/bff/me");
+        if (cancel) return;
+        const email = me.code === 0 ? emailFromProfile(me.data) : "";
+        setSessionEmail(email);
+        setStep("confirm");
       } catch {
-        /* still collect email — do not advertise login state */
+        /* stay on email form */
+      } finally {
+        if (!cancel) setCheckingSession(false);
       }
     })();
     return () => {
       cancel = true;
     };
   }, [open, onAuthed]);
+
+  const handleConfirmCurrentAccount = () => {
+    setApiError(null);
+    setStep("claim");
+  };
+
+  const handleUseOtherAccount = async () => {
+    setAuthBusy(true);
+    setApiError(null);
+    try {
+      await bookBffJson<null>("/api/bff/auth/logout", { method: "POST" });
+    } catch {
+      /* still switch to email form */
+    } finally {
+      setSessionEmail("");
+      setEmailInput("");
+      setOtpInput("");
+      setLoginSubStep("email");
+      setStep("login");
+      setAuthBusy(false);
+    }
+  };
 
   if (!open) return null;
 
@@ -182,11 +229,13 @@ export default function ChronicleSignedNftClaimModal({ open, onClose, onAuthed, 
             <div>
               <p className="text-xs text-gold/80">{t("account.czSignedNft.title")}</p>
               <h2 className="font-display text-xl text-foreground">
-                {step === "login"
-                  ? t("chronicle.nftLoginTitle")
-                  : step === "claim"
-                    ? t("chronicle.nftClaimTitle")
-                    : t("chronicle.nftClaimSuccessTitle")}
+                {step === "confirm"
+                  ? t("chronicle.nftConfirmAccountTitle")
+                  : step === "login"
+                    ? t("chronicle.nftLoginTitle")
+                    : step === "claim"
+                      ? t("chronicle.nftClaimTitle")
+                      : t("chronicle.nftClaimSuccessTitle")}
               </h2>
             </div>
           </div>
@@ -197,10 +246,38 @@ export default function ChronicleSignedNftClaimModal({ open, onClose, onAuthed, 
             </p>
           ) : null}
 
+          {step === "confirm" ? (
+            <div className="space-y-3">
+              <p className="text-sm text-muted-foreground">
+                {sessionEmail
+                  ? t("chronicle.nftConfirmAccountIntro", { email: sessionEmail })
+                  : t("chronicle.nftConfirmAccountIntroNoEmail")}
+              </p>
+              <button
+                type="button"
+                onClick={handleConfirmCurrentAccount}
+                disabled={authBusy}
+                className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-gold to-gold-light px-6 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-40"
+              >
+                {t("chronicle.nftConfirmAccountCta")}
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleUseOtherAccount()}
+                disabled={authBusy}
+                className="inline-flex w-full items-center justify-center rounded-full border border-border px-6 py-3 text-sm disabled:opacity-40"
+              >
+                {authBusy ? t("common.loading") : t("chronicle.nftConfirmOtherCta")}
+              </button>
+            </div>
+          ) : null}
+
           {step === "login" ? (
             <div className="space-y-3">
-              <p className="text-sm text-muted-foreground">{t("chronicle.nftLoginIntro")}</p>
-              {loginSubStep === "email" ? (
+              <p className="text-sm text-muted-foreground">
+                {checkingSession ? t("common.loading") : t("chronicle.nftLoginIntro")}
+              </p>
+              {checkingSession ? null : loginSubStep === "email" ? (
                 <>
                   <label className="block text-xs text-muted-foreground" htmlFor="chronicle-nft-email">
                     {t("purchase.emailLabel")}

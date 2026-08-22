@@ -73,6 +73,9 @@ export function getBookStandardAirdropPublicCode(): string {
   return envString("VITE_IPDEX_BOOK_STANDARD_AIRDROP_PUBLIC_CODE");
 }
 
+/** Hide My Binance Life nav tab and campaign banners until the flow is ready. */
+export const SHOW_CHRONICLE_CAMPAIGN = false;
+
 /**
  * My Binance Life (chronicle) activity FD proof — free airdrop, separate from standard/premium membership.
  * Admin → Airdrop campaign `publicCode`.

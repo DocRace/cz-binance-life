@@ -208,8 +208,7 @@ export function mapTagsToPrinciples(
   }
 
   const ranked = [...agg.values()].sort((a, b) => b.score - a.score);
-  // Candidates for user pick (up to 10); UI selects top 3 when available.
-  if (ranked.length > 0) return ranked.slice(0, 10);
+  if (ranked.length > 0) return ranked;
 
   // Soft fallback if user confirmed nothing useful
   return [
@@ -298,6 +297,18 @@ export function countFilled(entries: UserEntries): number {
 
 export function isChronicleNodeId(value: string): value is ChronicleNodeId {
   return (CHRONICLE_NODE_IDS as string[]).includes(value);
+}
+
+/** Full CZ-principle catalog from the behavior sheet (stable first-seen order). */
+export function getPrincipleCatalog(): string[] {
+  const names: string[] = [];
+  for (const refs of Object.values(tagMap.principlesByTag)) {
+    for (const ref of refs) {
+      const name = `${ref?.name || ""}`.trim();
+      if (name && !names.includes(name)) names.push(name);
+    }
+  }
+  return names;
 }
 
 export function getTagCatalog(audience?: ChronicleAudience): BehaviorTag[] {

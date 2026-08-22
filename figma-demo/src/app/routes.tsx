@@ -13,8 +13,10 @@ import NotFound from "./pages/NotFound";
 import OfflineEvent from "./pages/OfflineEvent";
 import CryptoChronicle from "./pages/CryptoChronicle";
 import ChronicleLeaderboard from "./pages/ChronicleLeaderboard";
+import PosterPreviewLab from "./pages/PosterPreviewLab";
 
 export const router = createBrowserRouter([
+  { path: "/dev/poster-preview", Component: PosterPreviewLab },
   {
     path: "/",
     Component: Layout,

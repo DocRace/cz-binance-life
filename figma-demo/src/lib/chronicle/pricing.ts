@@ -1,6 +1,21 @@
+import tagMapJson from "./data/cz_behavior_tag_map.json";
 import { CHRONICLE_NODE_IDS, CHRONICLE_NODE_YEAR } from "./nodes";
+import { BNB_ECO_TERMS, CRYPTO_TERMS } from "./pricingLexicon";
 import type { AvatarRoleId } from "./roles";
 import type { ChronicleNodeId, MatchedPrinciple, UserEntries } from "./types";
+
+const TAG_CIRCLE_TERMS: readonly string[] = (() => {
+  const out: string[] = [];
+  for (const tag of tagMapJson.tags || []) {
+    if (tag.label) out.push(tag.label);
+    for (const syn of tag.synonyms || []) {
+      if (syn) out.push(syn);
+    }
+  }
+  return out;
+})();
+
+const CRYPTO_CIRCLE_TERMS: readonly string[] = [...new Set([...CRYPTO_TERMS, ...TAG_CIRCLE_TERMS])];
 
 /**
  * Viral price ladder — wide range, leading digits are not stuck on 「1」
@@ -12,37 +27,21 @@ const PRICE_LADDER_POS: readonly number[] = [
   888_888_888, 2_888_888_888, 6_888_888_888, 8_888_888_888,
 ];
 
-/** Roles that lean negative (meme loss / 归零 vibe) when score is non-trivial. */
-const NEGATIVE_ROLES: ReadonlySet<AvatarRoleId> = new Set(["degen", "black-hat"]);
+const MIN_PRICE_NODES = 6;
 
 /** Soft role nudge on ladder index (not a fixed sticker price). */
 const ROLE_LADDER_NUDGE: Partial<Record<AvatarRoleId, number>> = {
-  "diamond-hands": 4,
-  whale: 3,
-  farmer: 2,
-  founder: 3,
-  investor: 2,
+  "diamond-hands": 3,
+  whale: 2,
+  farmer: 1,
+  founder: 2,
+  investor: 1,
   "alpha-hunter": 1,
-  fren: -2,
+  fren: -1,
   hodler: 0,
-  degen: 1,
-  "black-hat": 1,
+  degen: 0,
+  "black-hat": 0,
 };
-
-const WEIGHTS = {
-  /** 币安元素密度 */
-  binance: 0.5,
-  /** 内容详实度（节点覆盖 + 字数深度） */
-  substance: 0.5,
-} as const;
-
-const SUBSTANCE_WEIGHTS = {
-  nodeCover: 0.35,
-  cycleCover: 0.15,
-  identity: 0.1,
-  principles: 0.1,
-  depth: 0.3,
-} as const;
 
 /** Bull/bear cycles (4). */
 const CYCLE_BY_NODE: Record<ChronicleNodeId, 1 | 2 | 3 | 4> = {
@@ -84,75 +83,21 @@ const ECO_IDENTITY_KEYWORDS: Array<{ id: string; needles: string[] }> = [
   { id: "white-hat", needles: ["white hat", "漏洞猎人", "漏洞獵人", "白帽"] },
 ];
 
-/** Binance / CZ lexicon — more hits → higher score. */
-const BINANCE_KEYWORDS: string[] = [
-  "币安",
-  "幣安",
-  "binance",
-  "bnb",
-  "币安链",
-  "幣安鏈",
-  "bnb chain",
-  "bsc",
-  "launchpad",
-  "launchpool",
-  "alpha",
-  "megadrop",
-  "safu",
-  "hodler",
-  "cz",
-  "赵长鹏",
-  "趙長鵬",
-  "何一",
-  "ftx",
-  "sbf",
-  "okx",
-  "合约",
-  "合約",
-  "期货",
-  "期貨",
-  "杠杆",
-  "槓桿",
-  "现货",
-  "現貨",
-  "上币",
-  "上幣",
-  "c2c",
-  "理财",
-  "理財",
-  "质押",
-  "質押",
-  "打新",
-  "空投",
-  "打金",
-  "蓝鲸",
-  "藍鯨",
-  "钻石手",
-  "鑽石手",
-  "挂单",
-  "掛單",
-  "划转",
-  "劃轉",
-  "bnb",
-  "vip",
-  "futures",
-  "spot",
-];
-
 export type PricingBreakdown = {
   nodeRatio: number;
   identityRatio: number;
   cycleRatio: number;
   principleRatio: number;
   keywordRatio: number;
-  /** 0–1 overall score (binance elements × substance). */
   fillRatio: number;
   binanceRatio: number;
   substanceRatio: number;
+  cryptoHits: number;
+  bnbHits: number;
   price: number;
 };
 
-function fold(text: string): string {
+function foldCompact(text: string): string {
   return `${text || ""}`.toLowerCase().replace(/[\s\u3000]+/g, "");
 }
 
@@ -174,38 +119,53 @@ function countCycles(entries: UserEntries): number {
 }
 
 function countIdentities(entries: UserEntries, role: AvatarRoleId | null): number {
-  const blob = fold(filledTexts(entries).join("\n"));
+  const blob = foldCompact(filledTexts(entries).join("\n"));
   const hit = new Set<string>();
   if (role) hit.add(role);
   for (const item of ECO_IDENTITY_KEYWORDS) {
-    if (item.needles.some((n) => blob.includes(fold(n)))) hit.add(item.id);
+    if (item.needles.some((n) => blob.includes(foldCompact(n)))) hit.add(item.id);
   }
   return Math.min(5, hit.size);
 }
 
-function countKeywords(entries: UserEntries): number {
-  const blob = fold(filledTexts(entries).join("\n"));
+function escapeRegExp(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/** CJK: substring. Short Latin tickers: word-ish boundary so "eth" ≠ "ethereum" double-count is OK, "the" ≠ "eth". */
+function textHasTerm(raw: string, term: string): boolean {
+  const needle = `${term || ""}`.trim();
+  if (!needle) return false;
+  const hay = `${raw || ""}`;
+  if (/[\u4e00-\u9fff]/.test(needle)) {
+    return foldCompact(hay).includes(foldCompact(needle));
+  }
+  const compact = needle.toLowerCase().replace(/[\s\u3000]+/g, "");
+  if (compact.length <= 2) {
+    return new RegExp(`(?:^|[^a-z0-9])${escapeRegExp(compact)}(?:[^a-z0-9]|$)`, "i").test(hay);
+  }
+  return new RegExp(`(?:^|[^a-z0-9])${escapeRegExp(compact)}(?:[^a-z0-9]|$)`, "i").test(hay);
+}
+
+function countLexiconHits(raw: string, terms: readonly string[]): number {
   let n = 0;
-  for (const kw of BINANCE_KEYWORDS) {
-    if (blob.includes(fold(kw))) n += 1;
-    if (n >= 25) break;
+  for (const term of terms) {
+    if (textHasTerm(raw, term)) n += 1;
   }
   return n;
 }
 
-/**
- * Writing depth 0–1: total chars + average length of filled nodes.
- * Short one-liners stay low; multi-node detailed copy climbs.
- */
-function contentDepthRatio(entries: UserEntries): number {
-  const texts = filledTexts(entries);
+function totalCharCount(texts: string[]): number {
+  return texts.reduce((s, t) => s + [...t].length, 0);
+}
+
+function contentDepthRatio(texts: string[]): number {
   if (texts.length === 0) return 0;
-  const totalChars = texts.reduce((s, t) => s + [...t].length, 0);
+  const totalChars = totalCharCount(texts);
   const avg = totalChars / texts.length;
-  // ~120 CJK/latin chars across book → mid; ~480+ → full depth
-  const totalScore = Math.min(1, totalChars / 480);
-  const avgScore = Math.min(1, avg / 80);
-  return Math.min(1, totalScore * 0.65 + avgScore * 0.35);
+  const totalScore = Math.min(1, totalChars / 360);
+  const avgScore = Math.min(1, avg / 60);
+  return Math.min(1, totalScore * 0.7 + avgScore * 0.3);
 }
 
 function clamp01(n: number): number {
@@ -222,65 +182,149 @@ function hashSeed(s: string): number {
   return Math.abs(h);
 }
 
+/** Copy-paste / 划水: the same sentence pasted across nodes (numbers ignored). */
+function isCopyPasteSlack(texts: string[]): boolean {
+  if (texts.length < MIN_PRICE_NODES) return false;
+  const normalized = texts.map((t) => foldCompact(t).replace(/[0-9０-９]+/g, ""));
+  const unique = new Set(normalized.filter(Boolean));
+  return unique.size <= 2;
+}
+
+type SlackKind = "none" | "tiny" | "thin" | "copypaste" | "nojargon";
+
 /**
- * Map score → ladder index, then pick a nearby rung so siblings aren't all 「1…」.
+ * Negative = empty / pasted 划水 only.
+ * Compact industry facts (tickers, job titles, one-liners) stay positive.
+ * Keyword chips on the cover do not count as writing.
  */
-function priceFromScore(score: number, role: AvatarRoleId | null, seed: string): number {
+function classifySlack(texts: string[], cryptoHits: number, bnbHits: number): SlackKind {
+  if (texts.length < MIN_PRICE_NODES) return "none";
+  const chars = totalCharCount(texts);
+  const avg = chars / texts.length;
+  const jargon = cryptoHits + bnbHits;
+  if (isCopyPasteSlack(texts)) {
+    if (jargon >= 2 && chars >= 80) return "none";
+    return "copypaste";
+  }
+  if (jargon >= 1 && chars >= 36) return "none";
+  if (chars < 24 || avg < 4) return "tiny";
+  if (chars < 40 || avg < 6) return "thin";
+  if (jargon === 0 && chars < 72) return "nojargon";
+  return "none";
+}
+
+function consolationIdx(filledNodes: number, chars: number): number {
+  if (filledNodes < MIN_PRICE_NODES) return 0;
+  if (chars >= 280) return 5;
+  if (chars >= 160) return 4;
+  if (chars >= 90) return 3;
+  return 2;
+}
+
+function rungAt(idx: number): number {
+  const i = Math.max(0, Math.min(PRICE_LADDER_POS.length - 1, idx));
+  return PRICE_LADDER_POS[i] ?? 0;
+}
+
+function slackPrice(kind: SlackKind, seed: string): number {
+  const jitter = (hashSeed(`${seed}|slack`) % 3) - 1;
+  const byKind: Record<Exclude<SlackKind, "none">, number> = {
+    tiny: 2,
+    thin: 3,
+    copypaste: 2,
+    nojargon: 3,
+  };
+  const idx = Math.max(1, (byKind[kind] || 2) + jitter);
+  return -rungAt(idx);
+}
+
+function honestPrice(
+  score: number,
+  role: AvatarRoleId | null,
+  seed: string,
+  filledNodes: number,
+  chars: number,
+  cryptoHits: number,
+  bnbHits: number,
+): number {
   const s = clamp01(score);
-  if (s < 0.02) return 0;
-
   const max = PRICE_LADDER_POS.length - 1;
-  let idx = Math.round(s * max);
+  let idx = Math.round(3 + s * 16);
   idx += ROLE_LADDER_NUDGE[role || "fren"] || 0;
-  // Stable ±1 jitter from content seed so two similar books aren't identical.
-  idx += (hashSeed(seed) % 3) - 1;
-  idx = Math.max(0, Math.min(max, idx));
-
-  const magnitude = PRICE_LADDER_POS[idx] ?? 0;
-  if (magnitude === 0) return 0;
-
-  const negative = role != null && NEGATIVE_ROLES.has(role) && s >= 0.12;
-  return negative ? -magnitude : magnitude;
+  if (bnbHits >= 2) idx += 2;
+  if (bnbHits >= 5) idx += 2;
+  if (chars >= 220) idx += 2;
+  if (chars >= 400) idx += 2;
+  idx += (hashSeed(`${seed}|jitter`) % 5) - 2;
+  idx = Math.max(consolationIdx(filledNodes, chars), Math.min(max, idx));
+  if (cryptoHits + bnbHits === 0) idx = Math.min(idx, 7);
+  const magnitude = rungAt(idx);
+  return magnitude === 0 ? rungAt(consolationIdx(filledNodes, chars)) : magnitude;
 }
 
 /**
- * Score from 少→多:
- * 1) 币安元素多少（关键词命中）
- * 2) 内容详实度（填了多少节点 + 写了多长）
+ * Score:
+ * 1) crypto-circle terms (any hit counts)
+ * 2) BNB / Binance ecosystem (extra)
+ * 3) 苦劳 — nodes filled + how long they actually wrote
  */
 export function computeChroniclePrice(input: {
   entries: UserEntries;
   role: AvatarRoleId | null;
   principles: MatchedPrinciple[];
   selectedPrincipleCount?: number;
+  /** Node copy from distill — used if live entries were stripped / lost. */
+  nodeTexts?: string[];
+  /** Selected keyword labels, principles, role name. */
+  extraTexts?: string[];
+  /** Bound book: never price at 0. */
+  finished?: boolean;
 }): PricingBreakdown {
-  const nodeRatio = countFilledNodes(input.entries) / CHRONICLE_NODE_IDS.length;
+  const fromEntries = filledTexts(input.entries);
+  const fromNodes = (input.nodeTexts || []).map((t) => `${t || ""}`.trim()).filter(Boolean);
+  const texts = fromEntries.length >= fromNodes.length ? fromEntries : fromNodes;
+  const extras = (input.extraTexts || []).map((t) => `${t || ""}`.trim()).filter(Boolean);
+  const raw = [...texts, ...extras].join("\n");
+  const filledNodes = texts.length;
+  const chars = totalCharCount(texts) + totalCharCount(extras);
+  const finished = Boolean(input.finished || filledNodes >= MIN_PRICE_NODES);
+
+  const cryptoHits = countLexiconHits(raw, CRYPTO_CIRCLE_TERMS);
+  const bnbHits = countLexiconHits(raw, BNB_ECO_TERMS);
+  const writingBlob = texts.join("\n");
+  const writingCryptoHits = countLexiconHits(writingBlob, CRYPTO_CIRCLE_TERMS);
+  const writingBnbHits = countLexiconHits(writingBlob, BNB_ECO_TERMS);
+  const cryptoRatio = clamp01(cryptoHits / 18);
+  const binanceRatio = clamp01(bnbHits / 6);
+
+  const nodeRatio = filledNodes / CHRONICLE_NODE_IDS.length;
   const identityRatio = countIdentities(input.entries, input.role) / 5;
   const cycleRatio = countCycles(input.entries) / 4;
   const principleCount =
     typeof input.selectedPrincipleCount === "number"
       ? input.selectedPrincipleCount
       : input.principles.length;
-  const principleRatio = Math.min(1, principleCount / 72);
-  const keywordHits = countKeywords(input.entries);
-  const keywordRatio = keywordHits / 25;
-  const depthRatio = contentDepthRatio(input.entries);
+  const principleRatio = Math.min(1, principleCount / 3);
+  const depthRatio = contentDepthRatio(texts);
+  const effortRatio = clamp01(nodeRatio * 0.35 + cycleRatio * 0.15 + depthRatio * 0.4 + principleRatio * 0.1);
 
-  const binanceRatio = clamp01(keywordRatio);
-  const substanceRatio = clamp01(
-    nodeRatio * SUBSTANCE_WEIGHTS.nodeCover +
-      cycleRatio * SUBSTANCE_WEIGHTS.cycleCover +
-      identityRatio * SUBSTANCE_WEIGHTS.identity +
-      principleRatio * SUBSTANCE_WEIGHTS.principles +
-      depthRatio * SUBSTANCE_WEIGHTS.depth,
-  );
+  const fillRatio = clamp01(cryptoRatio * 0.32 + binanceRatio * 0.28 + effortRatio * 0.4);
+  const keywordRatio = clamp01((cryptoHits + bnbHits * 1.5) / 24);
 
-  const fillRatio = clamp01(binanceRatio * WEIGHTS.binance + substanceRatio * WEIGHTS.substance);
-
-  const seed = `${input.role || ""}|${filledTexts(input.entries)
-    .map((t) => t.slice(0, 24))
-    .join("~")}`;
-  const price = priceFromScore(fillRatio, input.role, seed);
+  const seed = `${input.role || ""}|${texts.map((t) => t.slice(0, 24)).join("~")}`;
+  const slack = classifySlack(texts, writingCryptoHits, writingBnbHits);
+  const scoredNodes = finished ? Math.max(filledNodes, MIN_PRICE_NODES) : filledNodes;
+  let price = 0;
+  if (scoredNodes < MIN_PRICE_NODES) {
+    price = 0;
+  } else if (slack !== "none" && filledNodes >= MIN_PRICE_NODES) {
+    price = slackPrice(slack, seed);
+  } else {
+    price = honestPrice(fillRatio, input.role, seed, scoredNodes, chars, cryptoHits, bnbHits);
+  }
+  if (finished && price === 0) {
+    price = rungAt(Math.max(2, consolationIdx(scoredNodes, chars)));
+  }
 
   return {
     nodeRatio,
@@ -290,7 +334,9 @@ export function computeChroniclePrice(input: {
     keywordRatio,
     fillRatio,
     binanceRatio,
-    substanceRatio,
+    substanceRatio: effortRatio,
+    cryptoHits,
+    bnbHits,
     price,
   };
 }

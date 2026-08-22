@@ -36,6 +36,7 @@ import {
   getBookStandardPrimaryListingId,
   getBookStandardPrimarySaleId,
   formatBookPremiumPriceHkd,
+  SHOW_CHRONICLE_CAMPAIGN,
 } from "../../config/platform";
 import {
   CARD_SURFACE,
@@ -172,7 +173,7 @@ export default function BookClub() {
         </div>
       </motion.div>
 
-      <ChronicleCampaignBanner className={SECTION_SPACING} />
+      {SHOW_CHRONICLE_CAMPAIGN ? <ChronicleCampaignBanner className={SECTION_SPACING} /> : null}
 
       <MembershipTiers
         onPremiumClick={() => setPurchaseOpen(true)}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { motion } from "motion/react";
-import { BookOpen, ChevronRight, Trophy } from "lucide-react";
+import { BookOpen, ListOrdered } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
   fetchRankConfig,
@@ -110,19 +110,18 @@ export default function ChronicleCampaignBanner({ className = "" }: ChronicleCam
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <Link
               to="/club/chronicle"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-gold/95 px-6 py-3.5 text-sm font-body font-medium tracking-wide text-primary-foreground shadow-sm transition-colors hover:bg-gold no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a1714]"
+              className="relative inline-flex w-full items-center justify-center rounded-full bg-gold/95 px-6 py-3.5 text-sm font-body font-medium tracking-wide text-primary-foreground shadow-sm transition-colors hover:bg-gold no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a1714] sm:w-auto sm:min-w-[16.5rem]"
             >
-              <BookOpen className="h-4 w-4 shrink-0" aria-hidden />
-              {t("home.chronicleBannerCta")}
-              <ChevronRight className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
+              <BookOpen className="pointer-events-none absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2" aria-hidden />
+              <span>{t("home.chronicleBannerCta")}</span>
             </Link>
             {rankLive ? (
               <Link
                 to="/club/chronicle/rank"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-gold/50 bg-white/5 px-6 py-3.5 text-sm font-body font-medium tracking-wide text-gold transition-colors hover:bg-gold/10 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a1714]"
+                className="relative inline-flex w-full items-center justify-center rounded-full border border-gold/50 bg-white/5 px-6 py-3.5 text-sm font-body font-medium tracking-wide text-gold transition-colors hover:bg-gold/10 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a1714] sm:w-auto sm:min-w-[16.5rem]"
               >
-                <Trophy className="h-4 w-4 shrink-0" aria-hidden />
-                {t("home.chronicleRankCta")}
+                <ListOrdered className="pointer-events-none absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2" aria-hidden />
+                <span>{t("home.chronicleRankCta")}</span>
               </Link>
             ) : null}
           </div>

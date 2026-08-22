@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router";
 import { Users, List, User, Home, Clock, MapPin, Trophy } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
+import { SHOW_CHRONICLE_CAMPAIGN } from "../../config/platform";
 import LanguageSwitcher from "./LanguageSwitcher";
 import {
   Sheet,
@@ -19,20 +20,23 @@ export type SiteNavItem = {
 
 export function useSiteNavItems(): SiteNavItem[] {
   const { t } = useTranslation();
-  return [
+  const items: SiteNavItem[] = [
     { path: "/", label: t("nav.home"), icon: Home, match: (p) => p === "/" },
     { path: "/club", label: t("nav.joinClub"), icon: Users, match: (p) => p === "/club" },
-    {
-      path: "/club/chronicle",
-      label: t("nav.chronicle"),
-      icon: Trophy,
-      match: (p) => p === "/club/chronicle" || p.startsWith("/club/chronicle"),
-    },
     { path: "/event", label: t("nav.offlineEvent"), icon: MapPin, match: (p) => p === "/event" },
     { path: "/principles", label: t("nav.principles"), icon: List, match: (p) => p === "/principles" },
     { path: "/timeline", label: t("nav.timeline"), icon: Clock, match: (p) => p === "/timeline" },
     { path: "/account", label: t("nav.account"), icon: User, match: (p) => p.startsWith("/account") },
   ];
+  if (SHOW_CHRONICLE_CAMPAIGN) {
+    items.splice(2, 0, {
+      path: "/club/chronicle",
+      label: t("nav.chronicle"),
+      icon: Trophy,
+      match: (p) => p === "/club/chronicle" || p.startsWith("/club/chronicle"),
+    });
+  }
+  return items;
 }
 
 type SiteNavDrawerProps = {

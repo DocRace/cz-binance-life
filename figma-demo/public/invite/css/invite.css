@@ -406,6 +406,10 @@ body { overflow-x: hidden; }
   display: block;
 }
 
+.card.is-exporting .partners .logo-cell {
+  overflow: visible;
+}
+
 .card-mark {
   position: absolute;
   z-index: 1;
@@ -626,9 +630,13 @@ body { overflow-x: hidden; }
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.partners .logo-cell {
+  overflow: visible;
+}
+
 .partners .logo-grid-4 {
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.28fr) minmax(0, 1.2fr) minmax(0, 0.54fr);
-  column-gap: 32px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr) minmax(0, 0.9fr) minmax(0, 1.2fr);
+  column-gap: 20px;
   overflow: visible;
 }
 
@@ -636,18 +644,29 @@ body { overflow-x: hidden; }
   justify-content: flex-start;
 }
 
-.partners .logo-grid-4 .logo-cell:nth-child(2),
+.partners .logo-grid-4 .logo-cell:nth-child(2) {
+  justify-content: flex-start;
+  overflow: visible;
+  z-index: 1;
+  transform: translateX(16px);
+}
+
 .partners .logo-grid-4 .logo-cell:nth-child(3) {
-  justify-content: center;
+  justify-content: flex-start;
+  overflow: visible;
+  z-index: 3;
+  transform: none;
 }
 
 .partners .logo-grid-4 .logo-cell:nth-child(4) {
   justify-content: flex-end;
   overflow: visible;
+  z-index: 2;
 }
 
 .partners .logo-grid-4 .logo-img-yafang {
-  transform: translateX(22px);
+  transform: none;
+  max-width: none;
 }
 
 .logo-grid-3 {
@@ -717,6 +736,13 @@ body { overflow-x: hidden; }
   width: auto;
 }
 
+.partners .logo-cell svg.logo-datadance {
+  width: 268px;
+  height: auto;
+  max-width: none;
+  flex: none;
+}
+
 .logo-img {
   display: block;
   height: 76px;
@@ -756,6 +782,12 @@ body { overflow-x: hidden; }
   width: auto;
   max-width: 100%;
   aspect-ratio: 1024 / 125;
+}
+
+.partners .logo-img-hash {
+  width: 252px;
+  height: auto;
+  max-width: none;
 }
 
 .logo-img-ipdex {

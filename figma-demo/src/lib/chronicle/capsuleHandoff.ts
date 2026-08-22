@@ -81,12 +81,13 @@ export function encodeCapsuleHandoff(payload: CapsuleHandoffPayload): string {
   return toBase64Url(JSON.stringify(payload));
 }
 
-/** Open Life Capsule import page; user logs in there (separate accounts), then auto-saves. */
+/**
+ * Open Life Capsule import page; user logs in there (separate accounts), then auto-saves.
+ * Payload goes in the hash so nginx never sees a giant query string (414 Request-URI Too Large).
+ */
 export function buildLifeCapsuleImportUrl(payload: CapsuleHandoffPayload): string {
   const token = encodeCapsuleHandoff(payload);
-  const url = new URL("/from/cz-chronicle", LIFE_CAPSULE_ORIGIN);
-  url.searchParams.set("p", token);
-  return url.toString();
+  return `${LIFE_CAPSULE_ORIGIN}/from/cz-chronicle#p=${token}`;
 }
 
 export function getLifeCapsuleOrigin(): string {
