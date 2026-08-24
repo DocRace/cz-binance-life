@@ -67,6 +67,7 @@ body { overflow-x: hidden; }
   overflow: hidden;
   opacity: 0.4;
   filter: grayscale(0.12) contrast(1.05);
+  transform: translateY(-14%);
 }
 
 .page-veil {
@@ -178,6 +179,11 @@ body { overflow-x: hidden; }
 .tab.is-on:hover,
 .chrome-btn.gold:hover { background: #c9a76a; color: #2a2622; }
 
+.tab[hidden],
+.chrome-btn[hidden] {
+  display: none !important;
+}
+
 .chrome-btn:disabled { opacity: 0.7; cursor: wait; }
 
 .yafang-bar {
@@ -195,6 +201,10 @@ body { overflow-x: hidden; }
   display: flex;
   align-items: center;
   gap: 0.55rem;
+}
+
+.name-field[hidden] {
+  display: none;
 }
 
 .name-field label {
@@ -236,6 +246,61 @@ body { overflow-x: hidden; }
   width: min(1120px, calc(100% - 2rem));
 }
 
+.stage.is-side {
+  width: min(420px, calc(100% - 2rem));
+}
+
+.stage.is-backdrop {
+  width: min(1200px, calc(100% - 2rem));
+}
+
+.backdrop-hint {
+  flex-basis: 100%;
+  margin: 0.2rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.backdrop-hint[hidden] {
+  display: none;
+}
+
+.backdrop-rig {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.backdrop-led {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.55rem;
+  width: 100%;
+}
+
+.backdrop-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.backdrop-col-wide {
+  width: 100%;
+}
+
+.backdrop-caption {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-dim);
+}
+
 .board-slot {
   position: relative;
   aspect-ratio: 9 / 21;
@@ -247,6 +312,11 @@ body { overflow-x: hidden; }
 
 .board-slot.is-wide {
   aspect-ratio: 16 / 9;
+  border-radius: 1.15rem;
+}
+
+.board-slot.is-side {
+  aspect-ratio: 867 / 1152;
   border-radius: 1.15rem;
 }
 
@@ -295,7 +365,7 @@ body { overflow-x: hidden; }
   flex: none;
   width: 100%;
   aspect-ratio: 625 / 1000;
-  background: url("/invite/assets/invite-hero.png") center top / cover no-repeat;
+  background: url("/invite/assets/invite-hero.png") 50% 28% / cover no-repeat;
   -webkit-mask-image: linear-gradient(
     to bottom,
     transparent 0%,
@@ -329,6 +399,19 @@ body { overflow-x: hidden; }
   background: url("./assets/book-cover-hero.png") center / cover no-repeat;
   opacity: 0.42;
   filter: none;
+}
+
+.card.is-backdrop .card-photo.is-cover {
+  background-image: url("./assets/invite-hero.png");
+  background-position: 50% 22%;
+  background-size: 155% auto;
+  opacity: 0.55;
+}
+
+.card.is-backdrop .blast-veil {
+  background:
+    linear-gradient(180deg, rgba(26, 23, 20, 0.38) 0%, rgba(26, 23, 20, 0.5) 46%, rgba(26, 23, 20, 0.7) 100%),
+    linear-gradient(110deg, rgba(26, 23, 20, 0.28), rgba(26, 23, 20, 0.12) 58%, rgba(26, 23, 20, 0.32));
 }
 
 .card-photo .photo-tile:first-child {
@@ -1159,6 +1242,491 @@ body { overflow-x: hidden; }
   background: transparent;
 }
 
+.card.is-backdrop .backdrop-inner {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 96px 80px 72px;
+}
+
+.card.is-backdrop-side .backdrop-inner {
+  justify-content: center;
+  padding: 72px 48px;
+}
+
+.backdrop-lockup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.backdrop-title {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--display);
+  font-size: 88px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-align: center;
+  color: #f7f1e4;
+  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+.card.is-backdrop-side .backdrop-title {
+  font-size: 52px;
+  letter-spacing: 0.14em;
+}
+
+.backdrop-club {
+  display: block;
+  width: min(400px, 58%);
+  height: auto;
+}
+
+.backdrop-wall {
+  margin-top: 80px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 52px;
+  overflow: visible;
+}
+
+.backdrop-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 72px;
+  min-height: 96px;
+  width: 100%;
+}
+
+.backdrop-row.is-shift {
+  transform: none;
+}
+
+.card.is-backdrop .logo-cell {
+  width: 240px;
+  height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.card.is-backdrop .logo-img {
+  height: 68px;
+  width: auto;
+  max-width: 220px;
+  object-fit: contain;
+}
+
+.card.is-backdrop .logo-img-press { height: 56px; }
+.card.is-backdrop .logo-img-yafang { height: 78px; }
+.card.is-backdrop .logo-img-bnb { height: 52px; }
+.card.is-backdrop .logo-img-ipdex { height: 52px; }
+.card.is-backdrop .logo-img-hash {
+  height: auto;
+  width: 220px;
+  max-width: 220px;
+}
+.card.is-backdrop .logo-img-onebook {
+  height: 58px;
+  max-width: 220px;
+}
+.card.is-backdrop .logo-img-hku {
+  height: 74px;
+  max-width: 240px;
+}
+.card.is-backdrop .logo-cell-club {
+  width: 300px;
+}
+.card.is-backdrop .logo-img-club {
+  height: auto;
+  width: 280px;
+  max-width: 280px;
+}
+
+.card.is-backdrop .logo-cell:has(svg.logo-datadance) {
+  width: 268px;
+}
+
+.card.is-backdrop .logo-cell svg.logo-datadance {
+  width: 252px;
+  height: 44px;
+}
+
+.stage.is-ppt {
+  width: min(1200px, calc(100% - 2rem));
+}
+
+.ppt-rig {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.4rem 0.9rem;
+  width: 100%;
+  justify-items: center;
+}
+
+.ppt-col {
+  width: 100%;
+}
+
+.ppt-col .chrome-btn {
+  margin-top: 0.15rem;
+}
+
+.card.is-ppt {
+  --ppt-paper: #d5c9ae;
+  --ppt-paper-soft: rgba(213, 201, 174, 0.72);
+  overflow: hidden;
+  font-family: var(--sans);
+  color: var(--ppt-paper);
+}
+
+.card.is-ppt .card-bg {
+  background: linear-gradient(160deg, #322b23 0%, #2a241e 52%, #221c17 100%);
+}
+
+.card.is-ppt .card-gold,
+.card.is-ppt .card-mesh {
+  display: none;
+}
+
+.card.is-ppt .ppt-portrait {
+  display: block;
+  inset: -22% 0 10% 40%;
+  background: url("./assets/invite-hero.png") 52% 4% / 92% auto no-repeat;
+  opacity: 0.24;
+  filter: grayscale(1) contrast(1.12) brightness(0.7);
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.35) 18%, #000 36%, #000 78%, rgba(0, 0, 0, 0.35) 90%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.35) 18%, #000 36%, #000 78%, rgba(0, 0, 0, 0.35) 90%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+  mask-composite: intersect;
+}
+
+.card.is-ppt .ppt-veil {
+  background: linear-gradient(90deg, rgba(42, 36, 30, 0.78) 0%, rgba(42, 36, 30, 0.28) 36%, rgba(42, 36, 30, 0.08) 62%, rgba(42, 36, 30, 0.22) 88%, rgba(42, 36, 30, 0.55) 100%);
+}
+
+.ppt-sheet {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  padding: 72px 96px 64px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ppt-sheet.is-cover {
+  padding: 88px 120px 72px;
+}
+
+.ppt-cover-main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.ppt-corner {
+  position: absolute;
+  margin: 0;
+  font-family: var(--display);
+  font-size: 20px;
+  letter-spacing: 0.18em;
+  color: var(--ppt-paper-soft);
+}
+
+.ppt-corner.is-tl {
+  top: 48px;
+  left: 64px;
+}
+
+.ppt-corner.is-br {
+  right: 64px;
+  bottom: 48px;
+}
+
+.ppt-title,
+.ppt-subtitle,
+.ppt-section-title,
+.ppt-agenda-title,
+.ppt-speaker-name {
+  font-family: var(--display);
+  font-weight: 700;
+  color: var(--ppt-paper);
+}
+
+.ppt-title {
+  margin: 72px 0 0;
+  font-size: 84px;
+  line-height: 1.18;
+  letter-spacing: 0.12em;
+}
+
+.ppt-hash {
+  color: var(--ppt-paper);
+  margin-right: 0.04em;
+}
+
+.ppt-subtitle {
+  margin: 18px 0 0;
+  font-size: 52px;
+  line-height: 1.24;
+  letter-spacing: 0.22em;
+  color: var(--ppt-paper);
+}
+
+.ppt-when,
+.ppt-venue,
+.ppt-section-lead,
+.ppt-agenda-lead,
+.ppt-chapter-time,
+.ppt-speaker-role,
+.ppt-speaker-handle,
+.ppt-partners-label,
+.ppt-qr-label {
+  margin: 0;
+  color: var(--ppt-paper-soft);
+}
+
+.ppt-when {
+  margin-top: 36px;
+  font-size: 22px;
+  letter-spacing: 0.12em;
+}
+
+.ppt-venue {
+  margin-top: 10px;
+  font-size: 22px;
+  letter-spacing: 0.12em;
+}
+
+.ppt-partners {
+  margin-top: auto;
+  width: min(1180px, 100%);
+  padding-top: 48px;
+}
+
+.ppt-partner-block + .ppt-partner-block {
+  margin-top: 28px;
+}
+
+.ppt-partners-label {
+  margin-bottom: 16px;
+  font-size: 16px;
+  letter-spacing: 0.36em;
+}
+
+.ppt-logo-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 36px 48px;
+  flex-wrap: wrap;
+}
+
+.card.is-ppt .ppt-logo-row .logo-cell {
+  overflow: visible;
+}
+
+.card.is-ppt .logo-img,
+.card.is-ppt .logo-datadance {
+  height: 42px;
+  width: auto;
+  max-width: 220px;
+  filter: grayscale(1) brightness(1.55) contrast(1.08);
+  opacity: 0.92;
+  mix-blend-mode: normal;
+}
+
+.card.is-ppt .logo-datadance {
+  filter: none;
+  color: #edd59a;
+}
+
+.card.is-ppt .logo-datadance path {
+  fill: #edd59a;
+  opacity: 1;
+}
+
+.card.is-ppt .logo-img-press { height: 36px; }
+.card.is-ppt .logo-img-hash { height: 34px; }
+.card.is-ppt .logo-img-yafang { height: 46px; }
+.card.is-ppt .logo-img-onebook { height: 32px; }
+.card.is-ppt .logo-img-hku { height: 40px; }
+.card.is-ppt .logo-img-bnb { height: 32px; }
+.card.is-ppt .logo-cell svg.logo-datadance {
+  width: 196px;
+  height: 34px;
+}
+
+.ppt-qr-rail {
+  position: absolute;
+  right: 56px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  width: 168px;
+  pointer-events: none;
+}
+
+.ppt-qr-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.ppt-qr-frame {
+  padding: 10px;
+  border: 1px solid rgba(213, 201, 174, 0.45);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.ppt-qr-frame.is-bare {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.ppt-qr-frame img {
+  display: block;
+  width: 112px;
+  height: 112px;
+}
+
+.ppt-qr-label {
+  font-size: 14px;
+  letter-spacing: 0.16em;
+  color: var(--ppt-paper);
+}
+
+.ppt-sheet.is-agenda,
+.ppt-sheet.is-guest,
+.ppt-sheet.is-chapter {
+  padding: 96px 140px 80px;
+}
+
+.ppt-agenda-hero,
+.ppt-guest-main,
+.ppt-chapter-main {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.ppt-guest-main,
+.ppt-chapter-main {
+  margin: auto 0;
+}
+
+.ppt-section-title,
+.ppt-agenda-title {
+  margin: 0;
+  font-size: 88px;
+  line-height: 1.16;
+  letter-spacing: 0.18em;
+}
+
+.ppt-agenda-lead,
+.ppt-section-lead {
+  margin-top: 22px;
+  max-width: 18em;
+  font-size: 24px;
+  line-height: 1.7;
+  letter-spacing: 0.14em;
+}
+
+.ppt-chapter-time {
+  margin-top: 28px;
+  font-size: 20px;
+  letter-spacing: 0.22em;
+}
+
+.ppt-speakers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 28px 72px;
+  margin-top: 48px;
+}
+
+.ppt-speaker-name {
+  margin: 0;
+  font-size: 36px;
+  letter-spacing: 0.12em;
+}
+
+.ppt-speaker-role,
+.ppt-speaker-handle {
+  margin-top: 10px;
+  font-size: 18px;
+  letter-spacing: 0.1em;
+}
+
+.ppt-program {
+  margin: 48px auto 0;
+  padding: 0;
+  width: min(1080px, 100%);
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
+.ppt-program-row {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 28px;
+  padding: 22px 0;
+  border-top: 1px solid rgba(213, 201, 174, 0.22);
+}
+
+.ppt-program-row:last-child {
+  border-bottom: 1px solid rgba(213, 201, 174, 0.22);
+}
+
+.ppt-program-time {
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  color: var(--ppt-paper-soft);
+}
+
+.ppt-program-item {
+  font-family: var(--display);
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--ppt-paper);
+}
+
 @media (max-width: 820px) {
   .actions { margin-left: 0; }
+  .ppt-rig { grid-template-columns: 1fr; }
 }

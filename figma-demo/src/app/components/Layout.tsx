@@ -28,7 +28,10 @@ export default function Layout() {
   useDocumentTitle();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   /** Viral H5 shell: no site chrome (nav / footer / partner strip). */
-  const isH5Shell = location.pathname === "/club/chronicle" || location.pathname.startsWith("/club/chronicle/");
+  const isH5Shell =
+    location.pathname === "/club/chronicle" ||
+    location.pathname.startsWith("/club/chronicle/") ||
+    location.pathname.startsWith("/s/");
 
   const ipdexBrandHref = getIpdexSiteUrl();
   const datadanceHref = getDatadanceSiteUrl();

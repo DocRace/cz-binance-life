@@ -351,11 +351,16 @@ export function formatUsdt(price: number): string {
   return price.toFixed(2);
 }
 
-/** Share copy: flashy prices use the “high” template. */
+/** Share copy includes the `$` so negatives read `-$88`, not `$-88`. */
+export function formatShareUsd(price: number): string {
+  const body = formatUsdt(Math.abs(price));
+  return price < 0 ? `-$${body}` : `$${body}`;
+}
+
+/** Share copy: flashy positive prices use the “high” template. Slack / negative stays “low”. */
 export function isChroniclePriceHigh(price: number): boolean {
-  if (!Number.isFinite(price)) return false;
-  if (price < 0) return true;
-  return Math.abs(price) >= 100_000;
+  if (!Number.isFinite(price) || price <= 0) return false;
+  return price >= 100_000;
 }
 
 export function yearForNode(id: ChronicleNodeId): string {

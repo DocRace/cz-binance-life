@@ -26,12 +26,48 @@
         "publisher": "书友会 × DataDance",
         "cycle": true,
         "faces": [
-          { "src": "/assets/chronicle/roles/pack/founder-male.png", "byline": "Ava", "corner": "Founder", "keywords": "韧性 · 保护用户 · 长期主义", "dark": true },
-          { "src": "/assets/chronicle/roles/pack/creator-female.png", "byline": "Ava", "corner": "Creator", "keywords": "叙事 · 内容 · 社群", "dark": false },
-          { "src": "/assets/chronicle/roles/pack/degen-male.png", "byline": "Kai", "corner": "Degen", "keywords": "合约 · 还在场", "dark": true },
-          { "src": "/assets/chronicle/roles/pack/whale.png", "byline": "Kai", "corner": "Whale", "keywords": "体量 · OTC", "dark": true },
-          { "src": "/assets/chronicle/roles/pack/diamond-hands-male.png", "byline": "Ava", "corner": "Diamond Hands", "keywords": "长期主义", "dark": true },
-          { "src": "/assets/chronicle/roles/pack/white-hat.png", "byline": "Ava", "corner": "White Hat", "keywords": "安全 · 披露", "dark": true }
+          {
+            "src": "/assets/chronicle/roles/pack/founder-male.png",
+            "byline": "Ava",
+            "corner": "Founder",
+            "keywords": "韧性 · 保护用户 · 长期主义",
+            "dark": true
+          },
+          {
+            "src": "/assets/chronicle/roles/pack/creator-female.png",
+            "byline": "Ava",
+            "corner": "Creator",
+            "keywords": "叙事 · 内容 · 社群",
+            "dark": false
+          },
+          {
+            "src": "/assets/chronicle/roles/pack/degen-male.png",
+            "byline": "Kai",
+            "corner": "Degen",
+            "keywords": "合约 · 还在场",
+            "dark": true
+          },
+          {
+            "src": "/assets/chronicle/roles/pack/whale.png",
+            "byline": "Kai",
+            "corner": "Whale",
+            "keywords": "体量 · OTC",
+            "dark": true
+          },
+          {
+            "src": "/assets/chronicle/roles/pack/diamond-hands-male.png",
+            "byline": "Ava",
+            "corner": "Diamond Hands",
+            "keywords": "长期主义",
+            "dark": true
+          },
+          {
+            "src": "/assets/chronicle/roles/pack/white-hat.png",
+            "byline": "Ava",
+            "corner": "White Hat",
+            "keywords": "安全 · 披露",
+            "dark": true
+          }
         ]
       }
     },
@@ -42,11 +78,26 @@
       "title": "活动定位",
       "subtitle": "这不是再做一个读书摘要。读者顺着 CZ 的时间轴，把自己的加密经历写进去，再蒸馏成一本书、一枚胶囊、一份可分享的定价。",
       "facts": [
-        { "label": "活动定位", "value": "解构《币安人生》关键节点 + 用户写入口，创建自己的加密回忆" },
-        { "label": "目标人群", "value": "《币安人生》读书会成员，及潜在读者" },
-        { "label": "活动形式", "value": "PC：书友会官网子页面 · 移动：线上 H5" },
-        { "label": "上线节点", "value": "配合线下活动 8.18（TBD），之后长期放在书友会官网" },
-        { "label": "双入口", "value": "《币安人生》书友会官网 · Life Capsule 官网" }
+        {
+          "label": "活动定位",
+          "value": "解构《币安人生》关键节点 + 用户写入口，创建自己的加密回忆"
+        },
+        {
+          "label": "目标人群",
+          "value": "《币安人生》读书会成员，及潜在读者"
+        },
+        {
+          "label": "活动形式",
+          "value": "PC：书友会官网子页面 · 移动：线上 H5"
+        },
+        {
+          "label": "上线节点",
+          "value": "配合线下活动 8.18（TBD），之后长期放在书友会官网"
+        },
+        {
+          "label": "双入口",
+          "value": "《币安人生》书友会官网 · Life Capsule 官网"
+        }
       ],
       "image": "/offline-event-poster.png"
     },
@@ -56,11 +107,31 @@
       "eyebrow": "AGENDA",
       "title": "方案目录",
       "items": [
-        { "label": "01", "title": "流程图", "desc": "答题写节点 → 拿到一本书和定价 → 发到 X 的完整路径" },
-        { "label": "02", "title": "结果图", "desc": "用户最后拿到的封面、标签、估价、胶囊、亲签 NFT" },
-        { "label": "03", "title": "推特样式", "desc": "高低估价两套预填文案，带封面图，按 X 发帖还原" },
-        { "label": "04", "title": "谁手里 / 联名切口", "desc": "策划、落地、胶囊、链上、线下——模块归属一眼看清" },
-        { "label": "05", "title": "测试活动实装", "desc": "角色封面、时间轴、蒸馏、定价、排行榜——现在就能点" }
+        {
+          "label": "01",
+          "title": "流程图",
+          "desc": "答题写节点 → 拿到一本书和定价 → 发到 X 的完整路径"
+        },
+        {
+          "label": "02",
+          "title": "结果图",
+          "desc": "用户最后拿到的封面、标签、估价、胶囊、亲签纪念卡"
+        },
+        {
+          "label": "03",
+          "title": "推特样式",
+          "desc": "高低估价两套预填文案，带封面图，按 X 发帖还原"
+        },
+        {
+          "label": "04",
+          "title": "谁手里 / 联名切口",
+          "desc": "策划、落地、胶囊、链上、线下——模块归属一眼看清"
+        },
+        {
+          "label": "05",
+          "title": "测试活动实装",
+          "desc": "角色封面、时间轴、蒸馏、定价、排行榜——现在就能点"
+        }
       ]
     },
     {
@@ -72,18 +143,58 @@
       "rows": [
         {
           "steps": [
-            { "label": "01 入口", "title": "创建我的币安人生", "desc": "书友会 / Life Capsule 双入口，看见会转的 3D 封面。", "tone": "start" },
-            { "label": "02 作者", "title": "选角色 + 署名", "desc": "15 个身份切图，封面立刻换成你。", "tone": "mid" },
-            { "label": "03 答题", "title": "点开 CZ 节点作答", "desc": "15 个关键人生节点。左边 CZ，右边写你当时在干什么。", "tone": "quiz" },
-            { "label": "04 蒸馏", "title": "选 3 标签 + 3 原则", "desc": "系统按你写的内容匹配行为标签和 CZ 的 72 原则。", "tone": "quiz" }
+            {
+              "label": "01 入口",
+              "title": "创建我的币安人生",
+              "desc": "书友会 / Life Capsule 双入口，看见会转的 3D 封面。",
+              "tone": "start"
+            },
+            {
+              "label": "02 作者",
+              "title": "选角色 + 署名",
+              "desc": "15 个身份切图，封面立刻换成你。",
+              "tone": "mid"
+            },
+            {
+              "label": "03 答题",
+              "title": "点开 CZ 节点作答",
+              "desc": "15 个关键人生节点。左边 CZ，右边写你当时在干什么。",
+              "tone": "quiz"
+            },
+            {
+              "label": "04 蒸馏",
+              "title": "选 3 标签 + 3 原则",
+              "desc": "系统按你写的内容匹配行为标签和 CZ 的 72 原则。",
+              "tone": "quiz"
+            }
           ]
         },
         {
           "steps": [
-            { "label": "05 结果", "title": "拿到你的书", "desc": "3D 封面 + 对标 CZ $19.99 的病毒估价。这就是结果图。", "tone": "win" },
-            { "label": "06 封装", "title": "Life Capsule", "desc": "跳胶囊页，账户里留下胶囊入口。", "tone": "mid" },
-            { "label": "07 发推", "title": "公开「发售」到 X", "desc": "预填文案 + 封面图。估价高于或低于 $19.99 两套语气。", "tone": "share" },
-            { "label": "08 领取", "title": "CZ 亲签 NFT", "desc": "书友会权益 + Wallet 积分。账户里可再看一次。", "tone": "win" }
+            {
+              "label": "05 结果",
+              "title": "拿到你的书",
+              "desc": "3D 封面 + 对标 CZ $19.99 的病毒估价。这就是结果图。",
+              "tone": "win"
+            },
+            {
+              "label": "06 封装",
+              "title": "Life Capsule",
+              "desc": "跳胶囊页，账户里留下胶囊入口。",
+              "tone": "mid"
+            },
+            {
+              "label": "07 发推",
+              "title": "公开「发售」到 X",
+              "desc": "预填文案 + 封面图。估价高于或低于 $19.99 两套语气。",
+              "tone": "share"
+            },
+            {
+              "label": "08 领取",
+              "title": "CZ 亲签纪念卡",
+              "desc": "书友会权益 + Wallet 积分。账户里可再看一次。",
+              "tone": "win"
+            }
           ]
         }
       ]
@@ -98,7 +209,7 @@
         {
           "who": "策划 / 共读方案",
           "title": "书友会 × Life Capsule",
-          "text": "活动定位、P1–P8 流程、定价对标 CZ $19.99、分享文案与 NFT 权益，写在共读计划里。",
+          "text": "活动定位、P1–P8 流程、定价对标 CZ $19.99、分享文案与 徽章权益，写在共读计划里。",
           "status": "方案已定稿"
         },
         {
@@ -120,9 +231,9 @@
           "status": "待联调跳转"
         },
         {
-          "who": "账户 / NFT / 支付",
+          "who": "账户 / 徽章 / 支付",
           "title": "IPDEX + DataDance Wallet",
-          "text": "登录、领取书友会 NFT、账户里的胶囊入口与积分激励，走书城 BFF → IPDEX。",
+          "text": "登录、领取书友会纪念卡、账户里的胶囊入口与积分激励，走书城 BFF → IPDEX。",
           "status": "测试链路已通"
         },
         {
@@ -140,14 +251,46 @@
       "title": "P1–P8 一整条链路",
       "subtitle": "共读计划里的八页，已经按测试活动的真实组件摊开。合作方可以认领其中任何一截。",
       "items": [
-        { "label": "P1", "title": "入口", "desc": "封面书 + 创建 CTA。书友会 / Life Capsule 双入口。" },
-        { "label": "P2", "title": "作者信息", "desc": "署名、性别、15 个角色头像，直接印上封面。" },
-        { "label": "P3", "title": "CZ 时间轴", "desc": "15 个关键节点。点开是 CZ 卡片 + 你的写入框。" },
-        { "label": "P4", "title": "蒸馏成书", "desc": "3 个标签、3 条原则、CZ / 我 对照时间轴。" },
-        { "label": "P5", "title": "装订定价", "desc": "3D 封面 + 对标 CZ $19.99 的病毒定价。" },
-        { "label": "P6", "title": "封装胶囊", "desc": "跳 Life Capsule，账户里留下胶囊入口。" },
-        { "label": "P7", "title": "公开发售", "desc": "预填社媒文案，比 $19.99 高或低两套语气。" },
-        { "label": "P8", "title": "亲签 NFT", "desc": "领取 / 查看。书友会权益 + Wallet 积分。" }
+        {
+          "label": "P1",
+          "title": "入口",
+          "desc": "封面书 + 创建 CTA。书友会 / Life Capsule 双入口。"
+        },
+        {
+          "label": "P2",
+          "title": "作者信息",
+          "desc": "署名、性别、15 个角色头像，直接印上封面。"
+        },
+        {
+          "label": "P3",
+          "title": "CZ 时间轴",
+          "desc": "15 个关键节点。点开是 CZ 卡片 + 你的写入框。"
+        },
+        {
+          "label": "P4",
+          "title": "蒸馏成书",
+          "desc": "3 个标签、3 条原则、CZ / 我 对照时间轴。"
+        },
+        {
+          "label": "P5",
+          "title": "装订定价",
+          "desc": "3D 封面 + 对标 CZ $19.99 的病毒定价。"
+        },
+        {
+          "label": "P6",
+          "title": "封装胶囊",
+          "desc": "跳 Life Capsule，账户里留下胶囊入口。"
+        },
+        {
+          "label": "P7",
+          "title": "公开发售",
+          "desc": "预填社媒文案，比 $19.99 高或低两套语气。"
+        },
+        {
+          "label": "P8",
+          "title": "亲签纪念卡",
+          "desc": "领取 / 查看。书友会权益 + Wallet 积分。"
+        }
       ]
     },
     {
@@ -157,9 +300,18 @@
       "title": "CZ 出版了他的《币安人生》，你的呢？",
       "subtitle": "小号字：币安人生书友会 × DataDance。主按钮「创建我的币安人生」。下面是已出版人数，以及人气新锐作者榜入口。",
       "points": [
-        { "title": "一张会转的书", "text": "测试活动用 3D 封面轮播 15 个角色切图，不是静图海报。" },
-        { "title": "两个入口", "text": "书友会官网子页长期放；Life Capsule 官网可做第二入口。" },
-        { "title": "线下也能扫", "text": "8.18 现场海报 / 二维码直接落到这一页。" }
+        {
+          "title": "一张会转的书",
+          "text": "测试活动用 3D 封面轮播 15 个角色切图，不是静图海报。"
+        },
+        {
+          "title": "两个入口",
+          "text": "书友会官网子页长期放；Life Capsule 官网可做第二入口。"
+        },
+        {
+          "title": "线下也能扫",
+          "text": "8.18 现场海报 / 二维码直接落到这一页。"
+        }
       ],
       "phone": {
         "kind": "landing",
@@ -175,10 +327,34 @@
           "publisher": "书友会 × DataDance",
           "cycle": true,
           "faces": [
-            { "src": "/assets/chronicle/roles/pack/founder-male.png", "byline": "Ava", "corner": "Founder", "keywords": "韧性 · 保护用户", "dark": true },
-            { "src": "/assets/chronicle/roles/pack/creator-female.png", "byline": "Ava", "corner": "Creator", "keywords": "叙事 · 社群", "dark": false },
-            { "src": "/assets/chronicle/roles/pack/degen-male.png", "byline": "Kai", "corner": "Degen", "keywords": "合约 · 还在场", "dark": true },
-            { "src": "/assets/chronicle/roles/pack/hodler-female.png", "byline": "Ava", "corner": "HODLer", "keywords": "信仰 · 持有", "dark": true }
+            {
+              "src": "/assets/chronicle/roles/pack/founder-male.png",
+              "byline": "Ava",
+              "corner": "Founder",
+              "keywords": "韧性 · 保护用户",
+              "dark": true
+            },
+            {
+              "src": "/assets/chronicle/roles/pack/creator-female.png",
+              "byline": "Ava",
+              "corner": "Creator",
+              "keywords": "叙事 · 社群",
+              "dark": false
+            },
+            {
+              "src": "/assets/chronicle/roles/pack/degen-male.png",
+              "byline": "Kai",
+              "corner": "Degen",
+              "keywords": "合约 · 还在场",
+              "dark": true
+            },
+            {
+              "src": "/assets/chronicle/roles/pack/hodler-female.png",
+              "byline": "Ava",
+              "corner": "HODLer",
+              "keywords": "信仰 · 持有",
+              "dark": true
+            }
           ]
         },
         "cta": "创建我的币安人生",
@@ -193,21 +369,66 @@
       "title": "出版之前，先成为封面人物",
       "subtitle": "测试活动已经铺好 15 个角色切图（含男女版）。点选角色 + 填写署名，封面立刻换成「你的币安人生」。",
       "items": [
-        { "name": "Founder", "image": "/assets/chronicle/roles/pack/founder-male.png" },
-        { "name": "BUIDLer", "image": "/assets/chronicle/roles/pack/buidler-male.png" },
-        { "name": "On-chain Detective", "image": "/assets/chronicle/roles/pack/onchain-detective-male.png" },
-        { "name": "Degen", "image": "/assets/chronicle/roles/pack/degen-male.png" },
-        { "name": "HODLer", "image": "/assets/chronicle/roles/pack/hodler-male.png" },
-        { "name": "Diamond Hands", "image": "/assets/chronicle/roles/pack/diamond-hands-male.png" },
-        { "name": "Investor", "image": "/assets/chronicle/roles/pack/investor-female.png" },
-        { "name": "Whale", "image": "/assets/chronicle/roles/pack/whale.png" },
-        { "name": "Miner", "image": "/assets/chronicle/roles/pack/miner-male.png" },
-        { "name": "Creator", "image": "/assets/chronicle/roles/pack/creator-female.png" },
-        { "name": "Fren", "image": "/assets/chronicle/roles/pack/fren.png" },
-        { "name": "Farmer", "image": "/assets/chronicle/roles/pack/farmer-female.png" },
-        { "name": "Alpha Hunter", "image": "/assets/chronicle/roles/pack/alpha-hunter-male.png" },
-        { "name": "Black Hat", "image": "/assets/chronicle/roles/pack/black-hat.png" },
-        { "name": "White Hat", "image": "/assets/chronicle/roles/pack/white-hat.png" }
+        {
+          "name": "Founder",
+          "image": "/assets/chronicle/roles/pack/founder-male.png"
+        },
+        {
+          "name": "BUIDLer",
+          "image": "/assets/chronicle/roles/pack/buidler-male.png"
+        },
+        {
+          "name": "On-chain Detective",
+          "image": "/assets/chronicle/roles/pack/onchain-detective-male.png"
+        },
+        {
+          "name": "Degen",
+          "image": "/assets/chronicle/roles/pack/degen-male.png"
+        },
+        {
+          "name": "HODLer",
+          "image": "/assets/chronicle/roles/pack/hodler-male.png"
+        },
+        {
+          "name": "Diamond Hands",
+          "image": "/assets/chronicle/roles/pack/diamond-hands-male.png"
+        },
+        {
+          "name": "Investor",
+          "image": "/assets/chronicle/roles/pack/investor-female.png"
+        },
+        {
+          "name": "Whale",
+          "image": "/assets/chronicle/roles/pack/whale.png"
+        },
+        {
+          "name": "Miner",
+          "image": "/assets/chronicle/roles/pack/miner-male.png"
+        },
+        {
+          "name": "Creator",
+          "image": "/assets/chronicle/roles/pack/creator-female.png"
+        },
+        {
+          "name": "Fren",
+          "image": "/assets/chronicle/roles/pack/fren.png"
+        },
+        {
+          "name": "Farmer",
+          "image": "/assets/chronicle/roles/pack/farmer-female.png"
+        },
+        {
+          "name": "Alpha Hunter",
+          "image": "/assets/chronicle/roles/pack/alpha-hunter-male.png"
+        },
+        {
+          "name": "Black Hat",
+          "image": "/assets/chronicle/roles/pack/black-hat.png"
+        },
+        {
+          "name": "White Hat",
+          "image": "/assets/chronicle/roles/pack/white-hat.png"
+        }
       ]
     },
     {
@@ -217,23 +438,53 @@
       "title": "球形头像变成可选角色墙",
       "subtitle": "共读方案里的「球形框点选」，落地成角色切图 + 性别 + 署名。封面和作者页共用同一套资源。",
       "points": [
-        { "title": "署名可改", "text": "结果页还能再改一次名字，旁边有编辑笔标。" },
-        { "title": "角色即封面", "text": "Founder / Degen / Diamond Hands……选完直接印在书脊和封面上。" },
-        { "title": "联名可加皮肤", "text": "合作方可加一套联名角色或联名封面底板，不必重做整条链路。" }
+        {
+          "title": "署名可改",
+          "text": "结果页还能再改一次名字，旁边有编辑笔标。"
+        },
+        {
+          "title": "角色即封面",
+          "text": "Founder / Degen / Diamond Hands……选完直接印在书脊和封面上。"
+        },
+        {
+          "title": "联名可加皮肤",
+          "text": "合作方可加一套联名角色或联名封面底板，不必重做整条链路。"
+        }
       ],
       "phone": {
         "kind": "author",
         "title": "出版之前，先填写作者信息",
         "hint": "选择身份头像并填写署名",
         "name": "填写署名",
-        "genders": ["男性", "女性"],
+        "genders": [
+          "男性",
+          "女性"
+        ],
         "roles": [
-          { "name": "Founder", "image": "/assets/chronicle/roles/pack/founder-male.png" },
-          { "name": "Creator", "image": "/assets/chronicle/roles/pack/creator-female.png" },
-          { "name": "Degen", "image": "/assets/chronicle/roles/pack/degen-male.png" },
-          { "name": "HODLer", "image": "/assets/chronicle/roles/pack/hodler-female.png" },
-          { "name": "Whale", "image": "/assets/chronicle/roles/pack/whale.png" },
-          { "name": "White Hat", "image": "/assets/chronicle/roles/pack/white-hat.png" }
+          {
+            "name": "Founder",
+            "image": "/assets/chronicle/roles/pack/founder-male.png"
+          },
+          {
+            "name": "Creator",
+            "image": "/assets/chronicle/roles/pack/creator-female.png"
+          },
+          {
+            "name": "Degen",
+            "image": "/assets/chronicle/roles/pack/degen-male.png"
+          },
+          {
+            "name": "HODLer",
+            "image": "/assets/chronicle/roles/pack/hodler-female.png"
+          },
+          {
+            "name": "Whale",
+            "image": "/assets/chronicle/roles/pack/whale.png"
+          },
+          {
+            "name": "White Hat",
+            "image": "/assets/chronicle/roles/pack/white-hat.png"
+          }
         ],
         "cta": "开始书写"
       }
@@ -245,16 +496,56 @@
       "title": "同一条时间轴，写下你的加密经历",
       "subtitle": "15 个节点来自《币安人生》。点开节点：左边是 CZ，右边是你。写得越细，书越完整。",
       "sessions": [
-        { "time": "2013", "title": "三个第一次", "concept": "第一次听说 BTC，第一次全仓 BTC，第一次进入加密行业。" },
-        { "time": "2017.6", "title": "火锅桌上的决定", "concept": "成都火锅聊到 ICO，成为币安诞生的起点。" },
-        { "time": "2017.7", "title": "币安上线", "concept": "7 月 14 日交易所上线，同期发行 BNB。" },
-        { "time": "2017.9", "title": "撤离大陆", "concept": "九四禁令发布，连夜撤离，自掏资产补偿用户。" },
-        { "time": "2017末", "title": "币安登顶", "concept": "上线半年，交易量冲上全球第一。" },
-        { "time": "2019", "title": "BTC 被盗 / 生态扩张", "concept": "被盗七千枚 BTC 全额兜底；上线 BSC、Launchpad、合约。" },
-        { "time": "2021", "title": "帝国巅峰", "concept": "交易量占全球最大份额，BNB 冲上高点，监管开始紧盯。" },
-        { "time": "2022", "title": "全球斡旋 / FTX 崩塌", "concept": "满世界见监管；宣布收购 FTX，隔天放弃，风暴引向自己。" },
-        { "time": "2023", "title": "被围剿 / 认罪辞任", "concept": "CFTC、SEC 接连起诉；认罪、罚款、辞任 CEO。" },
-        { "time": "2024", "title": "入狱 · 重获自由 · 教育", "concept": "狱中写完初稿；9 月 27 日出狱；转向 Giggle Academy。" }
+        {
+          "time": "2013",
+          "title": "三个第一次",
+          "concept": "第一次听说 BTC，第一次全仓 BTC，第一次进入加密行业。"
+        },
+        {
+          "time": "2017.6",
+          "title": "火锅桌上的决定",
+          "concept": "成都火锅聊到 ICO，成为币安诞生的起点。"
+        },
+        {
+          "time": "2017.7",
+          "title": "币安上线",
+          "concept": "7 月 14 日交易所上线，同期发行 BNB。"
+        },
+        {
+          "time": "2017.9",
+          "title": "撤离大陆",
+          "concept": "九四禁令发布，连夜撤离，自掏资产补偿用户。"
+        },
+        {
+          "time": "2017末",
+          "title": "币安登顶",
+          "concept": "上线半年，交易量冲上全球第一。"
+        },
+        {
+          "time": "2019",
+          "title": "BTC 被盗 / 生态扩张",
+          "concept": "被盗七千枚 BTC 全额兜底；上线 BSC、Launchpad、合约。"
+        },
+        {
+          "time": "2021",
+          "title": "帝国巅峰",
+          "concept": "交易量占全球最大份额，BNB 冲上高点，监管开始紧盯。"
+        },
+        {
+          "time": "2022",
+          "title": "全球斡旋 / FTX 崩塌",
+          "concept": "满世界见监管；宣布收购 FTX，隔天放弃，风暴引向自己。"
+        },
+        {
+          "time": "2023",
+          "title": "被围剿 / 认罪辞任",
+          "concept": "CFTC、SEC 接连起诉；认罪、罚款、辞任 CEO。"
+        },
+        {
+          "time": "2024",
+          "title": "入狱 · 重获自由 · 教育",
+          "concept": "狱中写完初稿；9 月 27 日出狱；转向 Giggle Academy。"
+        }
       ]
     },
     {
@@ -264,9 +555,18 @@
       "title": "点开 2013：CZ 的三次第一次，对上你的大事件",
       "subtitle": "PC 左右、移动上下。CZ 侧只读；用户侧可写、可存。填完至少一格，就能「生成我的币安人生」。",
       "points": [
-        { "title": "选填，但越写越完整", "text": "文案沿用共读方案：写得越细，你的币安人生越完整。" },
-        { "title": "本地草稿", "text": "测试活动先落在本机，登录后再把领取和排行榜接上账户。" },
-        { "title": "联名可加节点", "text": "合作方自己的品牌时刻，可以做成一条平行节点，不必改 CZ 主轴。" }
+        {
+          "title": "选填，但越写越完整",
+          "text": "文案沿用共读方案：写得越细，你的币安人生越完整。"
+        },
+        {
+          "title": "本地草稿",
+          "text": "测试活动先落在本机，登录后再把领取和排行榜接上账户。"
+        },
+        {
+          "title": "联名可加节点",
+          "text": "合作方自己的品牌时刻，可以做成一条平行节点，不必改 CZ 主轴。"
+        }
       ],
       "phone": {
         "kind": "node",
@@ -287,22 +587,51 @@
       "title": "标签、原则、对照时间轴",
       "subtitle": "系统按写入内容匹配行为标签和 CZ 的 72 原则。用户点选最喜欢的 3 个标签、最坚持的 3 条原则。写得少就不必硬选。",
       "points": [
-        { "title": "CZ 只能删，不能改", "text": "编辑权只开放「删年份」和「改自己的话」。" },
-        { "title": "行为标签来自写入", "text": "测试活动已接蒸馏与建议标签，不是空下拉。" },
-        { "title": "装订成册", "text": "选完标签和原则，进入封面定价页。" }
+        {
+          "title": "CZ 只能删，不能改",
+          "text": "编辑权只开放「删年份」和「改自己的话」。"
+        },
+        {
+          "title": "行为标签来自写入",
+          "text": "测试活动已接蒸馏与建议标签，不是空下拉。"
+        },
+        {
+          "title": "装订成册",
+          "text": "选完标签和原则，进入封面定价页。"
+        }
       ],
       "phone": {
         "kind": "result",
         "title": "我的币安人生",
         "hint": "点击选择你最喜欢的 3 个标签",
-        "tags": ["韧性", "保护用户", "长期主义"],
+        "tags": [
+          "韧性",
+          "保护用户",
+          "长期主义"
+        ],
         "rows": [
-          { "cz": "三个第一次", "year": "2013", "me": "第一次买入 BTC" },
-          { "cz": "火锅桌上的决定", "year": "2017", "me": "辞职 all in" },
-          { "cz": "重获自由", "year": "2024", "me": "还在场" }
+          {
+            "cz": "三个第一次",
+            "year": "2013",
+            "me": "第一次买入 BTC"
+          },
+          {
+            "cz": "火锅桌上的决定",
+            "year": "2017",
+            "me": "辞职 all in"
+          },
+          {
+            "cz": "重获自由",
+            "year": "2024",
+            "me": "还在场"
+          }
         ],
         "principlesTitle": "我的币安原则",
-        "principles": ["用户第一", "长期主义", "危机兜底"],
+        "principles": [
+          "用户第一",
+          "长期主义",
+          "危机兜底"
+        ],
         "cta": "装订成册"
       }
     },
@@ -313,9 +642,18 @@
       "title": "你的封面，对上 CZ 的 $19.99",
       "subtitle": "画面参考原书；定价不是死价。测试活动按「币安元素密度 × 内容详实度」走出 0 到数十亿的病毒阶梯，专门拿来和 $19.99 对比分享。",
       "points": [
-        { "title": "即时出版信息", "text": "署名、日期、书友会 × DataDance 出版，印在封面上。" },
-        { "title": "两个主按钮", "text": "封装胶囊 · 公开「发售」。封装后可回账户领 NFT。" },
-        { "title": "联名可换封底", "text": "合作 logo、联名价签、联名出版行，都可以加在这一页。" }
+        {
+          "title": "即时出版信息",
+          "text": "署名、日期、书友会 × DataDance 出版，印在封面上。"
+        },
+        {
+          "title": "两个主按钮",
+          "text": "封装胶囊 · 公开「发售」。封装后可回账户领纪念卡。"
+        },
+        {
+          "title": "联名可换封底",
+          "text": "合作 logo、联名价签、联名出版行，都可以加在这一页。"
+        }
       ],
       "phone": {
         "kind": "book",
@@ -327,7 +665,13 @@
           "title": "我的币安人生",
           "publisher": "书友会 × DataDance",
           "faces": [
-            { "src": "/assets/chronicle/roles/pack/founder-female.png", "byline": "Ava 著", "corner": "Founder", "keywords": "韧性 · 保护用户 · 长期主义", "dark": false }
+            {
+              "src": "/assets/chronicle/roles/pack/founder-female.png",
+              "byline": "Ava 著",
+              "corner": "Founder",
+              "keywords": "韧性 · 保护用户 · 长期主义",
+              "dark": false
+            }
           ]
         },
         "price": "$8,888",
@@ -342,11 +686,20 @@
       "type": "result",
       "eyebrow": "MUST HAVE · 结果图",
       "title": "答完题，用户手里是这张东西",
-      "subtitle": "不是一张分数海报。是一本印着自己署名和角色的《我的币安人生》，外加估价、三个标签、胶囊和专利 NFT。这张图就是发给合作方看的「结果」。",
+      "subtitle": "不是一张分数海报。是一本印着自己署名和角色的《我的币安人生》，外加估价、三个标签、胶囊和专利纪念卡。这张图就是发给合作方看的「结果」。",
       "points": [
-        { "title": "一本自己的书", "text": "角色切图当封面，署名、日期、出版行都印上去。截图就能发。" },
-        { "title": "一个对比价", "text": "CZ 的书 $19.99。你的书可能是 $8，也可能是 $8,888,888。反差就是传播点。" },
-        { "title": "三件可带走的东西", "text": "Life Capsule 胶囊 · 书友会亲签 NFT · 人气新锐作者榜上的一席。" }
+        {
+          "title": "一本自己的书",
+          "text": "角色切图当封面，署名、日期、出版行都印上去。截图就能发。"
+        },
+        {
+          "title": "一个对比价",
+          "text": "CZ 的书 $19.99。你的书可能是 $8，也可能是 $8,888,888。反差就是传播点。"
+        },
+        {
+          "title": "三件可带走的东西",
+          "text": "Life Capsule 胶囊 · 书友会亲签纪念卡 · 人气新锐作者榜上的一席。"
+        }
       ],
       "result": {
         "kicker": "答题结果 · 可截图分享",
@@ -357,13 +710,28 @@
           "title": "我的币安人生",
           "publisher": "书友会 × DataDance",
           "faces": [
-            { "src": "/assets/chronicle/roles/pack/founder-female.png", "byline": "Ava 著", "corner": "Founder", "keywords": "韧性 · 保护用户 · 长期主义", "dark": false }
+            {
+              "src": "/assets/chronicle/roles/pack/founder-female.png",
+              "byline": "Ava 著",
+              "corner": "Founder",
+              "keywords": "韧性 · 保护用户 · 长期主义",
+              "dark": false
+            }
           ]
         },
-        "tags": ["韧性", "保护用户", "长期主义"],
+        "tags": [
+          "韧性",
+          "保护用户",
+          "长期主义"
+        ],
         "price": "$8,888",
         "vs": "对标 @cz_binance 《币安人生》 $19.99",
-        "loot": ["3D 封面书", "Life Capsule", "亲签 NFT", "新锐作者榜"],
+        "loot": [
+          "3D 封面书",
+          "Life Capsule",
+          "亲签纪念卡",
+          "新锐作者榜"
+        ],
         "publisher": "币安人生书友会 × DataDance 出版 · 2026/08/16"
       }
     },
@@ -374,23 +742,80 @@
       "title": "和测试活动同一本会转的书",
       "subtitle": "书脊、切口、光泽、鼠标可转。入口页每 2.6 秒换一个角色切图——演示页用的就是这套效果。",
       "points": [
-        { "title": "立体书块", "text": "封面、书脊、页边、顶底四面都在，转起来不是一张贴图。" },
-        { "title": "角色即封面", "text": "15 个身份切图轮播。鼠标移上去可以自己转。" },
-        { "title": "结果页同一本", "text": "答完题拿到的就是它，截图就能发到 X。" }
+        {
+          "title": "立体书块",
+          "text": "封面、书脊、页边、顶底四面都在，转起来不是一张贴图。"
+        },
+        {
+          "title": "角色即封面",
+          "text": "15 个身份切图轮播。鼠标移上去可以自己转。"
+        },
+        {
+          "title": "结果页同一本",
+          "text": "答完题拿到的就是它，截图就能发到 X。"
+        }
       ],
       "book": {
         "title": "我的币安人生",
         "publisher": "书友会 × DataDance",
         "cycle": true,
         "faces": [
-          { "src": "/assets/chronicle/roles/pack/founder-male.png", "byline": "Ava", "corner": "Founder", "keywords": "韧性 · 保护用户 · 长期主义", "dark": true },
-          { "src": "/assets/chronicle/roles/pack/founder-female.png", "byline": "Ava", "corner": "Founder", "keywords": "韧性 · 保护用户 · 长期主义", "dark": false },
-          { "src": "/assets/chronicle/roles/pack/creator-female.png", "byline": "Ava", "corner": "Creator", "keywords": "叙事 · 内容 · 社群", "dark": false },
-          { "src": "/assets/chronicle/roles/pack/buidler-male.png", "byline": "Kai", "corner": "BUIDLer", "keywords": "Solidity · BNB Chain", "dark": true },
-          { "src": "/assets/chronicle/roles/pack/degen-male.png", "byline": "Kai", "corner": "Degen", "keywords": "合约 · 还在场", "dark": true },
-          { "src": "/assets/chronicle/roles/pack/diamond-hands-male.png", "byline": "Ava", "corner": "Diamond Hands", "keywords": "不割 · 长期", "dark": true },
-          { "src": "/assets/chronicle/roles/pack/whale.png", "byline": "Kai", "corner": "Whale", "keywords": "体量 · OTC", "dark": true },
-          { "src": "/assets/chronicle/roles/pack/white-hat.png", "byline": "Ava", "corner": "White Hat", "keywords": "安全 · 披露", "dark": true }
+          {
+            "src": "/assets/chronicle/roles/pack/founder-male.png",
+            "byline": "Ava",
+            "corner": "Founder",
+            "keywords": "韧性 · 保护用户 · 长期主义",
+            "dark": true
+          },
+          {
+            "src": "/assets/chronicle/roles/pack/founder-female.png",
+            "byline": "Ava",
+            "corner": "Founder",
+            "keywords": "韧性 · 保护用户 · 长期主义",
+            "dark": false
+          },
+          {
+            "src": "/assets/chronicle/roles/pack/creator-female.png",
+            "byline": "Ava",
+            "corner": "Creator",
+            "keywords": "叙事 · 内容 · 社群",
+            "dark": false
+          },
+          {
+            "src": "/assets/chronicle/roles/pack/buidler-male.png",
+            "byline": "Kai",
+            "corner": "BUIDLer",
+            "keywords": "Solidity · BNB Chain",
+            "dark": true
+          },
+          {
+            "src": "/assets/chronicle/roles/pack/degen-male.png",
+            "byline": "Kai",
+            "corner": "Degen",
+            "keywords": "合约 · 还在场",
+            "dark": true
+          },
+          {
+            "src": "/assets/chronicle/roles/pack/diamond-hands-male.png",
+            "byline": "Ava",
+            "corner": "Diamond Hands",
+            "keywords": "不割 · 长期",
+            "dark": true
+          },
+          {
+            "src": "/assets/chronicle/roles/pack/whale.png",
+            "byline": "Kai",
+            "corner": "Whale",
+            "keywords": "体量 · OTC",
+            "dark": true
+          },
+          {
+            "src": "/assets/chronicle/roles/pack/white-hat.png",
+            "byline": "Ava",
+            "corner": "White Hat",
+            "keywords": "安全 · 披露",
+            "dark": true
+          }
         ]
       }
     },
@@ -401,9 +826,18 @@
       "title": "封装去 Life Capsule，发售去社媒",
       "subtitle": "封装成功后，书友会账户里出现胶囊：点击查看跳 Life Capsule；公开「发售」弹出预填文案。",
       "points": [
-        { "title": "低于 $19.99", "text": "「系统估价仅 $X 🤦🏻‍♂️」——自嘲，更容易转发。" },
-        { "title": "高于 $19.99", "text": "「系统估价高达 $X 👀」——炫耀，同样好截图。" },
-        { "title": "中英两套", "text": "测试活动已写好中英分享模板，链接落到 /club/chronicle。" }
+        {
+          "title": "低于 $19.99",
+          "text": "「系统估价仅 $X 🤦🏻‍♂️」——自嘲，更容易转发。"
+        },
+        {
+          "title": "高于 $19.99",
+          "text": "「系统估价高达 $X 👀」——炫耀，同样好截图。"
+        },
+        {
+          "title": "中英两套",
+          "text": "测试活动已写好中英分享模板，链接落到 /club/chronicle。"
+        }
       ],
       "phone": {
         "kind": "share",
@@ -453,18 +887,27 @@
     {
       "id": "p8",
       "type": "split",
-      "eyebrow": "P8 · NFT / 账户",
-      "title": "封装之后，领取 CZ 亲签 NFT",
+      "eyebrow": "P8 · 徽章 / 账户",
+      "title": "封装之后，领取 CZ 亲签纪念卡",
       "subtitle": "未领取显示「领取」，已领取显示「查看」。弹窗讲清书友会权益和 DataDance Wallet 积分。",
       "points": [
-        { "title": "书友会权益", "text": "活动优先报名、抽奖 +10% 中奖、周边兑换 ×1、未来合作项目权益。" },
-        { "title": "Wallet 权益", "text": "一次性 100 Points；日常数据上传奖励 +5%。" },
-        { "title": "测试活动已接领取", "text": "登录书友会账户即可免费领活动 FD。账户页也能再进一次。" }
+        {
+          "title": "书友会权益",
+          "text": "活动优先报名、抽奖 +10% 中奖、周边兑换 ×1、未来合作项目权益。"
+        },
+        {
+          "title": "Wallet 权益",
+          "text": "一次性 100 Points；日常数据上传奖励 +5%。"
+        },
+        {
+          "title": "测试活动已接领取",
+          "text": "登录书友会账户即可免费领活动 FD。账户页也能再进一次。"
+        }
       ],
       "phone": {
         "kind": "nft",
         "kicker": "我的账户",
-        "title": "CZ 亲签 NFT",
+        "title": "CZ 亲签纪念卡",
         "badge": "/assets/nft/chronicle-fd-badge.png",
         "lead": "封装胶囊后，可至我的账户领取。还没有账号？点击注册。",
         "cta": "领取",
@@ -476,14 +919,32 @@
       "type": "gallery",
       "eyebrow": "04 / LIVE NOW",
       "title": "测试活动已经长这样",
-      "subtitle": "不是线框。角色切图、线下海报、亲签 NFT、书封，都是当前仓库里正在用的资源。右上角「打开测试活动」可直接点进 /club/chronicle。",
+      "subtitle": "不是线框。角色切图、线下海报、亲签纪念卡、书封，都是当前仓库里正在用的资源。右上角「打开测试活动」可直接点进 /club/chronicle。",
       "images": [
-        { "src": "/assets/chronicle/roles/pack/founder-male.png", "caption": "角色封面 · Founder" },
-        { "src": "/assets/chronicle/roles/pack/creator-female.png", "caption": "角色封面 · Creator" },
-        { "src": "/offline-event-poster.png", "caption": "线下 8.18 海报" },
-        { "src": "/assets/nft/chronicle-fd-badge.png", "caption": "活动 FD / 亲签 NFT" },
-        { "src": "./assets/book-cover-hero.png", "caption": "《币安人生》原书视觉" },
-        { "src": "./assets/cz-signature-gold.png", "caption": "CZ 金色签名" }
+        {
+          "src": "/assets/chronicle/roles/pack/founder-male.png",
+          "caption": "角色封面 · Founder"
+        },
+        {
+          "src": "/assets/chronicle/roles/pack/creator-female.png",
+          "caption": "角色封面 · Creator"
+        },
+        {
+          "src": "/offline-event-poster.png",
+          "caption": "线下 8.18 海报"
+        },
+        {
+          "src": "/assets/nft/chronicle-fd-badge.png",
+          "caption": "活动 FD / 亲签纪念卡"
+        },
+        {
+          "src": "./assets/book-cover-hero.png",
+          "caption": "《币安人生》原书视觉"
+        },
+        {
+          "src": "./assets/cz-signature-gold.png",
+          "caption": "CZ 金色签名"
+        }
       ]
     },
     {
@@ -526,7 +987,7 @@
         {
           "who": "待接",
           "title": "联名权益包",
-          "text": "NFT 弹窗里的「未来合作项目权益」就是给下一家合作方留的空位。",
+          "text": "徽章弹窗里的「未来合作项目权益」就是给下一家合作方留的空位。",
           "status": "可马上写进权益"
         }
       ]
@@ -536,7 +997,7 @@
       "type": "partners",
       "eyebrow": "05 / PARTNERS",
       "title": "合作方可以一起干的事",
-      "subtitle": "不用接整条链路。认领一截，就能出现在封面、胶囊、分享文案或 NFT 权益里。",
+      "subtitle": "不用接整条链路。认领一截，就能出现在封面、胶囊、分享文案或 徽章权益里。",
       "items": [
         {
           "role": "内容封装",

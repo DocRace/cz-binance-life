@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
+  BOOK_CLUB_TELEGRAM_HANDLE,
+  BOOK_CLUB_TELEGRAM_QR_SRC,
   BOOK_CLUB_TELEGRAM_URL,
   OFFLINE_EVENT_POSTER_SRC,
   OFFLINE_EVENT_REGISTER_QR_SRC,
@@ -260,6 +262,49 @@ export default function OfflineEvent() {
               ))}
             </tbody>
           </table>
+        </div>
+      </motion.section>
+
+      <motion.section
+        initial={{ opacity: 0, y: 12 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-40px" }}
+        className={`${CONTENT_DEFAULT} ${SECTION_SPACING} mt-12 md:mt-16 mb-4`}
+        aria-labelledby="offline-event-telegram"
+      >
+        <div className={`mx-auto max-w-md p-8 text-center ${CARD_SURFACE}`}>
+          <h2 id="offline-event-telegram" className="font-display text-2xl text-gold mb-2">
+            {t("offlineEvent.scanTitle")}
+          </h2>
+          <p className="mb-6 text-sm leading-relaxed text-muted-foreground">{t("offlineEvent.scanHint")}</p>
+          <a
+            href={BOOK_CLUB_TELEGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mx-auto inline-block rounded-2xl border border-border/50 bg-white p-3 shadow-sm transition-opacity hover:opacity-90"
+            aria-label={t("offlineEvent.qrAlt")}
+          >
+            <img
+              src={BOOK_CLUB_TELEGRAM_QR_SRC}
+              alt={t("offlineEvent.qrAlt")}
+              width={220}
+              height={220}
+              className="h-[13.75rem] w-[13.75rem] object-contain"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+          <p className="mt-4 text-sm text-muted-foreground">
+            Telegram{" "}
+            <a
+              href={BOOK_CLUB_TELEGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold hover:text-gold-light transition-colors"
+            >
+              @{BOOK_CLUB_TELEGRAM_HANDLE}
+            </a>
+          </p>
         </div>
       </motion.section>
 

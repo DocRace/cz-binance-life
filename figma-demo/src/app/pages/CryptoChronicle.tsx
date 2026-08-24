@@ -24,6 +24,7 @@ import ChroniclePartnerMarks from "../components/ChroniclePartnerMarks";
 import {
   attributeInvite,
   enrollRankEntry,
+  fetchLeaderboard,
   fetchRankConfig,
   fetchRankEntry,
   isRankCampaignLive,
@@ -52,11 +53,11 @@ import ChronicleSignedNftClaimModal from "../components/ChronicleSignedNftClaimM
 import OverlayPortal from "../components/OverlayPortal";
 import { overlayBackdropClassLight } from "../lib/overlayLayers";
 import { buildShareUrl, decodeSharePayload } from "../../lib/chronicle/shareCodec";
+import { mintChronicleShareLink } from "../../lib/chronicle/shareLinkClient";
 import { fetchLlmTagSuggestions } from "../../lib/chronicle/suggestTagsClient";
 import {
-  bumpCompletionCount,
   clearDraft,
-  getParticipantCount,
+  displayParticipantCount,
   loadDraft,
   resumeStepFromDraft,
   saveDraft,
@@ -76,17 +77,20 @@ import {
   type AvatarStyleId,
 } from "../../lib/chronicle/roles";
 import { DEFAULT_AVATAR_STYLE } from "../../lib/chronicle/roleVisuals";
-import { computeChroniclePrice, formatUsdt, isChroniclePriceHigh } from "../../lib/chronicle/pricing";
+import { computeChroniclePrice, formatShareUsd, isChroniclePriceHigh } from "../../lib/chronicle/pricing";
 import RoleAvatar from "../components/RoleAvatar";
 import {
   blobToDataUrl,
   buildChroniclePosterBlob,
   isWeChatBrowser,
+  shareImageNative,
   shareOrDownloadPoster,
 } from "../../lib/chronicle/invitePoster";
 import {
   MIN_FILLED_NODES,
+  CHRONICLE_HOME_PATH,
   WIZARD_PREV,
+  canLeaveChronicleViaHistory,
   chroniclePath,
   isWizardStep,
   loadInviteRef,
@@ -149,7 +153,7 @@ export default function CryptoChronicle() {
   const [styleId, setStyleId] = useState<AvatarStyleId>(DEFAULT_AVATAR_STYLE);
   const [gender, setGender] = useState<AvatarGenderId>(DEFAULT_AVATAR_GENDER);
   const [result, setResult] = useState<ChronicleResult | null>(null);
-  const [participants, setParticipants] = useState(getParticipantCount);
+  const [publishedActual, setPublishedActual] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
   const [wechatHint, setWechatHint] = useState(false);
   const [showcaseRoleIdx, setShowcaseRoleIdx] = useState(0);
@@ -165,6 +169,7 @@ export default function CryptoChronicle() {
   const [distilling, setDistilling] = useState(false);
   const [rankCfg, setRankCfg] = useState<RankConfig | null>(null);
   const [rankEntry, setRankEntry] = useState<RankEntry | null>(null);
+  const [shortShareUrl, setShortShareUrl] = useState("");
   const [nftClaimOpen, setNftClaimOpen] = useState(false);
   const [siteNavOpen, setSiteNavOpen] = useState(false);
   const [posterBusy, setPosterBusy] = useState(false);
@@ -207,7 +212,11 @@ export default function CryptoChronicle() {
   const onWizardBack = () => {
     persist({ step });
     if (step === "intro") {
-      navigate("/");
+      if (canLeaveChronicleViaHistory()) {
+        navigate(-1);
+        return;
+      }
+      navigate(CHRONICLE_HOME_PATH);
       return;
     }
     if (window.history.state?.czWizard && window.history.state.step === step) {
@@ -313,6 +322,9 @@ export default function CryptoChronicle() {
 
   useEffect(() => {
     void fetchRankConfig().then(setRankCfg);
+    void fetchLeaderboard({ limit: 1 }).then((board) => {
+      if (board && Number.isFinite(board.total)) setPublishedActual(board.total);
+    });
   }, []);
 
   useEffect(() => {
@@ -480,7 +492,7 @@ export default function CryptoChronicle() {
         step: "result",
       });
       setResult(distilled);
-      setParticipants(bumpCompletionCount());
+      setPublishedActual((n) => (typeof n === "number" ? n + 1 : n));
       goStep("result");
     } finally {
       setDistilling(false);
@@ -578,6 +590,7 @@ export default function CryptoChronicle() {
       .filter(Boolean);
 
   const resultShareLink = () =>
+    shortShareUrl ||
     buildShareUrl(shareEncodeBase(), {
       ref: rankEntry?.entryId || inviteRef || undefined,
     });
@@ -607,46 +620,122 @@ export default function CryptoChronicle() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, readOnlyShare, result, authorName, roleId, styleId, pricing?.price, shareToken]);
 
-  const buildResultShareText = () => {
+  useEffect(() => {
+    if (step !== "book" || readOnlyShare || !result || !authorName.trim()) return;
+    const token = shareToken || shareTokenFromUrl(buildShareUrl(shareEncodeBase()));
+    if (!token) return;
+    let cancelled = false;
+    void mintChronicleShareLink({
+      shareToken: token,
+      ref: rankEntry?.entryId || inviteRef || undefined,
+    }).then((url) => {
+      if (!cancelled && url) setShortShareUrl(url);
+    });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, readOnlyShare, result, authorName, rankEntry?.entryId, inviteRef, shareToken]);
+
+  const buildResultShareText = (channel: "x" | "wechat" = "x") => {
     const link = resultShareLink();
     const tags = selectedTagLabels().join("、") || t("chronicle.shareBlank");
-    const price = formatUsdt(pricing?.price ?? 0);
+    const price = formatShareUsd(pricing?.price ?? 0);
     const high = isChroniclePriceHigh(pricing?.price ?? 0);
+    const wechat = channel === "wechat";
     if (isZhUi) {
+      if (wechat) {
+        return high
+          ? t("chronicle.shareTextWechatHighZh", { tags, price, link })
+          : t("chronicle.shareTextWechatLowZh", { tags, price, link });
+      }
       return high
         ? t("chronicle.shareTextHighZh", { tags, price, link })
         : t("chronicle.shareTextLowZh", { tags, price, link });
+    }
+    if (wechat) {
+      return high
+        ? t("chronicle.shareTextWechatHighEn", { tags, price, link })
+        : t("chronicle.shareTextWechatLowEn", { tags, price, link });
     }
     return high
       ? t("chronicle.shareTextHighEn", { tags, price, link })
       : t("chronicle.shareTextLowEn", { tags, price, link });
   };
 
-  const copyText = async (text: string, okKey: string) => {
+  const tryCopyText = async (text: string): Promise<boolean> => {
     try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      toast.success(t(okKey));
-      window.setTimeout(() => setCopied(false), 2000);
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
     } catch {
-      toast.error(t("chronicle.copyFailed"));
+      /* Xiaomi / Android often revoke clipboard after a download sheet */
+    }
+    try {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.left = "-9999px";
+      area.style.top = "0";
+      document.body.appendChild(area);
+      area.focus();
+      area.select();
+      area.setSelectionRange(0, text.length);
+      const ok = document.execCommand("copy");
+      document.body.removeChild(area);
+      return ok;
+    } catch {
+      return false;
     }
   };
 
-  const shareToX = async () => {
-    const mode = await deliverPoster();
-    if (mode !== "downloaded") return;
-    const text = buildResultShareText();
+  const copyText = async (text: string, okKey: string) => {
+    const ok = await tryCopyText(text);
+    if (ok) {
+      setCopied(true);
+      toast.success(t(okKey));
+      window.setTimeout(() => setCopied(false), 2000);
+      return;
+    }
+    toast.error(t("chronicle.copyFailed"));
+  };
+
+  const shareToX = () => {
     const url = new URL("https://twitter.com/intent/tweet");
-    url.searchParams.set("text", text);
+    url.searchParams.set("text", buildResultShareText("x"));
     window.open(url.toString(), "_blank", "noopener,noreferrer");
   };
 
   const shareToWechat = async () => {
-    const mode = await deliverPoster();
-    if (!mode) return;
-    if (mode === "downloaded") setWechatHint(true);
-    await copyText(buildResultShareText(), "chronicle.inviteCopied");
+    if (posterBusy) return;
+    const text = buildResultShareText("wechat");
+    const copied = await tryCopyText(text);
+    if (copied) {
+      setCopied(true);
+      toast.success(t("chronicle.inviteCopied"));
+      window.setTimeout(() => setCopied(false), 2000);
+    }
+    setPosterBusy(true);
+    try {
+      const blob = await buildResultPosterBlob();
+      if (!blob) {
+        toast.error(t("chronicle.posterFailed"));
+        return;
+      }
+      const native = await shareImageNative(blob, text);
+      if (native === "shared" || native === "aborted") {
+        setShareOpen(false);
+        return;
+      }
+      setShareOpen(false);
+      closePosterPreview();
+      setWechatHint(true);
+      setPosterPreviewUrl(await blobToDataUrl(blob));
+    } finally {
+      setPosterBusy(false);
+    }
   };
 
   const openLifeCapsule = () => {
@@ -688,28 +777,31 @@ export default function CryptoChronicle() {
     });
   };
 
+  const buildResultPosterBlob = () =>
+    buildChroniclePosterBlob({
+      authorName: authorName.trim() || t("chronicle.anonymousAuthor"),
+      creditLine: t("chronicle.posterBy", {
+        name: authorName.trim() || t("chronicle.anonymousAuthor"),
+      }),
+      roleId,
+      gender,
+      roleLabel: roleId ? t(`chronicle.roles.${roleId}.name`) : "",
+      publisher: t("chronicle.bookPublisher"),
+      keywords: coverKeywords,
+      principles: selectedPrinciples.map((name) => localizedPrincipleLabel(name, t)),
+      priceLabel: t("chronicle.posterPrice", { price: formatShareUsd(pricing?.price ?? 0) }),
+      inviteUrl: resultShareLink(),
+      title: t("chronicle.bookTitle"),
+      subtitle: t("chronicle.kicker"),
+      partners: t("chronicle.coverPartners"),
+      qrHint: t("chronicle.posterQrHint"),
+    });
+
   const deliverPoster = async (): Promise<"preview" | "downloaded" | null> => {
     if (posterBusy) return null;
     setPosterBusy(true);
     try {
-      const blob = await buildChroniclePosterBlob({
-        authorName: authorName.trim() || t("chronicle.anonymousAuthor"),
-        creditLine: t("chronicle.posterBy", {
-          name: authorName.trim() || t("chronicle.anonymousAuthor"),
-        }),
-        roleId,
-        gender,
-        roleLabel: roleId ? t(`chronicle.roles.${roleId}.name`) : "",
-        publisher: t("chronicle.bookPublisher"),
-        keywords: coverKeywords,
-        principles: selectedPrinciples.map((name) => localizedPrincipleLabel(name, t)),
-        priceLabel: t("chronicle.posterPrice", { price: formatUsdt(pricing?.price ?? 0) }),
-        inviteUrl: resultShareLink(),
-        title: t("chronicle.bookTitle"),
-        subtitle: t("chronicle.kicker"),
-        partners: t("chronicle.coverPartners"),
-        qrHint: t("chronicle.posterQrHint"),
-      });
+      const blob = await buildResultPosterBlob();
       if (!blob) {
         toast.error(t("chronicle.posterFailed"));
         return null;
@@ -718,6 +810,7 @@ export default function CryptoChronicle() {
       if (mode === "preview" || isWeChatBrowser()) {
         setShareOpen(false);
         closePosterPreview();
+        setWechatHint(true);
         setPosterPreviewUrl(await blobToDataUrl(blob));
         return "preview";
       }
@@ -736,6 +829,7 @@ export default function CryptoChronicle() {
     t(`chronicle.nodes.${id}.year`, { defaultValue: CHRONICLE_NODE_YEAR[id] });
 
   const displayName = authorName.trim() || t("chronicle.anonymousAuthor");
+  const publishedDisplay = displayParticipantCount(publishedActual ?? 0);
 
   return (
     <div className="relative min-h-dvh bg-[#1a1714] text-foreground">
@@ -777,12 +871,14 @@ export default function CryptoChronicle() {
                     {t("chronicle.decodeCz")}
                   </span>
                 </h1>
-                <p className="mb-2 text-[15px] leading-relaxed text-muted-foreground">
+                <p className={`${publishedDisplay != null ? "mb-2" : "mb-4"} text-[15px] leading-relaxed text-muted-foreground`}>
                   {t("chronicle.introLead")}
                 </p>
-                <p className="mb-4 text-xs text-muted-foreground/75">
-                  {t("chronicle.participants", { count: participants })}
-                </p>
+                {publishedDisplay != null ? (
+                  <p className="mb-4 text-xs text-muted-foreground/75">
+                    {t("chronicle.participants", { count: publishedDisplay })}
+                  </p>
+                ) : null}
                 <div className="mb-5">
                   <ChronicleBookCover
                     authorName=""
@@ -1156,7 +1252,7 @@ export default function CryptoChronicle() {
                   keywords={coverKeywords}
                 />
                 <p className="mt-4 break-all text-center font-tech text-xl text-gold sm:text-2xl">
-                  {t("chronicle.posterPrice", { price: formatUsdt(pricing.price) })}
+                  {t("chronicle.posterPrice", { price: formatShareUsd(pricing.price) })}
                 </p>
                 <p className="mt-2 text-center font-cjk text-sm text-foreground/80">
                   {t("chronicle.posterBy", { name: displayName })}
@@ -1231,7 +1327,7 @@ export default function CryptoChronicle() {
                       <img
                         src={posterPreviewUrl}
                         alt={t("chronicle.downloadPoster")}
-                        className="max-h-[72vh] w-full select-none object-contain"
+                        className="max-h-[64vh] w-full select-none object-contain"
                         style={{ WebkitTouchCallout: "default", WebkitUserSelect: "auto" }}
                         draggable={false}
                       />
@@ -1239,9 +1335,17 @@ export default function CryptoChronicle() {
                         id="chronicle-poster-preview-hint"
                         className="mt-3 text-center text-sm leading-relaxed text-gold-light"
                       >
-                        {t("chronicle.posterLongPress")}
+                        {wechatHint ? t("chronicle.shareSteps") : t("chronicle.posterLongPress")}
                       </p>
-                      <button type="button" onClick={closePosterPreview} className={`${H5_CTA_GHOST} mt-3`}>
+                      <button
+                        type="button"
+                        onClick={() => void copyText(buildResultShareText("wechat"), "chronicle.inviteCopied")}
+                        className={`${H5_CTA} mt-3`}
+                      >
+                        {copied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
+                        {t("chronicle.shareCta")}
+                      </button>
+                      <button type="button" onClick={closePosterPreview} className={`${H5_CTA_GHOST} mt-2`}>
                         {t("common.close")}
                       </button>
                     </div>
@@ -1280,29 +1384,41 @@ export default function CryptoChronicle() {
                       >
                         {t("chronicle.shareAction")}
                       </h2>
+                      <p className="mb-4 text-xs leading-relaxed text-muted-foreground">
+                        {t("chronicle.shareSteps")}
+                      </p>
                       <div className="grid gap-2.5">
-                        <button type="button" onClick={() => void shareToX()} className={H5_CTA_GHOST}>
-                          <Share2 className="h-4 w-4" aria-hidden />
-                          {t("chronicle.shareXCta")}
-                        </button>
-                        <button type="button" onClick={() => void shareToWechat()} className={H5_CTA_GHOST}>
-                          <MessageCircle className="h-4 w-4" aria-hidden />
-                          {t("chronicle.shareWechatCta")}
+                        <button
+                          type="button"
+                          onClick={() => void downloadPoster()}
+                          disabled={posterBusy}
+                          className={H5_CTA}
+                        >
+                          <Download className="h-4 w-4" aria-hidden />
+                          {posterBusy ? t("common.loading") : t("chronicle.downloadPoster")}
                         </button>
                         <button
                           type="button"
-                          onClick={() => void copyText(buildResultShareText(), "chronicle.copied")}
+                          onClick={() => void shareToWechat()}
+                          disabled={posterBusy}
+                          className={H5_CTA_GHOST}
+                        >
+                          <MessageCircle className="h-4 w-4" aria-hidden />
+                          {t("chronicle.shareWechatCta")}
+                        </button>
+                        <button type="button" onClick={shareToX} className={H5_CTA_GHOST}>
+                          <Share2 className="h-4 w-4" aria-hidden />
+                          {t("chronicle.shareXCta")}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => void copyText(buildResultShareText("wechat"), "chronicle.copied")}
                           className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border/70 px-6 py-3 text-sm"
                         >
                           {copied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
                           {t("chronicle.shareCta")}
                         </button>
                       </div>
-                      {wechatHint ? (
-                        <p className="mt-3 text-center text-xs leading-relaxed text-muted-foreground">
-                          {t("chronicle.shareWechatHint")}
-                        </p>
-                      ) : null}
                     </div>
                   </div>
                 </OverlayPortal>

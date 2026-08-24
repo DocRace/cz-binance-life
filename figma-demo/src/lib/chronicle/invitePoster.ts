@@ -198,6 +198,29 @@ export function isWeChatBrowser(): boolean {
   return /MicroMessenger/i.test(navigator.userAgent || "");
 }
 
+export function isMobileBrowser(): boolean {
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+}
+
+/** Android / iOS share sheet can send the JPEG straight to WeChat. */
+export async function shareImageNative(
+  blob: Blob,
+  text: string,
+): Promise<"shared" | "aborted" | "unsupported"> {
+  try {
+    const file = new File([blob], posterFilename(), { type: blob.type || "image/jpeg" });
+    if (typeof navigator.canShare !== "function" || !navigator.canShare({ files: [file] })) {
+      return "unsupported";
+    }
+    await navigator.share({ files: [file], text });
+    return "shared";
+  } catch (err) {
+    if (err instanceof DOMException && err.name === "AbortError") return "aborted";
+    if (err instanceof Error && err.name === "AbortError") return "aborted";
+    return "unsupported";
+  }
+}
+
 export function posterFilename(): string {
   return "my-binance-life.jpg";
 }
@@ -228,8 +251,8 @@ export function triggerBlobDownload(blob: Blob, filename: string) {
 }
 
 export async function shareOrDownloadPoster(blob: Blob): Promise<"shared" | "downloaded" | "preview"> {
-  // WeChat cannot download files — show a long-press preview instead.
-  if (isWeChatBrowser()) return "preview";
+  // Mobile browsers (Xiaomi especially) save `<a download>` to Files, not the album.
+  if (isWeChatBrowser() || isMobileBrowser()) return "preview";
   triggerBlobDownload(blob, posterFilename());
   return "downloaded";
 }
@@ -794,11 +817,11 @@ function drawPartnerStack(
 
 function splitPriceLabel(label: string): { prefix: string; amount: string } {
   const raw = `${label || ""}`.trim();
-  const match = raw.match(/^(.*?)([¥$€]\s*)?([\d][\d,.\s]*)$/);
+  const match = raw.match(/^(.*?)(-?\s*[¥$€]\s*[\d][\d,.\s]*)$/);
   if (!match) return { prefix: raw, amount: "" };
   return {
     prefix: `${match[1] || ""}`.trim(),
-    amount: `${match[2] || ""}${match[3] || ""}`.trim(),
+    amount: `${match[2] || ""}`.replace(/\s+/g, "").trim(),
   };
 }
 

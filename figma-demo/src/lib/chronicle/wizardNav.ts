@@ -54,3 +54,22 @@ export function chroniclePath(search: string): string {
   const q = search.startsWith("?") ? search.slice(1) : search;
   return q ? `/club/chronicle?${q}` : "/club/chronicle";
 }
+
+/** Official book-club home when this tab has nowhere to go back to. */
+export const CHRONICLE_HOME_PATH = "/";
+
+/**
+ * True when this tab can leave the activity via the browser history
+ * (same-tab arrival). False for a fresh tab / typed URL / emptied stack.
+ */
+export function canLeaveChronicleViaHistory(): boolean {
+  try {
+    const nav = "navigation" in window
+      ? (window as Window & { navigation?: { canGoBack?: boolean } }).navigation
+      : undefined;
+    if (nav && typeof nav.canGoBack === "boolean") return nav.canGoBack;
+  } catch {
+    /* ignore */
+  }
+  return window.history.length > 1 && Boolean(document.referrer);
+}

@@ -14,8 +14,11 @@ import { DEFAULT_AVATAR_STYLE } from "./roleVisuals";
 import type { ChronicleAudience, ChronicleStep, UserEntries } from "./types";
 
 const DRAFT_KEY = "czlife.chronicle.draft.v3";
-const DONE_KEY = "czlife.chronicle.completions.v1";
-const BASE_PARTICIPANTS = 1286;
+
+/** Hide the intro line until this many real publishes exist. */
+export const PARTICIPANT_DISPLAY_MIN_ACTUAL = 100;
+/** π + e ≈ 5.85987… so 100 real publishes first appear as 586. */
+export const PARTICIPANT_DISPLAY_FACTOR = Math.PI + Math.E;
 
 const STEPS: ChronicleStep[] = ["intro", "fill", "result", "author", "book"];
 
@@ -137,25 +140,9 @@ export function clearDraft() {
   }
 }
 
-export function bumpCompletionCount(): number {
-  try {
-    const next = getLocalCompletions() + 1;
-    localStorage.setItem(DONE_KEY, String(next));
-    return BASE_PARTICIPANTS + next;
-  } catch {
-    return BASE_PARTICIPANTS + 1;
-  }
-}
-
-export function getParticipantCount(): number {
-  return BASE_PARTICIPANTS + getLocalCompletions();
-}
-
-function getLocalCompletions(): number {
-  try {
-    const n = parseInt(localStorage.getItem(DONE_KEY) || "0", 10);
-    return Number.isFinite(n) && n > 0 ? n : 0;
-  } catch {
-    return 0;
-  }
+/** Display count from real publishes, or null to hide the line. */
+export function displayParticipantCount(actual: number): number | null {
+  const n = Math.floor(Number(actual) || 0);
+  if (n < PARTICIPANT_DISPLAY_MIN_ACTUAL) return null;
+  return Math.round(n * PARTICIPANT_DISPLAY_FACTOR);
 }

@@ -21,9 +21,11 @@ function isolatedStaticPages() {
   const pages = ['/partner-deck', '/cover-showcase', '/invite']
   const rewrite = (req: { url?: string }, _res: unknown, next: () => void) => {
     const url = req.url || ''
+    const pathname = url.split('?')[0]
+    const query = url.includes('?') ? url.slice(url.indexOf('?')) : ''
     for (const page of pages) {
-      if (url === page || url === `${page}/`) {
-        req.url = `${page}/index.html`
+      if (pathname === page || pathname === `${page}/`) {
+        req.url = `${page}/index.html${query}`
         break
       }
     }

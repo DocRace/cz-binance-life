@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import path from 'node:path';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -9,6 +10,7 @@ import {
   createChronicleRankStore,
   loadRankConfigFromEnv,
 } from './chronicleRankStore.js';
+import { createChronicleShareStore } from './chronicleShareStore.js';
 
 const PORT = Number(process.env.BFF_PORT || 8787);
 const AT_COOKIE = 'bff_ipdex_at';
@@ -628,6 +630,14 @@ async function boot() {
 
   const rankCfg = loadRankConfigFromEnv(process.env);
   const rankStore = createChronicleRankStore(rankCfg);
+  const shareStore = createChronicleShareStore(path.dirname(rankCfg.dataPath));
+
+  function chronicleLongPath(shareToken, ref) {
+    const q = new URLSearchParams();
+    q.set('share', shareToken);
+    if (ref) q.set('ref', ref);
+    return `/club/chronicle?${q.toString()}`;
+  }
 
   async function resolveUserId(req) {
     const accessToken = bearer(req);
@@ -684,6 +694,29 @@ async function boot() {
       return res.status(400).json({ code: -10001, message: out.code, data: null });
     }
     res.json({ code: 0, message: 'ok', data: out });
+  });
+
+  app.post('/api/bff/chronicle/share-link', (req, res) => {
+    const out = shareStore.mint({
+      shareToken: req.body?.shareToken,
+      ref: req.body?.ref,
+    });
+    if (!out.ok) {
+      return res.status(400).json({ code: -10001, message: out.code, data: null });
+    }
+    res.json({ code: 0, message: 'ok', data: { code: out.code, ref: out.ref || '' } });
+  });
+
+  app.get('/api/bff/chronicle/share-link/:code', (req, res) => {
+    const row = shareStore.resolve(req.params.code);
+    if (!row) return res.status(404).json({ code: -10004, message: 'SHARE_NOT_FOUND', data: null });
+    res.json({ code: 0, message: 'ok', data: row });
+  });
+
+  app.get('/s/:code', (req, res) => {
+    const row = shareStore.resolve(req.params.code);
+    if (!row) return res.redirect(302, '/club/chronicle');
+    res.redirect(302, chronicleLongPath(row.shareToken, row.ref));
   });
 
   app.post('/api/bff/chronicle/rank/enroll', async (req, res) => {

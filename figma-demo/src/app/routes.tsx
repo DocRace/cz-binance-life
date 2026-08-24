@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import OfflineEvent from "./pages/OfflineEvent";
 import CryptoChronicle from "./pages/CryptoChronicle";
 import ChronicleLeaderboard from "./pages/ChronicleLeaderboard";
+import ChronicleShareRedirect from "./pages/ChronicleShareRedirect";
 import PosterPreviewLab from "./pages/PosterPreviewLab";
 
 export const router = createBrowserRouter([
@@ -26,6 +27,7 @@ export const router = createBrowserRouter([
       { path: "club", Component: BookClub },
       { path: "club/chronicle", Component: CryptoChronicle },
       { path: "club/chronicle/rank", Component: ChronicleLeaderboard },
+      { path: "s/:code", Component: ChronicleShareRedirect },
       { path: "event", Component: OfflineEvent },
       { path: "principles", Component: CZPrinciples },
       { path: "timeline", Component: Timeline },

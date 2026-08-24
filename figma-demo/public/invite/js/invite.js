@@ -1,8 +1,16 @@
 (() => {
-  const DATA_URL = './data/invites.json?v=21';
+  const DATA_URL = './data/invites.json?v=29';
+  const TELEGRAM_QR_SRC = './assets/telegram-czlifeclub-qr.png';
+  const SITE_QR_SRC = './assets/czlife-home-qr.png';
+  const PPT_CORNER = '《幣安人生》書友會';
   const PORTRAIT = { w: 1080, h: 2200 };
   const WIDE = { w: 1920, h: 1080 };
+  const BACKDROP_CENTRE = { w: 2048, h: 1152 };
+  const BACKDROP_SIDE = { w: 867, h: 1152 };
+  const BACKDROP_WIDE = { w: 1920, h: 1080 };
+  const PPT_SIZE = { w: 1920, h: 1080 };
   const SITE_URL = 'https://czlife.club';
+  const INSCRIPTION_SRC = './assets/cz-book-club-inscription.png';
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const esc = (s) => String(s ?? '')
@@ -16,19 +24,39 @@
   let typeId = 'guest';
   let guestName = '';
   let yafangVariant = 'media';
+  let backdropPanel = 'centre';
+  let inscriptionUrl = INSCRIPTION_SRC;
 
   async function init() {
     const res = await fetch(DATA_URL);
     if (!res.ok) throw new Error('Failed to load invite copy');
     data = await res.json();
+    const requested = new URLSearchParams(window.location.search).get('type')
+      || window.location.hash.replace(/^#/, '');
+    if (requested && data.types[requested]) typeId = requested;
     render();
     bind();
     fitBoard();
     window.addEventListener('resize', fitBoard);
+    prepareInscription().then(() => {
+      if (isBackdrop() || isPpt()) paintCard();
+    });
   }
 
   function isYafangPack() {
     return typeId === 'yafang';
+  }
+
+  function isBackdrop() {
+    return typeId === 'backdrop';
+  }
+
+  function isPpt() {
+    return typeId === 'ppt';
+  }
+
+  function pptSlides() {
+    return data.pptSlides || [];
   }
 
   function currentType() {
@@ -47,17 +75,93 @@
   }
 
   function boardSize() {
-    return typeId === 'blast' ? WIDE : PORTRAIT;
+    if (typeId === 'blast' || isPpt()) return WIDE;
+    if (isBackdrop()) return backdropPanelSize(backdropPanel);
+    return PORTRAIT;
+  }
+
+  function backdropPanelSize(panel) {
+    if (panel === 'side') return BACKDROP_SIDE;
+    if (panel === 'wide') return BACKDROP_WIDE;
+    return BACKDROP_CENTRE;
   }
 
   function applyBoardMetrics() {
     const { w, h } = boardSize();
-    const wide = typeId === 'blast';
+    const wide = typeId === 'blast' || isPpt();
     document.documentElement.style.setProperty('--board-w', `${w}px`);
     document.documentElement.style.setProperty('--board-h', `${h}px`);
     $('#artboard')?.classList.toggle('is-wide', wide);
     $('#boardSlot')?.classList.toggle('is-wide', wide);
-    $('#stage')?.classList.toggle('is-wide', wide);
+    $('#boardSlot')?.classList.toggle('is-side', false);
+    $('#stage')?.classList.toggle('is-wide', wide || isBackdrop() || isPpt());
+    $('#stage')?.classList.toggle('is-side', false);
+    $('#stage')?.classList.toggle('is-backdrop', isBackdrop());
+    $('#stage')?.classList.toggle('is-ppt', isPpt());
+  }
+
+  function ensureStageShell() {
+    const stage = $('#stage');
+    if (!stage) return;
+    if (isPpt()) {
+      if ($('#pptRig')) return;
+      const slides = pptSlides();
+      stage.innerHTML = `
+        <div class="ppt-rig" id="pptRig">
+          ${slides.map((slide, i) => `
+            <div class="backdrop-col ppt-col">
+              <div class="board-slot is-wide" data-ppt="${i}">
+                <div class="artboard" id="pptBoard${i}"></div>
+              </div>
+              <p class="backdrop-caption">${esc(slide.no)}　${esc(slide.short)}　1920 × 1080</p>
+              <button type="button" class="chrome-btn gold" data-ppt-dl="${i}">下載 ${esc(slide.no)} ${esc(slide.short)}</button>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      return;
+    }
+    if (isBackdrop()) {
+      if ($('#backdropRig')) return;
+      stage.innerHTML = `
+        <div class="backdrop-rig" id="backdropRig">
+          <div class="backdrop-led" id="backdropLed">
+            <div class="backdrop-col">
+              <div class="board-slot is-side" data-panel="side">
+                <div class="artboard" id="artboardSideL"></div>
+              </div>
+              <p class="backdrop-caption">兩側　867 × 1152</p>
+            </div>
+            <div class="backdrop-col">
+              <div class="board-slot is-wide" data-panel="centre">
+                <div class="artboard" id="artboard"></div>
+              </div>
+              <p class="backdrop-caption">中間　2048 × 1152</p>
+            </div>
+            <div class="backdrop-col">
+              <div class="board-slot is-side" data-panel="side">
+                <div class="artboard" id="artboardSideR"></div>
+              </div>
+              <p class="backdrop-caption">兩側　867 × 1152</p>
+            </div>
+          </div>
+          <div class="backdrop-col backdrop-col-wide">
+            <div class="board-slot is-wide" data-panel="wide">
+              <div class="artboard" id="artboardWide"></div>
+            </div>
+            <p class="backdrop-caption">16:9 整幅　1920 × 1080</p>
+          </div>
+        </div>
+      `;
+      return;
+    }
+    if ($('#backdropRig') || $('#pptRig') || !$('#boardSlot')) {
+      stage.innerHTML = `
+        <div class="board-slot" id="boardSlot">
+          <div class="artboard" id="artboard"></div>
+        </div>
+      `;
+    }
   }
 
   function render() {
@@ -74,7 +178,7 @@
         <p class="studio-kicker">Invitation</p>
         <p class="studio-brand">BINANCE LIFE BOOK CLUB  ×  DATADANCE</p>
         <h1 class="studio-title">書友見面會邀請函</h1>
-        <p class="studio-lead">媒體／嘉賓為 21:9 手機豎版；郵件推送為 16:9 橫版。「亞芳對外」為人名留空模板，並印上亞芳聯絡方式。</p>
+        <p class="studio-lead">媒體／嘉賓為 21:9 手機豎版；郵件推送為 16:9 橫版。「背景板」含現場三塊屏與 16:9 整幅。「PPT」為現場簡報七頁，可一鍵下載 PPTX，也可逐頁下載 1920×1080。「亞芳對外」為人名留空模板。</p>
         <div class="studio-bar">
           <div class="tabs" id="tabs">
             ${types.map((t) => `
@@ -85,6 +189,8 @@
             <button type="button" class="tab" data-yafang-variant="media">媒體邀請函</button>
             <button type="button" class="tab" data-yafang-variant="guest">嘉賓邀請函</button>
           </div>
+          <p class="backdrop-hint" id="backdropHint" hidden>左／右側板相同，只下一張。請用下面三個按鈕分別下載。</p>
+          <p class="backdrop-hint" id="pptHint" hidden>七頁現場簡報。可一鍵下載 PPTX（每張圖一頁），或用各頁下方按鈕分別下載 1920×1080。</p>
           <div class="name-field" id="nameField" hidden>
             <label for="nameInput"></label>
             <input id="nameInput" type="text" autocomplete="name" />
@@ -92,6 +198,10 @@
           <div class="actions">
             <button type="button" class="chrome-btn" id="copyBtn">複製正文</button>
             <button type="button" class="chrome-btn gold" id="pngBtn">下載 PNG</button>
+            <button type="button" class="chrome-btn gold" id="backdropCentreBtn" hidden>下載中間 2048×1152</button>
+            <button type="button" class="chrome-btn gold" id="backdropSideBtn" hidden>下載側板 867×1152</button>
+            <button type="button" class="chrome-btn gold" id="backdropWideBtn" hidden>下載16:9 1920×1080</button>
+            <button type="button" class="chrome-btn gold" id="pptxBtn" hidden>下載 PPTX</button>
             <button type="button" class="chrome-btn" id="mediaBatchBtn" title="${esc((data.mediaBatch || []).join('、'))}">批量下載媒體邀請函</button>
             <button type="button" class="chrome-btn gold" id="yafangPackBtn" hidden>下載亞芳媒體+嘉賓空白模板</button>
           </div>
@@ -106,6 +216,8 @@
     paintCard();
     syncNameField();
     syncYafangBar();
+    syncBackdropBar();
+    syncPptBar();
   }
 
   function syncYafangBar() {
@@ -120,7 +232,38 @@
       });
     }
     if (packBtn) packBtn.hidden = !on;
-    if (batchBtn) batchBtn.hidden = on;
+    if (batchBtn) batchBtn.hidden = on || isBackdrop() || isPpt();
+  }
+
+  function backdropExportButtons() {
+    return ['#backdropCentreBtn', '#backdropSideBtn', '#backdropWideBtn']
+      .map((sel) => $(sel))
+      .filter(Boolean);
+  }
+
+  function syncBackdropBar() {
+    const hint = $('#backdropHint');
+    const copyBtn = $('#copyBtn');
+    const pngBtn = $('#pngBtn');
+    const on = isBackdrop();
+    if (hint) hint.hidden = !on;
+    backdropExportButtons().forEach((btn) => { btn.hidden = !on; });
+    if (copyBtn) copyBtn.hidden = on || isPpt();
+    if (pngBtn) pngBtn.hidden = on || isPpt();
+  }
+
+  function syncPptBar() {
+    const hint = $('#pptHint');
+    const pptxBtn = $('#pptxBtn');
+    const on = isPpt();
+    if (hint) hint.hidden = !on;
+    if (pptxBtn) pptxBtn.hidden = !on;
+    if (on) {
+      const copyBtn = $('#copyBtn');
+      const pngBtn = $('#pngBtn');
+      if (copyBtn) copyBtn.hidden = true;
+      if (pngBtn) pngBtn.hidden = true;
+    }
   }
 
   function syncNameField() {
@@ -129,7 +272,7 @@
     const input = $('#nameInput');
     const label = field?.querySelector('label');
     if (!field || !input) return;
-    const show = Boolean(t.greetingPrefix) && !t.nameLockedBlank;
+    const show = Boolean(t.greetingPrefix) && !t.nameLockedBlank && !isBackdrop() && !isPpt();
     field.hidden = !show;
     if (label) label.textContent = t.nameLabel || '姓名';
     input.placeholder = t.namePlaceholder || '';
@@ -137,11 +280,25 @@
   }
 
   function paintCard() {
+    ensureStageShell();
     applyBoardMetrics();
+    if (isPpt()) {
+      pptSlides().forEach((slide, i) => paintPptSlide($(`#pptBoard${i}`), slide));
+      fitBoard();
+      return;
+    }
     const board = $('#artboard');
     if (!board) return;
     if (typeId === 'blast') {
       paintBlastCard(board);
+      fitBoard();
+      return;
+    }
+    if (isBackdrop()) {
+      paintBackdropCard($('#artboardSideL'), 'side');
+      paintBackdropCard(board, 'centre');
+      paintBackdropCard($('#artboardSideR'), 'side');
+      paintBackdropCard($('#artboardWide'), 'wide');
       fitBoard();
       return;
     }
@@ -248,6 +405,200 @@
     `;
   }
 
+  function backdropLogos() {
+    const partners = data.backdropPartners || [
+      { id: 'press', name: '商務印書館' },
+      { id: 'datadance', name: 'DataDance' },
+      { id: 'yafang', name: '亞芳創變派' },
+      { id: 'hash', name: 'HASH GLOBAL' },
+      { id: 'bnb', name: 'BNB Chain' },
+      { id: 'ipdex', name: 'IPDEX' },
+      { id: 'onebook', name: '一本讀書會' },
+      { id: 'hku', name: '香港大學創立方' },
+    ];
+    return [...partners, { id: 'club', name: '幣安人生 Club' }];
+  }
+
+  function renderBackdropWall() {
+    const logos = backdropLogos();
+    const pattern = [5, 4, 5, 4, 5];
+    let i = 0;
+    return pattern.map((count, row) => {
+      const cells = Array.from({ length: count }, () => logos[i++ % logos.length]);
+      return `<div class="backdrop-row${row % 2 ? ' is-shift' : ''}">${cells.map(renderLogo).join('')}</div>`;
+    }).join('');
+  }
+
+  function paintBackdropCard(board, panel = backdropPanel) {
+    if (!board) return;
+    const side = panel === 'side';
+    const { w, h } = backdropPanelSize(panel);
+    board.style.width = `${w}px`;
+    board.style.height = `${h}px`;
+    const club = side
+      ? `<img class="backdrop-club" src="${esc(inscriptionUrl)}" alt="幣安人生 Club" />`
+      : '';
+    board.innerHTML = `
+      <div class="card is-backdrop${side ? ' is-backdrop-side' : ''}${panel === 'wide' ? ' is-backdrop-wide' : ''}">
+        <div class="card-bg"></div>
+        <div class="card-photo is-cover"></div>
+        <div class="card-veil blast-veil"></div>
+        <div class="card-gold"></div>
+        <div class="card-mesh"></div>
+        <canvas class="card-baked-bg" aria-hidden></canvas>
+        <div class="backdrop-inner">
+          <div class="backdrop-lockup">
+            <h1 class="backdrop-title">幣安人生書友會</h1>
+            ${club}
+          </div>
+          ${side ? '' : `<div class="backdrop-wall">${renderBackdropWall()}</div>`}
+        </div>
+      </div>
+    `;
+  }
+
+  function pptCorners(label = PPT_CORNER) {
+    return `
+      <p class="ppt-corner is-tl">${esc(label)}</p>
+      <p class="ppt-corner is-br">${esc(label)}</p>
+    `;
+  }
+
+  function pptQrItems(slide) {
+    if (Array.isArray(slide.qrs) && slide.qrs.length) return slide.qrs;
+    if (!slide.showQr) return [];
+    return [{
+      src: TELEGRAM_QR_SRC,
+      label: slide.qrLabel || '掃碼入群',
+      handle: slide.qrHandle || 't.me/czlifeclub',
+    }];
+  }
+
+  function pptQrRail(slide) {
+    const items = pptQrItems(slide);
+    if (!items.length) return '';
+    return `
+      <aside class="ppt-qr-rail">
+        ${items.map((q) => `
+          <div class="ppt-qr-item">
+            <div class="ppt-qr-frame${q.framed === false ? ' is-bare' : ''}">
+              <img src="${esc(q.src || (q.id === 'site' ? SITE_QR_SRC : TELEGRAM_QR_SRC))}" alt="${esc(q.label || '')}" />
+            </div>
+            <p class="ppt-qr-label">${esc(q.label || '')}</p>
+          </div>
+        `).join('')}
+      </aside>
+    `;
+  }
+
+  function pptPartnerRows() {
+    const ev = data.event;
+    const main = data.partners || [];
+    const extra = data.venuePartners || [];
+    const row1 = main.slice(0, 5);
+    const row2 = [...main.slice(5), ...extra];
+    const block = (label, row) => {
+      if (!row.length) return '';
+      return `
+        <div class="ppt-partner-block">
+          <p class="ppt-partners-label">${esc(label)}</p>
+          <div class="ppt-logo-row">${row.map(renderLogo).join('')}</div>
+        </div>
+      `;
+    };
+    return `
+      <div class="ppt-partners">
+        ${block(ev.partnersLabel || '支持機構', row1)}
+        ${block(ev.venueSupportLabel || '生態夥伴', row2)}
+      </div>
+    `;
+  }
+
+  function pptTitleBlock(slide) {
+    const raw = String(slide.title || '');
+    const cls = slide.layout === 'cover' ? 'ppt-title' : 'ppt-section-title';
+    if (raw.startsWith('#')) {
+      return `<h1 class="${cls}"><span class="ppt-hash">#</span>${esc(raw.slice(1))}</h1>`;
+    }
+    return `<h1 class="${cls}">${esc(raw)}</h1>`;
+  }
+
+  function paintPptSlide(board, slide) {
+    if (!board || !slide) return;
+    board.style.width = `${PPT_SIZE.w}px`;
+    board.style.height = `${PPT_SIZE.h}px`;
+    let sheet = '';
+    if (slide.layout === 'cover') {
+      sheet = `
+        <div class="ppt-sheet is-cover">
+          <div class="ppt-cover-main">
+            <h1 class="ppt-title">${esc(slide.title)}</h1>
+            <h2 class="ppt-subtitle">${esc(slide.subtitle)}</h2>
+            <p class="ppt-when">${esc(slide.when)}</p>
+            <p class="ppt-venue">${esc(slide.venue)}</p>
+            ${pptPartnerRows()}
+          </div>
+          ${pptQrRail(slide)}
+        </div>
+      `;
+    } else if (slide.layout === 'agenda') {
+      const rows = (slide.rows || []).map(([time, item], i) => `
+        <li class="ppt-program-row">
+          <span class="ppt-program-time">${esc(time)}</span>
+          <span class="ppt-program-item">${esc(item)}</span>
+        </li>
+      `).join('');
+      sheet = `
+        <div class="ppt-sheet is-agenda">
+          ${pptCorners(slide.kicker)}
+          <div class="ppt-agenda-hero">
+            <h1 class="ppt-agenda-title">${esc(slide.title)}</h1>
+            <p class="ppt-agenda-lead">${esc(slide.lead)}</p>
+          </div>
+          <ol class="ppt-program">${rows}</ol>
+        </div>
+      `;
+    } else if (slide.layout === 'guest') {
+      const speakers = (slide.speakers || []).map((s) => `
+        <div class="ppt-speaker">
+          <p class="ppt-speaker-name">${esc(s.name)}</p>
+          <p class="ppt-speaker-role">${esc(s.role || '')}</p>
+          ${s.handle ? `<p class="ppt-speaker-handle">${esc(s.handle)}</p>` : ''}
+        </div>
+      `).join('');
+      sheet = `
+        <div class="ppt-sheet is-guest">
+          ${pptCorners(slide.kicker)}
+          <div class="ppt-guest-main">
+            <h1 class="ppt-section-title">${esc(slide.title)}</h1>
+            <div class="ppt-speakers">${speakers}</div>
+          </div>
+        </div>
+      `;
+    } else {
+      sheet = `
+        <div class="ppt-sheet is-chapter">
+          ${pptCorners(slide.kicker)}
+          <div class="ppt-chapter-main">
+            ${pptTitleBlock(slide)}
+            <p class="ppt-section-lead">${esc(slide.lead)}</p>
+            ${slide.time ? `<p class="ppt-chapter-time">${esc(slide.time)}</p>` : ''}
+          </div>
+          ${pptQrRail(slide)}
+        </div>
+      `;
+    }
+    board.innerHTML = `
+      <div class="card is-ppt is-ppt-${esc(slide.layout)}">
+        <div class="card-bg"></div>
+        <div class="card-photo ppt-portrait" aria-hidden="true"></div>
+        <div class="card-veil ppt-veil"></div>
+        <canvas class="card-baked-bg" aria-hidden></canvas>
+        ${sheet}
+      </div>
+    `;
+  }
+
   function renderYafangContact(contact) {
     if (!contact) return '';
     return `
@@ -326,6 +677,9 @@
     if (p.id === 'onebook') {
       return `<div class="logo-cell logo-cell-img" title="${esc(p.name)}"><img class="logo-img logo-img-onebook" src="./assets/onebook.png?v=gold" alt="${esc(p.name)}" /></div>`;
     }
+    if (p.id === 'club') {
+      return `<div class="logo-cell logo-cell-img logo-cell-club" title="${esc(p.name)}"><img class="logo-img logo-img-club" src="${esc(inscriptionUrl)}" alt="${esc(p.name)}" /></div>`;
+    }
     return `<div class="logo-cell" title="${esc(p.name)}"><span class="logo-word">${esc(p.name)}</span></div>`;
   }
 
@@ -342,8 +696,8 @@
       <path d="M138.352 19.4667C137.403 19.4667 136.521 19.2667 135.776 18.8333C134.996 18.4 134.42 17.8333 133.979 17.0667C133.538 16.3333 133.301 15.5 133.301 14.5667C133.301 13.6333 133.504 12.8 133.945 12.0667C134.386 11.3333 134.962 10.7333 135.742 10.3C136.487 9.86667 137.335 9.66667 138.25 9.66667C139.132 9.66667 139.911 9.86665 140.623 10.2666C141.301 10.6666 141.843 11.2333 142.25 11.9333C142.657 12.6333 142.826 13.4333 142.826 14.3333C142.826 14.5 142.826 14.6667 142.792 14.8C142.759 14.9667 142.759 15.1333 142.691 15.3333H134.826V13.5667H141.538L140.725 14.2666C140.691 13.7 140.589 13.2 140.386 12.8333C140.182 12.4333 139.911 12.1333 139.538 11.9333C139.165 11.7333 138.725 11.6333 138.182 11.6333C137.64 11.6333 137.131 11.7667 136.725 12C136.318 12.2333 135.979 12.5667 135.776 13C135.538 13.4333 135.437 13.9333 135.437 14.5333C135.437 15.1333 135.572 15.6333 135.809 16.0667C136.047 16.5 136.386 16.8666 136.826 17.1C137.267 17.3333 137.775 17.4667 138.352 17.4667C138.826 17.4667 139.301 17.3667 139.708 17.2C140.114 17.0333 140.487 16.7667 140.758 16.4667L142.148 17.8667C141.674 18.4 141.131 18.8 140.453 19.0667C139.809 19.3333 139.098 19.4667 138.352 19.4667Z" fill="#ddc48e"/>
       <path d="M19.3362 0H13.3702V13H19.4718V6C23.0311 6.1 25.9123 8.96667 25.9123 12.5C25.9123 16.0333 23.0311 18.9 19.4718 19H13.3702V25H19.3023C26.3193 25 32.014 19.4 32.014 12.5C32.014 5.6 26.3193 0 19.3362 0Z" fill="#ddc48e"/>
       <path d="M13.3702 13H7.26855V19H13.3702V13Z" fill="#ddc48e"/>
-      <path opacity="0.3" d="M7.2685 7H1.16687V13H7.2685V7Z" fill="#ddc48e"/>
-      <path opacity="0.3" d="M7.2685 19H1.16687V25H7.2685V19Z" fill="#ddc48e"/>
+      <path d="M7.2685 7H1.16687V13H7.2685V7Z" fill="#ddc48e"/>
+      <path d="M7.2685 19H1.16687V25H7.2685V19Z" fill="#ddc48e"/>
     </svg>`;
   }
 
@@ -379,6 +733,8 @@
       paintCard();
       syncNameField();
       syncYafangBar();
+      syncBackdropBar();
+      syncPptBar();
     });
     $('#yafangBar')?.addEventListener('click', (e) => {
       const btn = e.target.closest('[data-yafang-variant]');
@@ -417,6 +773,38 @@
         alert('亞芳模板匯出失敗，請稍後再試或改為逐張下載。');
       });
     });
+    $('#backdropCentreBtn')?.addEventListener('click', () => {
+      downloadBackdropPanel('centre').catch((err) => {
+        console.error(err);
+        alert('中間背景板匯出失敗，請再試一次。');
+      });
+    });
+    $('#backdropSideBtn')?.addEventListener('click', () => {
+      downloadBackdropPanel('side').catch((err) => {
+        console.error(err);
+        alert('側板匯出失敗，請再試一次。');
+      });
+    });
+    $('#backdropWideBtn')?.addEventListener('click', () => {
+      downloadBackdropPanel('wide').catch((err) => {
+        console.error(err);
+        alert('16:9 背景板匯出失敗，請再試一次。');
+      });
+    });
+    $('#pptxBtn')?.addEventListener('click', () => {
+      downloadPptxDeck().catch((err) => {
+        console.error(err);
+        alert('PPTX 匯出失敗，請再試一次或改為逐頁下載 PNG。');
+      });
+    });
+    $('#stage')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-ppt-dl]');
+      if (!btn) return;
+      downloadPptSlide(Number(btn.getAttribute('data-ppt-dl'))).catch((err) => {
+        console.error(err);
+        alert('PPT 頁面匯出失敗，請再試一次。');
+      });
+    });
   }
 
   function flash(sel, text) {
@@ -427,11 +815,51 @@
     window.setTimeout(() => { el.textContent = prev; }, 1200);
   }
 
+  function scaleBoardSlot(slot, s) {
+    const board = slot?.querySelector('.artboard');
+    if (!slot || !board) return;
+    const { w, h } = backdropPanelSize(slot.getAttribute('data-panel'));
+    slot.style.width = `${w * s}px`;
+    slot.style.height = `${h * s}px`;
+    board.style.width = `${w}px`;
+    board.style.height = `${h}px`;
+    board.style.transform = `scale(${s})`;
+    board.style.transformOrigin = 'top left';
+  }
+
   function fitBoard() {
     const stage = $('#stage');
+    if (!stage) return;
+    if (isBackdrop()) {
+      const rig = $('#backdropRig');
+      const led = $('#backdropLed');
+      if (!rig || !led) return;
+      const ledW = BACKDROP_SIDE.w + BACKDROP_CENTRE.w + BACKDROP_SIDE.w;
+      const sLed = Math.max(0.1, Math.min((stage.clientWidth - 16) / ledW, 1));
+      led.querySelectorAll('.board-slot').forEach((slot) => scaleBoardSlot(slot, sLed));
+      const wideSlot = $('[data-panel="wide"]');
+      const sWide = Math.max(0.12, Math.min((stage.clientWidth - 16) / BACKDROP_WIDE.w, 1));
+      scaleBoardSlot(wideSlot, sWide);
+      return;
+    }
+    if (isPpt()) {
+      const colW = Math.max(280, (stage.clientWidth - 32) / 2);
+      const s = Math.max(0.12, Math.min(colW / PPT_SIZE.w, 1));
+      document.querySelectorAll('#pptRig [data-ppt]').forEach((slot) => {
+        const board = slot.querySelector('.artboard');
+        if (!board) return;
+        slot.style.width = `${PPT_SIZE.w * s}px`;
+        slot.style.height = `${PPT_SIZE.h * s}px`;
+        board.style.width = `${PPT_SIZE.w}px`;
+        board.style.height = `${PPT_SIZE.h}px`;
+        board.style.transform = `scale(${s})`;
+        board.style.transformOrigin = 'top left';
+      });
+      return;
+    }
     const board = $('#artboard');
     const slot = $('#boardSlot');
-    if (!stage || !board || !slot) return;
+    if (!board || !slot) return;
     const { w, h } = boardSize();
     const pad = typeId === 'blast' ? 8 : 8;
     const s = Math.max(0.18, Math.min((stage.clientWidth - pad) / w, 1));
@@ -474,6 +902,52 @@
     });
   }
 
+  async function prepareInscription() {
+    try {
+      const img = await loadImage(INSCRIPTION_SRC);
+      const w = img.naturalWidth;
+      const h = img.naturalHeight;
+      const src = document.createElement('canvas');
+      src.width = w;
+      src.height = h;
+      const ctx = src.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      const data = ctx.getImageData(0, 0, w, h);
+      const px = data.data;
+      const rowInk = new Array(h).fill(0);
+      for (let y = 0; y < h; y += 1) {
+        let ink = 0;
+        for (let x = 0; x < w; x += 1) {
+          const i = (y * w + x) * 4;
+          const lum = (px[i] + px[i + 1] + px[i + 2]) / 3;
+          if (lum < 36) px[i + 3] = 0;
+          else if (lum < 70) px[i + 3] = Math.round(px[i + 3] * ((lum - 36) / 34));
+          if (px[i + 3] > 0) {
+            px[i] = 0xdd;
+            px[i + 1] = 0xc4;
+            px[i + 2] = 0x8e;
+          }
+          if (px[i + 3] > 40 && lum > 50) ink += 1;
+        }
+        rowInk[y] = ink;
+      }
+      ctx.putImageData(data, 0, 0);
+      const threshold = Math.max(8, Math.round(w * 0.004));
+      let y = h - 1;
+      while (y > 0 && rowInk[y] < threshold) y -= 1;
+      while (y > 0 && rowInk[y] >= threshold) y -= 1;
+      while (y > 0 && rowInk[y] < threshold) y -= 1;
+      const cropH = Math.max(1, Math.min(h, y + 16));
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = cropH;
+      canvas.getContext('2d').drawImage(src, 0, 0, w, cropH, 0, 0, w, cropH);
+      inscriptionUrl = canvas.toDataURL('image/png');
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
   function drawMaskedTile(ctx, img, y, w, h, stops) {
     const off = document.createElement('canvas');
     off.width = w;
@@ -492,8 +966,8 @@
     ctx.drawImage(off, 0, y);
   }
 
-  async function bakeCardBackdrop(canvas) {
-    const { w, h } = boardSize();
+  async function bakeCardBackdrop(canvas, size = boardSize()) {
+    const { w, h } = size;
     const dpr = 2;
     canvas.width = w * dpr;
     canvas.height = h * dpr;
@@ -502,6 +976,65 @@
     const ctx = canvas.getContext('2d');
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.scale(dpr, dpr);
+
+    if (isPpt()) {
+      const wash = ctx.createLinearGradient(0, 0, w, h);
+      wash.addColorStop(0, '#322b23');
+      wash.addColorStop(0.55, '#2a241e');
+      wash.addColorStop(1, '#221c17');
+      ctx.fillStyle = wash;
+      ctx.fillRect(0, 0, w, h);
+      try {
+        const hero = await loadImage('/invite/assets/invite-hero.png');
+        const sx = Math.round(hero.width * 0.05);
+        const sy = Math.round(hero.height * 0.03);
+        const sw = Math.round(hero.width * 0.9);
+        const sh = Math.round(hero.height * 0.58);
+        const dw = w * 0.56;
+        const dh = dw * (sh / sw);
+        const dx = w * 0.42;
+        const dy = h * -0.1;
+        const off = document.createElement('canvas');
+        off.width = w;
+        off.height = h;
+        const octx = off.getContext('2d');
+        octx.filter = 'grayscale(1) contrast(1.12) brightness(0.7)';
+        octx.drawImage(hero, sx, sy, sw, sh, dx, dy, dw, dh);
+        octx.filter = 'none';
+        octx.globalCompositeOperation = 'destination-in';
+        const edge = octx.createLinearGradient(dx, 0, dx + dw, 0);
+        edge.addColorStop(0, 'rgba(0,0,0,0)');
+        edge.addColorStop(0.16, 'rgba(0,0,0,0.28)');
+        edge.addColorStop(0.34, 'rgba(0,0,0,1)');
+        edge.addColorStop(0.78, 'rgba(0,0,0,1)');
+        edge.addColorStop(0.91, 'rgba(0,0,0,0.32)');
+        edge.addColorStop(1, 'rgba(0,0,0,0)');
+        octx.fillStyle = edge;
+        octx.fillRect(0, 0, w, h);
+        const vert = octx.createLinearGradient(0, dy, 0, dy + dh);
+        vert.addColorStop(0, 'rgba(0,0,0,0)');
+        vert.addColorStop(0.14, 'rgba(0,0,0,1)');
+        vert.addColorStop(0.86, 'rgba(0,0,0,1)');
+        vert.addColorStop(1, 'rgba(0,0,0,0)');
+        octx.fillStyle = vert;
+        octx.fillRect(0, 0, w, h);
+        ctx.save();
+        ctx.globalAlpha = 0.26;
+        ctx.drawImage(off, 0, 0, w, h);
+        ctx.restore();
+      } catch {
+        /* keep solid field */
+      }
+      const fade = ctx.createLinearGradient(0, 0, w, 0);
+      fade.addColorStop(0, 'rgba(42, 36, 30, 0.78)');
+      fade.addColorStop(0.36, 'rgba(42, 36, 30, 0.28)');
+      fade.addColorStop(0.62, 'rgba(42, 36, 30, 0.08)');
+      fade.addColorStop(0.88, 'rgba(42, 36, 30, 0.22)');
+      fade.addColorStop(1, 'rgba(42, 36, 30, 0.55)');
+      ctx.fillStyle = fade;
+      ctx.fillRect(0, 0, w, h);
+      return;
+    }
 
     const base = ctx.createLinearGradient(0, 0, w * 0.35, h);
     base.addColorStop(0, '#1a1714');
@@ -530,7 +1063,7 @@
       ctx.globalAlpha = 0.42;
       ctx.drawImage(cover, (w - dw) / 2 - w * 0.04, (h - dh) / 2, dw, dh);
       ctx.globalAlpha = 1;
-    } else {
+    } else if (!isBackdrop() && !isPpt()) {
       const hero = await loadImage('/invite/assets/invite-hero.png');
       const tileW = w;
       const tileH = Math.round(tileW * (1000 / 625));
@@ -553,7 +1086,11 @@
     ctx.fillRect(0, 0, w, h);
 
     const veil = ctx.createLinearGradient(0, 0, 0, h);
-    if (typeId === 'blast') {
+    if (isBackdrop() || isPpt()) {
+      veil.addColorStop(0, 'rgba(26,23,20,0.12)');
+      veil.addColorStop(0.55, 'rgba(26,23,20,0.22)');
+      veil.addColorStop(1, 'rgba(26,23,20,0.38)');
+    } else if (typeId === 'blast') {
       veil.addColorStop(0, 'rgba(26,23,20,0.55)');
       veil.addColorStop(0.42, 'rgba(26,23,20,0.72)');
       veil.addColorStop(1, 'rgba(26,23,20,0.88)');
@@ -602,14 +1139,35 @@
     ctx.restore();
   }
 
-  function lockLogoLayout(root) {
+  const PPT_LOGO_INK = '#edd59a';
+
+  function loadSvgImage(svgEl, w, h, fill) {
+    const clone = svgEl.cloneNode(true);
+    clone.setAttribute('width', String(w));
+    clone.setAttribute('height', String(h));
+    clone.querySelectorAll('path').forEach((path) => {
+      path.setAttribute('fill', fill);
+      path.removeAttribute('opacity');
+      path.style.opacity = '1';
+    });
+    const xml = new XMLSerializer().serializeToString(clone);
+    const url = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(xml)}`;
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error('svg logo raster failed'));
+      img.src = url;
+    });
+  }
+
+  async function lockLogoLayout(root) {
     const nodes = [...(root?.querySelectorAll('.logo-img, .logo-datadance') || [])];
     const prev = nodes.map((el) => ({
       el,
       style: el.getAttribute('style'),
       canvas: null,
     }));
-    prev.forEach((item) => {
+    await Promise.all(prev.map(async (item) => {
       const el = item.el;
       const rect = el.getBoundingClientRect();
       const boxW = Math.max(1, Math.round(el.clientWidth || rect.width));
@@ -636,11 +1194,41 @@
         item.canvas = canvas;
         return;
       }
-      el.style.width = `${boxW}px`;
-      el.style.height = `${boxH}px`;
-      el.style.maxWidth = 'none';
-      el.style.flex = 'none';
-    });
+      if (!el.classList.contains('logo-datadance')) {
+        el.style.width = `${boxW}px`;
+        el.style.height = `${boxH}px`;
+        el.style.maxWidth = 'none';
+        el.style.flex = 'none';
+        return;
+      }
+      const dpr = 2;
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(boxW * dpr);
+      canvas.height = Math.round(boxH * dpr);
+      canvas.className = `${el.className} logo-img`;
+      canvas.setAttribute('aria-hidden', 'true');
+      canvas.style.width = `${boxW}px`;
+      canvas.style.height = `${boxH}px`;
+      canvas.style.maxWidth = 'none';
+      canvas.style.flex = 'none';
+      try {
+        const img = await loadSvgImage(el, canvas.width, canvas.height, PPT_LOGO_INK);
+        const cctx = canvas.getContext('2d');
+        cctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.style.filter = 'none';
+      } catch {
+        el.style.width = `${boxW}px`;
+        el.style.height = `${boxH}px`;
+        el.querySelectorAll('path').forEach((path) => {
+          path.setAttribute('fill', PPT_LOGO_INK);
+          path.removeAttribute('opacity');
+          path.style.opacity = '1';
+        });
+        return;
+      }
+      el.replaceWith(canvas);
+      item.canvas = canvas;
+    }));
     return () => {
       prev.forEach((item) => {
         if (item.canvas) item.canvas.replaceWith(item.el);
@@ -669,6 +1257,19 @@
     return String(name || '').replace(/[\\/:*?"<>|]+/g, '').trim();
   }
 
+  function saveBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.rel = 'noopener';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 8000);
+  }
+
   function saveCanvas(canvas, filename) {
     return new Promise((resolve, reject) => {
       canvas.toBlob((blob) => {
@@ -676,12 +1277,7 @@
           reject(new Error('PNG blob failed'));
           return;
         }
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        a.click();
-        window.setTimeout(() => URL.revokeObjectURL(url), 2500);
+        saveBlob(blob, filename);
         resolve();
       }, 'image/png');
     });
@@ -689,8 +1285,8 @@
 
   let bakedBgCache = { key: '', canvas: null };
 
-  async function ensureBakedBg(canvas) {
-    const { w, h } = boardSize();
+  async function ensureBakedBg(canvas, size = boardSize()) {
+    const { w, h } = size;
     const key = `${typeId}:${w}x${h}`;
     if (bakedBgCache.canvas && bakedBgCache.key === key) {
       canvas.width = bakedBgCache.canvas.width;
@@ -700,7 +1296,7 @@
       canvas.getContext('2d').drawImage(bakedBgCache.canvas, 0, 0);
       return;
     }
-    await bakeCardBackdrop(canvas);
+    await bakeCardBackdrop(canvas, size);
     const copy = document.createElement('canvas');
     copy.width = canvas.width;
     copy.height = canvas.height;
@@ -713,22 +1309,25 @@
     const batchBtn = $('#mediaBatchBtn');
     const packBtn = $('#yafangPackBtn');
     const copyBtn = $('#copyBtn');
-    [pngBtn, batchBtn, packBtn, copyBtn].forEach((btn) => {
+    const pptxBtn = $('#pptxBtn');
+    const pptBtns = [...document.querySelectorAll('[data-ppt-dl]')];
+    [...backdropExportButtons(), ...pptBtns, pngBtn, batchBtn, packBtn, copyBtn, pptxBtn].forEach((btn) => {
       if (btn) btn.disabled = busy;
     });
-    if (batchBtn && label && !isYafangPack()) batchBtn.textContent = label;
+    if (batchBtn && label && !isYafangPack() && !isPpt()) batchBtn.textContent = label;
     if (packBtn && label && isYafangPack()) packBtn.textContent = label;
+    if (pptxBtn && label && isPpt()) pptxBtn.textContent = label;
     if (!busy && batchBtn) batchBtn.textContent = '批量下載媒體邀請函';
     if (!busy && packBtn) packBtn.textContent = '下載亞芳媒體+嘉賓空白模板';
+    if (!busy && pptxBtn) pptxBtn.textContent = '下載 PPTX';
     if (pngBtn && !busy) pngBtn.textContent = '下載 PNG';
     if (pngBtn && busy && !label) pngBtn.textContent = '匯出中…';
   }
 
-  async function captureBoard() {
+  async function captureBoard(board = $('#artboard'), size = boardSize()) {
     if (!window.html2canvas) {
       await loadScriptOnce('/partner-deck/assets/vendor/html2canvas.min.js');
     }
-    const board = $('#artboard');
     const card = board?.querySelector('.card');
     const baked = card?.querySelector('.card-baked-bg');
     if (!board || !card || !baked) throw new Error('Invite board not ready');
@@ -738,12 +1337,12 @@
     try {
       await waitForImages(card);
       if (document.fonts?.ready) await document.fonts.ready;
-      await ensureBakedBg(baked);
+      await ensureBakedBg(baked, size);
       card.classList.add('is-exporting');
-      unlockLogos = lockLogoLayout(card);
+      unlockLogos = await lockLogoLayout(card);
       await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-      const { w, h } = boardSize();
-      return await window.html2canvas(board, {
+      const { w, h } = size;
+      const shot = await window.html2canvas(board, {
         backgroundColor: '#1a1714',
         scale: 2,
         useCORS: true,
@@ -751,9 +1350,29 @@
         logging: false,
         width: w,
         height: h,
-        windowWidth: w,
-        windowHeight: h,
+        ignoreElements: (el) => {
+          if (!el || el === board) return false;
+          if (board.contains(el)) return false;
+          if (el.id === 'ppt-export-isolate') return false;
+          return Boolean(el.closest?.('.ppt-rig, .studio, .artboard, .page-photo, .page-bg, .page-veil, .page-mesh'));
+        },
+        onclone(doc, clonedBoard) {
+          const isolate = doc.getElementById('ppt-export-isolate');
+          if (isolate) {
+            [...doc.body.children].forEach((node) => {
+              if (node !== isolate) node.remove();
+            });
+          }
+          doc.querySelectorAll('.artboard').forEach((node) => {
+            if (node !== clonedBoard) node.remove();
+          });
+        },
       });
+      const copy = document.createElement('canvas');
+      copy.width = shot.width;
+      copy.height = shot.height;
+      copy.getContext('2d').drawImage(shot, 0, 0);
+      return copy;
     } finally {
       unlockLogos();
       card.classList.remove('is-exporting');
@@ -785,6 +1404,134 @@
     paintCard();
     syncNameField();
     syncYafangBar();
+    syncBackdropBar();
+    syncPptBar();
+  }
+
+  const BACKDROP_FILES = {
+    centre: { id: 'centre', name: '背景板-A-中間主屏-2048x1152.png', label: '中間' },
+    side: { id: 'side', name: '背景板-B-側板-867x1152.png', label: '側板' },
+    wide: { id: 'wide', name: '背景板-C-16比9整幅-1920x1080.png', label: '16:9' },
+  };
+
+  async function captureBackdropPanel(panel) {
+    const prevType = typeId;
+    typeId = 'backdrop';
+    const size = backdropPanelSize(panel);
+    const host = document.createElement('div');
+    host.setAttribute('aria-hidden', 'true');
+    host.style.cssText = `position:fixed;left:-12000px;top:0;width:${size.w}px;height:${size.h}px;overflow:hidden;pointer-events:none;`;
+    const board = document.createElement('div');
+    board.className = 'artboard';
+    host.appendChild(board);
+    document.body.appendChild(host);
+    paintBackdropCard(board, panel);
+    try {
+      await waitForImages(board);
+      return await captureBoard(board, size);
+    } finally {
+      host.remove();
+      typeId = prevType;
+    }
+  }
+
+  async function downloadBackdropPanel(panel) {
+    const file = BACKDROP_FILES[panel];
+    if (!file) return;
+    setExportBusy(true, `匯出${file.label}…`);
+    try {
+      const canvas = await captureBackdropPanel(panel);
+      await saveCanvas(canvas, file.name);
+    } finally {
+      setExportBusy(false);
+      fitBoard();
+    }
+  }
+
+  async function capturePptSlideCanvas(index) {
+    const slide = pptSlides()[index];
+    const board = document.getElementById(`pptBoard${index}`);
+    if (!slide || !board) return null;
+    const prevType = typeId;
+    typeId = 'ppt';
+    const parent = board.parentNode;
+    const next = board.nextSibling;
+    const prevStyle = board.getAttribute('style');
+    const host = document.createElement('div');
+    host.id = 'ppt-export-isolate';
+    host.setAttribute('aria-hidden', 'true');
+    host.style.cssText = `position:fixed;left:0;top:0;width:${PPT_SIZE.w}px;height:${PPT_SIZE.h}px;z-index:2147483000;overflow:hidden;background:#1a1714;`;
+    document.body.appendChild(host);
+    host.appendChild(board);
+    board.style.transform = 'none';
+    board.style.width = `${PPT_SIZE.w}px`;
+    board.style.height = `${PPT_SIZE.h}px`;
+    try {
+      await waitForImages(board);
+      if (document.fonts?.ready) await document.fonts.ready;
+      return await captureBoard(board, PPT_SIZE);
+    } finally {
+      if (next) parent.insertBefore(board, next);
+      else parent.appendChild(board);
+      if (prevStyle == null) board.removeAttribute('style');
+      else board.setAttribute('style', prevStyle);
+      host.remove();
+      typeId = prevType;
+      fitBoard();
+    }
+  }
+
+  async function downloadPptSlide(index) {
+    const slide = pptSlides()[index];
+    if (!slide) return;
+    setExportBusy(true, `匯出 ${slide.no}…`);
+    try {
+      const canvas = await capturePptSlideCanvas(index);
+      if (!canvas) return;
+      await saveCanvas(canvas, slide.file);
+    } finally {
+      setExportBusy(false);
+      fitBoard();
+    }
+  }
+
+  async function ensurePptxGen() {
+    if (window.PptxGenJS) return window.PptxGenJS;
+    await loadScriptOnce('/invite/assets/vendor/pptxgen.bundle.js');
+    if (!window.PptxGenJS) throw new Error('PptxGenJS unavailable');
+    return window.PptxGenJS;
+  }
+
+  async function downloadPptxDeck() {
+    const slides = pptSlides();
+    if (!slides.length) return;
+    setExportBusy(true, '準備 PPTX…');
+    try {
+      const PptxGenJS = await ensurePptxGen();
+      const pptx = new PptxGenJS();
+      const slideW = 13.33333333;
+      const slideH = 7.5;
+      pptx.defineLayout({ name: 'WIDE_16x9', width: slideW, height: slideH });
+      pptx.layout = 'WIDE_16x9';
+      pptx.title = '《幣安人生》書友見面會';
+      pptx.author = 'Binance Life Book Club';
+      const pages = [];
+      for (let i = 0; i < slides.length; i += 1) {
+        setExportBusy(true, `匯出 PPTX ${i + 1}/${slides.length}`);
+        const canvas = await capturePptSlideCanvas(i);
+        if (!canvas) continue;
+        pages.push(canvas.toDataURL('image/jpeg', 0.92));
+        await sleep(40);
+      }
+      pages.forEach((data) => {
+        const page = pptx.addSlide();
+        page.addImage({ data, x: 0, y: 0, w: slideW, h: slideH });
+      });
+      await pptx.writeFile({ fileName: `幣安人生-書友見面會-${slides.length}頁.pptx` });
+    } finally {
+      setExportBusy(false);
+      fitBoard();
+    }
   }
 
   async function downloadYafangPack() {
