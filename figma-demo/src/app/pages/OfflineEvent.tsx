@@ -120,9 +120,11 @@ export default function OfflineEvent() {
                 </div>
               ))}
             </dl>
-            <p className="mt-6 text-sm leading-relaxed text-muted-foreground whitespace-pre-line">
-              {t("offlineEvent.address")}
-            </p>
+            {t("offlineEvent.address") ? (
+              <p className="mt-6 text-sm leading-relaxed text-muted-foreground whitespace-pre-line">
+                {t("offlineEvent.address")}
+              </p>
+            ) : null}
           </div>
 
           <div className={`space-y-4 p-6 md:p-8 ${CARD_SURFACE}`}>
@@ -143,7 +145,7 @@ export default function OfflineEvent() {
           <div className={`w-full max-w-sm overflow-hidden ${CARD_SURFACE}`}>
             <img
               src={OFFLINE_EVENT_POSTER_SRC}
-              alt=""
+              alt={t("offlineEvent.launchHeadline")}
               className="w-full object-contain"
               loading="eager"
               decoding="async"
@@ -222,25 +224,6 @@ export default function OfflineEvent() {
         <h2 id="offline-event-agenda" className="mb-6 font-display text-2xl md:text-3xl text-foreground">
           {t("offlineEvent.agendaTitle")}
         </h2>
-        <div className={`mb-6 space-y-2 p-6 md:p-8 ${CARD_SURFACE}`}>
-          <p className="text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">{t("offlineEvent.agendaTopicLabel")}</span>
-            {t("offlineEvent.agendaTopic")}
-          </p>
-          <p className="text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">{t("offlineEvent.agendaTimeLabel")}</span>
-            {t("offlineEvent.agendaTime")}
-          </p>
-          <p className="text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">{t("offlineEvent.agendaVenueLabel")}</span>
-            {t("offlineEvent.agendaVenue")}
-          </p>
-          <p className="text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">{t("offlineEvent.agendaHostLabel")}</span>
-            {t("offlineEvent.agendaHost")}
-          </p>
-        </div>
-
         <div className={`overflow-x-auto ${CARD_SURFACE}`}>
           <table className="w-full min-w-[36rem] text-left text-sm">
             <thead>
@@ -254,7 +237,7 @@ export default function OfflineEvent() {
             </thead>
             <tbody>
               {agendaRows.map((row) => (
-                <tr key={row.time} className="border-b border-border/40 last:border-0">
+                <tr key={`${row.time}-${row.segment}`} className="border-b border-border/40 last:border-0">
                   <td className="px-4 py-3 align-top font-tech text-xs text-gold/85 whitespace-nowrap">{row.time}</td>
                   <td className="px-4 py-3 align-top font-medium text-foreground">{row.segment}</td>
                   <td className="px-4 py-3 align-top text-muted-foreground leading-relaxed">{row.content}</td>

@@ -40,6 +40,7 @@ export default function PosterPreviewLab() {
           t("chronicle.principleLabels.ship_or_quit"),
         ],
         priceLabel: t("chronicle.posterPrice", { price: "$8,888,888,888" }),
+        disclaimer: t("chronicle.priceDisclaimer"),
         inviteUrl: "https://czlife.club/club/chronicle",
         title: t("chronicle.bookTitle"),
         subtitle: t("chronicle.kicker"),

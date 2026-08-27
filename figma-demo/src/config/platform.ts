@@ -73,8 +73,8 @@ export function getBookStandardAirdropPublicCode(): string {
   return envString("VITE_IPDEX_BOOK_STANDARD_AIRDROP_PUBLIC_CODE");
 }
 
-/** Hide My Binance Life nav tab and campaign banners until the flow is ready. */
-export const SHOW_CHRONICLE_CAMPAIGN = false;
+/** My Binance Life nav tab and campaign banners on Home / Join. */
+export const SHOW_CHRONICLE_CAMPAIGN = true;
 
 /**
  * My Binance Life (chronicle) activity FD proof — free airdrop, separate from standard/premium membership.
@@ -263,7 +263,7 @@ export const BOOK_CLUB_TELEGRAM_QR_SRC = "/telegram-czlifeclub-qr.png" as const;
 /** Offline book-club launch event — Telegram group QR on `/event`. */
 export const OFFLINE_EVENT_REGISTER_QR_SRC = BOOK_CLUB_TELEGRAM_QR_SRC;
 
-export const OFFLINE_EVENT_POSTER_SRC = "/offline-event-poster.png" as const;
+export const OFFLINE_EVENT_POSTER_SRC = "/offline-event-poster.png?v=meetup-20260826" as const;
 
 /** On-site redeem QR deep link — opens account redeem flow after login. */
 export { redeemScanPath, redeemScanUrl } from "../lib/redeemDeepLink";

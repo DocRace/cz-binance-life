@@ -3,7 +3,7 @@
     "book": "《幣安人生》",
     "meeting": "書友線下見面會",
     "date": "2026年8月27日",
-    "time": "09:20–11:00",
+    "time": "09:30–11:00",
     "venue": "香港中環交易廣場",
     "blastVenue": "香港中環交易廣場第二座40樓4005–07室",
     "speakers": "謝亞芳 × CZ",
@@ -45,6 +45,19 @@
       "body": "《幣安人生》記錄了CZ一路走來的經歷與思考。本次見面會將圍繞「選擇、成長、創業與長期主義」，由資深媒體人謝亞芳與CZ展開對談，並與現場嘉賓和書友分享交流。",
       "closing": "期待與您見面，共度一場真誠而有啟發的書友相聚。",
       "format": "定向邀請｜閉門交流",
+      "note": ""
+    },
+    "poster": {
+      "id": "poster",
+      "label": "活動海報",
+      "subtitle": "書友見面會",
+      "nameLabel": "",
+      "namePlaceholder": "",
+      "greetingPrefix": "",
+      "lead": "",
+      "body": "",
+      "closing": "",
+      "format": "",
       "note": ""
     },
     "yafang": {
@@ -125,13 +138,23 @@
   ],
   "blastVenuePartners": [],
   "backdropPartners": [
+    { "id": "bnb", "name": "BNB Chain" },
     { "id": "press", "name": "商務印書館" },
     { "id": "datadance", "name": "DataDance" },
     { "id": "yafang", "name": "亞芳創變派" },
     { "id": "hash", "name": "HASH GLOBAL" },
-    { "id": "bnb", "name": "BNB Chain" },
     { "id": "ipdex", "name": "IPDEX" },
     { "id": "onebook", "name": "一本讀書會" },
+    { "id": "hku", "name": "香港大學創立方" }
+  ],
+  "pptWallPartners": [
+    { "id": "bnb", "name": "BNB Chain" },
+    { "id": "press", "name": "商務印書館" },
+    { "id": "datadance", "name": "DataDance" },
+    { "id": "yafang", "name": "亞芳創變派" },
+    { "id": "hash", "name": "HASH GLOBAL" },
+    { "id": "onebook", "name": "一本讀書會" },
+    { "id": "ipdex", "name": "IPDEX" },
     { "id": "hku", "name": "香港大學創立方" }
   ],
   "pptSlides": [
@@ -144,98 +167,75 @@
       "kicker": "2026.08.27",
       "title": "《幣安人生》書友會",
       "subtitle": "書友見面會",
-      "when": "2026年8月27日　星期四　09:20–11:00",
-      "venue": "香港中環交易廣場",
       "showQr": true,
       "qrs": [
-        { "id": "site", "src": "./assets/czlife-home-qr.png", "label": "掃碼訪問官網", "framed": false },
+        {
+          "id": "chronicle",
+          "src": "./assets/czlife-chronicle-qr.png",
+          "label": "參與我的幣安人生",
+          "url": "https://czlife.club/club/chronicle"
+        },
         { "id": "telegram", "src": "./assets/telegram-czlifeclub-qr.png", "label": "掃碼入群" }
       ]
     },
     {
-      "id": "agenda",
-      "no": "02",
-      "layout": "agenda",
-      "short": "議程",
-      "file": "PPT-02-今天的90分鐘.png",
-      "kicker": "《幣安人生》書友會",
-      "title": "今天的議程",
-      "lead": "從書友會匯報，到對談、提問與發佈",
-      "foot": "活動議程 | 09:20–11:00",
-      "rows": [
-        ["09:25–09:50", "書友會匯報"],
-        ["09:55–10:25", "謝亞芳 × CZ 對談"],
-        ["10:25–10:45", "大學生提問"],
-        ["10:45–10:50", "#我的幣安人生 活動發佈儀式"],
-        ["10:50–11:00", "活動收尾"]
-      ]
-    },
-    {
-      "id": "mingle",
-      "no": "03",
-      "layout": "section",
-      "short": "匯報",
-      "file": "PPT-03-書友會匯報.png",
-      "kicker": "《幣安人生》書友會",
-      "time": "09:25–09:50",
-      "title": "書友會匯報",
-      "lead": "書友會進展，與現場書友見面",
-      "railFoot": "書友會匯報"
-    },
-    {
       "id": "talk",
-      "no": "04",
+      "no": "02",
       "layout": "guest",
       "short": "對談",
-      "file": "PPT-04-謝亞芳xCZ.png",
+      "file": "PPT-02-謝亞芳xCZ.png",
       "kicker": "《幣安人生》書友會",
-      "time": "09:55–10:25",
       "title": "特邀對談",
+      "logo": "yafang",
       "speakers": [
         { "name": "謝亞芳", "role": "資深媒體人" },
         { "name": "CZ", "role": "《幣安人生》作者" }
-      ],
-      "lead": "選擇、成長、創業與長期主義",
-      "railFoot": "人物對談"
+      ]
     },
     {
       "id": "qa",
-      "no": "05",
+      "no": "03",
       "layout": "section",
-      "short": "提問",
-      "file": "PPT-05-大學生提問.png",
+      "short": "共話",
+      "file": "PPT-03-與大學生共話成長.png",
       "kicker": "《幣安人生》書友會",
-      "time": "10:25–10:45",
-      "title": "大學生提問",
-      "lead": "精選現場問題，控制節奏",
-      "railFoot": "現場提問"
+      "title": "與大學生共話成長"
     },
     {
       "id": "launch",
-      "no": "06",
-      "layout": "section",
+      "no": "04",
+      "layout": "launch",
       "short": "發佈",
-      "file": "PPT-06-我的幣安人生.png",
+      "file": "PPT-04-我的幣安人生.png",
       "kicker": "《幣安人生》書友會",
-      "time": "10:45–10:50",
       "title": "#我的幣安人生",
-      "lead": "介紹活動詳情與進展",
-      "railFoot": "活動發佈儀式"
+      "showQr": true,
+      "qrs": [
+        {
+          "id": "chronicle",
+          "src": "./assets/czlife-chronicle-qr.png",
+          "label": "掃碼撰寫我的幣安人生",
+          "url": "https://czlife.club/club/chronicle"
+        }
+      ]
     },
     {
       "id": "close",
-      "no": "07",
+      "no": "05",
       "layout": "section",
       "short": "收尾",
-      "file": "PPT-07-相聚有期.png",
+      "file": "PPT-05-相聚有期.png",
       "kicker": "《幣安人生》書友會",
-      "time": "10:50–11:00",
-      "title": "相聚有期",
-      "lead": "CZ寄語 · 主持總結 · 全場合影",
-      "railFoot": "活動收尾",
-      "showQr": true,
-      "qrLabel": "掃碼加入 Telegram 書友會",
-      "qrHandle": "t.me/czlifeclub"
+      "title": "相聚有期"
+    },
+    {
+      "id": "wall",
+      "no": "06",
+      "layout": "wall",
+      "short": "Logo牆",
+      "file": "PPT-06-Logo牆.png",
+      "kicker": "《幣安人生》書友會",
+      "title": "幣安人生書友會"
     }
   ],
   "mediaBatch": [

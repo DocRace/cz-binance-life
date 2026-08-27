@@ -44,6 +44,49 @@ function inviteScore(e) {
   return Number(e.inviteCount || e.voteCount || 0);
 }
 
+/** Internal test authors — hide from public ranking only; keep rows in the store. */
+export function isHiddenLeaderboardAuthor(name) {
+  const n = `${name || ''}`.trim().toLowerCase();
+  if (!n) return false;
+  if (n === 'iris' || n.startsWith('iris ')) return true;
+  if (n === 'race' || n.startsWith('race ')) return true;
+  if (n === '瑞' || n.startsWith('瑞')) return true;
+  if (n.startsWith('0xd3d7d1aa')) return true;
+  return false;
+}
+
+export function normalizeAuthorKey(name) {
+  return `${name || ''}`.trim().toLowerCase();
+}
+
+function collapseByAuthor(rows) {
+  const best = new Map();
+  for (const e of rows) {
+    const key = normalizeAuthorKey(e.authorName);
+    if (!key) continue;
+    const prev = best.get(key);
+    if (!prev) {
+      best.set(key, e);
+      continue;
+    }
+    const pop = inviteScore(e);
+    const prevPop = inviteScore(prev);
+    const newer = `${e.createdAt || ''}`.localeCompare(`${prev.createdAt || ''}`) > 0;
+    if (pop > prevPop || (pop === prevPop && newer)) best.set(key, e);
+  }
+  return [...best.values()];
+}
+
+function findEntryByAuthor(state, name) {
+  const key = normalizeAuthorKey(name);
+  if (!key) return null;
+  const matches = Object.values(state.entries).filter(
+    (e) => normalizeAuthorKey(e.authorName) === key,
+  );
+  if (!matches.length) return null;
+  return collapseByAuthor(matches)[0];
+}
+
 export function createChronicleRankStore(cfg) {
   let db = null;
   let writeQueue = Promise.resolve();
@@ -90,7 +133,10 @@ export function createChronicleRankStore(cfg) {
 
   function listSorted() {
     const state = ensureLoaded();
-    return Object.values(state.entries)
+    const visible = collapseByAuthor(
+      Object.values(state.entries).filter((e) => !isHiddenLeaderboardAuthor(e.authorName)),
+    );
+    return visible
       .map((e) => ({
         ...e,
         inviteCount: inviteScore(e),
@@ -194,6 +240,7 @@ export function createChronicleRankStore(cfg) {
       price,
       tags,
       ownerUserId,
+      refEntryId,
     }) {
       const phase = resolveRankPhase(cfg);
       if (phase === 'disabled') return { ok: false, code: 'RANK_DISABLED' };
@@ -206,8 +253,13 @@ export function createChronicleRankStore(cfg) {
       if (!name) return { ok: false, code: 'AUTHOR_REQUIRED' };
 
       const state = ensureLoaded();
-      const entryId = entryIdFromShareToken(token);
-      const existing = state.entries[entryId];
+      const tokenId = entryIdFromShareToken(token);
+      const existing = resolveEnrollExisting(state, {
+        tokenId,
+        authorName: name,
+        ownerUserId,
+      });
+      const entryId = existing?.entryId || tokenId;
       if (phase === 'ended' && !existing) {
         return { ok: false, code: 'RANK_ENDED' };
       }
@@ -250,8 +302,68 @@ export function createChronicleRankStore(cfg) {
         }
       }
       state.entries[entryId] = next;
+      if (phase === 'active' && refEntryId) {
+        applyInviteAttribution(state, {
+          refEntryId,
+          userId: ownerUserId,
+          completerEntryId: entryId,
+        });
+      }
       void persist();
-      return { ok: true, entry: publicEntry(next) };
+      return { ok: true, entry: publicEntry(state.entries[entryId] || next) };
+    },
+
+    listMine(userId) {
+      const uid = `${userId || ''}`.trim();
+      if (!uid) return [];
+      const state = ensureLoaded();
+      return Object.values(state.entries)
+        .filter((e) => e.ownerUserId === uid)
+        .sort((a, b) => `${b.updatedAt || ''}`.localeCompare(`${a.updatedAt || ''}`))
+        .map((e) => publicEntry(e));
+    },
+
+    bindOwner({ entryId, shareToken, authorName, userId }) {
+      const uid = `${userId || ''}`.trim();
+      if (!uid) return { ok: false, code: 'LOGIN_REQUIRED' };
+      const state = ensureLoaded();
+      const id = `${entryId || ''}`.trim();
+      const token = `${shareToken || ''}`.trim();
+      const name = `${authorName || ''}`.trim();
+      let e = id ? state.entries[id] : null;
+      if (!e && token) e = state.entries[entryIdFromShareToken(token)];
+      if (e) {
+        if (e.ownerUserId && e.ownerUserId !== uid) {
+          return { ok: false, code: 'NOT_OWNER' };
+        }
+        if (!e.ownerUserId) {
+          e.ownerUserId = uid;
+          e.updatedAt = new Date().toISOString();
+          void persist();
+        }
+        return { ok: true, entry: publicEntry(e), items: [publicEntry(e)] };
+      }
+      if (!name) return { ok: false, code: 'ENTRY_NOT_FOUND' };
+      const key = normalizeAuthorKey(name);
+      const matches = Object.values(state.entries).filter(
+        (row) => normalizeAuthorKey(row.authorName) === key,
+      );
+      if (!matches.length) return { ok: false, code: 'ENTRY_NOT_FOUND' };
+      if (matches.some((row) => row.ownerUserId && row.ownerUserId !== uid)) {
+        return { ok: false, code: 'AUTHOR_OWNED' };
+      }
+      const nowIso = new Date().toISOString();
+      let changed = false;
+      for (const row of matches) {
+        if (!row.ownerUserId) {
+          row.ownerUserId = uid;
+          row.updatedAt = nowIso;
+          changed = true;
+        }
+      }
+      if (changed) void persist();
+      const items = matches.map((row) => publicEntry(row));
+      return { ok: true, entry: items[0] || null, items };
     },
 
     getEntry(entryId) {
@@ -284,29 +396,12 @@ export function createChronicleRankStore(cfg) {
       if (phase !== 'active') {
         return { ok: false, code: phase === 'ended' ? 'RANK_ENDED' : 'RANK_NOT_ACTIVE' };
       }
-      if (!userId) return { ok: false, code: 'LOGIN_REQUIRED' };
-      const refId = `${refEntryId || ''}`.trim();
       const state = ensureLoaded();
-      const ref = state.entries[refId];
-      if (!ref) return { ok: false, code: 'ENTRY_NOT_FOUND' };
-      if (ref.ownerUserId && ref.ownerUserId === userId) {
-        return { ok: false, code: 'SELF_INVITE' };
-      }
-      const existing = state.invites[userId];
-      if (existing) {
-        return { ok: true, already: true, entry: this.getEntry(existing.refEntryId) };
-      }
-      const nowIso = new Date().toISOString();
-      state.invites[userId] = {
-        refEntryId: refId,
-        completerEntryId: `${completerEntryId || ''}`.trim() || null,
-        createdAt: nowIso,
-      };
-      ref.inviteCount = inviteScore(ref) + 1;
-      ref.voteCount = ref.inviteCount;
-      ref.updatedAt = nowIso;
-      void persist();
-      return { ok: true, already: false, entry: this.getEntry(refId) };
+      const out = applyInviteAttribution(state, { refEntryId, userId, completerEntryId });
+      if (!out.ok) return out;
+      if (!out.already) void persist();
+      const lookId = out.refEntryId || `${refEntryId || ''}`.trim();
+      return { ok: true, already: Boolean(out.already), entry: lookId ? this.getEntry(lookId) : null };
     },
 
     claim({ entryId, userId }) {
@@ -361,6 +456,74 @@ export function createChronicleRankStore(cfg) {
       return state.rewards[userId] || [];
     },
   };
+}
+
+function resolveEnrollExisting(state, { tokenId, authorName, ownerUserId }) {
+  const byToken = state.entries[tokenId];
+  if (byToken) return byToken;
+  const byAuthor = findEntryByAuthor(state, authorName);
+  if (!byAuthor) return null;
+  const uid = `${ownerUserId || ''}`.trim();
+  if (!uid) return byAuthor;
+  if (!byAuthor.ownerUserId) return byAuthor;
+  return null;
+}
+
+function inviteDedupeKey(userId, completerEntryId) {
+  const uid = `${userId || ''}`.trim();
+  if (uid) return `u:${uid}`;
+  const cid = `${completerEntryId || ''}`.trim();
+  if (cid) return `c:${cid}`;
+  return '';
+}
+
+/** Count a scan→write pair. Login is optional; completer entry id is enough. */
+function applyInviteAttribution(state, { refEntryId, userId, completerEntryId }) {
+  const refId = `${refEntryId || ''}`.trim();
+  const uid = `${userId || ''}`.trim();
+  const completerId = `${completerEntryId || ''}`.trim();
+  if (!refId) return { ok: false, code: 'REF_REQUIRED' };
+  const dedupeKey = inviteDedupeKey(uid, completerId);
+  if (!dedupeKey) return { ok: false, code: 'INVITE_KEY_REQUIRED' };
+
+  const ref = state.entries[refId];
+  if (!ref) return { ok: false, code: 'ENTRY_NOT_FOUND' };
+  if (completerId && completerId === refId) return { ok: false, code: 'SELF_INVITE' };
+  if (uid && ref.ownerUserId && ref.ownerUserId === uid) {
+    return { ok: false, code: 'SELF_INVITE' };
+  }
+
+  const completer = completerId ? state.entries[completerId] : null;
+  if (
+    completer &&
+    normalizeAuthorKey(completer.authorName) === normalizeAuthorKey(ref.authorName)
+  ) {
+    return { ok: false, code: 'SELF_INVITE' };
+  }
+
+  const existing = state.invites[dedupeKey] || (uid ? state.invites[uid] : null);
+  if (existing) {
+    return { ok: true, already: true, refEntryId: existing.refEntryId };
+  }
+  if (completerId) {
+    const alreadyByCompleter = Object.values(state.invites).some(
+      (row) => row && row.completerEntryId === completerId,
+    );
+    if (alreadyByCompleter) {
+      return { ok: true, already: true };
+    }
+  }
+
+  const nowIso = new Date().toISOString();
+  state.invites[dedupeKey] = {
+    refEntryId: refId,
+    completerEntryId: completerId || null,
+    createdAt: nowIso,
+  };
+  ref.inviteCount = inviteScore(ref) + 1;
+  ref.voteCount = ref.inviteCount;
+  ref.updatedAt = nowIso;
+  return { ok: true, already: false, refEntryId: refId };
 }
 
 function findReward(state, userId, entryId) {

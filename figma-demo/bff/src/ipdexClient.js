@@ -67,12 +67,29 @@ export async function ipdexFacadeFetch(env, opts) {
   }
 
   const url = buildUrl(env.IPDEX_CLIENT_ORIGIN, pathname, sortedQ);
+  const timeoutMs = Number(opts.timeoutMs);
+  const signal = Number.isFinite(timeoutMs) && timeoutMs > 0 ? AbortSignal.timeout(timeoutMs) : undefined;
 
-  const res = await fetch(url, {
-    method: methodUp,
-    headers,
-    body: reqBody,
-  });
+  let res;
+  try {
+    res = await fetch(url, {
+      method: methodUp,
+      headers,
+      body: reqBody,
+      signal,
+    });
+  } catch (err) {
+    const timedOut = err?.name === 'AbortError' || err?.name === 'TimeoutError';
+    return {
+      ok: false,
+      status: timedOut ? 504 : 502,
+      json: {
+        code: timedOut ? -10607 : -1,
+        message: timedOut ? 'Upstream redeem timed out; retry shortly' : (err?.message || 'upstream_fetch_failed'),
+        data: null,
+      },
+    };
+  }
 
   const text = await res.text();
   let json;

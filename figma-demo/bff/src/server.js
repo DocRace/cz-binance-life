@@ -605,6 +605,7 @@ async function boot() {
       },
       accessToken,
       idempotencyKey,
+      timeoutMs: 45_000,
     });
     res.status(out.json?.code === 0 ? 200 : 400).json(out.json);
   });
@@ -682,13 +683,14 @@ async function boot() {
 
   app.post('/api/bff/chronicle/rank/attribute', async (req, res) => {
     const userId = await resolveUserId(req);
-    if (!userId) {
-      return res.status(401).json({ code: -10005, message: 'LOGIN_REQUIRED', data: null });
+    const completerEntryId = `${req.body?.completerEntryId || ''}`.trim();
+    if (!userId && !completerEntryId) {
+      return res.status(400).json({ code: -10001, message: 'INVITE_KEY_REQUIRED', data: null });
     }
     const out = rankStore.attributeInvite({
       refEntryId: req.body?.refEntryId,
       userId,
-      completerEntryId: req.body?.completerEntryId,
+      completerEntryId,
     });
     if (!out.ok) {
       return res.status(400).json({ code: -10001, message: out.code, data: null });
@@ -729,6 +731,7 @@ async function boot() {
       price: req.body?.price,
       tags: req.body?.tags,
       ownerUserId: userId,
+      refEntryId: req.body?.refEntryId,
     });
     if (!out.ok) {
       return res.status(400).json({ code: -10001, message: out.code, data: null });
@@ -758,6 +761,31 @@ async function boot() {
       return res.status(401).json({ code: -10005, message: 'LOGIN_REQUIRED', data: null });
     }
     res.json({ code: 0, message: 'ok', data: { rewards: rankStore.myRewards(userId) } });
+  });
+
+  app.get('/api/bff/chronicle/rank/mine', async (req, res) => {
+    const userId = await resolveUserId(req);
+    if (!userId) {
+      return res.status(401).json({ code: -10005, message: 'LOGIN_REQUIRED', data: null });
+    }
+    res.json({ code: 0, message: 'ok', data: { items: rankStore.listMine(userId) } });
+  });
+
+  app.post('/api/bff/chronicle/rank/bind', async (req, res) => {
+    const userId = await resolveUserId(req);
+    if (!userId) {
+      return res.status(401).json({ code: -10005, message: 'LOGIN_REQUIRED', data: null });
+    }
+    const out = rankStore.bindOwner({
+      entryId: req.body?.entryId,
+      shareToken: req.body?.shareToken,
+      authorName: req.body?.authorName,
+      userId,
+    });
+    if (!out.ok) {
+      return res.status(400).json({ code: -10001, message: out.code, data: null });
+    }
+    res.json({ code: 0, message: 'ok', data: out.entry });
   });
 
   app.listen(PORT, () => {

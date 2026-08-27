@@ -5,7 +5,6 @@ import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import bookCover from "../../assets/book-cover-hero.png";
 import LanguageSwitcher from "./LanguageSwitcher";
-import { DataDanceWordmark } from "./DataDanceWordmark";
 import PartnerLogoMark from "./PartnerLogoMark";
 import { SiteNavDrawer, SiteNavMenuButton, useSiteNavItems } from "./SiteNavDrawer";
 import {
@@ -42,6 +41,7 @@ export default function Layout() {
   const partnerLinkClass = "text-muted-foreground transition-colors hover:text-gold";
   const partnerBrandLinkClass =
     "inline-flex items-center gap-1 font-tech text-[11px] text-muted-foreground/90 transition-colors hover:text-gold";
+  const partnerLogoLinkClass = "inline-flex transition-opacity hover:opacity-80";
 
   const navItems = useSiteNavItems();
 
@@ -222,7 +222,15 @@ export default function Layout() {
             <div className="grid grid-cols-1 gap-8 md:gap-6 lg:grid-cols-3 lg:gap-0 lg:items-start">
               {/* Commercial Press — left on wide screens */}
               <div className="flex flex-col items-center gap-3 text-center lg:items-start lg:text-left lg:pr-8">
-                <PartnerLogoMark id="press" size="sm" />
+                <a
+                  href={COMMERCIAL_PRESS_WECHAT_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={partnerLogoLinkClass}
+                  aria-label={t("footer.publisherWechatAria")}
+                >
+                  <PartnerLogoMark id="press" size="sm" />
+                </a>
                 <h4 className={partnerTitleClass}>{t("footer.publisherSocialTitle")}</h4>
                 <p className={partnerDescClass}>{t("footer.publisherDesc")}</p>
                 <div className="flex items-center gap-2">
@@ -242,7 +250,15 @@ export default function Layout() {
 
               {/* IPDEX — center */}
               <div className="flex flex-col items-center gap-3 border-border/50 border-t pt-8 text-center lg:border-t-0 lg:border-x lg:px-8 lg:pt-0">
-                <PartnerLogoMark id="ipdex" size="sm" />
+                <a
+                  href={ipdexBrandHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={partnerLogoLinkClass}
+                  aria-label={t("footer.ipdexWebsiteAria")}
+                >
+                  <PartnerLogoMark id="ipdex" size="sm" />
+                </a>
                 <h4 className={partnerTitleClass}>IPDEX</h4>
                 <p className={partnerDescClass}>{t("footer.poweredByIpdex")}</p>
                 <div className="flex flex-wrap items-center justify-center gap-2">
@@ -280,18 +296,18 @@ export default function Layout() {
 
               {/* DataDance — right on wide screens */}
               <div className="flex flex-col items-center gap-3 border-t border-border/40 pt-8 text-center lg:items-end lg:border-t-0 lg:pl-8 lg:pt-0 lg:text-right">
+                <a
+                  href={datadanceHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={partnerLogoLinkClass}
+                  aria-label={t("footer.datadanceWebsiteAria")}
+                >
+                  <PartnerLogoMark id="datadance" size="sm" className="!h-6" />
+                </a>
                 <h4 className={partnerTitleClass}>{t("footer.datadanceTitle")}</h4>
                 <p className={partnerDescClass}>{t("footer.datadanceDesc")}</p>
-                <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-end">
-                  <a
-                    href={datadanceHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex text-foreground/90 transition-colors hover:text-gold"
-                    aria-label={t("footer.datadanceWebsiteAria")}
-                  >
-                    <DataDanceWordmark className="h-[1.5625rem] w-[9rem]" />
-                  </a>
+                <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-end">
                   <a
                     href={datadanceHref}
                     target="_blank"

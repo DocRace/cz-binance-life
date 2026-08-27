@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import PurchaseModal from "../components/PurchaseModal";
 import AirdropClaimModal from "../components/AirdropClaimModal";
 import MembershipTiers from "../components/MembershipTiers";
+import AccountNoticeMarquee from "../components/AccountNoticeMarquee";
 import ChronicleCampaignBanner from "../components/ChronicleCampaignBanner";
 import { SHOW_CHRONICLE_CAMPAIGN } from "../../config/platform";
 import Book3DCover from "../components/Book3DCover";
@@ -22,8 +23,8 @@ import {
   CONTENT_NARROW,
   CONTENT_WIDE,
   GRID_GAP,
-  PAGE_SHELL_HOME,
   SECTION_SPACING_LG,
+  SITE_CONTAINER_X,
 } from "../layout/pageLayout";
 
 export default function Home() {
@@ -47,7 +48,8 @@ export default function Home() {
 
   return (
     <>
-      <div className={PAGE_SHELL_HOME}>
+      <div className={`${SITE_CONTAINER_X} pb-24 pt-4 md:pb-32 md:pt-5`}>
+        <AccountNoticeMarquee className="mb-3" />
         {SHOW_CHRONICLE_CAMPAIGN ? (
           <ChronicleCampaignBanner className={SECTION_SPACING_LG} />
         ) : null}

@@ -51,7 +51,8 @@
     "contractAddress": "컨트랙트",
     "tokenId": "Token ID",
     "chain": "체인",
-    "tokenStandard": "토큰 표준",
+    "tokenStandard": "유형",
+    "tokenStandardValue": "디지털 배지",
     "collectionId": "컬렉션 UUID",
     "attributes": "속성",
     "noAttributes": "속성 없음"
@@ -93,28 +94,28 @@
     "dateLabel": "날짜",
     "date": "2026년 8월 27일 (목)",
     "timeLabel": "시간",
-    "time": "09:20 – 11:00 (약 100분, 11:15 이전 종료)",
+    "time": "09:30 – 11:00",
     "venueLabel": "장소",
-    "venue": "홍콩 중환 거래광장 2좌 40층",
-    "address": "홍콩 중환 거래광장 2좌 40층 4005–07실\n(MTR 중환역 / 홍콩역)",
+    "venue": "홍콩 중환 거래광장",
+    "address": "",
     "hostLabel": "사회",
     "host": "셰야팡",
     "languageLabel": "언어",
     "language": "표준 중국어(만다린)",
     "flowParagraphs": [
       "이번 밋업의 주제는 「청년의 창업과 성장: 선택, 성장, 장기주의」입니다. 시니어 언론인 셰야팡이 CZ와 대담하고 「#나의 바이낸스 인생」을 발표합니다.",
-      "2026년 8월 27일 오전, 홍콩 중환 거래광장에서 진행합니다. 본 프로그램 약 75분, 예비 15분, 11:15 이전 종료. 좌석이 제한되어 초대제·비공개입니다.",
+      "2026년 8월 27일 오전, 홍콩 중환 거래광장에서 진행합니다. 좌석이 제한되어 초대제·비공개입니다.",
       "《바이낸스 인생》은 자오창펑(CZ)의 성장과 창업을 기록합니다. 단기 업계 이슈가 아니라, 창업자가 마주하는 선택, 변화 속 성장, 정말 중요한 일의 지속을 이야기합니다.",
       "「#나의 바이낸스 인생」은 책의 선택과 성장에서 출발해, 독자 자신의 경험·판단·장기 고수를 이야기하도록 초대합니다.",
       "창업자와 대학생이 현장에서 질문합니다(대학생 약 60명 예정). CZ의 메시지, 총평, 공식 단체 사진으로 마무리합니다."
     ],
-    "agendaTitle": "행사 일정｜09:20–11:00",
+    "agendaTitle": "행사 일정",
     "agendaTopicLabel": "주제: ",
     "agendaTopic": "청년의 창업과 성장: 선택, 성장, 장기주의",
     "agendaTimeLabel": "일시: ",
-    "agendaTime": "2026년 8월 27일(목) 09:20–11:00｜약 100분｜11:15 이전 종료",
+    "agendaTime": "2026년 8월 27일(목) 09:30–11:00",
     "agendaVenueLabel": "장소: ",
-    "agendaVenue": "홍콩 중환 거래광장 2좌 40층 4005–07실",
+    "agendaVenue": "홍콩 중환 거래광장",
     "agendaHostLabel": "사회: ",
     "agendaHost": "셰야팡",
     "agendaColTime": "시간",
@@ -122,29 +123,24 @@
     "agendaColContent": "내용",
     "agendaRows": [
       {
-        "time": "09:25–09:50",
-        "segment": "북클럽 브리핑",
-        "content": "북클럽 진행 상황과 현장 교류."
+        "time": "09:30–09:55",
+        "segment": "셰야팡 × CZ 대담",
+        "content": "인물 인터뷰: 선택, 성장, 창업, 장기주의"
       },
       {
         "time": "09:55–10:25",
-        "segment": "셰야팡 × CZ 대담",
-        "content": "인물 인터뷰: 선택, 성장, 창업, 장기주의｜약 30분."
-      },
-      {
-        "time": "10:25–10:45",
         "segment": "대학생 Q&A",
-        "content": "선별된 현장 질문｜약 20분."
+        "content": "선별된 현장 질문"
       },
       {
-        "time": "10:45–10:50",
+        "time": "10:25–10:30",
         "segment": "#나의 바이낸스 인생 발표식",
-        "content": "캠페인 상세와 진행 상황 소개｜약 5분."
+        "content": "캠페인 상세와 진행 상황 소개"
       },
       {
-        "time": "10:50–11:00",
+        "time": "10:30–10:45",
         "segment": "마무리",
-        "content": "CZ 메시지, 총평 및 단체 사진｜약 10분."
+        "content": "CZ 메시지, 총평 및 단체 사진"
       }
     ],
     "supportersTitle": "후원 · 협력",
@@ -198,7 +194,6 @@
     "stat4Label": "발급된 배지",
     "stat4Unit": "개",
     "chronicleBannerKicker": "진행 중",
-    "chronicleBannerBrand": "BINANCE LIFE BOOK CLUB  ×  DATADANCE",
     "chronicleBannerTitle": "My Binance Life",
     "chronicleBannerDesc": "CZ의 인생 마디를 따라, 같은 타임라인에 당신의 크립토 이야기를 쓰세요. 당신의 바이낸스 인생은 얼마일까요?",
     "chronicleBannerCta": "나의 바이낸스 인생 쓰기",
@@ -253,13 +248,13 @@
     "loginTitle": "로그인 후 받기",
     "loginIntro": "IPDEX 계정으로 로그인하면 무료 표준 기념 배지를 등록할 수 있습니다.",
     "claimTitle": "표준 배지 받기",
-    "claimIntro": "확인 후 기념 배지가 자동 할당되어 계정에 지급됩니다(DDC 시리즈는 온체인 mint).",
-    "freeBadgeNote": "무료 등급 · 결제 없음 · Claim Mint",
+    "claimIntro": "확인 후 기념 배지가 자동 할당되어 계정에 지급됩니다.",
+    "freeBadgeNote": "무료 등급 · 결제 없음 · 무료 수령",
     "claimButton": "받기 확인",
     "successTitle": "등록 완료",
     "successMessage": "무료 표준 배지 받기가 등록되었습니다.",
     "viewAccount": "내 계정으로",
-    "onChainNote": "받기 성공 후 즉시 내 계정에 표시됩니다. DDC ERC-721은 같은 흐름에서 온체인 mint됩니다.",
+    "onChainNote": "받기 성공 후 즉시 내 계정에 표시됩니다.",
     "configMissing": "에어드롭 publicCode가 설정되지 않았습니다 (VITE_IPDEX_BOOK_STANDARD_AIRDROP_PUBLIC_CODE).",
     "campaignUnavailable": "에어드롭 캠페인을 사용할 수 없습니다.",
     "collectionMismatch": "캠페인 컬렉션이 예상 무료 시리즈와 일치하지 않습니다.",
@@ -267,7 +262,7 @@
     "authError": "로그인에 실패했습니다.",
     "claimFailed": "받기에 실패했습니다.",
     "inventoryExhausted": "무료 배지 재고가 소진되었습니다. 나중에 다시 시도하세요.",
-    "mintFailed": "온체인 mint에 실패했습니다. 잠시 후 다시 시도하세요.",
+    "mintFailed": "배지 지급에 실패했습니다. 잠시 후 다시 시도하세요.",
     "status": {
       "pending": "등록됨 — 배포 대기 중(다시 시도 가능).",
       "distributed": "배포 완료 — 내 계정을 확인하세요.",
@@ -659,7 +654,7 @@
     "chainSettlementHint": "원장：거래는 {{dex}}에서 · 배지는 {{chain}}에 앵커",
     "ipdexCheckoutTitle": "IPDEX에서 결제 진행",
     "ipdexCheckoutSubtitle": "선택 수량 {{quantity}}, 참고 금액 HK${{totalPrice}} — 수량 및 가격은 IPDEX 화면을 기준으로 하세요.",
-    "ddcSettlementLine": "{{chain}} (체인 ID {{chainId}}): 해당 프라이머리 세일이 DataDance와 ERC-721로 구성될 때 온체인 계약 발행 및 결산이 진행됩니다.",
+    "ddcSettlementLine": "{{chain}} (체인 ID {{chainId}}): 해당 프라이머리 세일이 DataDance로 구성될 때 온체인 결산이 진행됩니다.",
     "partnerApiReminder": "Partner API(검증 등)는 서버에서 HMAC으로 {{partnerBase}} 에 호출합니다. 이 SPA에 비밀 키를 넣지 마세요(ipdex-backend docs/partner).",
     "openIpdexMarket": "IPDEX 마켓 열기",
     "missingMarketConfig": "환경 변수 VITE_IPDEX_MARKET_URL 및 VITE_IPDEX_BOOK_PRIMARY_SALE_ID 가 필요합니다.",
@@ -761,6 +756,7 @@
     "invoiceGeneratedAt": "Generated at",
     "invoicePrintHint": "인쇄 또는 PDF로 저장",
     "title": "내 계정",
+    "antiFraudMarquee": "【엄정 성명】《幣安人生》글로벌 북클럽과 #我的幣安人生 은 NFT나 MEME를 발행한 적이 없습니다. 경각심을 갖고 사기를 조심하세요!",
     "loadError": "계정 정보를 불러오지 못했습니다.",
     "syncingAfterPurchase": "결제가 완료되었습니다. 바우처, 주문 및 온체인 데이터를 확인 중입니다. 수십 초 걸릴 수 있으니 잠시만 기다려 주세요. 페이지를 새로고침할 필요는 없습니다.",
     "nftReservation": "예약 예약 바우처",
@@ -797,7 +793,7 @@
     "premiumStubSection": "교환 완료 · 참석 스텁",
     "stubRedeemedOk": "현장 교환 완료",
     "redeemModalTitle": "현장 교환（수령）",
-    "redeemModalBody": "예약／입장용 배지가 온체인에서 플랫폼 회수 주소로 이동됩니다(온체인 계약에는 네이티브 burn이 없음). 이어 운영 측 기념카드를 민팅합니다. 스태프가 알려 준 검증 코드를 입력하세요.",
+    "redeemModalBody": "예약 바우처가 플랫폼 회수 주소로 이동되고, 참석 기념카드가 발급됩니다. 스태프가 알려 준 검증 코드를 입력하세요.",
     "redeemModalBodyStaff": "현장 스태프: 운영에서 받은 코드를 이 휴대폰에 입력하세요. 참가자가 아래 표시된 예약 바우처를 선택했는지 확인하세요.",
     "redeemStaffLabel": "현장 검증 코드",
     "redeemStaffPlaceholder": "스태프 안내——대소문자 구분",
@@ -814,6 +810,7 @@
     "redeemErrorUpstreamTips": "SPA를 강제 새로고침 후 localStorage.setItem('bookDebugRedeem','1')을 설정하고 재시도해 `[#code] …`를 확인하세요.",
     "redeemErrorNoStock": "서버측 스텁 재고가 없습니다. 운영팀에 문의하세요.",
     "redeemErrorChain": "온체인 교환 단계 실패 — 다시 시도하거나 지원 요청.",
+    "redeemErrorInProgress": "교환이 아직 처리 중입니다. 약 1분 후 다시 한 번만 시도하세요. 연속으로 누르지 마세요.",
     "redeemErrorRuleRequired": "이 환경에서는 redemptionRuleId가 필요합니다. 운영팀에서 규칙 UUID를 받거나 교환 규칙 번호를 설정하세요.",
     "redeemErrorOffline": "BFF에 연결할 수 없습니다.",
     "redeemErrorGeneric": "교환에 실패했습니다.",
@@ -862,6 +859,13 @@
         "DataDance Wallet: +5% Points on daily data uploads"
       ],
       "rightsFootnote": "Subject to campaign rules and partner announcements; benefits may change by phase."
+    },
+    "myBooks": {
+      "title": "My Binance Life",
+      "count": "완성된 책이 {{count}}권 있습니다. 표지를 누르면 결과·공유 페이지로 돌아갑니다.",
+      "empty": "책을 완성한 뒤 이메일로 로그인하고 기념카드를 받으면 여기에 나타납니다. 이미 카드를 받았다면 결과 페이지를 다시 열거나, 로그인한 상태로 한 번 더 출간하세요.",
+      "writeCta": "내 바이낸스 인생 쓰기",
+      "openCta": "결과와 포스터 보기"
     },
     "nftChronicleFd": "북클럽 기념카드",
     "chronicleAcquiredDate": "Claimed",
@@ -1153,11 +1157,12 @@
     "nftLoginIntro": "Sign in with your book-club account to claim the 북클럽 기념카드 after sealing a capsule.",
     "nftClaimTitle": "Claim 북클럽 기념카드",
     "nftClaimIntro": "Confirm to claim your free 북클럽 기념카드.",
-    "nftClaimStubNote": "Campaign mint is not configured yet — this step is a placeholder.",
+    "nftClaimStubNote": "수령 캠페인이 아직 설정되지 않았습니다 — 이 단계는 자리 표시입니다.",
     "nftClaimStubTitle": "Claim recorded",
     "nftClaimStubOk": "Your claim intent is saved. When the campaign goes live, check My Account to receive it.",
     "nftLoggedInSavedHint": "You're signed in — your chronicle draft stays saved on this device.",
     "publishCta": "Publish / “list”",
+    "shareHashtag": "#나의바이낸스인생",
     "shareTextLowZh": "",
     "shareTextHighZh": "",
     "shareTextLowEn": "📚 @cz_binance's Binance Life: luck, resilience, protecting users.\nPriced at $19.99.\nMy Binance Life: {{tags}}.\nValued at just {{price}} 🤦🏻‍♂️🤦🏻‍♀️\nSame timeline, what's your Binance Life worth?\nCreate yours 👇\n{{link}}",
@@ -1290,7 +1295,7 @@
     },
     "nftClaimDdcHint": "Book club free-claim campaign. Artwork can be updated later.",
     "nftClaimSuccessTitle": "Claim submitted",
-    "nftClaimSuccessDistributed": "Minted successfully. Check My Account for your badge.",
+    "nftClaimSuccessDistributed": "수령 완료. 내 계정에서 배지를 확인하세요.",
     "nftClaimSuccessPending": "Claim registered. Check My Account shortly for your badge.",
     "tagLabels": {
       "early_entry": "조기 진입",
@@ -1398,6 +1403,7 @@
     "posterBy": "By: {{name}}",
     "posterQrHint": "스캔하고 나와 함께 책을 내요",
     "posterPrice": "가치 {{price}}",
+    "priceDisclaimer": "재미용 평가이며 투자 권유가 아닙니다",
     "claimAndCapsuleCta": "디지털 기념카드 받기 and save to Life Capsule",
     "coverPartners": "The Commercial Press · Binance Life Book Club · DataDance"
   }

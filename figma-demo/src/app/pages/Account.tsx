@@ -3,9 +3,11 @@ import { motion } from "motion/react";
 import { BookOpen, FileText, LogIn, LogOut, Package, Award, Loader2 } from "lucide-react";
 import AccountPendingOrders from "../components/AccountPendingOrders";
 import CzSignedNftPanel from "../components/CzSignedNftPanel";
+import AccountChronicleBooks from "../components/AccountChronicleBooks";
 import ChronicleRankRewardsPanel from "../components/ChronicleRankRewardsPanel";
 import { useTranslation } from "react-i18next";
 import { Link, useSearchParams } from "react-router";
+import AccountNoticeMarquee from "../components/AccountNoticeMarquee";
 import NFTBadge from "../components/NFTBadge";
 import NftDetailModal from "../components/NftDetailModal";
 import GiftNftModal from "../components/GiftNftModal";
@@ -698,6 +700,7 @@ export default function Account() {
   if (!isLoggedIn) {
     return (
       <div className={PAGE_SHELL}>
+        <AccountNoticeMarquee />
         <div className={`${CONTENT_NARROW} max-w-md`}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -795,6 +798,7 @@ export default function Account() {
 
   return (
     <div className={PAGE_SHELL}>
+      <AccountNoticeMarquee />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -936,6 +940,7 @@ export default function Account() {
             onChanged={() => void loadDashboard()}
           />
 
+          <AccountChronicleBooks />
           <CzSignedNftPanel />
           <ChronicleRankRewardsPanel />
 

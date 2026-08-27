@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Globe } from "lucide-react";
+import { normalizeUiLanguage } from "../../i18n/config";
 
 const languages = [
   { code: "zh-TW", label: "繁體中文" },
@@ -19,22 +20,19 @@ export default function LanguageSwitcher({ dropUp = false }: LanguageSwitcherPro
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Match language more flexibly
+  const activeCode = normalizeUiLanguage(i18n.resolvedLanguage || i18n.language);
+
   const getCurrentLanguage = () => {
-    const currentLang = i18n.language || "zh-TW";
-    return languages.find(lang =>
-      currentLang.startsWith(lang.code) || lang.code.startsWith(currentLang)
-    ) || languages[0];
+    return languages.find((lang) => lang.code === activeCode) || languages[0];
   };
 
   const handleLanguageChange = (langCode: string) => {
-    i18n.changeLanguage(langCode);
+    void i18n.changeLanguage(normalizeUiLanguage(langCode));
     setIsOpen(false);
   };
 
   const isCurrentLanguage = (langCode: string) => {
-    const currentLang = i18n.language || "zh-TW";
-    return currentLang.startsWith(langCode) || langCode.startsWith(currentLang);
+    return activeCode === langCode;
   };
 
   // Close dropdown when tapping outside (pointer events cover touch + mouse)

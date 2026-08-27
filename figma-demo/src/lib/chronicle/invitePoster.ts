@@ -1,5 +1,6 @@
 import czClubMarkSrc from "../../assets/cz-club-mark.png";
 import datadanceWordmarkSrc from "../../assets/datadance-wordmark.svg";
+import { truncateAuthorName } from "./authorName";
 import { coverHasDarkBylineZone, rolePackSrc, type AvatarGenderId } from "./roleArt";
 import type { AvatarRoleId } from "./roles";
 
@@ -21,6 +22,8 @@ export type PosterInput = {
   qrHint?: string;
   /** Line under the price, e.g. "By: Race Li". Falls back to "By: {authorName}". */
   creditLine?: string;
+  /** Small risk note under the price, e.g. not investment advice. */
+  disclaimer?: string;
 };
 
 type Pt = [number, number];
@@ -63,7 +66,15 @@ async function ensurePosterFonts() {
       `500 64px ${SANS}`,
       `500 40px ${SANS}`,
       `400 28px ${SANS}`,
+      `400 26px ${SANS}`,
+      `500 28px ${SANS}`,
       `500 26px ${SANS}`,
+      `500 24px ${SANS}`,
+      `400 28px "Noto Sans TC"`,
+      `500 28px "Noto Sans TC"`,
+      `500 26px "Noto Sans TC"`,
+      `500 24px "Noto Sans TC"`,
+      `400 28px "Instrument Sans"`,
       `600 56px ${TECH}`,
     ].map((spec) => fonts.load(spec).catch(() => undefined)),
   );
@@ -104,7 +115,7 @@ export async function buildChroniclePosterBlob(input: PosterInput): Promise<Blob
   const coverArt = artSrc ? await loadImage(artSrc, true) : null;
   const darkByline = coverHasDarkBylineZone(input.roleId, input.gender);
   const keywords = input.keywords.map((k) => `${k || ""}`.trim()).filter(Boolean).slice(0, 3);
-  const signature = input.authorName.trim();
+  const signature = truncateAuthorName(input.authorName);
   const roleByline = (input.roleLabel || "").trim();
   const byline = signature || roleByline;
   const corner = signature && roleByline ? roleByline : "";
@@ -138,26 +149,29 @@ export async function buildChroniclePosterBlob(input: PosterInput): Promise<Blob
     spinePublisher: input.publisher || input.partners,
   });
 
-  const midY = closedBookMaxY(bookOpts) + 92 * scale;
+  const midY = closedBookMaxY(bookOpts) + 76 * scale;
 
   drawPriceLabel(ctx, input.priceLabel, W / 2, midY, scale, 56);
 
+  const disclaimer = `${input.disclaimer || ""}`.trim();
+  const afterPrice = 54 * scale;
+
   ctx.textAlign = "center";
-  ctx.fillStyle = "#e8dfd0";
+  ctx.fillStyle = GOLD_LIGHT;
   ctx.font = `500 ${40 * scale}px ${SANS}`;
   const credit = `${input.creditLine || (signature ? `By: ${signature}` : "")}`.trim();
-  ctx.fillText(credit, W / 2, midY + 54 * scale);
+  ctx.fillText(credit, W / 2, midY + afterPrice);
 
   const principles = input.principles.filter(Boolean).slice(0, 3).join("  ·  ");
   if (principles) {
     ctx.fillStyle = "rgba(232,223,208,0.86)";
     ctx.font = `400 ${28 * scale}px ${SANS}`;
-    wrapCenter(ctx, principles, W / 2, midY + 102 * scale, W - 80 * scale, 40 * scale);
+    wrapCenter(ctx, principles, W / 2, midY + afterPrice + 48 * scale, W - 80 * scale, 40 * scale);
   }
 
   const qrSize = 200 * scale;
   const sidePad = 228 * scale;
-  const bottomPad = 80 * scale;
+  const bottomPad = disclaimer ? 112 * scale : 80 * scale;
   const qrX = W - sidePad - qrSize;
   const qrY = H - bottomPad - qrSize;
   const qr = await loadImage(qrImageUrl(input.inviteUrl, 440), true).then(tintQrBlushWhite);
@@ -183,6 +197,20 @@ export async function buildChroniclePosterBlob(input: PosterInput): Promise<Blob
   const groupH = qrY + qrSize - groupTop;
   const groupMid = groupTop + groupH / 2;
   drawPartnerStack(ctx, [pressLogo, clubLogo, ddLogo], sidePad, groupMid, scale, W * 0.42, groupH);
+
+  if (disclaimer) {
+    ctx.textAlign = "center";
+    ctx.fillStyle = "rgba(196,180,148,0.30)";
+    let noteSize = 24 * scale;
+    ctx.font = `500 ${noteSize}px ${SANS}`;
+    const noteMax = W - 64 * scale;
+    const noteW = ctx.measureText(disclaimer).width;
+    if (noteW > noteMax) {
+      noteSize *= noteMax / noteW;
+      ctx.font = `500 ${noteSize}px ${SANS}`;
+    }
+    ctx.fillText(disclaimer, W / 2, H - 32 * scale);
+  }
 
   return canvasToImageBlob(canvas);
 }

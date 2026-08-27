@@ -17,12 +17,14 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { normalizeUiLanguage } from "../../i18n/config";
 import LanguageSwitcher from "../components/LanguageSwitcher";
 import { SiteNavDrawer, SiteNavMenuButton } from "../components/SiteNavDrawer";
 import ChronicleBookCover from "../components/ChronicleBookCover";
 import ChroniclePartnerMarks from "../components/ChroniclePartnerMarks";
 import {
   attributeInvite,
+  bindMyBook,
   enrollRankEntry,
   fetchLeaderboard,
   fetchRankConfig,
@@ -52,6 +54,7 @@ import { bookBffJson } from "../../lib/bookBffClient";
 import ChronicleSignedNftClaimModal from "../components/ChronicleSignedNftClaimModal";
 import OverlayPortal from "../components/OverlayPortal";
 import { overlayBackdropClassLight } from "../lib/overlayLayers";
+import { truncateAuthorName } from "../../lib/chronicle/authorName";
 import { buildShareUrl, decodeSharePayload } from "../../lib/chronicle/shareCodec";
 import { mintChronicleShareLink } from "../../lib/chronicle/shareLinkClient";
 import { fetchLlmTagSuggestions } from "../../lib/chronicle/suggestTagsClient";
@@ -63,6 +66,7 @@ import {
   saveDraft,
   type ChronicleDraft,
 } from "../../lib/chronicle/storage";
+import { rememberPublishedBook } from "../../lib/chronicle/publishedBooks";
 import {
   AVATAR_GENDER_IDS,
   DEFAULT_AVATAR_GENDER,
@@ -88,13 +92,13 @@ import {
 } from "../../lib/chronicle/invitePoster";
 import {
   MIN_FILLED_NODES,
-  CHRONICLE_HOME_PATH,
   WIZARD_PREV,
-  canLeaveChronicleViaHistory,
+  chronicleLeavePath,
   chroniclePath,
   isWizardStep,
   loadInviteRef,
   persistInviteRef,
+  rememberChronicleArrival,
 } from "../../lib/chronicle/wizardNav";
 import type {
   ChronicleAudience,
@@ -161,6 +165,9 @@ export default function CryptoChronicle() {
   const [readOnlyShare, setReadOnlyShare] = useState(false);
   const readOnlyShareRef = useRef(false);
   readOnlyShareRef.current = readOnlyShare;
+  const [shareLock, setShareLock] = useState(false);
+  const shareLockRef = useRef(false);
+  shareLockRef.current = shareLock;
   const authorNameRef = useRef("");
   authorNameRef.current = authorName;
   const roleIdRef = useRef<AvatarRoleId | null>(null);
@@ -182,9 +189,13 @@ export default function CryptoChronicle() {
   const rankLive = isRankCampaignLive(rankCfg);
   const catalogMap = useMemo(() => new Map(catalog.map((x) => [x.id, x])), [catalog]);
 
+  useEffect(() => {
+    rememberChronicleArrival();
+  }, []);
+
   const persist = (patch: Partial<ChronicleDraft>) => {
-    // Viewing someone else's book must not become this visitor's draft.
-    if (readOnlyShareRef.current) return;
+    // Viewing a published snapshot must not overwrite this visitor's draft.
+    if (readOnlyShareRef.current || shareLockRef.current) return;
     const draft: ChronicleDraft = {
       audience: patch.audience ?? audience,
       entries: patch.entries ?? entriesRef.current,
@@ -211,12 +222,12 @@ export default function CryptoChronicle() {
 
   const onWizardBack = () => {
     persist({ step });
+    if (readOnlyShareRef.current || shareLockRef.current) {
+      navigate(searchParams.get("view") === "mine" ? "/account" : chronicleLeavePath());
+      return;
+    }
     if (step === "intro") {
-      if (canLeaveChronicleViaHistory()) {
-        navigate(-1);
-        return;
-      }
-      navigate(CHRONICLE_HOME_PATH);
+      navigate(chronicleLeavePath());
       return;
     }
     if (window.history.state?.czWizard && window.history.state.step === step) {
@@ -276,7 +287,9 @@ export default function CryptoChronicle() {
         setStyleId(decoded.styleId || DEFAULT_AVATAR_STYLE);
         setGender(decoded.gender || draft.gender || DEFAULT_AVATAR_GENDER);
         setResult(distilled);
-        setReadOnlyShare(true);
+        const mine = searchParams.get("view") === "mine";
+        setReadOnlyShare(!mine);
+        setShareLock(true);
         setSharedPrice(
           typeof decoded.price === "number" && Number.isFinite(decoded.price) ? decoded.price : null,
         );
@@ -296,6 +309,7 @@ export default function CryptoChronicle() {
     setSelectedTagIds(draft.selectedTagIds);
     setSelectedPrinciples(draft.selectedPrinciples);
     setReadOnlyShare(false);
+    setShareLock(false);
     setSharedPrice(null);
 
     const target = resume || "intro";
@@ -373,7 +387,7 @@ export default function CryptoChronicle() {
       ],
       finished: step === "book" || Boolean(roleId && selectedTagIds.length),
     });
-    const lockedPrice = readOnlyShare
+    const lockedPrice = readOnlyShare || shareLock
       ? ((sharedPrice != null && Number.isFinite(sharedPrice) ? sharedPrice : null) ??
         (typeof rankEntry?.price === "number" && Number.isFinite(rankEntry.price)
           ? rankEntry.price
@@ -391,6 +405,7 @@ export default function CryptoChronicle() {
     step,
     t,
     readOnlyShare,
+    shareLock,
     sharedPrice,
     rankEntry?.price,
   ]);
@@ -444,7 +459,7 @@ export default function CryptoChronicle() {
     audience,
     entries,
     confirmedTagIds: result?.confirmedTagIds || confirmedTagIds,
-    authorName,
+    authorName: truncateAuthorName(authorName),
     roleId,
     styleId,
     gender,
@@ -542,10 +557,12 @@ export default function CryptoChronicle() {
 
   const startMine = () => {
     readOnlyShareRef.current = false;
+    shareLockRef.current = false;
     authorNameRef.current = "";
     roleIdRef.current = null;
     entriesRef.current = {};
     setReadOnlyShare(false);
+    setShareLock(false);
     setSharedPrice(null);
     setResult(null);
     setEntries({});
@@ -596,20 +613,32 @@ export default function CryptoChronicle() {
     });
 
   useEffect(() => {
-    if (step !== "book" || readOnlyShare || !result || !authorName.trim()) return;
+    if (step !== "book" || readOnlyShare || shareLock || !result || !authorName.trim()) return;
     const token = shareToken || shareTokenFromUrl(buildShareUrl(shareEncodeBase()));
     if (!token) return;
     let cancelled = false;
     void enrollRankEntry({
       shareToken: token,
-      authorName: authorName.trim(),
+      authorName: truncateAuthorName(authorName),
       roleId,
       styleId,
       price: pricing?.price,
       tags: selectedTagLabels(),
+      refEntryId: inviteRef || undefined,
     }).then(async (entry) => {
       if (cancelled || !entry) return;
       setRankEntry(entry);
+      rememberPublishedBook({
+        entryId: entry.entryId,
+        shareToken: token,
+        authorName: truncateAuthorName(authorName),
+        roleId,
+        styleId,
+        tags: selectedTagLabels(),
+        price: typeof pricing?.price === "number" ? pricing.price : entry.price,
+        savedAt: new Date().toISOString(),
+      });
+      await bindMyBook({ entryId: entry.entryId, shareToken: token });
       if (inviteRef && inviteRef !== entry.entryId) {
         await attributeInvite({ refEntryId: inviteRef, completerEntryId: entry.entryId });
       }
@@ -618,7 +647,17 @@ export default function CryptoChronicle() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step, readOnlyShare, result, authorName, roleId, styleId, pricing?.price, shareToken]);
+  }, [step, readOnlyShare, shareLock, result, authorName, roleId, styleId, pricing?.price, shareToken]);
+
+  useEffect(() => {
+    if (step !== "book" || readOnlyShare || !shareLock) return;
+    const token = shareToken || rankEntry?.shareToken || "";
+    if (!rankEntry?.entryId && !token) return;
+    void bindMyBook({
+      entryId: rankEntry?.entryId,
+      shareToken: token || undefined,
+    });
+  }, [step, readOnlyShare, shareLock, shareToken, rankEntry?.entryId, rankEntry?.shareToken]);
 
   useEffect(() => {
     if (step !== "book" || readOnlyShare || !result || !authorName.trim()) return;
@@ -637,6 +676,20 @@ export default function CryptoChronicle() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, readOnlyShare, result, authorName, rankEntry?.entryId, inviteRef, shareToken]);
 
+  const shareHashtagLng = () => {
+    const lng = (i18n.resolvedLanguage || i18n.language || "en").toLowerCase();
+    if (lng.startsWith("zh")) return "zh-TW";
+    if (lng.startsWith("ja")) return "ja";
+    if (lng.startsWith("ko")) return "ko";
+    return "en";
+  };
+
+  const withShareHashtag = (text: string) => {
+    const hashtag = t("chronicle.shareHashtag", { lng: shareHashtagLng() }).trim();
+    if (!hashtag || text.includes(hashtag)) return text;
+    return `${text.trimEnd()}\n${hashtag}`;
+  };
+
   const buildResultShareText = (channel: "x" | "wechat" = "x") => {
     const link = resultShareLink();
     const tags = selectedTagLabels().join("、") || t("chronicle.shareBlank");
@@ -645,22 +698,30 @@ export default function CryptoChronicle() {
     const wechat = channel === "wechat";
     if (isZhUi) {
       if (wechat) {
-        return high
-          ? t("chronicle.shareTextWechatHighZh", { tags, price, link })
-          : t("chronicle.shareTextWechatLowZh", { tags, price, link });
+        return withShareHashtag(
+          high
+            ? t("chronicle.shareTextWechatHighZh", { tags, price, link })
+            : t("chronicle.shareTextWechatLowZh", { tags, price, link }),
+        );
       }
-      return high
-        ? t("chronicle.shareTextHighZh", { tags, price, link })
-        : t("chronicle.shareTextLowZh", { tags, price, link });
+      return withShareHashtag(
+        high
+          ? t("chronicle.shareTextHighZh", { tags, price, link })
+          : t("chronicle.shareTextLowZh", { tags, price, link }),
+      );
     }
     if (wechat) {
-      return high
-        ? t("chronicle.shareTextWechatHighEn", { tags, price, link })
-        : t("chronicle.shareTextWechatLowEn", { tags, price, link });
+      return withShareHashtag(
+        high
+          ? t("chronicle.shareTextWechatHighEn", { tags, price, link })
+          : t("chronicle.shareTextWechatLowEn", { tags, price, link }),
+      );
     }
-    return high
-      ? t("chronicle.shareTextHighEn", { tags, price, link })
-      : t("chronicle.shareTextLowEn", { tags, price, link });
+    return withShareHashtag(
+      high
+        ? t("chronicle.shareTextHighEn", { tags, price, link })
+        : t("chronicle.shareTextLowEn", { tags, price, link }),
+    );
   };
 
   const tryCopyText = async (text: string): Promise<boolean> => {
@@ -756,7 +817,7 @@ export default function CryptoChronicle() {
           tagLabels,
           nodeTitles,
           shareUrl: resultShareLink(),
-          authorName,
+          authorName: truncateAuthorName(authorName),
           priceUsdt: pricing?.price,
           selectedTagIds,
           selectedPrinciples,
@@ -777,25 +838,31 @@ export default function CryptoChronicle() {
     });
   };
 
-  const buildResultPosterBlob = () =>
-    buildChroniclePosterBlob({
-      authorName: authorName.trim() || t("chronicle.anonymousAuthor"),
-      creditLine: t("chronicle.posterBy", {
-        name: authorName.trim() || t("chronicle.anonymousAuthor"),
-      }),
+  const buildResultPosterBlob = () => {
+    const posterT = i18n.getFixedT(normalizeUiLanguage(i18n.resolvedLanguage || i18n.language));
+    const displayName = truncateAuthorName(authorName) || posterT("chronicle.anonymousAuthor");
+    return buildChroniclePosterBlob({
+      authorName: displayName,
+      creditLine: posterT("chronicle.posterBy", { name: displayName }),
       roleId,
       gender,
-      roleLabel: roleId ? t(`chronicle.roles.${roleId}.name`) : "",
-      publisher: t("chronicle.bookPublisher"),
-      keywords: coverKeywords,
-      principles: selectedPrinciples.map((name) => localizedPrincipleLabel(name, t)),
-      priceLabel: t("chronicle.posterPrice", { price: formatShareUsd(pricing?.price ?? 0) }),
+      roleLabel: roleId ? posterT(`chronicle.roles.${roleId}.name`) : "",
+      publisher: posterT("chronicle.bookPublisher"),
+      keywords: selectedTagIds.map((id) => {
+        const fallback =
+          catalogMap.get(id)?.label || result?.tags.find((x) => x.id === id)?.label || "";
+        return localizedBehaviorTagLabel(id, fallback, posterT);
+      }),
+      principles: selectedPrinciples.map((name) => localizedPrincipleLabel(name, posterT)),
+      priceLabel: posterT("chronicle.posterPrice", { price: formatShareUsd(pricing?.price ?? 0) }),
+      disclaimer: posterT("chronicle.priceDisclaimer"),
       inviteUrl: resultShareLink(),
-      title: t("chronicle.bookTitle"),
-      subtitle: t("chronicle.kicker"),
-      partners: t("chronicle.coverPartners"),
-      qrHint: t("chronicle.posterQrHint"),
+      title: posterT("chronicle.bookTitle"),
+      subtitle: posterT("chronicle.kicker"),
+      partners: posterT("chronicle.coverPartners"),
+      qrHint: posterT("chronicle.posterQrHint"),
     });
+  };
 
   const deliverPoster = async (): Promise<"preview" | "downloaded" | null> => {
     if (posterBusy) return null;
@@ -828,7 +895,7 @@ export default function CryptoChronicle() {
   const yearLabel = (id: ChronicleNodeId) =>
     t(`chronicle.nodes.${id}.year`, { defaultValue: CHRONICLE_NODE_YEAR[id] });
 
-  const displayName = authorName.trim() || t("chronicle.anonymousAuthor");
+  const displayName = truncateAuthorName(authorName) || t("chronicle.anonymousAuthor");
   const publishedDisplay = displayParticipantCount(publishedActual ?? 0);
 
   return (
@@ -1254,6 +1321,9 @@ export default function CryptoChronicle() {
                 <p className="mt-4 break-all text-center font-tech text-xl text-gold sm:text-2xl">
                   {t("chronicle.posterPrice", { price: formatShareUsd(pricing.price) })}
                 </p>
+                <p className="mt-1.5 px-4 text-center text-[11px] leading-snug text-muted-foreground/80">
+                  {t("chronicle.priceDisclaimer")}
+                </p>
                 <p className="mt-2 text-center font-cjk text-sm text-foreground/80">
                   {t("chronicle.posterBy", { name: displayName })}
                 </p>
@@ -1429,6 +1499,23 @@ export default function CryptoChronicle() {
                 onClose={() => setNftClaimOpen(false)}
                 onSealed={openLifeCapsule}
                 onAuthed={() => {
+                  const token = shareToken || rankEntry?.shareToken || "";
+                  if (rankEntry?.entryId && !readOnlyShareRef.current) {
+                    void bindMyBook({
+                      entryId: rankEntry.entryId,
+                      shareToken: token || undefined,
+                    });
+                    rememberPublishedBook({
+                      entryId: rankEntry.entryId,
+                      shareToken: token || rankEntry.shareToken,
+                      authorName: truncateAuthorName(authorName),
+                      roleId,
+                      styleId,
+                      tags: selectedTagLabels(),
+                      price: typeof pricing?.price === "number" ? pricing.price : rankEntry.price,
+                      savedAt: new Date().toISOString(),
+                    });
+                  }
                   if (inviteRef && rankEntry?.entryId) {
                     void attributeInvite({
                       refEntryId: inviteRef,

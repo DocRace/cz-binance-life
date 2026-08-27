@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
+import { displayWithoutNft } from "../../lib/displayWithoutNft";
 
 interface NFTBadgeProps {
   tokenId: string;
@@ -33,7 +34,8 @@ export default function NFTBadge({
   principleName,
   principleColor = "cyan",
 }: NFTBadgeProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const shownName = displayWithoutNft(displayName || "", i18n.resolvedLanguage || i18n.language);
   const sizeClasses = {
     sm: "w-32 h-40",
     md: "w-48 h-60",
@@ -111,7 +113,7 @@ export default function NFTBadge({
         <>
           <img
             src={artUrl}
-            alt={displayName || badgeTitle}
+            alt={shownName || badgeTitle}
             className="absolute inset-0 h-full w-full object-cover"
             onError={() => setArtFailed(true)}
           />
@@ -143,7 +145,7 @@ export default function NFTBadge({
             <span className="text-[10px] font-tech uppercase opacity-80">{badgeType}</span>
           </div>
           <h3 className="font-display text-base leading-snug line-clamp-2 mb-0.5">
-            {displayName?.trim() || badgeTitle}
+            {shownName || badgeTitle}
           </h3>
           <p className="text-[10px] opacity-75 line-clamp-2">{badgeSubtitle}</p>
         </div>

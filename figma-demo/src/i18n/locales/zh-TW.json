@@ -51,7 +51,8 @@
     "contractAddress": "合約地址",
     "tokenId": "Token ID",
     "chain": "鏈",
-    "tokenStandard": "代幣標準",
+    "tokenStandard": "類型",
+    "tokenStandardValue": "數碼徽章",
     "collectionId": "系列 UUID",
     "attributes": "屬性",
     "noAttributes": "暫無屬性"
@@ -93,28 +94,28 @@
     "dateLabel": "日期",
     "date": "2026 年 8 月 27 日（星期四）",
     "timeLabel": "時間",
-    "time": "09:20 – 11:00（約 100 分鐘，11:15 前結束）",
+    "time": "09:30 – 11:00",
     "venueLabel": "地點",
-    "venue": "香港中環交易廣場第二座 40 樓",
-    "address": "香港中環交易廣場第二座 40 樓 4005–07 室\n（港鐵中環站 / 香港站）",
+    "venue": "香港中環交易廣場",
+    "address": "",
     "hostLabel": "主持",
     "host": "謝亞芳",
     "languageLabel": "語言",
     "language": "普通話",
     "flowParagraphs": [
       "本次見面會以「年輕人的創業與成長：選擇、成長與長期主義」為主題，由資深媒體人謝亞芳與 CZ 對談，並發布「#我的幣安人生」。",
-      "活動於 2026 年 8 月 27 日上午在香港中環交易廣場舉行。主流程約 75 分鐘，預留 15 分鐘機動，11:15 前結束。因現場席位有限，本次為定向邀請、閉門交流。",
+      "活動於 2026 年 8 月 27 日上午在香港中環交易廣場舉行。因現場席位有限，本次為定向邀請、閉門交流。",
       "《幣安人生》記錄趙長鵬（CZ）的成長與創業歷程。見面會希望討論的不是某一行業的短期熱點，而是每一位創業者都會面對的問題：如何作出選擇，如何在變化中成長，以及如何堅持真正重要的事情。",
       "「#我的幣安人生」希望邀請更多讀者，從書中的選擇與成長出發，講述自己的經歷、判斷和長期堅持，讓一本書喚起更多人的思考與表達。",
       "現場將邀請創業者與大學生提問交流，預計到場大學生約 60 人。活動以 CZ 寄語、總結及官方合影作結。"
     ],
-    "agendaTitle": "活動議程｜09:20–11:00",
+    "agendaTitle": "活動議程",
     "agendaTopicLabel": "活動主題：",
     "agendaTopic": "年輕人的創業與成長：選擇、成長與長期主義",
     "agendaTimeLabel": "活動時間：",
-    "agendaTime": "2026 年 8 月 27 日（星期四）09:20–11:00｜約 100 分鐘｜11:15 前結束",
+    "agendaTime": "2026 年 8 月 27 日（星期四）09:30–11:00",
     "agendaVenueLabel": "活動地點：",
-    "agendaVenue": "香港中環交易廣場第二座 40 樓 4005–07 室",
+    "agendaVenue": "香港中環交易廣場",
     "agendaHostLabel": "全場主持：",
     "agendaHost": "謝亞芳",
     "agendaColTime": "時間",
@@ -122,29 +123,24 @@
     "agendaColContent": "內容",
     "agendaRows": [
       {
-        "time": "09:25–09:50",
-        "segment": "書友會匯報",
-        "content": "書友會進展與現場交流。"
+        "time": "09:30–09:55",
+        "segment": "謝亞芳 × CZ 對談",
+        "content": "人物訪談：選擇、成長、創業與長期主義"
       },
       {
         "time": "09:55–10:25",
-        "segment": "謝亞芳 × CZ 對談",
-        "content": "人物訪談：選擇、成長、創業與長期主義｜約 30 分鐘。"
-      },
-      {
-        "time": "10:25–10:45",
         "segment": "大學生提問",
-        "content": "精選現場問題，控制節奏｜約 20 分鐘。"
+        "content": "精選現場問題"
       },
       {
-        "time": "10:45–10:50",
-        "segment": "#我的幣安人生 活動發布儀式",
-        "content": "介紹幣安人生活動詳情與進展｜約 5 分鐘。"
+        "time": "10:25–10:30",
+        "segment": "#我的幣安人生 活動發佈儀式",
+        "content": "介紹幣安人生活動詳情與進展"
       },
       {
-        "time": "10:50–11:00",
+        "time": "10:30–10:45",
         "segment": "活動收尾",
-        "content": "CZ 寄語、總結及合影｜約 10 分鐘。"
+        "content": "CZ 寄語、總結及合影"
       }
     ],
     "supportersTitle": "支持機構",
@@ -180,7 +176,7 @@
     "feature1Title": "預約憑證",
     "feature1Desc": "完成活動預約後發放徽章，作為身分與會場對照使用。",
     "feature2Title": "現場票根紀念卡",
-    "feature2Desc": "活動現場請工作人員於手機上輸入核銷碼；確認後自動鑄發票根紀念卡，紀錄您已親自到場並顯示於帳戶。",
+    "feature2Desc": "活動現場請工作人員於手機上輸入核銷碼；確認後自動發放票根紀念卡，紀錄您已親自到場並顯示於帳戶。",
     "feature3Title": "書友會社群",
     "feature3Desc": "加入專屬書友會社群，與志同道合的讀者持續交流",
     "journeyTitle": "從程序員到加密貨幣巨頭",
@@ -198,7 +194,6 @@
     "stat4Label": "已發放徽章",
     "stat4Unit": "枚",
     "chronicleBannerKicker": "活動進行中",
-    "chronicleBannerBrand": "幣安人生書友會  ×  DATADANCE",
     "chronicleBannerTitle": "我的幣安人生",
     "chronicleBannerDesc": "解構 CZ 的關鍵人生節點，給書友一條寫下自己加密經歷的通道。同一條時間軸，你的幣安人生值多少？",
     "chronicleBannerCta": "撰寫我的幣安人生",
@@ -253,13 +248,13 @@
     "loginTitle": "登入以領取空投",
     "loginIntro": "使用 IPDEX 帳戶登入後，即可登記領取標準版紀念徽章（免費）。",
     "claimTitle": "領取標準紀念徽章",
-    "claimIntro": "確認領取後，系統將自動分配會員徽章並發放至您的帳戶（DDC 系列同步上鏈）。",
-    "freeBadgeNote": "免費檔 · 無需付款 · Claim Mint",
+    "claimIntro": "確認領取後，系統將自動分配會員徽章並發放至您的帳戶。",
+    "freeBadgeNote": "免費檔 · 無需付款 · 免費領取",
     "claimButton": "確認領取",
     "successTitle": "登記成功",
     "successMessage": "標準紀念徽章已發放至您的帳戶。",
     "viewAccount": "前往我的帳戶",
-    "onChainNote": "領取成功後會員徽章會立即出現在「我的帳戶」；DDC ERC-721 系列會同步完成鏈上 mint。",
+    "onChainNote": "領取成功後，會員徽章會立即出現在「我的帳戶」。",
     "configMissing": "尚未設定空投活動代碼（VITE_IPDEX_BOOK_STANDARD_AIRDROP_PUBLIC_CODE）。請在 Admin 建立 Airdrop Campaign 後填入 publicCode。",
     "campaignUnavailable": "空投活動暫不可用，請稍後再試或聯繫管理員。",
     "collectionMismatch": "空投活動與預期的免費系列不一致，已中止。",
@@ -267,7 +262,7 @@
     "authError": "登入失敗，請檢查驗證碼後重試。",
     "claimFailed": "領取失敗，請稍後再試。",
     "inventoryExhausted": "免費會員徽章已領完，請稍後再試或聯繫管理員補充庫存。",
-    "mintFailed": "鏈上 mint 失敗，請稍後重試；若已扣庫存請聯繫管理員對帳。",
+    "mintFailed": "徽章發放失敗，請稍後重試；若已扣庫存請聯繫管理員對帳。",
     "status": {
       "pending": "已登記，待系統發放（可稍後重試領取）。",
       "distributed": "已發放完成，請至「我的帳戶」查看。",
@@ -659,7 +654,7 @@
     "chainSettlementHint": "紀錄：{{dex}} 處理交易 · 徽章錨定於 {{chain}}",
     "ipdexCheckoutTitle": "於 IPDEX 完成購買",
     "ipdexCheckoutSubtitle": "目前已選數量 {{quantity}}，頁面試算約 HK${{totalPrice}}；請在 IPDEX 頁面上確認數量與最終報價。",
-    "ddcSettlementLine": "{{chain}}（鏈編號 {{chainId}}）：當發行將該合集配置於 DataDance 並為 ERC-721 時，才會進行鏈上發行與結算（與後台合約設定一致為準）。",
+    "ddcSettlementLine": "{{chain}}（鏈編號 {{chainId}}）：當發行將該合集配置於 DataDance 時，才會進行鏈上發行與結算（與後台合約設定一致為準）。",
     "partnerApiReminder": "Partner API（驗資／資金操作等）需在後端透過 HMAC 呼叫 {{partnerBase}}，請勿把合作方密鑰寫進本網前端；請參考 ipdex-backend  repo 中的 docs/partner 說明。",
     "openIpdexMarket": "開啟 IPDEX 市場",
     "missingMarketConfig": "請在環境變數設定 VITE_IPDEX_MARKET_URL 與 VITE_IPDEX_BOOK_PRIMARY_SALE_ID 後再行開啟 IPDEX。",
@@ -769,6 +764,7 @@
     "invoiceGeneratedAt": "Generated at",
     "invoicePrintHint": "列印或另存為 PDF",
     "title": "我的帳戶",
+    "antiFraudMarquee": "【嚴正聲明】《幣安人生》全球書友會及 #我的幣安人生 從未發行任何 NFT 或 MEME，請務必提高警覺，謹防詐騙！",
     "loadError": "無法載入帳戶資料。",
     "syncingAfterPurchase": "付款已完成，正在確認憑證、訂單與鏈上資料。此過程可能需數十秒，請耐心等候，無需重新整理頁面。",
     "nftReservation": "讀書活動預約憑證",
@@ -822,6 +818,7 @@
     "redeemErrorUpstreamTips": "請對 SPA 硬性重新載入（⌘⇧R）。在控制台執行 localStorage.setItem('bookDebugRedeem','1') 後再試——錯誤下方會附上 `[#code] …`；若顯示 `(empty upstream message)`，代表上流未回傳文字。",
     "redeemErrorNoStock": "伺服端票根庫存用罄，請聯繫後台補充一級發售 ACTIVE token。",
     "redeemErrorChain": "鏈上步驟失敗，請重試或聯繫支援。",
+    "redeemErrorInProgress": "核銷仍在處理中，請稍候約一分鐘再試，不要連續點擊。",
     "redeemErrorRuleRequired": "此環境需指定兌換設定（請向營運取得規則 UUID，或設定 兌換規則編號）。",
     "redeemErrorOffline": "無法連到書站 BFF。",
     "redeemErrorGeneric": "核銷失敗，請稍後再試。",
@@ -870,6 +867,13 @@
         "合作夥伴 DataDance Wallet：日常數據上傳獎勵積分 +5%"
       ],
       "rightsFootnote": "最終以活動規則與合作方公告為準；權益可能隨活動階段調整。"
+    },
+    "myBooks": {
+      "title": "我的幣安人生",
+      "count": "已保存 {{count}} 本成書，點擊封面可回到結果與分享頁。",
+      "empty": "寫完書後用信箱登入並領取紀念卡，成書會自動出現在這裡。若你先前已領卡，請再打開一次自己的成書結果頁，或登入後重新出書一次。",
+      "writeCta": "去寫我的幣安人生",
+      "openCta": "查看結果與海報"
     },
     "nftChronicleFd": "書友會紀念卡",
     "chronicleAcquiredDate": "領取時間",
@@ -927,6 +931,7 @@
     "posterBy": "By：{{name}}",
     "posterQrHint": "掃碼和我一起出書",
     "posterPrice": "價值 {{price}}",
+    "priceDisclaimer": "系統估價僅供娛樂參考，不構成投資建議",
     "claimAndCapsuleCta": "領取數碼紀念卡 並保存到 Life Capsule",
     "coverPartners": "商務印書館 · 幣安人生書友會 · DataDance",
     "savedMark": "已記錄",
@@ -1177,11 +1182,12 @@
     "nftConfirmOtherCta": "換一個郵箱",
     "nftClaimTitle": "領取數碼紀念卡",
     "nftClaimIntro": "確認後將免費領取活動紀念卡，並打開 Life Capsule 保存你的人生。",
-    "nftClaimStubNote": "鑄造活動尚未配置 — 此步驟為佔位流程。",
+    "nftClaimStubNote": "領取活動尚未配置 — 此步驟為佔位流程。",
     "nftClaimStubTitle": "已登記領取",
     "nftClaimStubOk": "領取意向已保存。活動上線後，請到我的帳戶查收。",
     "nftLoggedInSavedHint": "已登錄 — 你的人生草稿會保留在本機。",
     "publishCta": "公開「發售」",
+    "shareHashtag": "#我的幣安人生",
     "shareTextLowZh": "📚 @cz_binance 的幣安人生：幸運、韌性、保護用戶，定價 $19.99；\n我的幣安人生：{{tags}}，系統估價僅 {{price}} 🤦🏻‍♂️🤦🏻‍♀️\n同一條時間軸，你的幣安人生能值多少？\n創建你的幣安人生 👇\n{{link}}",
     "shareTextHighZh": "📚 @cz_binance 的幣安人生：幸運、韌性、保護用戶，定價 $19.99；\n我的幣安人生：{{tags}}，系統估價高達 {{price}} 👀\n同一條時間軸，你的幣安人生能值多少？\n創建你的幣安人生 👇\n{{link}}",
     "shareTextLowEn": "📚 @cz_binance's Binance Life: luck, resilience, protecting users.\nPriced at $19.99.\nMy Binance Life: {{tags}}.\nValued at just {{price}} 🤦🏻‍♂️🤦🏻‍♀️\nSame timeline, what's your Binance Life worth?\nCreate yours 👇\n{{link}}",
@@ -1314,7 +1320,7 @@
     },
     "nftClaimDdcHint": "書友會免費領取活動。圖片可後續替換。",
     "nftClaimSuccessTitle": "領取已提交",
-    "nftClaimSuccessDistributed": "鑄造成功，請到「我的帳戶」查看徽章。",
+    "nftClaimSuccessDistributed": "領取成功，請到「我的帳戶」查看徽章。",
     "nftClaimSuccessPending": "領取已登記，請稍後到「我的帳戶」查看徽章。",
     "tagLabels": {
       "early_entry": "早期入場",

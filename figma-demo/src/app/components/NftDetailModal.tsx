@@ -19,6 +19,7 @@ import {
   pickNftImageUrl,
   strField,
 } from "../../lib/bookAccountNftApi";
+import { displayWithoutNft } from "../../lib/displayWithoutNft";
 
 interface NftDetailModalProps {
   nft: DisplayNft;
@@ -127,16 +128,24 @@ export default function NftDetailModal({ nft, onClose, onRedeem, onGift }: NftDe
     return nft.imageUrl ?? "";
   }, [infoRec, balanceRec, nft.imageUrl]);
 
-  const title =
+  const uiLang = i18n.resolvedLanguage || i18n.language;
+  const title = displayWithoutNft(
     recordField(infoRec, ["c_name", "name"]) ||
-    recordField(balanceRec, ["c_name", "name"]) ||
-    nft.name ||
-    `#${nft.tokenId}`;
+      recordField(balanceRec, ["c_name", "name"]) ||
+      nft.name ||
+      `#${nft.tokenId}`,
+    uiLang,
+  );
 
-  const collectionName =
-    recordField(collection, ["c_name", "name"]) || nft.collectionName || "—";
+  const collectionName = displayWithoutNft(
+    recordField(collection, ["c_name", "name"]) || nft.collectionName || "—",
+    uiLang,
+  );
 
-  const partnerName = recordField(collection, ["c_partner_name", "partnerName"]) || "—";
+  const partnerName = displayWithoutNft(
+    recordField(collection, ["c_partner_name", "partnerName"]) || "—",
+    uiLang,
+  );
   const ercType = recordField(collection, ["c_erc_type", "ercType"]) || recordField(balanceRec, ["c_erc_type"]);
   const contractAddress = recordField(collection, ["c_contract_address", "contractAddress"]);
   const chainId = recordField(collection, ["c_chain_id", "chainId"]) || DATADANCE_CHAIN_ID;
@@ -148,17 +157,23 @@ export default function NftDetailModal({ nft, onClose, onRedeem, onGift }: NftDe
     return Number.isFinite(n) ? `${n / 100}%` : "—";
   })();
 
-  const description = recordField(infoRec, ["c_description", "description"]) || "—";
+  const description = displayWithoutNft(
+    recordField(infoRec, ["c_description", "description"]) || "—",
+    uiLang,
+  );
   const benefitsRaw = collection?.c_extra_description;
   let benefits = "—";
   if (benefitsRaw && typeof benefitsRaw === "object" && !Array.isArray(benefitsRaw)) {
     const lang = i18n.resolvedLanguage || "en";
     const o = benefitsRaw as Record<string, unknown>;
-    benefits = `${o[lang] ?? o.en ?? o.zh ?? ""}`.trim() || "—";
+    benefits = displayWithoutNft(`${o[lang] ?? o.en ?? o.zh ?? ""}`.trim() || "—", uiLang);
   }
 
   const metadataSource = infoRec?.c_metadata ?? infoRec?.metadata ?? balanceRec?.c_metadata;
-  const attributes = parseMetadataAttributes(metadataSource);
+  const attributes = parseMetadataAttributes(metadataSource).map((row) => ({
+    trait: displayWithoutNft(row.trait, uiLang),
+    value: displayWithoutNft(row.value, uiLang),
+  }));
 
   const buyPriceHkd = formatHkdFromCents(balanceRec?.c_last_buy_price_hkd);
   const buyTime = formatDateTime(balanceRec?.c_last_buy_time);
@@ -350,7 +365,7 @@ export default function NftDetailModal({ nft, onClose, onRedeem, onGift }: NftDe
                     </div>
                     <div className="flex justify-between gap-3">
                       <dt className="text-muted-foreground">{t("nftDetailModal.tokenStandard")}</dt>
-                      <dd>{ercType ? `ERC-${ercType}` : "—"}</dd>
+                      <dd>{ercType ? t("nftDetailModal.tokenStandardValue") : "—"}</dd>
                     </div>
                     {collectionIdDisplay ? (
                       <div className="flex justify-between gap-3">

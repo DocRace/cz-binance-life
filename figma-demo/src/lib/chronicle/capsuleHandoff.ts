@@ -1,3 +1,4 @@
+import { truncateAuthorName } from "./authorName";
 import type { ChronicleAudience, ChronicleResult } from "./types";
 import { CHRONICLE_NODE_YEAR } from "./nodes";
 
@@ -54,7 +55,7 @@ export function buildCapsuleHandoffPayload(
     source: "cz-chronicle",
     audience: result.audience,
     locale: opts.locale,
-    authorName: opts.authorName?.trim() || undefined,
+    authorName: truncateAuthorName(opts.authorName || "") || undefined,
     priceUsdt: opts.priceUsdt,
     nodes: result.nodes.slice(0, 15).map((n) => ({
       year: CHRONICLE_NODE_YEAR[n.nodeId] || n.nodeId,

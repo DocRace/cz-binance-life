@@ -51,7 +51,8 @@
     "contractAddress": "コントラクト",
     "tokenId": "Token ID",
     "chain": "チェーン",
-    "tokenStandard": "トークン規格",
+    "tokenStandard": "種類",
+    "tokenStandardValue": "デジタルバッジ",
     "collectionId": "コレクション UUID",
     "attributes": "属性",
     "noAttributes": "属性なし"
@@ -93,28 +94,28 @@
     "dateLabel": "日付",
     "date": "2026年8月27日（木）",
     "timeLabel": "時間",
-    "time": "09:20 – 11:00（約100分、11:15までに終了）",
+    "time": "09:30 – 11:00",
     "venueLabel": "会場",
-    "venue": "香港中環・交易広場 第2座 40階",
-    "address": "香港中環 交易広場 第2座 40階 4005–07室\n（MTR中環駅 / 香港駅）",
+    "venue": "香港中環・交易広場",
+    "address": "",
     "hostLabel": "司会",
     "host": "謝亜芳",
     "languageLabel": "言語",
     "language": "中国語（普通話）",
     "flowParagraphs": [
       "テーマは「若者の起業と成長：選択、成長、長期主義」。シニアジャーナリスト謝亜芳がCZと対談し、「#私のバイナンスライフ」を発表します。",
-      "2026年8月27日午前、香港中環・交易広場で開催。本編約75分、予備15分、11:15までに終了。席数が限られるため招待制・クローズドです。",
+      "2026年8月27日午前、香港中環・交易広場で開催。席数が限られるため招待制・クローズドです。",
       "『バイナンスライフ』は趙長鵬（CZ）の成長と起業を記録します。短期的な業界ニュースではなく、創業者が直面する選択・変化の中での成長・本当に大切なことへの堅持を語ります。",
       "「#私のバイナンスライフ」は、本の選択と成長から出発し、読者自身の経験・判断・長期の堅持を語る場です。",
       "起業家と大学生が現場で質問します（大学生約60名を予定）。CZのメッセージ、総括、公式集合写真で締めくくります。"
     ],
-    "agendaTitle": "アジェンダ｜09:20–11:00",
+    "agendaTitle": "アジェンダ",
     "agendaTopicLabel": "テーマ：",
     "agendaTopic": "若者の起業と成長：選択、成長、長期主義",
     "agendaTimeLabel": "日時：",
-    "agendaTime": "2026年8月27日（木）09:20–11:00｜約100分｜11:15までに終了",
+    "agendaTime": "2026年8月27日（木）09:30–11:00",
     "agendaVenueLabel": "会場：",
-    "agendaVenue": "香港中環 交易広場 第2座 40階 4005–07室",
+    "agendaVenue": "香港中環・交易広場",
     "agendaHostLabel": "司会：",
     "agendaHost": "謝亜芳",
     "agendaColTime": "時間",
@@ -122,29 +123,24 @@
     "agendaColContent": "内容",
     "agendaRows": [
       {
-        "time": "09:25–09:50",
-        "segment": "書友会報告",
-        "content": "書友会の進捗と交流。"
+        "time": "09:30–09:55",
+        "segment": "謝亜芳 × CZ 対談",
+        "content": "人物インタビュー：選択、成長、起業、長期主義"
       },
       {
         "time": "09:55–10:25",
-        "segment": "謝亜芳 × CZ 対談",
-        "content": "人物インタビュー：選択、成長、起業、長期主義｜約30分。"
-      },
-      {
-        "time": "10:25–10:45",
         "segment": "大学生 Q&A",
-        "content": "厳選した現場質問｜約20分。"
+        "content": "厳選した現場質問"
       },
       {
-        "time": "10:45–10:50",
+        "time": "10:25–10:30",
         "segment": "#私のバイナンスライフ 発表式",
-        "content": "キャンペーンの詳細と進捗の紹介｜約5分。"
+        "content": "キャンペーンの詳細と進捗の紹介"
       },
       {
-        "time": "10:50–11:00",
+        "time": "10:30–10:45",
         "segment": "クロージング",
-        "content": "CZメッセージ、総括、集合写真｜約10分。"
+        "content": "CZメッセージ、総括、集合写真"
       }
     ],
     "supportersTitle": "協賛・協力",
@@ -171,7 +167,7 @@
     "title": "バイナンスライフ",
     "subtitle": "読書イベント・予約バウチャー・現地受領による 記念カード",
     "coverBadge": "インタラクティブ立体表紙",
-    "description": "イベント予約で予約バウチャーを獲得。現地でスタッフが確認コード入力による受領後、オンチェーン記念記念カード がマイントされ、アカウント一覧に表示されます。",
+    "description": "イベント予約で予約バウチャーを獲得。現地でスタッフが確認コード入力による受領後、記念カードが発行され、アカウント一覧に表示されます。",
     "reserveButton": "プレミアム典藏版を購入",
     "joinClubButton": "ブッククラブに参加",
     "joinPurchaseClubButton": "購入してブッククラブに参加",
@@ -198,7 +194,6 @@
     "stat4Label": "発行済みバッジ",
     "stat4Unit": "個",
     "chronicleBannerKicker": "開催中",
-    "chronicleBannerBrand": "BINANCE LIFE BOOK CLUB  ×  DATADANCE",
     "chronicleBannerTitle": "My Binance Life",
     "chronicleBannerDesc": "CZの人生の節目をたどり、同じタイムラインに自分の暗号資産の物語を書く。あなたのバイナンス人生はいくらだろう。",
     "chronicleBannerCta": "自分のバイナンス人生を書く",
@@ -253,13 +248,13 @@
     "loginTitle": "ログインして受け取る",
     "loginIntro": "IPDEX アカウントでログインし、無料のスタンダード記念バッジを登録します。",
     "claimTitle": "スタンダードバッジを受け取る",
-    "claimIntro": "確認後、記念バッジを自動割当てしアカウントに配布します（DDC シリーズはオンチェーン mint）。",
-    "freeBadgeNote": "無料枠 · 支払い不要 · Claim Mint",
+    "claimIntro": "確認後、記念バッジを自動割当てしアカウントに配布します。",
+    "freeBadgeNote": "無料枠 · 支払い不要 · 無料受け取り",
     "claimButton": "受け取りを確認",
     "successTitle": "登録完了",
     "successMessage": "スタンダード記念バッジの受け取り登録が完了しました。",
     "viewAccount": "マイアカウントへ",
-    "onChainNote": "受け取り成功後、すぐにマイアカウントに表示されます。DDC ERC-721 は同一フローでオンチェーン mint されます。",
+    "onChainNote": "受け取り成功後、すぐにマイアカウントに表示されます。",
     "configMissing": "エアドロップ publicCode が未設定です（VITE_IPDEX_BOOK_STANDARD_AIRDROP_PUBLIC_CODE）。",
     "campaignUnavailable": "エアドロップキャンペーンは現在利用できません。",
     "collectionMismatch": "キャンペーンのコレクションが想定の無料シリーズと一致しません。",
@@ -267,7 +262,7 @@
     "authError": "ログインに失敗しました。",
     "claimFailed": "受け取りに失敗しました。",
     "inventoryExhausted": "無料バッジは在庫切れです。後でもう一度お試しください。",
-    "mintFailed": "オンチェーン mint に失敗しました。しばらくして再試行してください。",
+    "mintFailed": "バッジの配布に失敗しました。しばらくして再試行してください。",
     "status": {
       "pending": "登録済み — 配布待ち（再試行できます）。",
       "distributed": "配布完了 — マイアカウントを確認してください。",
@@ -659,7 +654,7 @@
     "chainSettlementHint": "台帳：取引は{{dex}}・バッジは{{chain}}にアンカー",
     "ipdexCheckoutTitle": "IPDEXで購入手続き",
     "ipdexCheckoutSubtitle": "ご希望数量 {{quantity}} 件／参考小計 HK${{totalPrice}} — 数量・価格はIPDEXで確認してください。",
-    "ddcSettlementLine": "{{chain}}（チェーンID {{chainId}}）：コレクションが DataDance かつ ERC-721 のとき、オンチェーン契約 のミント／決済が適用されます。",
+    "ddcSettlementLine": "{{chain}}（チェーンID {{chainId}}）：コレクションが DataDance のとき、オンチェーン決済が適用されます。",
     "partnerApiReminder": "Partner API（検証など）はサーバー側で HMAC を使い {{partnerBase}} を呼び出します。このSPAに秘密鍵を置かないでください（ipdex-backend の docs/partner）。",
     "openIpdexMarket": "IPDEX市場を開く",
     "missingMarketConfig": "環境変数 VITE_IPDEX_MARKET_URL と VITE_IPDEX_BOOK_PRIMARY_SALE_ID を設定してください。",
@@ -761,6 +756,7 @@
     "invoiceGeneratedAt": "Generated at",
     "invoicePrintHint": "印刷または PDF で保存",
     "title": "マイアカウント",
+    "antiFraudMarquee": "【厳正声明】『幣安人生』グローバル書友会および #我的幣安人生 は NFT や MEME を発行したことはありません。十分ご注意ください。詐欺にご警戒を！",
     "loadError": "アカウント情報を読み込めませんでした。",
     "syncingAfterPurchase": "お支払いが完了しました。バウチャー・注文・オンチェーンデータを確認しています。数十秒かかる場合がありますので、そのままお待ちください（ページの再読み込みは不要です）。",
     "nftReservation": "予約予約バウチャー",
@@ -814,6 +810,7 @@
     "redeemErrorUpstreamTips": "SPA を強制再読み込みしてください。localStorage.setItem('bookDebugRedeem','1') のあと再試行し、付与される `[#code] …` を確認してください。",
     "redeemErrorNoStock": "記念カード のサーバー側在庫が不足しています。運用へ連絡してください。",
     "redeemErrorChain": "オンチェーン処理に失敗しました。再度お試しください。",
+    "redeemErrorInProgress": "交換処理が続いています。約1分待ってからもう一度お試しください。連続タップはしないでください。",
     "redeemErrorRuleRequired": "この環境では redemptionRuleId が必要です。運用にルール UUID を確認するか、交換ルールID を設定してください。",
     "redeemErrorOffline": "BFF に接続できません。",
     "redeemErrorGeneric": "引き換えに失敗しました。",
@@ -862,6 +859,13 @@
         "DataDance Wallet: +5% Points on daily data uploads"
       ],
       "rightsFootnote": "Subject to campaign rules and partner announcements; benefits may change by phase."
+    },
+    "myBooks": {
+      "title": "My Binance Life",
+      "count": "保存済みの本が {{count}} 冊あります。表紙を開くと結果・シェア画面に戻ります。",
+      "empty": "本を書き終えたあと、メールでログインして記念カードを受け取ると、ここに本が表示されます。すでにカードを受け取っている場合は、自分の結果ページをもう一度開くか、ログインした状態でもう一度出してください。",
+      "writeCta": "自分の本を書く",
+      "openCta": "結果とポスターを見る"
     },
     "nftChronicleFd": "ブッククラブ記念カード",
     "chronicleAcquiredDate": "Claimed",
@@ -1153,11 +1157,12 @@
     "nftLoginIntro": "Sign in with your book-club account to claim the ブッククラブ記念カード after sealing a capsule.",
     "nftClaimTitle": "Claim ブッククラブ記念カード",
     "nftClaimIntro": "Confirm to claim your free ブッククラブ記念カード.",
-    "nftClaimStubNote": "Campaign mint is not configured yet — this step is a placeholder.",
+    "nftClaimStubNote": "受け取りキャンペーンはまだ設定されていません — このステップはプレースホルダーです。",
     "nftClaimStubTitle": "Claim recorded",
     "nftClaimStubOk": "Your claim intent is saved. When the campaign goes live, check My Account to receive it.",
     "nftLoggedInSavedHint": "You're signed in — your chronicle draft stays saved on this device.",
     "publishCta": "Publish / “list”",
+    "shareHashtag": "#私のバイナンスライフ",
     "shareTextLowZh": "",
     "shareTextHighZh": "",
     "shareTextLowEn": "📚 @cz_binance's Binance Life: luck, resilience, protecting users.\nPriced at $19.99.\nMy Binance Life: {{tags}}.\nValued at just {{price}} 🤦🏻‍♂️🤦🏻‍♀️\nSame timeline, what's your Binance Life worth?\nCreate yours 👇\n{{link}}",
@@ -1290,7 +1295,7 @@
     },
     "nftClaimDdcHint": "Book club free-claim campaign. Artwork can be updated later.",
     "nftClaimSuccessTitle": "Claim submitted",
-    "nftClaimSuccessDistributed": "Minted successfully. Check My Account for your badge.",
+    "nftClaimSuccessDistributed": "受け取り完了。マイアカウントでバッジを確認してください。",
     "nftClaimSuccessPending": "Claim registered. Check My Account shortly for your badge.",
     "tagLabels": {
       "early_entry": "早期参入",
@@ -1398,6 +1403,7 @@
     "posterBy": "By: {{name}}",
     "posterQrHint": "スキャンして一緒に本を出そう",
     "posterPrice": "価値 {{price}}",
+    "priceDisclaimer": "娯楽目的の評価であり、投資助言ではありません",
     "claimAndCapsuleCta": "デジタル記念カードを受け取る and save to Life Capsule",
     "coverPartners": "The Commercial Press · Binance Life Book Club · DataDance"
   }

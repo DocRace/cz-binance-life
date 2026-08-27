@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { Gift, Ticket, Trophy } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { truncateAuthorName } from "../../lib/chronicle/authorName";
 import { fetchMyRankRewards, type RankReward } from "../../lib/chronicle/rankClient";
 
 export default function ChronicleRankRewardsPanel() {
@@ -41,7 +42,7 @@ export default function ChronicleRankRewardsPanel() {
               <p className="text-sm font-medium">
                 {t("chronicle.rank.accountRankLine", {
                   rank: r.rank,
-                  name: r.authorName,
+                  name: truncateAuthorName(r.authorName),
                 })}
               </p>
               <p className="mt-1 text-xs text-muted-foreground">

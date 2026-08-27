@@ -33,6 +33,19 @@ type AirdropClaimRow = {
   c_id?: number;
 };
 
+function claimedStatus(value: unknown): string | null {
+  const status = `${value || ""}`.trim().toLowerCase();
+  return status === "distributed" || status === "pending" ? status : null;
+}
+
+async function readExistingClaim(publicCode: string): Promise<string | null> {
+  if (!publicCode) return null;
+  const out = await bookBffJson<{ claim?: AirdropClaimRow | null }>(
+    `/api/bff/airdrop/my-claim?publicCode=${encodeURIComponent(publicCode)}`,
+  );
+  return out.code === 0 ? claimedStatus(out.data?.claim?.c_status) : null;
+}
+
 /**
  * Free My Binance Life activity FD claim on the chronicle result page.
  * Uses a dedicated airdrop campaign — not the standard/premium membership series.
@@ -73,6 +86,14 @@ export default function ChronicleSignedNftClaimModal({ open, onClose, onAuthed, 
         if (cancel) return;
         const email = me.code === 0 ? emailFromProfile(me.data) : "";
         setSessionEmail(email);
+        const existing = await readExistingClaim(publicCode);
+        if (cancel) return;
+        if (existing) {
+          setClaimStatus(existing);
+          setStep("success");
+          onSealed?.();
+          return;
+        }
         setStep("confirm");
       } catch {
         /* stay on email form */
@@ -83,7 +104,7 @@ export default function ChronicleSignedNftClaimModal({ open, onClose, onAuthed, 
     return () => {
       cancel = true;
     };
-  }, [open, onAuthed]);
+  }, [open, onAuthed, onSealed, publicCode]);
 
   const handleConfirmCurrentAccount = () => {
     setApiError(null);
@@ -145,8 +166,15 @@ export default function ChronicleSignedNftClaimModal({ open, onClose, onAuthed, 
         body: JSON.stringify({ email, code }),
       });
       if (out.code === 0) {
-        setStep("claim");
         onAuthed?.();
+        const existing = await readExistingClaim(publicCode);
+        if (existing) {
+          setClaimStatus(existing);
+          setStep("success");
+          onSealed?.();
+        } else {
+          setStep("claim");
+        }
       } else {
         setApiError(
           bookBffIsTransportIssue(out) ? t("airdropClaim.bffOffline") : out.message || t("airdropClaim.authError"),
@@ -167,6 +195,13 @@ export default function ChronicleSignedNftClaimModal({ open, onClose, onAuthed, 
     setClaimBusy(true);
     setApiError(null);
     try {
+      const existing = await readExistingClaim(publicCode);
+      if (existing) {
+        setClaimStatus(existing);
+        setStep("success");
+        onSealed?.();
+        return;
+      }
       const out = await bookBffJson<{
         claim?: AirdropClaimRow;
         fulfillment?: { distributed?: boolean; tokenId?: string };

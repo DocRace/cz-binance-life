@@ -1,3 +1,4 @@
+import { truncateAuthorName } from "./authorName";
 import { isChronicleNodeId } from "./distill";
 import { isAvatarGenderId, type AvatarGenderId } from "./roleArt";
 import { isAvatarRoleId, isAvatarStyleId } from "./roles";
@@ -55,7 +56,7 @@ export function encodeSharePayload(input: ShareEncodeInput): string {
     // Public share URL must not carry raw writing (meeting: no BNB review dump).
     entries: {},
     confirmedTagIds: input.confirmedTagIds.slice(0, 12),
-    authorName: `${input.authorName || ""}`.trim().slice(0, 40) || undefined,
+    authorName: truncateAuthorName(`${input.authorName || ""}`) || undefined,
     roleId: input.roleId && isAvatarRoleId(input.roleId) ? input.roleId : undefined,
     styleId: input.styleId && isAvatarStyleId(input.styleId) ? input.styleId : undefined,
     gender: input.gender && isAvatarGenderId(input.gender) ? input.gender : undefined,
@@ -81,7 +82,7 @@ export function decodeSharePayload(token: string): SharePayloadV3 | null {
         confirmedTagIds: Array.isArray(raw.confirmedTagIds)
           ? raw.confirmedTagIds.filter((x: unknown) => typeof x === "string").slice(0, 12)
           : [],
-        authorName: typeof raw.authorName === "string" ? raw.authorName.slice(0, 40) : undefined,
+        authorName: typeof raw.authorName === "string" ? truncateAuthorName(raw.authorName) || undefined : undefined,
         roleId: typeof raw.roleId === "string" && isAvatarRoleId(raw.roleId) ? raw.roleId : undefined,
         styleId:
           typeof raw.styleId === "string" && isAvatarStyleId(raw.styleId) ? raw.styleId : undefined,

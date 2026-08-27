@@ -72,6 +72,7 @@ export function localizedBookRedeemFailureMessage<T>(
   else if (out.code === -10604) msg = t("account.redeemErrorNoStock");
   else if (out.code === -10605) msg = t("account.redeemErrorChain");
   else if (out.code === -10606) msg = t("account.redeemErrorRuleRequired");
+  else if (out.code === -10607) msg = t("account.redeemErrorInProgress");
   return withBookRedeemDebugDetail(msg, out);
 }
 

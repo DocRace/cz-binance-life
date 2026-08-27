@@ -254,6 +254,10 @@ body { overflow-x: hidden; }
   width: min(1200px, calc(100% - 2rem));
 }
 
+.stage.is-poster {
+  width: min(520px, calc(100% - 2rem));
+}
+
 .backdrop-hint {
   flex-basis: 100%;
   margin: 0.2rem 0 0;
@@ -317,6 +321,11 @@ body { overflow-x: hidden; }
 
 .board-slot.is-side {
   aspect-ratio: 867 / 1152;
+  border-radius: 1.15rem;
+}
+
+.board-slot.is-poster {
+  aspect-ratio: 1080 / 1170;
   border-radius: 1.15rem;
 }
 
@@ -406,6 +415,19 @@ body { overflow-x: hidden; }
   background-position: 50% 22%;
   background-size: 155% auto;
   opacity: 0.55;
+}
+
+.card.is-poster .card-photo.is-cover {
+  background-image: url("./assets/invite-hero.png");
+  background-position: 50% 22%;
+  background-size: 170% auto;
+  opacity: 0.5;
+}
+
+.card.is-poster .blast-veil {
+  background:
+    linear-gradient(180deg, rgba(26, 23, 20, 0.42) 0%, rgba(26, 23, 20, 0.55) 42%, rgba(26, 23, 20, 0.78) 100%),
+    linear-gradient(110deg, rgba(26, 23, 20, 0.28), rgba(26, 23, 20, 0.12) 58%, rgba(26, 23, 20, 0.36));
 }
 
 .card.is-backdrop .blast-veil {
@@ -1242,6 +1264,82 @@ body { overflow-x: hidden; }
   background: transparent;
 }
 
+.card.is-poster .card-mark {
+  top: 54%;
+  bottom: auto;
+  font-size: 128px;
+  letter-spacing: 0.14em;
+  color: rgba(201, 167, 106, 0.07);
+}
+
+.poster-inner {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 56px 108px;
+  text-align: center;
+}
+
+.poster-brand {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.poster-title {
+  margin: 20px 0 0;
+  font-family: var(--display);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.1em;
+  color: #f3e6c8;
+}
+
+.poster-sign {
+  display: block;
+  width: min(560px, 52%);
+  height: auto;
+  margin: 18px 0 4px;
+  object-fit: contain;
+}
+
+.poster-book {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  margin-top: 0;
+}
+
+.card.is-poster .hero-book {
+  width: 360px;
+  height: 634px;
+}
+
+.card.is-poster .hero-book-shadow {
+  width: 270px;
+}
+
+.card.is-poster .hero-book-shadow-soft {
+  width: 300px;
+}
+
+.poster-meta {
+  margin: 10px 0 0;
+  font-size: 22px;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+}
+
 .card.is-backdrop .backdrop-inner {
   position: relative;
   z-index: 2;
@@ -1290,6 +1388,19 @@ body { overflow-x: hidden; }
   height: auto;
 }
 
+.card.is-backdrop-sign .backdrop-inner {
+  justify-content: center;
+  padding: 64px 80px;
+}
+
+.backdrop-sign {
+  display: block;
+  width: min(1680px, 88%);
+  max-height: 86%;
+  height: auto;
+  object-fit: contain;
+}
+
 .backdrop-wall {
   margin-top: 80px;
   width: 100%;
@@ -1332,10 +1443,14 @@ body { overflow-x: hidden; }
 .card.is-backdrop .logo-img-yafang { height: 78px; }
 .card.is-backdrop .logo-img-bnb { height: 52px; }
 .card.is-backdrop .logo-img-ipdex { height: 52px; }
+.card.is-backdrop .logo-cell:has(.logo-img-hash) {
+  width: 300px;
+  height: 104px;
+}
 .card.is-backdrop .logo-img-hash {
   height: auto;
-  width: 220px;
-  max-width: 220px;
+  width: 280px;
+  max-width: 280px;
 }
 .card.is-backdrop .logo-img-onebook {
   height: 58px;
@@ -1386,6 +1501,7 @@ body { overflow-x: hidden; }
 .card.is-ppt {
   --ppt-paper: #d5c9ae;
   --ppt-paper-soft: rgba(213, 201, 174, 0.72);
+  --ppt-gold: #edd59a;
   overflow: hidden;
   font-family: var(--sans);
   color: var(--ppt-paper);
@@ -1446,7 +1562,7 @@ body { overflow-x: hidden; }
   position: absolute;
   margin: 0;
   font-family: var(--display);
-  font-size: 20px;
+  font-size: 24px;
   letter-spacing: 0.18em;
   color: var(--ppt-paper-soft);
 }
@@ -1473,7 +1589,7 @@ body { overflow-x: hidden; }
 
 .ppt-title {
   margin: 72px 0 0;
-  font-size: 84px;
+  font-size: 96px;
   line-height: 1.18;
   letter-spacing: 0.12em;
 }
@@ -1485,7 +1601,7 @@ body { overflow-x: hidden; }
 
 .ppt-subtitle {
   margin: 18px 0 0;
-  font-size: 52px;
+  font-size: 62px;
   line-height: 1.24;
   letter-spacing: 0.22em;
   color: var(--ppt-paper);
@@ -1518,7 +1634,7 @@ body { overflow-x: hidden; }
 
 .ppt-partners {
   margin-top: auto;
-  width: min(1180px, 100%);
+  width: min(1560px, 100%);
   padding-top: 48px;
 }
 
@@ -1528,7 +1644,7 @@ body { overflow-x: hidden; }
 
 .ppt-partners-label {
   margin-bottom: 16px;
-  font-size: 16px;
+  font-size: 20px;
   letter-spacing: 0.36em;
 }
 
@@ -1536,8 +1652,8 @@ body { overflow-x: hidden; }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 36px 48px;
-  flex-wrap: wrap;
+  gap: 22px 28px;
+  flex-wrap: nowrap;
 }
 
 .card.is-ppt .ppt-logo-row .logo-cell {
@@ -1546,9 +1662,9 @@ body { overflow-x: hidden; }
 
 .card.is-ppt .logo-img,
 .card.is-ppt .logo-datadance {
-  height: 42px;
+  height: 52px;
   width: auto;
-  max-width: 220px;
+  max-width: 240px;
   filter: grayscale(1) brightness(1.55) contrast(1.08);
   opacity: 0.92;
   mix-blend-mode: normal;
@@ -1564,28 +1680,28 @@ body { overflow-x: hidden; }
   opacity: 1;
 }
 
-.card.is-ppt .logo-img-press { height: 36px; }
-.card.is-ppt .logo-img-hash { height: 34px; }
-.card.is-ppt .logo-img-yafang { height: 46px; }
-.card.is-ppt .logo-img-onebook { height: 32px; }
-.card.is-ppt .logo-img-hku { height: 40px; }
-.card.is-ppt .logo-img-bnb { height: 32px; }
+.card.is-ppt .logo-img-press { height: 46px; }
+.card.is-ppt .logo-img-hash { height: 44px; }
+.card.is-ppt .logo-img-yafang { height: 56px; }
+.card.is-ppt .logo-img-onebook { height: 42px; }
+.card.is-ppt .logo-img-hku { height: 50px; }
+.card.is-ppt .logo-img-bnb { height: 60px; }
 .card.is-ppt .logo-cell svg.logo-datadance {
-  width: 196px;
-  height: 34px;
+  width: 228px;
+  height: 40px;
 }
 
 .ppt-qr-rail {
   position: absolute;
-  right: 56px;
+  left: 56px;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 36px;
-  width: 168px;
+  gap: 28px;
+  width: 240px;
   pointer-events: none;
 }
 
@@ -1610,14 +1726,34 @@ body { overflow-x: hidden; }
   background: transparent;
 }
 
+.ppt-qr-frame.is-site {
+  padding: 18px;
+}
+
+.ppt-qr-frame.is-site img {
+  width: 96px;
+  height: 96px;
+}
+
 .ppt-qr-frame img {
   display: block;
   width: 112px;
   height: 112px;
 }
 
+.ppt-sheet.is-cover .ppt-qr-frame {
+  padding: 14px;
+}
+
+.ppt-sheet.is-cover .ppt-qr-frame img,
+.ppt-sheet.is-cover .ppt-qr-frame.is-site img,
+.ppt-sheet.is-cover .ppt-qr-frame.is-chronicle img {
+  width: 168px;
+  height: 168px;
+}
+
 .ppt-qr-label {
-  font-size: 14px;
+  font-size: 16px;
   letter-spacing: 0.16em;
   color: var(--ppt-paper);
 }
@@ -1626,6 +1762,10 @@ body { overflow-x: hidden; }
 .ppt-sheet.is-guest,
 .ppt-sheet.is-chapter {
   padding: 96px 140px 80px;
+}
+
+.ppt-sheet.is-agenda {
+  padding: 72px 88px 56px;
 }
 
 .ppt-agenda-hero,
@@ -1641,15 +1781,63 @@ body { overflow-x: hidden; }
 
 .ppt-guest-main,
 .ppt-chapter-main {
-  margin: auto 0;
+  margin: 260px auto auto;
+}
+
+.ppt-sheet.is-launch {
+  padding: 64px 96px 48px;
+}
+
+.ppt-sheet.is-launch .ppt-chapter-main {
+  margin: 36px auto 0;
+  flex: 1 1 auto;
+  justify-content: center;
+  gap: 32px;
+}
+
+.ppt-sheet.is-launch .ppt-section-title {
+  font-size: 86px;
+  letter-spacing: 0.14em;
+}
+
+.ppt-hero-qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.ppt-hero-qr-frame {
+  padding: 28px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(213, 201, 174, 0.35);
+}
+
+.ppt-hero-qr-frame img {
+  display: block;
+  width: 540px;
+  height: 540px;
+}
+
+.ppt-hero-qr-label {
+  margin: 0;
+  font-size: 26px;
+  letter-spacing: 0.22em;
+  color: var(--ppt-paper);
 }
 
 .ppt-section-title,
 .ppt-agenda-title {
   margin: 0;
-  font-size: 88px;
+  font-size: 104px;
   line-height: 1.16;
   letter-spacing: 0.18em;
+}
+
+.ppt-sheet.is-agenda .ppt-agenda-title {
+  font-size: 64px;
+  letter-spacing: 0.16em;
 }
 
 .ppt-agenda-lead,
@@ -1661,10 +1849,34 @@ body { overflow-x: hidden; }
   letter-spacing: 0.14em;
 }
 
+.ppt-sheet.is-agenda .ppt-agenda-lead {
+  margin-top: 10px;
+  max-width: none;
+  white-space: nowrap;
+}
+
+.ppt-agenda-range {
+  margin: 10px 0 0;
+  font-size: 22px;
+  letter-spacing: 0.28em;
+  color: var(--ppt-gold);
+}
+
 .ppt-chapter-time {
   margin-top: 28px;
   font-size: 20px;
   letter-spacing: 0.22em;
+}
+
+.ppt-guest-logo {
+  margin-bottom: 28px;
+}
+
+.card.is-ppt .ppt-guest-logo .logo-img-yafang {
+  height: 86px;
+  max-width: 280px;
+  filter: none;
+  opacity: 1;
 }
 
 .ppt-speakers {
@@ -1675,23 +1887,89 @@ body { overflow-x: hidden; }
   margin-top: 48px;
 }
 
+.ppt-sheet.is-wall {
+  padding: 56px 64px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ppt-wall-title {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 88px;
+  text-align: center;
+  font-size: 58px;
+  letter-spacing: 0.28em;
+  color: var(--ppt-paper);
+}
+
+.card.is-ppt.is-ppt-wall .ppt-wall {
+  margin-top: 0;
+  gap: 40px;
+}
+
+.card.is-ppt.is-ppt-wall .logo-cell {
+  width: 220px;
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.card.is-ppt.is-ppt-wall .logo-img,
+.card.is-ppt.is-ppt-wall .logo-datadance {
+  height: 58px;
+  max-width: 200px;
+  filter: none;
+  opacity: 1;
+}
+
+.card.is-ppt.is-ppt-wall .logo-img-press { height: 48px; }
+.card.is-ppt.is-ppt-wall .logo-img-yafang { height: 68px; }
+.card.is-ppt.is-ppt-wall .logo-img-bnb { height: 46px; }
+.card.is-ppt.is-ppt-wall .logo-img-ipdex { height: 46px; }
+.card.is-ppt.is-ppt-wall .logo-cell:has(.logo-img-hash) {
+  width: 280px;
+  height: 100px;
+}
+.card.is-ppt.is-ppt-wall .logo-img-hash {
+  height: auto;
+  width: 260px;
+  max-width: 260px;
+}
+.card.is-ppt.is-ppt-wall .logo-img-onebook { height: 50px; }
+.card.is-ppt.is-ppt-wall .logo-img-hku { height: 64px; }
+.card.is-ppt.is-ppt-wall .logo-cell-club { width: 280px; }
+.card.is-ppt.is-ppt-wall .logo-img-club {
+  height: auto;
+  width: 240px;
+  max-width: 240px;
+}
+.card.is-ppt.is-ppt-wall .logo-cell:has(svg.logo-datadance) { width: 248px; }
+.card.is-ppt.is-ppt-wall .logo-cell svg.logo-datadance {
+  width: 232px;
+  height: 40px;
+}
+
 .ppt-speaker-name {
   margin: 0;
-  font-size: 36px;
+  font-size: 44px;
   letter-spacing: 0.12em;
 }
 
 .ppt-speaker-role,
 .ppt-speaker-handle {
   margin-top: 10px;
-  font-size: 18px;
+  font-size: 22px;
   letter-spacing: 0.1em;
 }
 
 .ppt-program {
-  margin: 48px auto 0;
+  margin: 24px auto 0;
   padding: 0;
-  width: min(1080px, 100%);
+  width: min(1560px, 100%);
   list-style: none;
   display: flex;
   flex-direction: column;
@@ -1701,29 +1979,61 @@ body { overflow-x: hidden; }
 
 .ppt-program-row {
   display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
-  align-items: baseline;
-  gap: 28px;
-  padding: 22px 0;
-  border-top: 1px solid rgba(213, 201, 174, 0.22);
+  grid-template-columns: 220px minmax(280px, 0.9fr) minmax(0, 1.4fr);
+  align-items: center;
+  gap: 24px;
+  padding: 11px 18px;
+  border-top: 1px solid rgba(213, 201, 174, 0.18);
 }
 
 .ppt-program-row:last-child {
-  border-bottom: 1px solid rgba(213, 201, 174, 0.22);
+  border-bottom: 1px solid rgba(213, 201, 174, 0.18);
+}
+
+.ppt-program-row.is-head {
+  padding: 12px 18px;
+  border: 0;
+  background: rgba(237, 213, 154, 0.14);
+}
+
+.ppt-program-row.is-ops {
+  opacity: 0.78;
+}
+
+.ppt-program-row.is-main {
+  background: rgba(213, 201, 174, 0.045);
 }
 
 .ppt-program-time {
-  font-size: 22px;
-  letter-spacing: 0.08em;
+  font-size: 20px;
+  letter-spacing: 0.06em;
   color: var(--ppt-paper-soft);
+  white-space: nowrap;
 }
 
 .ppt-program-item {
   font-family: var(--display);
-  font-size: 30px;
+  font-size: 24px;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: var(--ppt-paper);
+}
+
+.ppt-program-detail {
+  font-size: 18px;
+  line-height: 1.45;
+  letter-spacing: 0.04em;
+  color: var(--ppt-paper-soft);
+}
+
+.ppt-program-row.is-head .ppt-program-time,
+.ppt-program-row.is-head .ppt-program-item,
+.ppt-program-row.is-head .ppt-program-detail {
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--ppt-gold);
 }
 
 @media (max-width: 820px) {

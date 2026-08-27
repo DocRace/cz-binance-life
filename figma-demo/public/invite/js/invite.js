@@ -1,9 +1,11 @@
 (() => {
-  const DATA_URL = './data/invites.json?v=29';
+  const DATA_URL = './data/invites.json?v=43';
   const TELEGRAM_QR_SRC = './assets/telegram-czlifeclub-qr.png';
   const SITE_QR_SRC = './assets/czlife-home-qr.png';
+  const CHRONICLE_QR_SRC = './assets/czlife-chronicle-qr.png';
   const PPT_CORNER = '《幣安人生》書友會';
   const PORTRAIT = { w: 1080, h: 2200 };
+  const POSTER = { w: 1080, h: 1170 };
   const WIDE = { w: 1920, h: 1080 };
   const BACKDROP_CENTRE = { w: 2048, h: 1152 };
   const BACKDROP_SIDE = { w: 867, h: 1152 };
@@ -39,7 +41,7 @@
     fitBoard();
     window.addEventListener('resize', fitBoard);
     prepareInscription().then(() => {
-      if (isBackdrop() || isPpt()) paintCard();
+      if (isBackdrop() || isPpt() || isEventPoster()) paintCard();
     });
   }
 
@@ -53,6 +55,10 @@
 
   function isPpt() {
     return typeId === 'ppt';
+  }
+
+  function isEventPoster() {
+    return typeId === 'poster';
   }
 
   function pptSlides() {
@@ -77,12 +83,13 @@
   function boardSize() {
     if (typeId === 'blast' || isPpt()) return WIDE;
     if (isBackdrop()) return backdropPanelSize(backdropPanel);
+    if (isEventPoster()) return POSTER;
     return PORTRAIT;
   }
 
   function backdropPanelSize(panel) {
     if (panel === 'side') return BACKDROP_SIDE;
-    if (panel === 'wide') return BACKDROP_WIDE;
+    if (panel === 'wide' || panel === 'sign') return BACKDROP_WIDE;
     return BACKDROP_CENTRE;
   }
 
@@ -94,10 +101,12 @@
     $('#artboard')?.classList.toggle('is-wide', wide);
     $('#boardSlot')?.classList.toggle('is-wide', wide);
     $('#boardSlot')?.classList.toggle('is-side', false);
+    $('#boardSlot')?.classList.toggle('is-poster', isEventPoster());
     $('#stage')?.classList.toggle('is-wide', wide || isBackdrop() || isPpt());
     $('#stage')?.classList.toggle('is-side', false);
     $('#stage')?.classList.toggle('is-backdrop', isBackdrop());
     $('#stage')?.classList.toggle('is-ppt', isPpt());
+    $('#stage')?.classList.toggle('is-poster', isEventPoster());
   }
 
   function ensureStageShell() {
@@ -151,6 +160,12 @@
             </div>
             <p class="backdrop-caption">16:9 整幅　1920 × 1080</p>
           </div>
+          <div class="backdrop-col backdrop-col-wide">
+            <div class="board-slot is-wide" data-panel="sign">
+              <div class="artboard" id="artboardSign"></div>
+            </div>
+            <p class="backdrop-caption">16:9 簽名　1920 × 1080</p>
+          </div>
         </div>
       `;
       return;
@@ -178,7 +193,7 @@
         <p class="studio-kicker">Invitation</p>
         <p class="studio-brand">BINANCE LIFE BOOK CLUB  ×  DATADANCE</p>
         <h1 class="studio-title">書友見面會邀請函</h1>
-        <p class="studio-lead">媒體／嘉賓為 21:9 手機豎版；郵件推送為 16:9 橫版。「背景板」含現場三塊屏與 16:9 整幅。「PPT」為現場簡報七頁，可一鍵下載 PPTX，也可逐頁下載 1920×1080。「亞芳對外」為人名留空模板。</p>
+        <p class="studio-lead">媒體／嘉賓為 21:9 手機豎版；郵件推送為 16:9 橫版。「活動海報」為 /event 右側用圖，1080×1170，可先下載再替換。「背景板」含現場三塊屏、16:9 整幅與 16:9 簽名。「PPT」為現場簡報六頁，可一鍵下載 PPTX，也可逐頁下載 1920×1080。「亞芳對外」為人名留空模板。</p>
         <div class="studio-bar">
           <div class="tabs" id="tabs">
             ${types.map((t) => `
@@ -189,8 +204,9 @@
             <button type="button" class="tab" data-yafang-variant="media">媒體邀請函</button>
             <button type="button" class="tab" data-yafang-variant="guest">嘉賓邀請函</button>
           </div>
-          <p class="backdrop-hint" id="backdropHint" hidden>左／右側板相同，只下一張。請用下面三個按鈕分別下載。</p>
-          <p class="backdrop-hint" id="pptHint" hidden>七頁現場簡報。可一鍵下載 PPTX（每張圖一頁），或用各頁下方按鈕分別下載 1920×1080。</p>
+          <p class="backdrop-hint" id="backdropHint" hidden>左／右側板相同，只下一張。請用下面四個按鈕分別下載。</p>
+          <p class="backdrop-hint" id="pptHint" hidden>六頁現場簡報。可一鍵下載 PPTX（每張圖一頁），或用各頁下方按鈕分別下載 1920×1080。</p>
+          <p class="backdrop-hint" id="posterHint" hidden>活動頁右側海報。比例接近現網海報，先下載預覽，確認後再換到 /event。</p>
           <div class="name-field" id="nameField" hidden>
             <label for="nameInput"></label>
             <input id="nameInput" type="text" autocomplete="name" />
@@ -201,6 +217,7 @@
             <button type="button" class="chrome-btn gold" id="backdropCentreBtn" hidden>下載中間 2048×1152</button>
             <button type="button" class="chrome-btn gold" id="backdropSideBtn" hidden>下載側板 867×1152</button>
             <button type="button" class="chrome-btn gold" id="backdropWideBtn" hidden>下載16:9 1920×1080</button>
+            <button type="button" class="chrome-btn gold" id="backdropSignBtn" hidden>下載16:9 簽名 1920×1080</button>
             <button type="button" class="chrome-btn gold" id="pptxBtn" hidden>下載 PPTX</button>
             <button type="button" class="chrome-btn" id="mediaBatchBtn" title="${esc((data.mediaBatch || []).join('、'))}">批量下載媒體邀請函</button>
             <button type="button" class="chrome-btn gold" id="yafangPackBtn" hidden>下載亞芳媒體+嘉賓空白模板</button>
@@ -232,11 +249,11 @@
       });
     }
     if (packBtn) packBtn.hidden = !on;
-    if (batchBtn) batchBtn.hidden = on || isBackdrop() || isPpt();
+    if (batchBtn) batchBtn.hidden = on || isBackdrop() || isPpt() || isEventPoster();
   }
 
   function backdropExportButtons() {
-    return ['#backdropCentreBtn', '#backdropSideBtn', '#backdropWideBtn']
+    return ['#backdropCentreBtn', '#backdropSideBtn', '#backdropWideBtn', '#backdropSignBtn']
       .map((sel) => $(sel))
       .filter(Boolean);
   }
@@ -248,7 +265,7 @@
     const on = isBackdrop();
     if (hint) hint.hidden = !on;
     backdropExportButtons().forEach((btn) => { btn.hidden = !on; });
-    if (copyBtn) copyBtn.hidden = on || isPpt();
+    if (copyBtn) copyBtn.hidden = on || isPpt() || isEventPoster();
     if (pngBtn) pngBtn.hidden = on || isPpt();
   }
 
@@ -264,6 +281,8 @@
       if (copyBtn) copyBtn.hidden = true;
       if (pngBtn) pngBtn.hidden = true;
     }
+    const posterHint = $('#posterHint');
+    if (posterHint) posterHint.hidden = !isEventPoster();
   }
 
   function syncNameField() {
@@ -272,7 +291,7 @@
     const input = $('#nameInput');
     const label = field?.querySelector('label');
     if (!field || !input) return;
-    const show = Boolean(t.greetingPrefix) && !t.nameLockedBlank && !isBackdrop() && !isPpt();
+    const show = Boolean(t.greetingPrefix) && !t.nameLockedBlank && !isBackdrop() && !isPpt() && !isEventPoster();
     field.hidden = !show;
     if (label) label.textContent = t.nameLabel || '姓名';
     input.placeholder = t.namePlaceholder || '';
@@ -294,11 +313,17 @@
       fitBoard();
       return;
     }
+    if (isEventPoster()) {
+      paintEventPoster(board);
+      fitBoard();
+      return;
+    }
     if (isBackdrop()) {
       paintBackdropCard($('#artboardSideL'), 'side');
       paintBackdropCard(board, 'centre');
       paintBackdropCard($('#artboardSideR'), 'side');
       paintBackdropCard($('#artboardWide'), 'wide');
+      paintBackdropCard($('#artboardSign'), 'sign');
       fitBoard();
       return;
     }
@@ -362,6 +387,37 @@
       </div>
     `;
     fitBoard();
+  }
+
+  function paintEventPoster(board) {
+    if (!board) return;
+    const ev = data.event;
+    board.innerHTML = `
+      <div class="card is-poster">
+        <div class="card-bg"></div>
+        <div class="card-photo is-cover"></div>
+        <div class="card-veil blast-veil"></div>
+        <div class="card-gold"></div>
+        <div class="card-mesh"></div>
+        <canvas class="card-baked-bg" aria-hidden></canvas>
+        <p class="card-mark" aria-hidden>幣安人生</p>
+        <div class="poster-inner">
+          <p class="poster-brand">CZ LIFE · YOUNG FOUNDERS</p>
+          <h1 class="poster-title">《幣安人生》書友見面會</h1>
+          <img class="poster-sign" src="${esc(inscriptionUrl)}" alt="幣安人生 Club" />
+          <div class="poster-book">
+            <div class="hero-book">
+              <span class="hero-book-shadow" aria-hidden="true"></span>
+              <span class="hero-book-shadow-soft" aria-hidden="true"></span>
+              <div class="hero-book-tilt">
+                <img src="./assets/book-cover-hero.png" alt="《幣安人生》" />
+              </div>
+            </div>
+          </div>
+          <p class="poster-meta">${esc(ev.date)}　${esc(ev.venue)}</p>
+        </div>
+      </div>
+    `;
   }
 
   function paintBlastCard(board) {
@@ -429,17 +485,42 @@
     }).join('');
   }
 
+  function pptWallLogos() {
+    const partners = data.pptWallPartners || data.backdropPartners || [];
+    return [...partners, { id: 'club', name: '幣安人生 Club' }];
+  }
+
+  function renderPptWall() {
+    const logos = pptWallLogos();
+    const pattern = [4, 5, 4, 5];
+    let i = 0;
+    return pattern.map((count, row) => {
+      const cells = Array.from({ length: count }, () => logos[i++ % logos.length]);
+      return `<div class="backdrop-row${row % 2 ? ' is-shift' : ''}">${cells.map(renderLogo).join('')}</div>`;
+    }).join('');
+  }
+
   function paintBackdropCard(board, panel = backdropPanel) {
     if (!board) return;
     const side = panel === 'side';
+    const sign = panel === 'sign';
     const { w, h } = backdropPanelSize(panel);
     board.style.width = `${w}px`;
     board.style.height = `${h}px`;
     const club = side
       ? `<img class="backdrop-club" src="${esc(inscriptionUrl)}" alt="幣安人生 Club" />`
       : '';
+    const inner = sign
+      ? `<img class="backdrop-sign" src="${esc(inscriptionUrl)}" alt="幣安人生 Club" />`
+      : `
+          <div class="backdrop-lockup">
+            <h1 class="backdrop-title">幣安人生書友會</h1>
+            ${club}
+          </div>
+          ${side ? '' : `<div class="backdrop-wall">${renderBackdropWall()}</div>`}
+        `;
     board.innerHTML = `
-      <div class="card is-backdrop${side ? ' is-backdrop-side' : ''}${panel === 'wide' ? ' is-backdrop-wide' : ''}">
+      <div class="card is-backdrop${side ? ' is-backdrop-side' : ''}${panel === 'wide' ? ' is-backdrop-wide' : ''}${sign ? ' is-backdrop-sign' : ''}">
         <div class="card-bg"></div>
         <div class="card-photo is-cover"></div>
         <div class="card-veil blast-veil"></div>
@@ -447,11 +528,7 @@
         <div class="card-mesh"></div>
         <canvas class="card-baked-bg" aria-hidden></canvas>
         <div class="backdrop-inner">
-          <div class="backdrop-lockup">
-            <h1 class="backdrop-title">幣安人生書友會</h1>
-            ${club}
-          </div>
-          ${side ? '' : `<div class="backdrop-wall">${renderBackdropWall()}</div>`}
+          ${inner}
         </div>
       </div>
     `;
@@ -481,8 +558,8 @@
       <aside class="ppt-qr-rail">
         ${items.map((q) => `
           <div class="ppt-qr-item">
-            <div class="ppt-qr-frame${q.framed === false ? ' is-bare' : ''}">
-              <img src="${esc(q.src || (q.id === 'site' ? SITE_QR_SRC : TELEGRAM_QR_SRC))}" alt="${esc(q.label || '')}" />
+            <div class="ppt-qr-frame${q.framed === false ? ' is-bare' : ''}${q.id === 'site' ? ' is-site' : ''}${q.id === 'chronicle' ? ' is-chronicle' : ''}">
+              <img src="${esc(q.src || (q.id === 'chronicle' ? CHRONICLE_QR_SRC : q.id === 'site' ? SITE_QR_SRC : TELEGRAM_QR_SRC))}" alt="${esc(q.label || '')}" />
             </div>
             <p class="ppt-qr-label">${esc(q.label || '')}</p>
           </div>
@@ -493,10 +570,8 @@
 
   function pptPartnerRows() {
     const ev = data.event;
-    const main = data.partners || [];
-    const extra = data.venuePartners || [];
-    const row1 = main.slice(0, 5);
-    const row2 = [...main.slice(5), ...extra];
+    const row1 = data.partners || [];
+    const row2 = data.venuePartners || [];
     const block = (label, row) => {
       if (!row.length) return '';
       return `
@@ -508,8 +583,8 @@
     };
     return `
       <div class="ppt-partners">
-        ${block(ev.partnersLabel || '支持機構', row1)}
         ${block(ev.venueSupportLabel || '生態夥伴', row2)}
+        ${block(ev.partnersLabel || '支持機構', row1)}
       </div>
     `;
   }
@@ -534,45 +609,89 @@
           <div class="ppt-cover-main">
             <h1 class="ppt-title">${esc(slide.title)}</h1>
             <h2 class="ppt-subtitle">${esc(slide.subtitle)}</h2>
-            <p class="ppt-when">${esc(slide.when)}</p>
-            <p class="ppt-venue">${esc(slide.venue)}</p>
+            ${slide.when ? `<p class="ppt-when">${esc(slide.when)}</p>` : ''}
+            ${slide.venue ? `<p class="ppt-venue">${esc(slide.venue)}</p>` : ''}
             ${pptPartnerRows()}
           </div>
           ${pptQrRail(slide)}
         </div>
       `;
     } else if (slide.layout === 'agenda') {
-      const rows = (slide.rows || []).map(([time, item], i) => `
-        <li class="ppt-program-row">
+      const cols = slide.cols || ['時間', '環節', '內容'];
+      const head = `
+        <li class="ppt-program-row is-head" aria-hidden="true">
+          <span class="ppt-program-time">${esc(cols[0] || '時間')}</span>
+          <span class="ppt-program-item">${esc(cols[1] || '環節')}</span>
+          <span class="ppt-program-detail">${esc(cols[2] || '內容')}</span>
+        </li>
+      `;
+      const rows = (slide.rows || []).map((row) => {
+        const [time, item, detail = ''] = row;
+        const kind = /簽到|入場|離場|結束/.test(item) ? 'is-ops' : 'is-main';
+        return `
+        <li class="ppt-program-row ${kind}">
           <span class="ppt-program-time">${esc(time)}</span>
           <span class="ppt-program-item">${esc(item)}</span>
+          <span class="ppt-program-detail">${esc(detail)}</span>
         </li>
-      `).join('');
+      `;
+      }).join('');
+      const range = slide.range || String(slide.foot || '').split('|').pop().trim();
       sheet = `
         <div class="ppt-sheet is-agenda">
           ${pptCorners(slide.kicker)}
           <div class="ppt-agenda-hero">
             <h1 class="ppt-agenda-title">${esc(slide.title)}</h1>
+            ${range ? `<p class="ppt-agenda-range">${esc(range)}</p>` : ''}
             <p class="ppt-agenda-lead">${esc(slide.lead)}</p>
           </div>
-          <ol class="ppt-program">${rows}</ol>
+          <ol class="ppt-program">${head}${rows}</ol>
         </div>
       `;
     } else if (slide.layout === 'guest') {
       const speakers = (slide.speakers || []).map((s) => `
         <div class="ppt-speaker">
           <p class="ppt-speaker-name">${esc(s.name)}</p>
-          <p class="ppt-speaker-role">${esc(s.role || '')}</p>
+          ${s.role ? `<p class="ppt-speaker-role">${esc(s.role)}</p>` : ''}
           ${s.handle ? `<p class="ppt-speaker-handle">${esc(s.handle)}</p>` : ''}
         </div>
       `).join('');
+      const logo = slide.logo
+        ? `<div class="ppt-guest-logo">${renderLogo({ id: slide.logo, name: slide.logoName || '亞芳創變派' })}</div>`
+        : '';
       sheet = `
         <div class="ppt-sheet is-guest">
           ${pptCorners(slide.kicker)}
           <div class="ppt-guest-main">
+            ${logo}
             <h1 class="ppt-section-title">${esc(slide.title)}</h1>
             <div class="ppt-speakers">${speakers}</div>
           </div>
+        </div>
+      `;
+    } else if (slide.layout === 'launch') {
+      const qr = pptQrItems(slide)[0];
+      const qrSrc = qr?.src || CHRONICLE_QR_SRC;
+      const qrLabel = qr?.label || '掃碼撰寫我的幣安人生';
+      sheet = `
+        <div class="ppt-sheet is-chapter is-launch">
+          ${pptCorners(slide.kicker)}
+          <div class="ppt-chapter-main">
+            ${pptTitleBlock(slide)}
+            <div class="ppt-hero-qr">
+              <div class="ppt-hero-qr-frame">
+                <img src="${esc(qrSrc)}" alt="${esc(qrLabel)}" />
+              </div>
+              <p class="ppt-hero-qr-label">${esc(qrLabel)}</p>
+            </div>
+          </div>
+        </div>
+      `;
+    } else if (slide.layout === 'wall') {
+      sheet = `
+        <div class="ppt-sheet is-wall">
+          ${slide.title ? `<h1 class="ppt-wall-title">${esc(slide.title)}</h1>` : ''}
+          <div class="ppt-wall backdrop-wall">${renderPptWall()}</div>
         </div>
       `;
     } else {
@@ -581,10 +700,7 @@
           ${pptCorners(slide.kicker)}
           <div class="ppt-chapter-main">
             ${pptTitleBlock(slide)}
-            <p class="ppt-section-lead">${esc(slide.lead)}</p>
-            ${slide.time ? `<p class="ppt-chapter-time">${esc(slide.time)}</p>` : ''}
           </div>
-          ${pptQrRail(slide)}
         </div>
       `;
     }
@@ -791,6 +907,12 @@
         alert('16:9 背景板匯出失敗，請再試一次。');
       });
     });
+    $('#backdropSignBtn')?.addEventListener('click', () => {
+      downloadBackdropPanel('sign').catch((err) => {
+        console.error(err);
+        alert('16:9 簽名背景板匯出失敗，請再試一次。');
+      });
+    });
     $('#pptxBtn')?.addEventListener('click', () => {
       downloadPptxDeck().catch((err) => {
         console.error(err);
@@ -837,9 +959,10 @@
       const ledW = BACKDROP_SIDE.w + BACKDROP_CENTRE.w + BACKDROP_SIDE.w;
       const sLed = Math.max(0.1, Math.min((stage.clientWidth - 16) / ledW, 1));
       led.querySelectorAll('.board-slot').forEach((slot) => scaleBoardSlot(slot, sLed));
-      const wideSlot = $('[data-panel="wide"]');
       const sWide = Math.max(0.12, Math.min((stage.clientWidth - 16) / BACKDROP_WIDE.w, 1));
-      scaleBoardSlot(wideSlot, sWide);
+      document.querySelectorAll('#backdropRig .backdrop-col-wide .board-slot').forEach((slot) => {
+        scaleBoardSlot(slot, sWide);
+      });
       return;
     }
     if (isPpt()) {
@@ -1090,7 +1213,7 @@
       veil.addColorStop(0, 'rgba(26,23,20,0.12)');
       veil.addColorStop(0.55, 'rgba(26,23,20,0.22)');
       veil.addColorStop(1, 'rgba(26,23,20,0.38)');
-    } else if (typeId === 'blast') {
+    } else if (typeId === 'blast' || isEventPoster()) {
       veil.addColorStop(0, 'rgba(26,23,20,0.55)');
       veil.addColorStop(0.42, 'rgba(26,23,20,0.72)');
       veil.addColorStop(1, 'rgba(26,23,20,0.88)');
@@ -1388,6 +1511,8 @@
       const yafangLabels = { media: '媒體', guest: '嘉賓' };
       const name = isYafangPack()
         ? `亞芳-${yafangLabels[yafangVariant] || yafangVariant}邀請函-空白.png`
+        : isEventPoster()
+          ? '活動海報-書友見面會-1080x1170.png'
         : (slug ? `binance-life-invite-${typeId}-${slug}.png` : `binance-life-invite-${typeId}.png`);
       await saveCanvas(canvas, name);
     } finally {
@@ -1412,6 +1537,7 @@
     centre: { id: 'centre', name: '背景板-A-中間主屏-2048x1152.png', label: '中間' },
     side: { id: 'side', name: '背景板-B-側板-867x1152.png', label: '側板' },
     wide: { id: 'wide', name: '背景板-C-16比9整幅-1920x1080.png', label: '16:9' },
+    sign: { id: 'sign', name: '背景板-D-16比9簽名-1920x1080.png', label: '簽名' },
   };
 
   async function captureBackdropPanel(panel) {

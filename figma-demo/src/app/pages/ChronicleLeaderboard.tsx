@@ -1,13 +1,19 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import { motion } from "motion/react";
 import { BookOpen, ChevronLeft, Loader2, Trophy } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import LanguageSwitcher from "../components/LanguageSwitcher";
 import RoleAvatar from "../components/RoleAvatar";
+import { truncateAuthorName } from "../../lib/chronicle/authorName";
 import type { AvatarRoleId } from "../../lib/chronicle/roles";
-import { persistInviteRef } from "../../lib/chronicle/wizardNav";
+import {
+  chronicleLeavePath,
+  isChronicleSurfacePath,
+  persistInviteRef,
+  rememberChronicleArrival,
+} from "../../lib/chronicle/wizardNav";
 import {
   claimRankReward,
   fetchLeaderboard,
@@ -26,6 +32,7 @@ const H5_CTA =
 
 export default function ChronicleLeaderboard() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const focusEntryId = searchParams.get("entryId") || "";
   const from = searchParams.get("from") || "";
@@ -37,12 +44,34 @@ export default function ChronicleLeaderboard() {
   const [busyId, setBusyId] = useState<string | null>(null);
   const [claimOpen, setClaimOpen] = useState<RankEntry | null>(null);
 
-  const backTo = (() => {
-    if (from === "intro") return "/club/chronicle";
-    if (focusEntryId) return `/club/chronicle?entryId=${encodeURIComponent(focusEntryId)}`;
-    if (from === "club") return "/club";
-    return "/club/chronicle";
-  })();
+  useEffect(() => {
+    rememberChronicleArrival();
+  }, []);
+
+  const onBoardBack = () => {
+    const refPath = (() => {
+      try {
+        const url = new URL(document.referrer, window.location.origin);
+        if (url.origin !== window.location.origin) return "";
+        return `${url.pathname}${url.search}`;
+      } catch {
+        return "";
+      }
+    })();
+    const fromChronicle =
+      from === "intro" ||
+      Boolean(focusEntryId) ||
+      (refPath && isChronicleSurfacePath(refPath) && !refPath.startsWith("/club/chronicle/rank"));
+    if (fromChronicle) {
+      if (window.history.length > 1) {
+        navigate(-1);
+        return;
+      }
+      navigate("/club/chronicle", { replace: true });
+      return;
+    }
+    navigate(chronicleLeavePath());
+  };
 
   const reload = useCallback(async () => {
     const [c, board] = await Promise.all([
@@ -94,10 +123,14 @@ export default function ChronicleLeaderboard() {
       />
       <div className={H5_STAGE}>
         <header className="mb-4 flex items-center justify-between gap-2">
-          <Link to={backTo} className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+          <button
+            type="button"
+            onClick={onBoardBack}
+            className="inline-flex items-center gap-1 text-xs text-muted-foreground"
+          >
             <ChevronLeft className="h-4 w-4" aria-hidden />
             {t("chronicle.rank.backChronicle")}
-          </Link>
+          </button>
           <LanguageSwitcher />
         </header>
 
@@ -115,7 +148,7 @@ export default function ChronicleLeaderboard() {
             </ul>
           </div>
 
-          <p className="text-center text-[11px] uppercase text-gold/80">
+          <p className="text-center font-display text-2xl text-gold">
             {t("chronicle.rank.boardKicker")}
           </p>
           <h1 className="mt-2 text-center font-display text-2xl text-gold">
@@ -156,10 +189,10 @@ export default function ChronicleLeaderboard() {
                       className="shrink-0"
                     />
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium">{row.authorName}</p>
+                      <p className="text-sm font-medium">{truncateAuthorName(row.authorName)}</p>
                       <p className="text-[11px] text-muted-foreground">
                         {t("chronicle.rank.togetherLine", {
-                          name: row.authorName,
+                          name: truncateAuthorName(row.authorName),
                           count: row.inviteCount ?? row.popularity ?? 0,
                         })}
                       </p>

@@ -313,3 +313,24 @@
     filter: brightness(1.06) saturate(1.08) drop-shadow(0 0 12px rgba(201, 167, 106, 0.32));
   }
 }
+
+@keyframes account-notice-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.account-notice-marquee {
+  animation: account-notice-marquee 36s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .account-notice-marquee {
+    animation: none;
+  }
+}

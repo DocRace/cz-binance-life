@@ -1,4 +1,5 @@
 import { bookBffJson } from "../bookBffClient";
+import { truncateAuthorName } from "./authorName";
 
 export type RankPhase = "disabled" | "upcoming" | "active" | "ended";
 export type RankMode = "sync" | "async";
@@ -76,10 +77,14 @@ export async function enrollRankEntry(body: {
   styleId?: string;
   price?: number;
   tags?: string[];
+  refEntryId?: string | null;
 }): Promise<RankEntry | null> {
   const out = await bookBffJson<RankEntry>("/api/bff/chronicle/rank/enroll", {
     method: "POST",
-    body: JSON.stringify(body),
+    body: JSON.stringify({
+      ...body,
+      authorName: truncateAuthorName(body.authorName),
+    }),
   });
   return out.code === 0 ? out.data : null;
 }
@@ -153,6 +158,24 @@ export async function claimRankReward(entryId: string): Promise<{
 export async function fetchMyRankRewards(): Promise<RankReward[]> {
   const out = await bookBffJson<{ rewards: RankReward[] }>("/api/bff/chronicle/rank/my-rewards");
   return out.code === 0 && out.data?.rewards ? out.data.rewards : [];
+}
+
+export async function fetchMyBooks(): Promise<RankEntry[]> {
+  const out = await bookBffJson<{ items: RankEntry[] }>("/api/bff/chronicle/rank/mine");
+  return out.code === 0 && out.data?.items ? out.data.items : [];
+}
+
+export async function bindMyBook(body: {
+  entryId?: string;
+  shareToken?: string;
+  authorName?: string;
+}): Promise<RankEntry | null> {
+  const out = await bookBffJson<RankEntry & { items?: RankEntry[] }>(
+    "/api/bff/chronicle/rank/bind",
+    { method: "POST", body: JSON.stringify(body) },
+  );
+  if (out.code !== 0) return null;
+  return out.data?.entryId ? out.data : out.data?.items?.[0] || null;
 }
 
 export function shareTokenFromUrl(url: string): string {

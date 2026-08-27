@@ -12,6 +12,7 @@ import {
   rolePackSrc,
   type AvatarGenderId,
 } from "../../lib/chronicle/roleArt";
+import { truncateAuthorName } from "../../lib/chronicle/authorName";
 import type { AvatarRoleId } from "../../lib/chronicle/roles";
 
 const MAX_TILT = 12;
@@ -19,6 +20,36 @@ const SPRING = { stiffness: 280, damping: 28, mass: 0.5 };
 const BASE_ROTATE_Y = 28;
 const BASE_ROTATE_X = 2;
 const THICKNESS = 50;
+/** Cover face design size — typography is composed here, then scaled with the book. */
+const DESIGN_COVER_W = 228;
+const DESIGN_COVER_H = Math.round((DESIGN_COVER_W * 4) / 3);
+
+function fitOneLine(el: HTMLElement | null) {
+  if (!el) return;
+  el.style.fontSize = "";
+  const { scrollWidth, clientWidth } = el;
+  if (scrollWidth <= clientWidth + 0.5) return;
+  const base = parseFloat(getComputedStyle(el).fontSize);
+  if (!Number.isFinite(base) || base <= 0) return;
+  el.style.fontSize = `${Math.max(8, base * (clientWidth / scrollWidth) * 0.98)}px`;
+}
+
+function useFitOneLine<T extends HTMLElement>(text: string) {
+  const ref = useRef<T | null>(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    let cancelled = false;
+    const run = () => {
+      if (!cancelled) fitOneLine(el);
+    };
+    run();
+    void document.fonts.ready.then(run);
+    return () => {
+      cancelled = true;
+    };
+  }, [text]);
+  return ref;
+}
 
 type Props = {
   authorName: string;
@@ -51,7 +82,7 @@ export default function ChronicleBookCover({
   const { t } = useTranslation();
   const roleLabel = roleId ? t(`chronicle.roles.${roleId}.name`) : "";
   /** Personal author name — prefers under-title byline when present. */
-  const signature = authorName.trim();
+  const signature = truncateAuthorName(authorName);
   /** Archetype label — corner mark when author is shown under the title. */
   const roleByline = roleLabel || t("chronicle.anonymousAuthor");
   const underTitle = signature || roleByline;
@@ -105,8 +136,12 @@ export default function ChronicleBookCover({
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const glareRef = useRef<HTMLDivElement>(null);
-  const [halfW, setHalfW] = useState(114);
-  const [halfH, setHalfH] = useState(152);
+  const [halfW, setHalfW] = useState(DESIGN_COVER_W / 2);
+  const [halfH, setHalfH] = useState(DESIGN_COVER_H / 2);
+  const coverScale = halfW * 2 / DESIGN_COVER_W;
+  const titleRef = useFitOneLine<HTMLHeadingElement>(title);
+  const bylineRef = useFitOneLine<HTMLParagraphElement>(face.byline);
+  const cornerRef = useFitOneLine<HTMLParagraphElement>(face.corner);
 
   useLayoutEffect(() => {
     const el = wrapRef.current;
@@ -221,13 +256,22 @@ export default function ChronicleBookCover({
         >
           {/* Horizontal line type rotated along the spine (reads as a normal line, not stacked glyphs) */}
           <div className="relative h-full w-full overflow-hidden">
-            <span className="font-display absolute left-1/2 top-[22%] whitespace-nowrap text-[11px] font-medium leading-none text-gold [transform:translate(-50%,-50%)_rotate(-90deg)]">
+            <span
+              className="font-display absolute left-1/2 top-[22%] whitespace-nowrap font-medium leading-none text-gold [transform:translate(-50%,-50%)_rotate(-90deg)]"
+              style={{ fontSize: `${11 * coverScale}px` }}
+            >
               {title}
             </span>
-            <span className="font-cjk absolute left-1/2 top-1/2 max-w-[180px] truncate whitespace-nowrap text-[10px] font-medium leading-none text-[#1a1a1a] [transform:translate(-50%,-50%)_rotate(-90deg)]">
+            <span
+              className="font-cjk absolute left-1/2 top-1/2 max-w-[180px] truncate whitespace-nowrap font-medium leading-none text-[#1a1a1a] [transform:translate(-50%,-50%)_rotate(-90deg)]"
+              style={{ fontSize: `${10 * coverScale}px` }}
+            >
               {face.byline}
             </span>
-            <span className="font-body absolute left-1/2 top-[78%] max-w-[150px] truncate whitespace-nowrap text-[8px] font-normal leading-none text-[#1a1a1a]/55 [transform:translate(-50%,-50%)_rotate(-90deg)]">
+            <span
+              className="font-body absolute left-1/2 top-[78%] max-w-[150px] truncate whitespace-nowrap font-normal leading-none text-[#1a1a1a]/55 [transform:translate(-50%,-50%)_rotate(-90deg)]"
+              style={{ fontSize: `${8 * coverScale}px` }}
+            >
               {publisher}
             </span>
           </div>
@@ -318,39 +362,55 @@ export default function ChronicleBookCover({
               </div>
             )}
 
-            {face.corner ? (
-              <p className="font-cjk absolute left-3 top-3 z-[2] max-w-[70%] truncate text-left text-[0.95rem] font-medium leading-normal text-[#1a1a1a]">
-                {face.corner}
-              </p>
-            ) : null}
-
-            <div className="absolute inset-x-0 bottom-0 z-[2] px-3 pb-4 pt-10 text-right">
-              <h2 className="font-display text-[1.75rem] font-medium leading-[1.05] text-gold">
-                {title}
-              </h2>
-              <p
-                className={`font-cjk mt-2 text-[1.15rem] font-medium leading-none ${
-                  face.darkByline ? "text-white" : "text-[#1a1a1a]"
-                }`}
-              >
-                {face.byline}
-              </p>
-              {face.keywords.length > 0 ? (
+            <div
+              className="pointer-events-none absolute left-0 top-0 z-[2] origin-top-left"
+              style={{
+                width: DESIGN_COVER_W,
+                height: DESIGN_COVER_H,
+                transform: `scale(${coverScale})`,
+              }}
+            >
+              {face.corner ? (
                 <p
-                  className={`font-cjk mt-2 text-[0.72rem] font-medium leading-snug tracking-wide ${
-                    face.darkByline ? "text-white/85" : "text-[#1a1a1a]/75"
-                  }`}
+                  ref={cornerRef}
+                  className="font-cjk absolute left-3 top-3 max-w-[70%] truncate whitespace-nowrap text-left text-[0.95rem] font-medium leading-normal text-[#1a1a1a]"
                 >
-                  {face.keywords.join(" · ")}
+                  {face.corner}
                 </p>
               ) : null}
-              <p
-                className={`font-cjk mt-2 text-[0.58rem] leading-tight ${
-                  face.darkByline ? "text-white/55" : "text-[#1a1a1a]/50"
-                }`}
-              >
-                {t("chronicle.coverPartners")}
-              </p>
+
+              <div className="absolute inset-x-0 bottom-0 px-3 pb-4 pt-10 text-right">
+                <h2
+                  ref={titleRef}
+                  className="font-display whitespace-nowrap text-[1.75rem] font-medium leading-[1.05] text-gold"
+                >
+                  {title}
+                </h2>
+                <p
+                  ref={bylineRef}
+                  className={`font-cjk mt-2 whitespace-nowrap text-[1.15rem] font-medium leading-none ${
+                    face.darkByline ? "text-white" : "text-[#1a1a1a]"
+                  }`}
+                >
+                  {face.byline}
+                </p>
+                {face.keywords.length > 0 ? (
+                  <p
+                    className={`font-cjk mt-2 text-[0.72rem] font-medium leading-snug tracking-wide ${
+                      face.darkByline ? "text-white/85" : "text-[#1a1a1a]/75"
+                    }`}
+                  >
+                    {face.keywords.join(" · ")}
+                  </p>
+                ) : null}
+                <p
+                  className={`font-cjk mt-2 text-[0.58rem] leading-tight ${
+                    face.darkByline ? "text-white/55" : "text-[#1a1a1a]/50"
+                  }`}
+                >
+                  {t("chronicle.coverPartners")}
+                </p>
+              </div>
             </div>
           </div>
         </div>
