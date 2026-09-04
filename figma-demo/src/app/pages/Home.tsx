@@ -235,14 +235,22 @@ export default function Home() {
             <p className="text-muted-foreground leading-relaxed mb-8">
               {t("home.offlineEventDesc")}
             </p>
-            <Link
-              to="/event"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-gold/90 px-8 py-3.5 text-sm font-body font-medium tracking-wide text-primary-foreground shadow-sm transition-colors hover:bg-gold no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            >
-              <MapPin className="h-4 w-4 shrink-0" aria-hidden />
-              {t("home.offlineEventCta")}
-              <ChevronRight className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
-            </Link>
+            <div className="flex flex-col items-center gap-4">
+              <Link
+                to="/event"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-gold/90 px-8 py-3.5 text-sm font-body font-medium tracking-wide text-primary-foreground shadow-sm transition-colors hover:bg-gold no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                <MapPin className="h-4 w-4 shrink-0" aria-hidden />
+                {t("home.offlineEventCta")}
+                <ChevronRight className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
+              </Link>
+              <Link
+                to="/event#press"
+                className="text-sm text-gold hover:text-gold-light transition-colors no-underline"
+              >
+                {t("home.offlineEventPressCta")}
+              </Link>
+            </div>
           </motion.div>
 
           <BookPickupStores

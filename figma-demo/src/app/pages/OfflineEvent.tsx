@@ -27,6 +27,7 @@ import {
   PAGE_SHELL,
   SECTION_SPACING,
 } from "../layout/pageLayout";
+import OfflineEventPress from "../components/OfflineEventPress";
 import PartnerLogoMark from "../components/PartnerLogoMark";
 import PartnerLogoRow from "../components/PartnerLogoRow";
 import { partnerLogoIdFromTitle } from "../../lib/partnerLogos";
@@ -195,7 +196,7 @@ export default function OfflineEvent() {
           <h2 id="offline-event-partners" className="mb-6 font-display text-2xl md:text-3xl text-foreground">
             {t("offlineEvent.partnersTitle")}
           </h2>
-          <div className={`grid grid-cols-1 gap-4 md:grid-cols-3 ${GRID_GAP}`}>
+          <div className={`grid grid-cols-1 gap-4 md:max-w-xl ${GRID_GAP}`}>
             {partners.map((partner) => {
               const logoId = partnerLogoIdFromTitle(partner.title);
               return (
@@ -247,6 +248,8 @@ export default function OfflineEvent() {
           </table>
         </div>
       </motion.section>
+
+      <OfflineEventPress />
 
       <motion.section
         initial={{ opacity: 0, y: 12 }}

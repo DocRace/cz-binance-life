@@ -149,19 +149,57 @@
       {
         "title": "商務印書館について",
         "body": "1897年上海で創立された中国最古の近代的出版機関。1914年に香港支店を設立、1988年に香港支店が有限公司として正式登録。編集出版と教育研修を手がける。"
-      },
-      {
-        "title": "IPDEXについて",
-        "body": "IP権益取引分野をリードするWeb3プラットフォーム企業。香港発・グローバル展開のIP権益取引所とチェーンクラウド一体型SaaSを提供。"
-      },
-      {
-        "title": "DDCについて",
-        "body": "DataDance（DDC）は消費者データを中心とした分散型データ取引プラットフォーム。個人のデータ管理と企業のプライバシー配慮型インサイトを支援。"
       }
     ],
     "scanTitle": "ブッククラブコミュニティに参加",
     "scanHint": "本ミートアップは招待制です。QRからTelegramに参加し、今後の案内を受け取ってください。",
-    "qrAlt": "Telegramブッククラブ入群QRコード"
+    "qrAlt": "Telegramブッククラブ入群QRコード",
+    "pressTitle": "メディア報道",
+    "pressLead": "8月の香港ブックミートアップと関連インタビューの公開報道・全編録画。",
+    "pressWatch": "録画を見る",
+    "pressRead": "記事を読む",
+    "pressItems": {
+      "hkcd-youtube": {
+        "outlet": "香港商報",
+        "title": "『バイナンスライフ』書友ミートアップ全編録画"
+      },
+      "hkcd-recap": {
+        "outlet": "香港商報",
+        "title": "香港で書友ミートアップ開催、CZが学生と成長と長期主義を語る"
+      },
+      "hkej": {
+        "outlet": "信報",
+        "title": "CZ、次の大きな方向はRWAと見込む"
+      },
+      "caixin": {
+        "outlet": "財新",
+        "title": "CZ：証券のオンチェーン化は想定より速い。RWAに強気"
+      },
+      "wenweipo": {
+        "outlet": "文匯報",
+        "title": "CZの資産運用「4つのしない」：株・不動産投機・現金・短期売買をしない"
+      },
+      "hket": {
+        "outlet": "香港経済日報",
+        "title": "CZの香港訪問報道"
+      },
+      "kr36": {
+        "outlet": "36Kr",
+        "title": "香港で15の質問に答える：Binance、Web3サイクル、若い創業者への助言"
+      },
+      "edigest": {
+        "outlet": "経済一周",
+        "title": "暗号の冬は終わった。香港のWeb3優位と想定を超えるRWA"
+      },
+      "stheadline": {
+        "outlet": "星島ヘッドライン",
+        "title": "暗号ブル相場は来たか？Bitcoin Asia現場観察｜鄧進一"
+      },
+      "wublock": {
+        "outlet": "呉説",
+        "title": "香港Q&A：どの段階でも「何をしないか」の方が大切"
+      }
+    }
   },
   "home": {
     "title": "バイナンスライフ",
@@ -185,6 +223,7 @@
     "offlineEventTitle": "『バイナンスライフ』書友ミートアップ",
     "offlineEventDesc": "8月27日午前、香港中環・交易広場。謝亜芳 × CZ が選択・成長・起業と長期主義を対談し、「#私のバイナンスライフ」を発表。招待制・クローズド。",
     "offlineEventCta": "オフラインイベント詳細",
+    "offlineEventPressCta": "メディア報道を見る",
     "stat1Label": "イベント予約者数",
     "stat1Unit": "人",
     "stat2Label": "実際の参加者数",

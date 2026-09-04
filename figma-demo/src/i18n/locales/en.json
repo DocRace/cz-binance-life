@@ -149,19 +149,57 @@
       {
         "title": "About The Commercial Press",
         "body": "Founded in Shanghai in 1897, The Commercial Press is China's oldest modern publishing institution. Its Hong Kong branch was established in 1914 and registered as a limited company in 1988, with businesses spanning editorial publishing and education."
-      },
-      {
-        "title": "About IPDEX",
-        "body": "IPDEX is a leading Web3 platform company in IP rights trading, building Hong Kong's first IP rights exchange with global reach and integrated chain-cloud SaaS, helping Web2 IP and fan communities enter Web3 seamlessly."
-      },
-      {
-        "title": "About DDC",
-        "body": "DataDance (DDC) is a decentralised data trading platform built around consumer data, helping individuals control and share data safely while giving enterprises trusted, privacy-aware insights."
       }
     ],
     "scanTitle": "Join the book-club community",
     "scanHint": "This meetup is invite-only. Scan to join the book-club Telegram for later updates.",
-    "qrAlt": "Telegram book club group QR code"
+    "qrAlt": "Telegram book club group QR code",
+    "pressTitle": "Press coverage",
+    "pressLead": "Public reports and the full recording from the August Hong Kong book meetup and related interviews.",
+    "pressWatch": "Watch the recording",
+    "pressRead": "Read the article",
+    "pressItems": {
+      "hkcd-youtube": {
+        "outlet": "Hong Kong Commercial Daily",
+        "title": "Full recording of the Freedom of Money book meetup"
+      },
+      "hkcd-recap": {
+        "outlet": "Hong Kong Commercial Daily",
+        "title": "Freedom of Money meetup in Hong Kong: CZ and students on growth and long-termism"
+      },
+      "hkej": {
+        "outlet": "Hong Kong Economic Journal",
+        "title": "CZ sees RWA as the next major direction"
+      },
+      "caixin": {
+        "outlet": "Caixin",
+        "title": "CZ: securities on-chain faster than expected; bullish on RWA"
+      },
+      "wenweipo": {
+        "outlet": "Wen Wei Po",
+        "title": "CZ’s four “don’ts” of personal finance"
+      },
+      "hket": {
+        "outlet": "Hong Kong Economic Times",
+        "title": "CZ’s Hong Kong visit"
+      },
+      "kr36": {
+        "outlet": "36Kr",
+        "title": "CZ answers 15 questions in Hong Kong: Binance, the Web3 cycle, and advice for young founders"
+      },
+      "edigest": {
+        "outlet": "Economic Digest",
+        "title": "CZ in Hong Kong: crypto winter is over, Web3 edge, and RWA ahead of schedule"
+      },
+      "stheadline": {
+        "outlet": "Sing Tao Headline",
+        "title": "Is a crypto bull market here? Notes from Bitcoin Asia | Tang Chun Yat"
+      },
+      "wublock": {
+        "outlet": "Wu Blockchain",
+        "title": "Hong Kong Q&A: at every stage, what you don’t do matters more"
+      }
+    }
   },
   "home": {
     "title": "Freedom of Money",
@@ -185,6 +223,7 @@
     "offlineEventTitle": "Freedom of Money book meetup",
     "offlineEventDesc": "Morning of 27 August at Exchange Square, Central, Hong Kong. Tse Ah Fong × CZ on choice, growth, entrepreneurship, and long-termism, plus the #MyBinanceLife launch. Invite-only, closed-door.",
     "offlineEventCta": "Offline event details",
+    "offlineEventPressCta": "Press coverage",
     "stat1Label": "Reservations",
     "stat1Unit": "",
     "stat2Label": "Attendees",

@@ -1,24 +1,13 @@
 import { Outlet, Link, useLocation } from "react-router";
 import { useState } from "react";
-import { Globe, SquareArrowOutUpRight } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import bookCover from "../../assets/book-cover-hero.png";
 import LanguageSwitcher from "./LanguageSwitcher";
-import PartnerLogoMark from "./PartnerLogoMark";
 import { SiteNavDrawer, SiteNavMenuButton, useSiteNavItems } from "./SiteNavDrawer";
-import {
-  BOOK_CLUB_TELEGRAM_HANDLE,
-  BOOK_CLUB_TELEGRAM_QR_SRC,
-  BOOK_CLUB_TELEGRAM_URL,
-  COMMERCIAL_PRESS_WECHAT_URL,
-  getDatadanceSiteUrl,
-  getIpdexSiteUrl,
-  getIpdexSocialXUrl,
-} from "../../config/platform";
 import { Toaster } from "sonner";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
-import { SITE_CONTAINER_X, SITE_HEADER_X } from "../layout/pageLayout";
+import { SITE_HEADER_X } from "../layout/pageLayout";
 
 
 export default function Layout() {
@@ -31,17 +20,6 @@ export default function Layout() {
     location.pathname === "/club/chronicle" ||
     location.pathname.startsWith("/club/chronicle/") ||
     location.pathname.startsWith("/s/");
-
-  const ipdexBrandHref = getIpdexSiteUrl();
-  const datadanceHref = getDatadanceSiteUrl();
-
-  const partnerTitleClass = "font-display text-sm tracking-wide text-foreground/90";
-  const partnerDescClass =
-    "max-w-xs text-[11px] leading-relaxed text-muted-foreground sm:max-w-[15rem] lg:max-w-[13.5rem]";
-  const partnerLinkClass = "text-muted-foreground transition-colors hover:text-gold";
-  const partnerBrandLinkClass =
-    "inline-flex items-center gap-1 font-tech text-[11px] text-muted-foreground/90 transition-colors hover:text-gold";
-  const partnerLogoLinkClass = "inline-flex transition-opacity hover:opacity-80";
 
   const navItems = useSiteNavItems();
 
@@ -163,171 +141,6 @@ export default function Layout() {
         <Toaster richColors position="top-center" toastOptions={{ className: "z-[230]" }} style={{ zIndex: 230 }} />
       </main>
 
-      {/* Footer */}
-      {!isH5Shell ? (
-      <footer
-        className={`relative border-t border-border/50 backdrop-blur-xl bg-background/80 ${
-          location.pathname === "/timeline" ? "mt-0" : "mt-20"
-        }`}
-      >
-        <div className={`${SITE_CONTAINER_X} py-12`}>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            <div className="text-center">
-              <h3 className="font-display mb-4">{t("footer.aboutTitle")}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {t("footer.aboutDesc")}
-              </p>
-            </div>
-            <div className="text-center">
-              <h3 className="font-display mb-4">{t("footer.badgeTitle")}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {t("footer.badgeDesc")}
-              </p>
-            </div>
-            <div className="text-center">
-              <h3 className="font-display mb-4">{t("footer.contactTitle")}</h3>
-              <a
-                href={BOOK_CLUB_TELEGRAM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mx-auto mb-3 inline-block rounded-xl border border-border/45 bg-white p-2 shadow-sm transition-opacity hover:opacity-90"
-                aria-label={t("club.contactTelegramQrAlt")}
-              >
-                <img
-                  src={BOOK_CLUB_TELEGRAM_QR_SRC}
-                  alt=""
-                  width={120}
-                  height={120}
-                  className="h-[7.5rem] w-[7.5rem] object-contain"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </a>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {t("club.contactTelegram")}:{" "}
-                <a
-                  href={BOOK_CLUB_TELEGRAM_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gold hover:text-gold-light transition-colors"
-                >
-                  @{BOOK_CLUB_TELEGRAM_HANDLE}
-                </a>
-              </p>
-            </div>
-          </div>
-
-          {/* Partners strip */}
-          <div className="border-t border-border/50 pt-8">
-            <div className="grid grid-cols-1 gap-8 md:gap-6 lg:grid-cols-3 lg:gap-0 lg:items-start">
-              {/* Commercial Press — left on wide screens */}
-              <div className="flex flex-col items-center gap-3 text-center lg:items-start lg:text-left lg:pr-8">
-                <a
-                  href={COMMERCIAL_PRESS_WECHAT_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={partnerLogoLinkClass}
-                  aria-label={t("footer.publisherWechatAria")}
-                >
-                  <PartnerLogoMark id="press" size="sm" />
-                </a>
-                <h4 className={partnerTitleClass}>{t("footer.publisherSocialTitle")}</h4>
-                <p className={partnerDescClass}>{t("footer.publisherDesc")}</p>
-                <div className="flex items-center gap-2">
-                  <a
-                    href={COMMERCIAL_PRESS_WECHAT_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={partnerLinkClass}
-                    aria-label={t("footer.publisherWechatAria")}
-                  >
-                    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                      <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 0 1 .598.082l1.584.926a.272.272 0 0 0 .14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 0 1 .181-.555c1.529-1.195 2.512-2.947 2.512-4.892 0-3.59-3.284-6.444-7.075-6.85zm-2.289 3.098c.535 0 .969.44.969.984 0 .544-.434.984-.969.984a.978.978 0 0 1-.969-.984c0-.544.434-.984.969-.984zm4.633 0c.535 0 .969.44.969.984 0 .544-.434.984-.969.984a.978.978 0 0 1-.969-.984c0-.544.434-.984.969-.984z"/>
-                    </svg>
-                  </a>
-                </div>
-              </div>
-
-              {/* IPDEX — center */}
-              <div className="flex flex-col items-center gap-3 border-border/50 border-t pt-8 text-center lg:border-t-0 lg:border-x lg:px-8 lg:pt-0">
-                <a
-                  href={ipdexBrandHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={partnerLogoLinkClass}
-                  aria-label={t("footer.ipdexWebsiteAria")}
-                >
-                  <PartnerLogoMark id="ipdex" size="sm" />
-                </a>
-                <h4 className={partnerTitleClass}>IPDEX</h4>
-                <p className={partnerDescClass}>{t("footer.poweredByIpdex")}</p>
-                <div className="flex flex-wrap items-center justify-center gap-2">
-                  <a
-                    href={ipdexBrandHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={partnerBrandLinkClass}
-                  >
-                    IPDEX
-                    <SquareArrowOutUpRight className="h-3 w-3 shrink-0 opacity-90" aria-hidden />
-                  </a>
-                  <a
-                    href={ipdexBrandHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={partnerLinkClass}
-                    aria-label={t("footer.ipdexWebsiteAria")}
-                  >
-                    <Globe className="h-5 w-5" aria-hidden />
-                  </a>
-                  <a
-                    href={getIpdexSocialXUrl()}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={partnerLinkClass}
-                    aria-label={t("footer.ipdexXAria")}
-                  >
-                    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                    </svg>
-                  </a>
-                </div>
-              </div>
-
-              {/* DataDance — right on wide screens */}
-              <div className="flex flex-col items-center gap-3 border-t border-border/40 pt-8 text-center lg:items-end lg:border-t-0 lg:pl-8 lg:pt-0 lg:text-right">
-                <a
-                  href={datadanceHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={partnerLogoLinkClass}
-                  aria-label={t("footer.datadanceWebsiteAria")}
-                >
-                  <PartnerLogoMark id="datadance" size="sm" className="!h-6" />
-                </a>
-                <h4 className={partnerTitleClass}>{t("footer.datadanceTitle")}</h4>
-                <p className={partnerDescClass}>{t("footer.datadanceDesc")}</p>
-                <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-end">
-                  <a
-                    href={datadanceHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={partnerLinkClass}
-                    aria-label={t("footer.datadanceWebsiteAria")}
-                  >
-                    <Globe className="h-5 w-5" aria-hidden />
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 border-t border-border/40 pt-6 text-center text-sm text-muted-foreground">
-              {t("footer.copyright")}
-            </div>
-          </div>
-        </div>
-      </footer>
-      ) : null}
     </div>
   );
 }

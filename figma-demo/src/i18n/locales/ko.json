@@ -149,19 +149,57 @@
       {
         "title": "상무인서관 소개",
         "body": "1897년 상하이에서 설립된 중국 최고(最古)의 근대 출판 기관. 1914년 홍콩 지점 설립, 1988년 홍콩 지점 유한회사 등록. 편집 출판 및 교육 훈련 사업."
-      },
-      {
-        "title": "IPDEX 소개",
-        "body": "IP 권익 거래 분야 선도 Web3 플랫폼 기업. 홍콩 기반·글로벌 IP 권익 거래소 및 체인-클라우드 일체형 SaaS 제공."
-      },
-      {
-        "title": "DDC 소개",
-        "body": "DataDance(DDC)은 소비자 데이터 중심의 탈중앙화 데이터 거래 플랫폼으로 개인의 데이터 통제와 기업의 프라이버시 보호형 인사이트를 지원합니다."
       }
     ],
     "scanTitle": "북클럽 커뮤니티 참여",
     "scanHint": "이번 밋업은 초대제입니다. QR로 Telegram에 참여해 이후 안내를 받아 주세요.",
-    "qrAlt": "Telegram 북클럽 입群 QR 코드"
+    "qrAlt": "Telegram 북클럽 입群 QR 코드",
+    "pressTitle": "언론 보도",
+    "pressLead": "8월 홍콩 북클럽 밋업과 관련 인터뷰의 공개 보도 및 전체 녹화.",
+    "pressWatch": "녹화 보기",
+    "pressRead": "기사 읽기",
+    "pressItems": {
+      "hkcd-youtube": {
+        "outlet": "홍콩상보",
+        "title": "《바이낸스 인생》 북클럽 밋업 전체 녹화"
+      },
+      "hkcd-recap": {
+        "outlet": "홍콩상보",
+        "title": "홍콩에서 북클럽 밋업 개최, CZ와 학생들이 성장과 장기주의를 이야기하다"
+      },
+      "hkej": {
+        "outlet": "신보",
+        "title": "CZ, RWA가 다음 큰 방향이 될 것으로 전망"
+      },
+      "caixin": {
+        "outlet": "차이신",
+        "title": "CZ: 증권 온체인화가 예상보다 빠르다. RWA에 긍정적"
+      },
+      "wenweipo": {
+        "outlet": "문회보",
+        "title": "CZ의 자산 운용 네 가지 ‘하지 않기’"
+      },
+      "hket": {
+        "outlet": "홍콩경제일보",
+        "title": "CZ 홍콩 방문 보도"
+      },
+      "kr36": {
+        "outlet": "36Kr",
+        "title": "홍콩에서 15가지 질문에 답하다: 바이낸스, Web3 주기, 젊은 창업자를 위한 조언"
+      },
+      "edigest": {
+        "outlet": "경제일주",
+        "title": "암호화 겨울은 끝났다. 홍콩 Web3 강점과 예상을 뛰어넘는 RWA"
+      },
+      "stheadline": {
+        "outlet": "성도헤드라인",
+        "title": "크립토 불장은 왔나? Bitcoin Asia 현장 관찰｜덩진일"
+      },
+      "wublock": {
+        "outlet": "오설",
+        "title": "홍콩 Q&A: 어떤 단계든 ‘무엇을 하지 않느냐’가 더 중요하다"
+      }
+    }
   },
   "home": {
     "title": "바이낸스 인생",
@@ -185,6 +223,7 @@
     "offlineEventTitle": "《바이낸스 인생》 북클럽 밋업",
     "offlineEventDesc": "8월 27일 오전, 홍콩 중환 거래광장. 셰야팡 × CZ가 선택·성장·창업과 장기주의를 대담하고 「#나의 바이낸스 인생」을 발표합니다. 초대제·비공개.",
     "offlineEventCta": "오프라인 행사 보기",
+    "offlineEventPressCta": "언론 보도 보기",
     "stat1Label": "활동 예약 인원",
     "stat1Unit": "명",
     "stat2Label": "실제 참석 인원",

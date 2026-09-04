@@ -1,4 +1,4 @@
-export type PartnerLogoId = "press" | "hash" | "yafang" | "datadance" | "ipdex" | "hku" | "onebook";
+export type PartnerLogoId = "press" | "hash" | "yafang" | "bnb" | "datadance" | "ipdex" | "hku" | "onebook";
 
 export type PartnerLogoDef = {
   id: PartnerLogoId;
@@ -8,6 +8,7 @@ export type PartnerLogoDef = {
 
 /** Same order as the invite Word brief / invite posters. */
 export const INVITE_PARTNER_LOGOS: PartnerLogoDef[] = [
+  { id: "bnb", name: "BNB", src: "/invite/assets/bnb-chain.png" },
   { id: "press", name: "商務印書館", src: "/invite/assets/commercial-press.png" },
   { id: "hash", name: "HASH GLOBAL", src: "/invite/assets/hash-global.png" },
   { id: "yafang", name: "亞芳創變派", src: "/invite/assets/yafang.png" },
@@ -17,10 +18,14 @@ export const INVITE_PARTNER_LOGOS: PartnerLogoDef[] = [
   { id: "onebook", name: "一本讀書會", src: "/invite/assets/onebook.png" },
 ];
 
-const BY_ID = Object.fromEntries(INVITE_PARTNER_LOGOS.map((p) => [p.id, p])) as Record<
-  PartnerLogoId,
-  PartnerLogoDef
->;
+const EXTRA_LOGOS: PartnerLogoDef[] = [
+  { id: "datadance", name: "DataDance" },
+  { id: "ipdex", name: "IPDEX", src: "/invite/assets/ipdex.png" },
+];
+
+const BY_ID = Object.fromEntries(
+  [...INVITE_PARTNER_LOGOS, ...EXTRA_LOGOS].map((p) => [p.id, p]),
+) as Record<PartnerLogoId, PartnerLogoDef>;
 
 export function partnerLogoById(id: PartnerLogoId): PartnerLogoDef {
   return BY_ID[id];
@@ -29,6 +34,7 @@ export function partnerLogoById(id: PartnerLogoId): PartnerLogoDef {
 /** Match event “about partner” cards to a logo, across locales. */
 export function partnerLogoIdFromTitle(title: string): PartnerLogoId | null {
   const s = title.toLowerCase();
+  if (s.includes("bnb")) return "bnb";
   if (s.includes("ipdex")) return "ipdex";
   if (s.includes("ddc") || s.includes("datadance")) return "datadance";
   if (
