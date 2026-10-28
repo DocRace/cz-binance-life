@@ -8,6 +8,7 @@ import AirdropClaimModal from "../components/AirdropClaimModal";
 import MembershipTiers from "../components/MembershipTiers";
 import AccountNoticeMarquee from "../components/AccountNoticeMarquee";
 import ChronicleCampaignBanner from "../components/ChronicleCampaignBanner";
+import OxfordEventBanner from "../components/OxfordEventBanner";
 import { SHOW_CHRONICLE_CAMPAIGN } from "../../config/platform";
 import Book3DCover from "../components/Book3DCover";
 import BookPickupStores from "../components/BookPickupStores";
@@ -50,6 +51,7 @@ export default function Home() {
     <>
       <div className={`${SITE_CONTAINER_X} pb-24 pt-4 md:pb-32 md:pt-5`}>
         <AccountNoticeMarquee className="mb-3" />
+        <OxfordEventBanner className="mb-6 md:mb-8" />
         {SHOW_CHRONICLE_CAMPAIGN ? (
           <ChronicleCampaignBanner className={SECTION_SPACING_LG} />
         ) : null}
