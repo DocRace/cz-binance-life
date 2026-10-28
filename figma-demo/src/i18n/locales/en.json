@@ -20,7 +20,7 @@
     "titleHome": "Freedom of Money Book Club",
     "titleBook": "The Book · Freedom of Money Book Club",
     "titleClub": "Book Club · Freedom of Money Book Club",
-    "titleOfflineEvent": "August book meetup · Freedom of Money Book Club",
+    "titleOfflineEvent": "Oxford book discussion · Freedom of Money Book Club",
     "titlePrinciples": "CZ Principles · Freedom of Money Book Club",
     "titleTimeline": "CZ Timeline · Freedom of Money Book Club",
     "titleAccount": "Account · Freedom of Money Book Club",
@@ -86,28 +86,30 @@
   },
   "offlineEvent": {
     "backHome": "Back to home",
-    "brand": "CZ LIFE · YOUNG FOUNDERS",
-    "title": "Freedom of Money book meetup",
-    "launchHeadline": "Freedom of Money book meetup",
-    "launchTagline": "Young founders: choice, growth, and long-termism",
-    "subtitle": "Host: Tse Ah Fong · Invite-only, closed-door",
+    "brand": "CZ LIFE · OXFORD DEBATING",
+    "title": "Freedom of Money Book Discussion and European Chapter Launch",
+    "launchHeadline": "Freedom of Money Book Discussion and European Chapter Launch",
+    "launchTagline": "Debate motion: a completely cashless society",
+    "subtitle": "Co-hosted by CZLife Book Club (Freedom of Money Book Club) · Oxford Debating",
+    "cohostKicker": "Co-hosts",
+    "cohostLeft": "CZLife Book Club",
+    "cohostLeftNote": "Freedom of Money Book Club",
+    "cohostRight": "Oxford Debating",
     "dateLabel": "Date",
-    "date": "Thursday, 27 August 2026",
+    "date": "Tuesday, 3 November 2026",
     "timeLabel": "Time",
-    "time": "09:30 – 11:00",
+    "time": "10:00 AM–12:00 PM (UTC+0 / GMT)",
     "venueLabel": "Venue",
-    "venue": "Exchange Square, Central, Hong Kong",
-    "address": "",
+    "venue": "Dorfman Room, St Peter's College",
+    "address": "New Inn Hall Street, Oxford OX1 2DL",
     "hostLabel": "Host",
-    "host": "Tse Ah Fong",
+    "host": "",
     "languageLabel": "Language",
-    "language": "Mandarin",
+    "language": "English",
     "flowParagraphs": [
-      "This meetup is themed “Young founders: choice, growth, and long-termism.” Senior journalist Tse Ah Fong will converse with CZ, followed by the launch of #MyBinanceLife.",
-      "The event takes place on the morning of 27 August 2026 at Exchange Square, Central, Hong Kong. Seats are limited; this is an invite-only, closed-door gathering.",
-      "Freedom of Money records Changpeng Zhao (CZ)’s growth and entrepreneurial path. The conversation is not about a short-term industry headline, but questions every founder faces: how to choose, how to grow through change, and how to stay with what truly matters.",
-      "#MyBinanceLife invites more readers to start from the book’s themes of choice and growth, and to tell their own stories, judgments, and long-term commitments.",
-      "Founders and university students will ask questions on site — about 60 students are expected. The morning closes with CZ’s remarks, a recap, and an official group photo."
+      "From Hong Kong to Oxford, CZLife Book Club continues the conversation around choices, growth, entrepreneurship and long-term thinking.",
+      "Inspired by Freedom of Money, this gathering will bring together Oxford students, young readers and participants from different backgrounds to debate the motion, “a completely cashless society,” followed by an open floor discussion.",
+      "The event will also mark the official launch of the CZLife Book Club European Chapter, creating a long-term platform that connects readers across the UK and Europe through conversations, learning and community-led activities. Whether or not you have read the book, you are welcome to join if you are interested in personal growth, entrepreneurship and long-term thinking."
     ],
     "agendaTitle": "Agenda",
     "agendaTopicLabel": "Theme: ",
@@ -123,83 +125,59 @@
     "agendaColContent": "Details",
     "agendaRows": [
       {
-        "time": "09:30–09:55",
-        "segment": "Tse Ah Fong × CZ conversation",
-        "content": "Interview: choice, growth, entrepreneurship, and long-termism"
+        "time": "10:00–10:10",
+        "segment": "Arrival and Registration",
+        "content": "Guests and participants arrive, register and take their seats"
       },
       {
-        "time": "09:55–10:25",
-        "segment": "Student Q&A",
-        "content": "Selected live questions"
+        "time": "10:10–11:10",
+        "segment": "Main Debate and Floor Debate",
+        "content": "Motion: A completely cashless society. A formal debate is followed by an open floor debate"
       },
       {
-        "time": "10:25–10:30",
-        "segment": "#MyBinanceLife launch",
-        "content": "Campaign details and current progress"
+        "time": "11:10–11:45",
+        "segment": "Networking with Food Served",
+        "content": "Food and refreshments are served during an informal networking session"
       },
       {
-        "time": "10:30–10:45",
-        "segment": "Close",
-        "content": "CZ’s remarks, recap, and group photo"
+        "time": "11:45–12:00",
+        "segment": "Winner Announcement and Ceremonial Closing",
+        "content": "The winning side is announced, followed by remarks from the Oxford Debating judge, the European Chapter launch and the ceremonial close"
       }
     ],
-    "supportersTitle": "Supporting organizations",
-    "partnersTitle": "Partners",
-    "partners": [
-      {
-        "title": "About The Commercial Press",
-        "body": "Founded in Shanghai in 1897, The Commercial Press is China's oldest modern publishing institution. Its Hong Kong branch was established in 1914 and registered as a limited company in 1988, with businesses spanning editorial publishing and education."
-      }
-    ],
-    "scanTitle": "Join the book-club community",
-    "scanHint": "This meetup is invite-only. Scan to join the book-club Telegram for later updates.",
+    "scanTitle": "Register on Telegram",
+    "scanHint": "Scan to join the book-club Telegram and register. Confirmation is sent in the community after a successful application.",
     "qrAlt": "Telegram book club group QR code",
-    "pressTitle": "Press coverage",
-    "pressLead": "Public reports and the full recording from the August Hong Kong book meetup and related interviews.",
-    "pressWatch": "Watch the recording",
-    "pressRead": "Read the article",
-    "pressItems": {
-      "hkcd-youtube": {
-        "outlet": "Hong Kong Commercial Daily",
-        "title": "Full recording of the Freedom of Money book meetup"
+    "formatLabel": "Format",
+    "format": "In-person event",
+    "attireLabel": "Attire",
+    "attire": "Smart or business attire is recommended",
+    "registrationTitle": "Registration",
+    "registrationBody": "Places are limited and advance registration through the official CZLife Book Club website is required. Successful applicants will receive an event confirmation.",
+    "debatersTitle": "Debaters",
+    "debatersLead": "The main debate is opened by these four speakers.",
+    "debaters": [
+      {
+        "name": "Ms. Sunny Lu",
+        "role": "Strategy Manager at Rolls-Royce",
+        "photo": "/debaters/sunny-lu.jpg"
       },
-      "hkcd-recap": {
-        "outlet": "Hong Kong Commercial Daily",
-        "title": "Freedom of Money meetup in Hong Kong: CZ and students on growth and long-termism"
+      {
+        "name": "Mr. Samson Green",
+        "role": "Sponsorships Officer, Oxford Union",
+        "photo": "/debaters/samson-green.jpg"
       },
-      "hkej": {
-        "outlet": "Hong Kong Economic Journal",
-        "title": "CZ sees RWA as the next major direction"
+      {
+        "name": "Mr. Ethan Wang",
+        "role": "DPhil Cancer Researcher, Ludwig-Oxford",
+        "photo": "/debaters/ethan-wang.jpg"
       },
-      "caixin": {
-        "outlet": "Caixin",
-        "title": "CZ: securities on-chain faster than expected; bullish on RWA"
-      },
-      "wenweipo": {
-        "outlet": "Wen Wei Po",
-        "title": "CZ’s four “don’ts” of personal finance"
-      },
-      "hket": {
-        "outlet": "Hong Kong Economic Times",
-        "title": "CZ’s Hong Kong visit"
-      },
-      "kr36": {
-        "outlet": "36Kr",
-        "title": "CZ answers 15 questions in Hong Kong: Binance, the Web3 cycle, and advice for young founders"
-      },
-      "edigest": {
-        "outlet": "Economic Digest",
-        "title": "CZ in Hong Kong: crypto winter is over, Web3 edge, and RWA ahead of schedule"
-      },
-      "stheadline": {
-        "outlet": "Sing Tao Headline",
-        "title": "Is a crypto bull market here? Notes from Bitcoin Asia | Tang Chun Yat"
-      },
-      "wublock": {
-        "outlet": "Wu Blockchain",
-        "title": "Hong Kong Q&A: at every stage, what you don’t do matters more"
+      {
+        "name": "Mr. Dhruv Ratra",
+        "role": "Mental Health-AI Entrepreneur",
+        "photo": "/debaters/dhruv-ratra.jpg"
       }
-    }
+    ]
   },
   "home": {
     "title": "Freedom of Money",
@@ -220,9 +198,9 @@
     "journeyTitle": "From Programmer to Crypto Giant",
     "journeyDesc": "Freedom of Money chronicles CZ's legendary journey from an ordinary programmer to creating the world's largest cryptocurrency exchange. This book is not only an entrepreneurial history but also a life guide about perseverance, innovation, and vision.",
     "bookDetailsCta": "Book details",
-    "offlineEventTitle": "Freedom of Money book meetup",
-    "offlineEventDesc": "Morning of 27 August at Exchange Square, Central, Hong Kong. Tse Ah Fong × CZ on choice, growth, entrepreneurship, and long-termism, plus the #MyBinanceLife launch. Invite-only, closed-door.",
-    "offlineEventCta": "Offline event details",
+    "offlineEventTitle": "Oxford book discussion and European chapter launch",
+    "offlineEventDesc": "Tuesday, 3 November 2026 at St Peter's College, Oxford. A debate on a completely cashless society, and the launch of the CZLife Book Club European Chapter. Places are limited.",
+    "offlineEventCta": "Event details",
     "offlineEventPressCta": "Press coverage",
     "stat1Label": "Reservations",
     "stat1Unit": "",
@@ -245,7 +223,8 @@
       "whale": "Size · OTC",
       "diamondHands": "Long-term",
       "whiteHat": "Security · Disclosure"
-    }
+    },
+    "offlineEventPastCta": "Past events"
   },
   "membershipTiers": {
     "kicker": "Membership",
@@ -1451,6 +1430,238 @@
       "reply_to_bad_news": "Answer bad news fast",
       "talk_to_press": "Talk to the press",
       "hard_rules": "Hard rules"
+    }
+  },
+  "pastEvents": {
+    "title": "Past events",
+    "lead": "Past events remain on separate pages, with the introduction, agenda, and partners from each gathering.",
+    "ended": "Ended",
+    "open": "Open this event",
+    "backToCurrent": "Back to the current event",
+    "order": [
+      "august-meetup",
+      "june-launch"
+    ],
+    "august-meetup": {
+      "backHome": "Back to home",
+      "brand": "CZ LIFE · YOUNG FOUNDERS",
+      "title": "Freedom of Money book meetup",
+      "launchHeadline": "Freedom of Money book meetup",
+      "launchTagline": "Young founders: choice, growth, and long-termism",
+      "subtitle": "Host: Tse Ah Fong · Invite-only, closed-door",
+      "dateLabel": "Date",
+      "date": "Thursday, 27 August 2026",
+      "timeLabel": "Time",
+      "time": "09:30 – 11:00",
+      "venueLabel": "Venue",
+      "venue": "Exchange Square, Central, Hong Kong",
+      "address": "",
+      "hostLabel": "Host",
+      "host": "Tse Ah Fong",
+      "languageLabel": "Language",
+      "language": "Mandarin",
+      "flowParagraphs": [
+        "This meetup is themed “Young founders: choice, growth, and long-termism.” Senior journalist Tse Ah Fong will converse with CZ, followed by the launch of #MyBinanceLife.",
+        "The event takes place on the morning of 27 August 2026 at Exchange Square, Central, Hong Kong. Seats are limited; this is an invite-only, closed-door gathering.",
+        "Freedom of Money records Changpeng Zhao (CZ)’s growth and entrepreneurial path. The conversation is not about a short-term industry headline, but questions every founder faces: how to choose, how to grow through change, and how to stay with what truly matters.",
+        "#MyBinanceLife invites more readers to start from the book’s themes of choice and growth, and to tell their own stories, judgments, and long-term commitments.",
+        "Founders and university students will ask questions on site — about 60 students are expected. The morning closes with CZ’s remarks, a recap, and an official group photo."
+      ],
+      "agendaTitle": "Agenda",
+      "agendaTopicLabel": "Theme: ",
+      "agendaTopic": "Young founders: choice, growth, and long-termism",
+      "agendaTimeLabel": "Time: ",
+      "agendaTime": "Thursday, 27 August 2026, 09:30–11:00",
+      "agendaVenueLabel": "Venue: ",
+      "agendaVenue": "Exchange Square, Central, Hong Kong",
+      "agendaHostLabel": "Host: ",
+      "agendaHost": "Tse Ah Fong",
+      "agendaColTime": "Time",
+      "agendaColSegment": "Segment",
+      "agendaColContent": "Details",
+      "agendaRows": [
+        {
+          "time": "09:30–09:55",
+          "segment": "Tse Ah Fong × CZ conversation",
+          "content": "Interview: choice, growth, entrepreneurship, and long-termism"
+        },
+        {
+          "time": "09:55–10:25",
+          "segment": "Student Q&A",
+          "content": "Selected live questions"
+        },
+        {
+          "time": "10:25–10:30",
+          "segment": "#MyBinanceLife launch",
+          "content": "Campaign details and current progress"
+        },
+        {
+          "time": "10:30–10:45",
+          "segment": "Close",
+          "content": "CZ’s remarks, recap, and group photo"
+        }
+      ],
+      "supportersTitle": "Supporting organizations",
+      "partnersTitle": "Partners",
+      "partners": [
+        {
+          "title": "About The Commercial Press",
+          "body": "Founded in Shanghai in 1897, The Commercial Press is China's oldest modern publishing institution. Its Hong Kong branch was established in 1914 and registered as a limited company in 1988, with businesses spanning editorial publishing and education."
+        }
+      ],
+      "scanTitle": "Join the book-club community",
+      "scanHint": "This meetup is invite-only. Scan to join the book-club Telegram for later updates.",
+      "qrAlt": "Telegram book club group QR code",
+      "pressTitle": "Press coverage",
+      "pressLead": "Public reports and the full recording from the August Hong Kong book meetup and related interviews.",
+      "pressWatch": "Watch the recording",
+      "pressRead": "Read the article",
+      "pressItems": {
+        "hkcd-youtube": {
+          "outlet": "Hong Kong Commercial Daily",
+          "title": "Full recording of the Freedom of Money book meetup"
+        },
+        "hkcd-recap": {
+          "outlet": "Hong Kong Commercial Daily",
+          "title": "Freedom of Money meetup in Hong Kong: CZ and students on growth and long-termism"
+        },
+        "hkej": {
+          "outlet": "Hong Kong Economic Journal",
+          "title": "CZ sees RWA as the next major direction"
+        },
+        "caixin": {
+          "outlet": "Caixin",
+          "title": "CZ: securities on-chain faster than expected; bullish on RWA"
+        },
+        "wenweipo": {
+          "outlet": "Wen Wei Po",
+          "title": "CZ’s four “don’ts” of personal finance"
+        },
+        "hket": {
+          "outlet": "Hong Kong Economic Times",
+          "title": "CZ’s Hong Kong visit"
+        },
+        "kr36": {
+          "outlet": "36Kr",
+          "title": "CZ answers 15 questions in Hong Kong: Binance, the Web3 cycle, and advice for young founders"
+        },
+        "edigest": {
+          "outlet": "Economic Digest",
+          "title": "CZ in Hong Kong: crypto winter is over, Web3 edge, and RWA ahead of schedule"
+        },
+        "stheadline": {
+          "outlet": "Sing Tao Headline",
+          "title": "Is a crypto bull market here? Notes from Bitcoin Asia | Tang Chun Yat"
+        },
+        "wublock": {
+          "outlet": "Wu Blockchain",
+          "title": "Hong Kong Q&A: at every stage, what you don’t do matters more"
+        }
+      },
+      "cardSummary": "Morning of 27 August at Exchange Square, Central, Hong Kong. Tse Ah Fong × CZ on choice, growth, entrepreneurship, and long-termism, plus the #MyBinanceLife launch. Invite-only, closed-door.",
+      "metaTitle": "August book meetup · Freedom of Money Book Club",
+      "showPoster": "yes",
+      "showSupporters": "yes",
+      "showPress": "yes"
+    },
+    "june-launch": {
+      "backHome": "Back to home",
+      "title": "Freedom of Money Book Club Launch & Sharing Session",
+      "launchHeadline": "The global Freedom of Money book club sets sail",
+      "launchTagline": "Hong Kong premiere on 28 June — witness the first NFT member benefits and the global reader community",
+      "subtitle": "The Commercial Press · My Book One Club · IPDEX",
+      "dateLabel": "Date",
+      "date": "Sunday, 28 June 2026",
+      "timeLabel": "Time",
+      "time": "17:00 – 19:00",
+      "venueLabel": "Venue",
+      "venue": "The Commercial Press · Tsim Sha Tsui flagship store",
+      "address": "Shop 25, G/F & Whole Floor, 1/F, Miramar Tower, 83–97 Nathan Road, Tsim Sha Tsui, Kowloon\n(MTR Tsim Sha Tsui Station Exit A1, turn right)",
+      "languageLabel": "Language",
+      "language": "Mandarin",
+      "flowParagraphs": [
+        "A great book inspires thought; a strong reader community keeps ideas growing.",
+        "On 28 June, the global Freedom of Money book club launch ceremony will be held at The Commercial Press Tsim Sha Tsui flagship in Hong Kong, bringing together guests from publishing, technology, investment, and content creation to mark the club's official founding and open a new chapter of reader exchange and co-creation.",
+        "Freedom of Money records Changpeng Zhao (CZ)'s growth and entrepreneurial path and reflects how digital-era innovators think and act. The global book club will build an open, diverse platform so readers from different regions and backgrounds can discuss reading, entrepreneurship, innovation, and our times — and grow together through sharing.",
+        "As a key innovation, the event will release exclusive digital member benefits. Attendees receive a Freedom of Money digital certificate issued by the book club (powered by DataDance and IPDEX) for membership proof and collectibility. Everyone at this offline launch receives a limited-edition NFT. More activities, exclusive content, and community perks will follow.",
+        "The programme includes keynote sharing, a roundtable, and open networking. Guests from the author team, industry, and leading voices will explore entrepreneurship, long-term thinking, content value, and cultural innovation in the digital age.",
+        "From one book to one community, from reading to co-creation — the global book club invites everyone who loves reading and innovation to connect ideas and create value through sharing.",
+        "Join us on 28 June at The Commercial Press Tsim Sha Tsui flagship to witness the launch of the global Freedom of Money book club."
+      ],
+      "agendaTitle": "Agenda",
+      "agendaTopicLabel": "Theme: ",
+      "agendaTopic": "Global Freedom of Money Book Club launch ceremony & sharing session",
+      "agendaTimeLabel": "Time: ",
+      "agendaTime": "Sunday, 28 June 2026, 17:00–19:00",
+      "agendaVenueLabel": "Venue: ",
+      "agendaVenue": "The Commercial Press Tsim Sha Tsui flagship store",
+      "agendaColTime": "Time",
+      "agendaColSegment": "Segment",
+      "agendaColContent": "Details",
+      "agendaRows": [
+        {
+          "time": "17:00–17:10",
+          "segment": "Welcome remarks",
+          "content": "Opening address by Mr. Mao Yongbo, General Manager of The Commercial Press (Hong Kong)."
+        },
+        {
+          "time": "17:10–17:25",
+          "segment": "Keynote sharing",
+          "content": "Geoffrey, Founder of DataDance and Director of IPDEX, on Web3 innovation and the road ahead."
+        },
+        {
+          "time": "17:25–17:55",
+          "segment": "Entrepreneurship & the times",
+          "content": "Web3 guests share entrepreneurial journeys and industry insights."
+        },
+        {
+          "time": "17:55–18:05",
+          "segment": "Community co-creation film",
+          "content": "Premiere of a Freedom of Money theme film co-created by the global community."
+        },
+        {
+          "time": "18:05–18:25",
+          "segment": "Book club launch ceremony",
+          "content": "Official launch of the global book club and release of the membership system and exclusive benefits."
+        },
+        {
+          "time": "18:25–19:00",
+          "segment": "Networking & group photo",
+          "content": "Guests and readers mingle and take photos together."
+        }
+      ],
+      "highlightsTitle": "Highlights",
+      "highlights": [
+        "Official launch of the global Freedom of Money book club",
+        "First release of book-club NFT member benefits",
+        "The Commercial Press Hong Kong premiere event",
+        "Cross-industry guest sharing",
+        "Premiere of the Freedom of Money community film",
+        "Face-to-face reader interaction"
+      ],
+      "partnersTitle": "Partners",
+      "partners": [
+        {
+          "title": "About The Commercial Press",
+          "body": "Founded in Shanghai in 1897, The Commercial Press is China's oldest modern publishing institution. Its Hong Kong branch was established in 1914 and registered as a limited company in 1988, with businesses spanning editorial publishing and education."
+        },
+        {
+          "title": "About IPDEX",
+          "body": "IPDEX is a leading Web3 platform company in IP rights trading, building Hong Kong's first IP rights exchange with global reach and integrated chain-cloud SaaS, helping Web2 IP and fan communities enter Web3 seamlessly."
+        },
+        {
+          "title": "About DDC",
+          "body": "DataDance Chain (DDC) is a decentralised data trading platform built around consumer data, helping individuals control and share data safely while giving enterprises trusted, privacy-aware insights."
+        }
+      ],
+      "scanTitle": "Scan to join & register",
+      "scanHint": "Scan with your phone camera or Telegram to join the group and register",
+      "qrAlt": "Telegram book club group QR code",
+      "cardSummary": "Launch ceremony on 28 June at The Commercial Press Tsim Sha Tsui flagship — witness the first NFT member benefits. Register to join.",
+      "metaTitle": "June book-club launch · Freedom of Money Book Club",
+      "showPoster": "no",
+      "showSupporters": "no",
+      "showPress": "no"
     }
   }
 }

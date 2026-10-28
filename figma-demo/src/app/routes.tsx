@@ -11,6 +11,7 @@ import AccountInvoices from "./pages/AccountInvoices";
 import PurchaseSuccess from "./pages/PurchaseSuccess";
 import NotFound from "./pages/NotFound";
 import OfflineEvent from "./pages/OfflineEvent";
+import PastEventPage from "./pages/PastEventPage";
 import CryptoChronicle from "./pages/CryptoChronicle";
 import ChronicleLeaderboard from "./pages/ChronicleLeaderboard";
 import ChronicleShareRedirect from "./pages/ChronicleShareRedirect";
@@ -29,6 +30,7 @@ export const router = createBrowserRouter([
       { path: "club/chronicle/rank", Component: ChronicleLeaderboard },
       { path: "s/:code", Component: ChronicleShareRedirect },
       { path: "event", Component: OfflineEvent },
+      { path: "event/:eventId", Component: PastEventPage },
       { path: "principles", Component: CZPrinciples },
       { path: "timeline", Component: Timeline },
       { path: "account/redeem", Component: AccountRedeem },

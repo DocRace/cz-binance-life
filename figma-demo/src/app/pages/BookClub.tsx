@@ -324,10 +324,10 @@ export default function BookClub() {
             <ChevronRight className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
           </Link>
           <Link
-            to="/event#press"
+            to="/event#past"
             className="text-sm text-gold hover:text-gold-light transition-colors no-underline"
           >
-            {t("home.offlineEventPressCta")}
+            {t("home.offlineEventPastCta")}
           </Link>
         </div>
       </motion.div>

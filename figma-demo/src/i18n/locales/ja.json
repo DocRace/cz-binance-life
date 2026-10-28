@@ -20,7 +20,7 @@
     "titleHome": "バイナンスライフブッククラブ",
     "titleBook": "書籍紹介 · バイナンスライフブッククラブ",
     "titleClub": "ブッククラブ · バイナンスライフブッククラブ",
-    "titleOfflineEvent": "8月ブックミートアップ · バイナンスライフブッククラブ",
+    "titleOfflineEvent": "オックスフォード読書会 · バイナンスライフブッククラブ",
     "titlePrinciples": "CZの原則 · バイナンスライフブッククラブ",
     "titleTimeline": "CZタイムライン · バイナンスライフブッククラブ",
     "titleAccount": "アカウント · バイナンスライフブッククラブ",
@@ -86,28 +86,30 @@
   },
   "offlineEvent": {
     "backHome": "ホームに戻る",
-    "brand": "CZ LIFE · YOUNG FOUNDERS",
-    "title": "『バイナンスライフ』書友ミートアップ",
-    "launchHeadline": "『バイナンスライフ』書友ミートアップ",
-    "launchTagline": "若者の起業と成長：選択、成長、長期主義",
-    "subtitle": "司会：謝亜芳｜招待制 · クローズド",
+    "brand": "CZ LIFE · OXFORD DEBATING",
+    "title": "『バイナンスライフ』読書会および欧州コミュニティ設立式",
+    "launchHeadline": "『バイナンスライフ』読書会および欧州コミュニティ設立式",
+    "launchTagline": "論題：完全なキャッシュレス社会の方が望ましい",
+    "subtitle": "共催 CZLife Book Club（Freedom of Money Book Club）· Oxford Debating",
+    "cohostKicker": "共催",
+    "cohostLeft": "CZLife Book Club",
+    "cohostLeftNote": "Freedom of Money Book Club",
+    "cohostRight": "Oxford Debating",
     "dateLabel": "日付",
-    "date": "2026年8月27日（木）",
+    "date": "2026年11月3日（火曜日）",
     "timeLabel": "時間",
-    "time": "09:30 – 11:00",
+    "time": "10:00–12:00（UTC+0 / GMT）",
     "venueLabel": "会場",
-    "venue": "香港中環・交易広場",
-    "address": "",
+    "venue": "Dorfman Room, St Peter's College",
+    "address": "New Inn Hall Street, Oxford OX1 2DL",
     "hostLabel": "司会",
-    "host": "謝亜芳",
+    "host": "",
     "languageLabel": "言語",
-    "language": "中国語（普通話）",
+    "language": "英語",
     "flowParagraphs": [
-      "テーマは「若者の起業と成長：選択、成長、長期主義」。シニアジャーナリスト謝亜芳がCZと対談し、「#私のバイナンスライフ」を発表します。",
-      "2026年8月27日午前、香港中環・交易広場で開催。席数が限られるため招待制・クローズドです。",
-      "『バイナンスライフ』は趙長鵬（CZ）の成長と起業を記録します。短期的な業界ニュースではなく、創業者が直面する選択・変化の中での成長・本当に大切なことへの堅持を語ります。",
-      "「#私のバイナンスライフ」は、本の選択と成長から出発し、読者自身の経験・判断・長期の堅持を語る場です。",
-      "起業家と大学生が現場で質問します（大学生約60名を予定）。CZのメッセージ、総括、公式集合写真で締めくくります。"
+      "香港からオックスフォードへ。CZLife Book Club は、選択、成長、起業、長期的な思考をめぐる対話を続けます。",
+      "『バイナンスライフ』に着想を得て、オックスフォードの学生、若い読者、さまざまな背景の参加者が「完全なキャッシュレス社会の方が望ましい」という論題を討論し、その後フロアを開いて議論します。",
+      "この会では CZLife Book Club 欧州コミュニティの正式発足も発表します。英国と欧州の読者をつなぎ、対話と学び、コミュニティ主導の活動を続ける場にします。本を読んだかどうかにかかわらず、個人の成長、起業、長期的な思考に関心があれば参加できます。"
     ],
     "agendaTitle": "アジェンダ",
     "agendaTopicLabel": "テーマ：",
@@ -119,87 +121,63 @@
     "agendaHostLabel": "司会：",
     "agendaHost": "謝亜芳",
     "agendaColTime": "時間",
-    "agendaColSegment": "环节",
+    "agendaColSegment": "項目",
     "agendaColContent": "内容",
     "agendaRows": [
       {
-        "time": "09:30–09:55",
-        "segment": "謝亜芳 × CZ 対談",
-        "content": "人物インタビュー：選択、成長、起業、長期主義"
+        "time": "10:00–10:10",
+        "segment": "来場・受付",
+        "content": "ゲストと参加者が到着し、受付のうえ着席"
       },
       {
-        "time": "09:55–10:25",
-        "segment": "大学生 Q&A",
-        "content": "厳選した現場質問"
+        "time": "10:10–11:10",
+        "segment": "本討論とフロア討論",
+        "content": "論題：完全なキャッシュレス社会の方が望ましい。正式な討論のあと、会場全体で議論"
       },
       {
-        "time": "10:25–10:30",
-        "segment": "#私のバイナンスライフ 発表式",
-        "content": "キャンペーンの詳細と進捗の紹介"
+        "time": "11:10–11:45",
+        "segment": "食事を交えた交流",
+        "content": "食事と飲み物を用意し、自由に交流"
       },
       {
-        "time": "10:30–10:45",
-        "segment": "クロージング",
-        "content": "CZメッセージ、総括、集合写真"
+        "time": "11:45–12:00",
+        "segment": "結果発表、講評と閉会式",
+        "content": "勝敗を発表し、Oxford Debating の審査員が講評。欧州コミュニティ設立と閉会式"
       }
     ],
-    "supportersTitle": "協賛・協力",
-    "partnersTitle": "パートナー",
-    "partners": [
-      {
-        "title": "商務印書館について",
-        "body": "1897年上海で創立された中国最古の近代的出版機関。1914年に香港支店を設立、1988年に香港支店が有限公司として正式登録。編集出版と教育研修を手がける。"
-      }
-    ],
-    "scanTitle": "ブッククラブコミュニティに参加",
-    "scanHint": "本ミートアップは招待制です。QRからTelegramに参加し、今後の案内を受け取ってください。",
+    "scanTitle": "Telegram で登録",
+    "scanHint": "書友会の Telegram を読み取り、そこから登録してください。完了後、確認はコミュニティでお知らせします。",
     "qrAlt": "Telegramブッククラブ入群QRコード",
-    "pressTitle": "メディア報道",
-    "pressLead": "8月の香港ブックミートアップと関連インタビューの公開報道・全編録画。",
-    "pressWatch": "録画を見る",
-    "pressRead": "記事を読む",
-    "pressItems": {
-      "hkcd-youtube": {
-        "outlet": "香港商報",
-        "title": "『バイナンスライフ』書友ミートアップ全編録画"
+    "formatLabel": "形式",
+    "format": "対面",
+    "attireLabel": "服装",
+    "attire": "スマートカジュアルまたは正装を推奨",
+    "registrationTitle": "参加登録",
+    "registrationBody": "席には限りがあります。CZLife Book Club 公式サイトからの事前登録が必要です。登録が完了した参加者には確認のご連絡をお送りします。",
+    "debatersTitle": "ディベーター",
+    "debatersLead": "本討論は次の4人が務めます。",
+    "debaters": [
+      {
+        "name": "Ms. Sunny Lu",
+        "role": "ロールス・ロイス 戦略マネージャー",
+        "photo": "/debaters/sunny-lu.jpg"
       },
-      "hkcd-recap": {
-        "outlet": "香港商報",
-        "title": "香港で書友ミートアップ開催、CZが学生と成長と長期主義を語る"
+      {
+        "name": "Mr. Samson Green",
+        "role": "オックスフォード・ユニオン スポンサーシップ担当",
+        "photo": "/debaters/samson-green.jpg"
       },
-      "hkej": {
-        "outlet": "信報",
-        "title": "CZ、次の大きな方向はRWAと見込む"
+      {
+        "name": "Mr. Ethan Wang",
+        "role": "ルートヴィヒ・オックスフォード がん研究 DPhil",
+        "photo": "/debaters/ethan-wang.jpg"
       },
-      "caixin": {
-        "outlet": "財新",
-        "title": "CZ：証券のオンチェーン化は想定より速い。RWAに強気"
-      },
-      "wenweipo": {
-        "outlet": "文匯報",
-        "title": "CZの資産運用「4つのしない」：株・不動産投機・現金・短期売買をしない"
-      },
-      "hket": {
-        "outlet": "香港経済日報",
-        "title": "CZの香港訪問報道"
-      },
-      "kr36": {
-        "outlet": "36Kr",
-        "title": "香港で15の質問に答える：Binance、Web3サイクル、若い創業者への助言"
-      },
-      "edigest": {
-        "outlet": "経済一周",
-        "title": "暗号の冬は終わった。香港のWeb3優位と想定を超えるRWA"
-      },
-      "stheadline": {
-        "outlet": "星島ヘッドライン",
-        "title": "暗号ブル相場は来たか？Bitcoin Asia現場観察｜鄧進一"
-      },
-      "wublock": {
-        "outlet": "呉説",
-        "title": "香港Q&A：どの段階でも「何をしないか」の方が大切"
+      {
+        "name": "Mr. Dhruv Ratra",
+        "role": "メンタルヘルスとAIの起業家",
+        "photo": "/debaters/dhruv-ratra.jpg"
       }
-    }
+    ]
   },
   "home": {
     "title": "バイナンスライフ",
@@ -220,9 +198,9 @@
     "journeyTitle": "プログラマーから暗号資産の巨人へ",
     "journeyDesc": "『バイナンスライフ』は、CZが平凡なプログラマーから世界最大の暗号資産取引所を創設するまでの伝説的な旅を記録しています。この本は創業の歴史だけでなく、忍耐、革新、ビジョンに関する人生ガイドです。",
     "bookDetailsCta": "書籍詳細を見る",
-    "offlineEventTitle": "『バイナンスライフ』書友ミートアップ",
-    "offlineEventDesc": "8月27日午前、香港中環・交易広場。謝亜芳 × CZ が選択・成長・起業と長期主義を対談し、「#私のバイナンスライフ」を発表。招待制・クローズド。",
-    "offlineEventCta": "オフラインイベント詳細",
+    "offlineEventTitle": "オックスフォード読書会と欧州コミュニティ設立",
+    "offlineEventDesc": "2026年11月3日、オックスフォード大学セント・ピーターズ・カレッジ。論題は「完全なキャッシュレス社会の方が望ましい」。CZLife Book Club 欧州コミュニティの設立も発表します。席数に限りがあります。",
+    "offlineEventCta": "今回のイベントを見る",
     "offlineEventPressCta": "メディア報道を見る",
     "stat1Label": "イベント予約者数",
     "stat1Unit": "人",
@@ -245,7 +223,8 @@
       "whale": "規模 · OTC",
       "diamondHands": "長期",
       "whiteHat": "セキュリティ · 開示"
-    }
+    },
+    "offlineEventPastCta": "過去のイベントを見る"
   },
   "membershipTiers": {
     "kicker": "会員特典",
@@ -1445,5 +1424,237 @@
     "priceDisclaimer": "娯楽目的の評価であり、投資助言ではありません",
     "claimAndCapsuleCta": "デジタル記念カードを受け取る and save to Life Capsule",
     "coverPartners": "The Commercial Press · Binance Life Book Club · DataDance"
+  },
+  "pastEvents": {
+    "title": "過去のイベント",
+    "lead": "過去のイベントはそれぞれ独立したページに残し、当日の紹介、議程、協力先を掲載しています。",
+    "ended": "終了",
+    "open": "この回を見る",
+    "backToCurrent": "現在のイベントに戻る",
+    "order": [
+      "august-meetup",
+      "june-launch"
+    ],
+    "august-meetup": {
+      "backHome": "ホームに戻る",
+      "brand": "CZ LIFE · YOUNG FOUNDERS",
+      "title": "『バイナンスライフ』書友ミートアップ",
+      "launchHeadline": "『バイナンスライフ』書友ミートアップ",
+      "launchTagline": "若者の起業と成長：選択、成長、長期主義",
+      "subtitle": "司会：謝亜芳｜招待制 · クローズド",
+      "dateLabel": "日付",
+      "date": "2026年8月27日（木）",
+      "timeLabel": "時間",
+      "time": "09:30 – 11:00",
+      "venueLabel": "会場",
+      "venue": "香港中環・交易広場",
+      "address": "",
+      "hostLabel": "司会",
+      "host": "謝亜芳",
+      "languageLabel": "言語",
+      "language": "中国語（普通話）",
+      "flowParagraphs": [
+        "テーマは「若者の起業と成長：選択、成長、長期主義」。シニアジャーナリスト謝亜芳がCZと対談し、「#私のバイナンスライフ」を発表します。",
+        "2026年8月27日午前、香港中環・交易広場で開催。席数が限られるため招待制・クローズドです。",
+        "『バイナンスライフ』は趙長鵬（CZ）の成長と起業を記録します。短期的な業界ニュースではなく、創業者が直面する選択・変化の中での成長・本当に大切なことへの堅持を語ります。",
+        "「#私のバイナンスライフ」は、本の選択と成長から出発し、読者自身の経験・判断・長期の堅持を語る場です。",
+        "起業家と大学生が現場で質問します（大学生約60名を予定）。CZのメッセージ、総括、公式集合写真で締めくくります。"
+      ],
+      "agendaTitle": "アジェンダ",
+      "agendaTopicLabel": "テーマ：",
+      "agendaTopic": "若者の起業と成長：選択、成長、長期主義",
+      "agendaTimeLabel": "日時：",
+      "agendaTime": "2026年8月27日（木）09:30–11:00",
+      "agendaVenueLabel": "会場：",
+      "agendaVenue": "香港中環・交易広場",
+      "agendaHostLabel": "司会：",
+      "agendaHost": "謝亜芳",
+      "agendaColTime": "時間",
+      "agendaColSegment": "項目",
+      "agendaColContent": "内容",
+      "agendaRows": [
+        {
+          "time": "09:30–09:55",
+          "segment": "謝亜芳 × CZ 対談",
+          "content": "人物インタビュー：選択、成長、起業、長期主義"
+        },
+        {
+          "time": "09:55–10:25",
+          "segment": "大学生 Q&A",
+          "content": "厳選した現場質問"
+        },
+        {
+          "time": "10:25–10:30",
+          "segment": "#私のバイナンスライフ 発表式",
+          "content": "キャンペーンの詳細と進捗の紹介"
+        },
+        {
+          "time": "10:30–10:45",
+          "segment": "クロージング",
+          "content": "CZメッセージ、総括、集合写真"
+        }
+      ],
+      "supportersTitle": "協賛・協力",
+      "partnersTitle": "パートナー",
+      "partners": [
+        {
+          "title": "商務印書館について",
+          "body": "1897年上海で創立された中国最古の近代的出版機関。1914年に香港支店を設立、1988年に香港支店が有限公司として正式登録。編集出版と教育研修を手がける。"
+        }
+      ],
+      "scanTitle": "ブッククラブコミュニティに参加",
+      "scanHint": "本ミートアップは招待制です。QRからTelegramに参加し、今後の案内を受け取ってください。",
+      "qrAlt": "Telegramブッククラブ入群QRコード",
+      "pressTitle": "メディア報道",
+      "pressLead": "8月の香港ブックミートアップと関連インタビューの公開報道・全編録画。",
+      "pressWatch": "録画を見る",
+      "pressRead": "記事を読む",
+      "pressItems": {
+        "hkcd-youtube": {
+          "outlet": "香港商報",
+          "title": "『バイナンスライフ』書友ミートアップ全編録画"
+        },
+        "hkcd-recap": {
+          "outlet": "香港商報",
+          "title": "香港で書友ミートアップ開催、CZが学生と成長と長期主義を語る"
+        },
+        "hkej": {
+          "outlet": "信報",
+          "title": "CZ、次の大きな方向はRWAと見込む"
+        },
+        "caixin": {
+          "outlet": "財新",
+          "title": "CZ：証券のオンチェーン化は想定より速い。RWAに強気"
+        },
+        "wenweipo": {
+          "outlet": "文匯報",
+          "title": "CZの資産運用「4つのしない」：株・不動産投機・現金・短期売買をしない"
+        },
+        "hket": {
+          "outlet": "香港経済日報",
+          "title": "CZの香港訪問報道"
+        },
+        "kr36": {
+          "outlet": "36Kr",
+          "title": "香港で15の質問に答える：Binance、Web3サイクル、若い創業者への助言"
+        },
+        "edigest": {
+          "outlet": "経済一周",
+          "title": "暗号の冬は終わった。香港のWeb3優位と想定を超えるRWA"
+        },
+        "stheadline": {
+          "outlet": "星島ヘッドライン",
+          "title": "暗号ブル相場は来たか？Bitcoin Asia現場観察｜鄧進一"
+        },
+        "wublock": {
+          "outlet": "呉説",
+          "title": "香港Q&A：どの段階でも「何をしないか」の方が大切"
+        }
+      },
+      "cardSummary": "8月27日午前、香港中環・交易広場。謝亜芳 × CZ が選択・成長・起業と長期主義を対談し、「#私のバイナンスライフ」を発表。招待制・クローズド。",
+      "metaTitle": "8月書友ミートアップ · バイナンスライフブッククラブ",
+      "showPoster": "yes",
+      "showSupporters": "yes",
+      "showPress": "yes"
+    },
+    "june-launch": {
+      "backHome": "ホームに戻る",
+      "title": "『バイナンスライフ』ブッククラブ 起動式 & シェア会",
+      "launchHeadline": "『バイナンスライフ』グローバルブッククラブがまもなく始航",
+      "launchTagline": "6月28日香港初開催 — 初回NFT会員特典の発表とグローバル読書コミュニティの誕生を共に見届けよう",
+      "subtitle": "商務印書館 · 一本読書会 · IPDEX",
+      "dateLabel": "日付",
+      "date": "2026年6月28日（日）",
+      "timeLabel": "時間",
+      "time": "17:00 – 19:00",
+      "venueLabel": "会場",
+      "venue": "商務印書館 · 尖沙咀旗艦店",
+      "address": "九龍尖沙咀弥敦道83–97号華淵大廈 地下25号舗及び1階全層\n（MTR尖沙咀駅 A1出口を右へ）",
+      "languageLabel": "言語",
+      "language": "中国語（普通話）",
+      "flowParagraphs": [
+        "良い一冊は思考を啓発し、優れた読者コミュニティは思想を育て続けます。",
+        "6月28日、『バイナンスライフ』グローバルブッククラブ成立式が香港・商務印書館尖沙咀旗艦店で開催されます。出版・テック・投資・コンテンツのゲストが集い、正式設立を祝います。",
+        "本書は趙長鵬（CZ）の成長と起業を記録し、デジタル時代の実践を示します。グローバルブッククラブは開かれた交流の場を築きます。",
+        "会場でデジタル会員特典を発表。参加者はIPDEX・DataDance技術によるデジタル証明書を受け取れます。",
+        "基調講演、円卓、交流を予定。起業精神・長期主義・文化革新について議論します。",
+        "一冊の本からコミュニティへ — 読書と共創の可能性を探求します。",
+        "6月28日、尖沙咀旗艦店でご一緒に啓航の瞬間を迎えましょう。"
+      ],
+      "agendaTitle": "アジェンダ",
+      "agendaTopicLabel": "テーマ：",
+      "agendaTopic": "『バイナンスライフ』グローバルブッククラブ成立式 & シェア会",
+      "agendaTimeLabel": "日時：",
+      "agendaTime": "2026年6月28日（日）17:00–19:00",
+      "agendaVenueLabel": "会場：",
+      "agendaVenue": "商務印書館尖沙咀旗艦店",
+      "agendaColTime": "時間",
+      "agendaColSegment": "項目",
+      "agendaColContent": "内容",
+      "agendaRows": [
+        {
+          "time": "17:00–17:10",
+          "segment": "歓迎挨拶",
+          "content": "商務印書館（香港）総経理 毛永波氏による挨拶。"
+        },
+        {
+          "time": "17:10–17:25",
+          "segment": "基調講演",
+          "content": "DataDance 創設者・IPDEX 取締役 Geoffrey による Web3 イノベーションと展望。"
+        },
+        {
+          "time": "17:25–17:55",
+          "segment": "起業ストーリーと時代の機会",
+          "content": "Web3 ゲストによる起業体験と業界洞察の共有。"
+        },
+        {
+          "time": "17:55–18:05",
+          "segment": "コミュニティ共創映像",
+          "content": "グローバルコミュニティが共同制作した『バイナンスライフ』テーマ映像の上映。"
+        },
+        {
+          "time": "18:05–18:25",
+          "segment": "ブッククラブ起動式",
+          "content": "グローバルブッククラブの正式起動と会員体系・専属特典の発表。"
+        },
+        {
+          "time": "18:25–19:00",
+          "segment": "交流・集合写真",
+          "content": "ゲストと読者の交流および記念撮影。"
+        }
+      ],
+      "highlightsTitle": "見どころ",
+      "highlights": [
+        "グローバルブッククラブ正式設立",
+        "初回NFT会員特典発表",
+        "商務印書館香港初イベント",
+        "各界ゲストのクロスオーバー分享",
+        "コミュニティ映像プレミア",
+        "読者との対面交流"
+      ],
+      "partnersTitle": "パートナー",
+      "partners": [
+        {
+          "title": "商務印書館について",
+          "body": "1897年上海で創立された中国最古の近代的出版機関。1914年に香港支店を設立、1988年に香港支店が有限公司として正式登録。編集出版と教育研修を手がける。"
+        },
+        {
+          "title": "IPDEXについて",
+          "body": "IP権益取引分野をリードするWeb3プラットフォーム企業。香港発・グローバル展開のIP権益取引所とチェーンクラウド一体型SaaSを提供。"
+        },
+        {
+          "title": "DDCについて",
+          "body": "DataDance Chain（DDC）は消費者データを中心とした分散型データ取引プラットフォーム。個人のデータ管理と企業のプライバシー配慮型インサイトを支援。"
+        }
+      ],
+      "scanTitle": "QRでグループ参加・申込",
+      "scanHint": "スマホのカメラまたはTelegramでスキャンし、グループに参加して申し込み",
+      "qrAlt": "Telegramブッククラブ入群QRコード",
+      "cardSummary": "6月28日・香港尖沙咀旗艦店で成立式を開催。初回NFT会員特典をご覧ください。",
+      "metaTitle": "6月ブッククラブ設立式 · バイナンスライフブッククラブ",
+      "showPoster": "no",
+      "showSupporters": "no",
+      "showPress": "no"
+    }
   }
 }

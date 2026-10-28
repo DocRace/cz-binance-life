@@ -265,5 +265,8 @@ export const OFFLINE_EVENT_REGISTER_QR_SRC = BOOK_CLUB_TELEGRAM_QR_SRC;
 
 export const OFFLINE_EVENT_POSTER_SRC = "/offline-event-poster.png?v=meetup-20260826" as const;
 
+/** Co-host mark for the November 2026 Oxford discussion. */
+export const OXFORD_EVENT_MARK_SRC = "/oxford-union-mark.png?v=screen" as const;
+
 /** On-site redeem QR deep link — opens account redeem flow after login. */
 export { redeemScanPath, redeemScanUrl } from "../lib/redeemDeepLink";

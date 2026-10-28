@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { OFFLINE_EVENT_PRESS, youtubeThumb } from "../../lib/offlineEventPress";
 import { CARD_HOVER, CARD_SURFACE, CONTENT_DEFAULT, GRID_GAP, SECTION_SPACING } from "../layout/pageLayout";
 
-export default function OfflineEventPress() {
+export default function OfflineEventPress({ base = "offlineEvent" }: { base?: string }) {
   const { t } = useTranslation();
   const location = useLocation();
 
@@ -29,10 +29,10 @@ export default function OfflineEventPress() {
       id="press"
     >
       <h2 id="offline-event-press" className="mb-3 font-display text-2xl md:text-3xl text-foreground">
-        {t("offlineEvent.pressTitle")}
+        {t(`${base}.pressTitle`)}
       </h2>
       <p className="mb-8 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-        {t("offlineEvent.pressLead")}
+        {t(`${base}.pressLead`)}
       </p>
 
       {featured?.youtubeId ? (
@@ -59,13 +59,13 @@ export default function OfflineEventPress() {
           <div className="flex min-w-0 flex-1 flex-col justify-center p-6 md:p-7">
             <p className="mb-2 inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.14em] text-gold/85">
               <Youtube className="h-3.5 w-3.5" aria-hidden />
-              {t(`offlineEvent.pressItems.${featured.id}.outlet`)}
+              {t(`${base}.pressItems.${featured.id}.outlet`)}
             </p>
             <h3 className="font-display text-xl text-foreground md:text-2xl">
-              {t(`offlineEvent.pressItems.${featured.id}.title`)}
+              {t(`${base}.pressItems.${featured.id}.title`)}
             </h3>
             <p className="mt-3 inline-flex items-center gap-1.5 text-sm text-gold">
-              {t("offlineEvent.pressWatch")}
+              {t(`${base}.pressWatch`)}
               <ExternalLink className="h-3.5 w-3.5" aria-hidden />
             </p>
           </div>
@@ -83,13 +83,13 @@ export default function OfflineEventPress() {
             >
               <p className="mb-2 inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.14em] text-gold/85">
                 <Newspaper className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                {t(`offlineEvent.pressItems.${item.id}.outlet`)}
+                {t(`${base}.pressItems.${item.id}.outlet`)}
               </p>
               <h3 className="font-display text-lg leading-snug text-foreground">
-                {t(`offlineEvent.pressItems.${item.id}.title`)}
+                {t(`${base}.pressItems.${item.id}.title`)}
               </h3>
               <p className="mt-auto pt-4 inline-flex items-center gap-1.5 text-sm text-gold">
-                {t("offlineEvent.pressRead")}
+                {t(`${base}.pressRead`)}
                 <ExternalLink className="h-3.5 w-3.5" aria-hidden />
               </p>
             </a>

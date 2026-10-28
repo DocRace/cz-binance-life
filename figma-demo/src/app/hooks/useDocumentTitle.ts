@@ -9,6 +9,7 @@ function titleKeyForPath(pathname: string): string {
   if (pathname === "/club/chronicle" || pathname.startsWith("/club/chronicle/") || pathname.startsWith("/s/"))
     return "meta.titleChronicle";
   if (pathname === "/event") return "meta.titleOfflineEvent";
+  if (pathname.startsWith("/event/")) return `pastEvents.${pathname.slice("/event/".length)}.metaTitle`;
   if (pathname === "/principles") return "meta.titlePrinciples";
   if (pathname === "/timeline") return "meta.titleTimeline";
   if (pathname === "/account/redeem") return "meta.titleAccountRedeem";
