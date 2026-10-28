@@ -160,22 +160,22 @@
       {
         "name": "Ms. Sunny Lu",
         "role": "ロールス・ロイス 戦略マネージャー",
-        "photo": "/debaters/sunny-lu.jpg"
+        "photo": "/debaters/sunny-lu.jpg?v=poster"
       },
       {
         "name": "Mr. Samson Green",
         "role": "オックスフォード・ユニオン スポンサーシップ担当",
-        "photo": "/debaters/samson-green.jpg"
+        "photo": "/debaters/samson-green.jpg?v=poster"
       },
       {
         "name": "Mr. Ethan Wang",
         "role": "ルートヴィヒ・オックスフォード がん研究 DPhil",
-        "photo": "/debaters/ethan-wang.jpg"
+        "photo": "/debaters/ethan-wang.jpg?v=poster"
       },
       {
-        "name": "Mr. Dhruv Ratra",
-        "role": "メンタルヘルスとAIの起業家",
-        "photo": "/debaters/dhruv-ratra.jpg"
+        "name": "未定",
+        "role": "親しみやすい隣の学者",
+        "photo": "/debaters/to-be-decided.jpg"
       }
     ]
   },

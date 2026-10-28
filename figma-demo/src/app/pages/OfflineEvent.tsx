@@ -109,9 +109,6 @@ export default function OfflineEvent() {
             </span>
             <p className="text-sm tracking-wide text-foreground">{t("offlineEvent.cohostRight")}</p>
           </div>
-          <p className="mt-1.5 text-xs tracking-wide text-muted-foreground">
-            {t("offlineEvent.cohostLeftNote")}
-          </p>
         </div>
       </motion.header>
 
@@ -155,7 +152,7 @@ export default function OfflineEvent() {
             <img
               src={OXFORD_EVENT_MARK_SRC}
               alt="Oxford Union"
-              className="w-full object-contain mix-blend-screen"
+              className="mx-auto h-44 w-auto object-contain mix-blend-screen"
               loading="eager"
               decoding="async"
             />
@@ -220,7 +217,7 @@ export default function OfflineEvent() {
                 <img
                   src={person.photo}
                   alt=""
-                  className="aspect-[4/5] w-full object-cover object-[center_18%]"
+                  className="aspect-[4/5] w-full object-cover object-center"
                   loading="lazy"
                   decoding="async"
                 />

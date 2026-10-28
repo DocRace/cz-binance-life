@@ -160,22 +160,22 @@
       {
         "name": "Ms. Sunny Lu",
         "role": "롤스로이스 전략 매니저",
-        "photo": "/debaters/sunny-lu.jpg"
+        "photo": "/debaters/sunny-lu.jpg?v=poster"
       },
       {
         "name": "Mr. Samson Green",
         "role": "옥스퍼드 유니언 후원 담당",
-        "photo": "/debaters/samson-green.jpg"
+        "photo": "/debaters/samson-green.jpg?v=poster"
       },
       {
         "name": "Mr. Ethan Wang",
         "role": "루드비히 옥스퍼드 암 연구 DPhil",
-        "photo": "/debaters/ethan-wang.jpg"
+        "photo": "/debaters/ethan-wang.jpg?v=poster"
       },
       {
-        "name": "Mr. Dhruv Ratra",
-        "role": "멘탈헬스·AI 창업가",
-        "photo": "/debaters/dhruv-ratra.jpg"
+        "name": "미정",
+        "role": "다정한 옆집 학자",
+        "photo": "/debaters/to-be-decided.jpg"
       }
     ]
   },

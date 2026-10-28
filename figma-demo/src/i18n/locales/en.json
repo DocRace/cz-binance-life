@@ -160,22 +160,22 @@
       {
         "name": "Ms. Sunny Lu",
         "role": "Strategy Manager at Rolls-Royce",
-        "photo": "/debaters/sunny-lu.jpg"
+        "photo": "/debaters/sunny-lu.jpg?v=poster"
       },
       {
         "name": "Mr. Samson Green",
         "role": "Sponsorships Officer, Oxford Union",
-        "photo": "/debaters/samson-green.jpg"
+        "photo": "/debaters/samson-green.jpg?v=poster"
       },
       {
         "name": "Mr. Ethan Wang",
         "role": "DPhil Cancer Researcher, Ludwig-Oxford",
-        "photo": "/debaters/ethan-wang.jpg"
+        "photo": "/debaters/ethan-wang.jpg?v=poster"
       },
       {
-        "name": "Mr. Dhruv Ratra",
-        "role": "Mental Health-AI Entrepreneur",
-        "photo": "/debaters/dhruv-ratra.jpg"
+        "name": "To be decided",
+        "role": "Friendly Neighbourhood Academic",
+        "photo": "/debaters/to-be-decided.jpg"
       }
     ]
   },

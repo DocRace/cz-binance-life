@@ -159,22 +159,22 @@
       {
         "name": "Ms. Sunny Lu",
         "role": "勞斯萊斯策略經理",
-        "photo": "/debaters/sunny-lu.jpg"
+        "photo": "/debaters/sunny-lu.jpg?v=poster"
       },
       {
         "name": "Mr. Samson Green",
         "role": "牛津聯盟贊助事務官",
-        "photo": "/debaters/samson-green.jpg"
+        "photo": "/debaters/samson-green.jpg?v=poster"
       },
       {
         "name": "Mr. Ethan Wang",
         "role": "牛津路德維希研究所癌症博士研究員",
-        "photo": "/debaters/ethan-wang.jpg"
+        "photo": "/debaters/ethan-wang.jpg?v=poster"
       },
       {
-        "name": "Mr. Dhruv Ratra",
-        "role": "心理健康與人工智能創業者",
-        "photo": "/debaters/dhruv-ratra.jpg"
+        "name": "待定",
+        "role": "親切的鄰家學者",
+        "photo": "/debaters/to-be-decided.jpg"
       }
     ]
   },
