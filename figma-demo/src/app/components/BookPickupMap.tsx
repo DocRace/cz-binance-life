@@ -2,6 +2,7 @@ import { useEffect, useRef, useMemo } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useTranslation } from "react-i18next";
+import { getMapboxAccessToken } from "../../lib/bookPickupStoreLocations";
 
 export type PickupMapStore = {
   name: string;
@@ -16,9 +17,8 @@ interface BookPickupMapProps {
   className?: string;
 }
 
-const TILE_URL = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
 const TILE_ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+  '&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 
 const MARKER_BUTTON_CLASS =
   "flex h-8 w-8 items-center justify-center rounded-full border-2 border-gold bg-background/95 text-xs font-tech font-medium text-gold shadow-md transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60";
@@ -36,13 +36,14 @@ export default function BookPickupMap({
   const onSelectRef = useRef(onSelectIndex);
   onSelectRef.current = onSelectIndex;
 
+  const token = getMapboxAccessToken();
   const storeKey = useMemo(
     () => stores.map((s) => `${s.lng},${s.lat}`).join("|"),
     [stores],
   );
 
   useEffect(() => {
-    if (!containerRef.current || stores.length === 0) return;
+    if (!token || !containerRef.current || stores.length === 0) return;
 
     const map = L.map(containerRef.current, {
       center: [stores[0].lat, stores[0].lng],
@@ -53,11 +54,14 @@ export default function BookPickupMap({
 
     L.control.zoom({ position: "topright" }).addTo(map);
 
-    const layer = L.tileLayer(TILE_URL, {
-      attribution: TILE_ATTRIBUTION,
-      subdomains: "abcd",
-      maxZoom: 20,
-    }).addTo(map);
+    L.tileLayer(
+      `https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/256/{z}/{x}/{y}?access_token=${encodeURIComponent(token)}`,
+      {
+        attribution: TILE_ATTRIBUTION,
+        tileSize: 256,
+        maxZoom: 22,
+      },
+    ).addTo(map);
 
     const bounds = L.latLngBounds([]);
     const markers: L.Marker[] = [];
@@ -88,7 +92,7 @@ export default function BookPickupMap({
       map.remove();
       mapRef.current = null;
     };
-  }, [storeKey, stores]);
+  }, [token, storeKey, stores]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -105,6 +109,16 @@ export default function BookPickupMap({
       el.style.boxShadow = active ? "0 0 0 2px rgba(212, 175, 55, 0.85)" : "0 2px 8px rgba(0,0,0,0.35)";
     });
   }, [selectedIndex, stores]);
+
+  if (!token) {
+    return (
+      <div
+        className={`flex min-h-[280px] items-center justify-center rounded-2xl border border-border/50 bg-card/20 px-6 text-center text-sm text-muted-foreground ${className}`}
+      >
+        {t("book.pickupMapUnavailable")}
+      </div>
+    );
+  }
 
   return (
     <div
