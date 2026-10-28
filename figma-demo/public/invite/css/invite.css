@@ -556,13 +556,50 @@ body { overflow-x: hidden; }
   min-height: 0;
 }
 
+.card.is-en .card-title {
+  font-size: 48px;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+
+.card.is-en .card-sub,
+.card.is-en .blast-sub {
+  font-size: 26px;
+  letter-spacing: 0.02em;
+}
+
+.card.is-en .greeting {
+  font-size: 34px;
+  letter-spacing: 0.02em;
+}
+
+.card.is-en .prose {
+  font-size: 28px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
+.card.is-en .details p {
+  font-size: 28px;
+  letter-spacing: 0.01em;
+}
+
+.card.is-en .details span {
+  letter-spacing: 0.06em;
+}
+
+.lang-tabs {
+  padding-right: 0.4rem;
+  border-right: 1px solid var(--gold-line);
+}
+
 .card-title {
   margin: 0;
   font-family: var(--display);
   font-weight: 700;
-  font-size: 76px;
+  font-size: 62px;
   line-height: 1.22;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
   color: #f3e6c8;
   text-shadow: 0 1px 0 rgba(201, 167, 106, 0.35);
 }
@@ -570,13 +607,13 @@ body { overflow-x: hidden; }
 .card-sub {
   margin: 18px 0 0;
   font-family: var(--display);
-  font-size: 36px;
-  letter-spacing: 0.18em;
+  font-size: 32px;
+  letter-spacing: 0.08em;
   color: var(--gold-light);
 }
 
 .greeting {
-  margin: 88px 0 0;
+  margin: 56px 0 0;
   font-family: var(--display);
   font-size: 40px;
   line-height: 1.5;
@@ -626,12 +663,11 @@ body { overflow-x: hidden; }
 
 .details {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 36px;
-  row-gap: 18px;
-  margin: 48px auto 0;
-  max-width: 860px;
-  text-align: left;
+  grid-template-columns: 1fr;
+  row-gap: 14px;
+  margin: 40px auto 0;
+  max-width: 820px;
+  text-align: center;
 }
 
 .details-title {
@@ -652,7 +688,7 @@ body { overflow-x: hidden; }
 
 .details span {
   display: inline-block;
-  min-width: 4.2em;
+  min-width: 0;
   margin-right: 12px;
   color: var(--gold-light);
   letter-spacing: 0.12em;
@@ -780,7 +816,39 @@ body { overflow-x: hidden; }
 }
 
 .partners .logo-grid-3 {
-  margin-top: 44px;
+  margin-top: 36px;
+}
+
+.partners .logo-grid-3.logo-grid-lead {
+  margin-top: 0;
+}
+
+.partners .logo-grid-3 .logo-cell {
+  justify-content: center;
+}
+
+.partners .logo-grid-oxford {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 8px;
+}
+
+.partners .logo-grid-oxford .logo-img-oxford {
+  height: 156px;
+  width: auto;
+  aspect-ratio: 171 / 253;
+}
+
+.partners .logo-grid-oxford + .logo-grid-3 {
+  margin-top: 20px;
+}
+
+.partners .logo-grid-rest {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 56px;
+  margin-top: 32px;
 }
 
 .logo-grid-venue {
@@ -789,11 +857,9 @@ body { overflow-x: hidden; }
 }
 
 .partners-foot {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 12px 36px;
-  margin-top: 36px;
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
 }
 
 .partners-foot .venue-support {
@@ -1038,11 +1104,10 @@ body { overflow-x: hidden; }
   margin: 0 0 0 -0.32em;
   font-family: var(--display);
   font-weight: 700;
-  font-size: 68px;
-  line-height: 1.12;
+  font-size: 48px;
+  line-height: 1.2;
   letter-spacing: 0.04em;
   color: #f3e6c8;
-  white-space: nowrap;
 }
 
 .blast-sub {

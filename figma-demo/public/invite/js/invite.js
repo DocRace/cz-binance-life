@@ -1,5 +1,5 @@
 (() => {
-  const DATA_URL = './data/invites.json?v=43';
+  const DATA_URL = './data/invites.json?v=48';
   const TELEGRAM_QR_SRC = './assets/telegram-czlifeclub-qr.png';
   const SITE_QR_SRC = './assets/czlife-home-qr.png';
   const CHRONICLE_QR_SRC = './assets/czlife-chronicle-qr.png';
@@ -24,6 +24,7 @@
 
   let data = null;
   let typeId = 'guest';
+  let lang = 'zh';
   let guestName = '';
   let yafangVariant = 'media';
   let backdropPanel = 'centre';
@@ -33,9 +34,10 @@
     const res = await fetch(DATA_URL);
     if (!res.ok) throw new Error('Failed to load invite copy');
     data = await res.json();
-    const requested = new URLSearchParams(window.location.search).get('type')
-      || window.location.hash.replace(/^#/, '');
+    const params = new URLSearchParams(window.location.search);
+    const requested = params.get('type') || window.location.hash.replace(/^#/, '');
     if (requested && data.types[requested]) typeId = requested;
+    if (params.get('lang') === 'en') lang = 'en';
     render();
     bind();
     fitBoard();
@@ -65,10 +67,25 @@
     return data.pptSlides || [];
   }
 
+  function view() {
+    const en = lang === 'en' ? data.locales?.en : null;
+    if (!en) return data;
+    const types = { ...data.types };
+    Object.entries(en.types || {}).forEach(([id, patch]) => {
+      if (types[id]) types[id] = { ...types[id], ...patch };
+    });
+    return {
+      ...data,
+      event: { ...data.event, ...(en.event || {}) },
+      types,
+    };
+  }
+
   function currentType() {
-    const pack = data.types.yafang;
+    const copy = view();
+    const pack = copy.types.yafang;
     if (isYafangPack() && pack) {
-      const variant = data.types[yafangVariant] || data.types.media;
+      const variant = copy.types[yafangVariant] || copy.types.media;
       return {
         ...variant,
         id: 'yafang',
@@ -77,7 +94,7 @@
         contact: pack.contact,
       };
     }
-    return data.types[typeId] || data.types.guest;
+    return copy.types[typeId] || copy.types.guest;
   }
 
   function boardSize() {
@@ -192,9 +209,13 @@
       <header class="studio">
         <p class="studio-kicker">Invitation</p>
         <p class="studio-brand">BINANCE LIFE BOOK CLUB  ×  DATADANCE</p>
-        <h1 class="studio-title">書友見面會邀請函</h1>
+        <h1 class="studio-title">牛津書友分享會邀請函</h1>
         <p class="studio-lead">媒體／嘉賓為 21:9 手機豎版；郵件推送為 16:9 橫版。「活動海報」為 /event 右側用圖，1080×1170，可先下載再替換。「背景板」含現場三塊屏、16:9 整幅與 16:9 簽名。「PPT」為現場簡報六頁，可一鍵下載 PPTX，也可逐頁下載 1920×1080。「亞芳對外」為人名留空模板。</p>
         <div class="studio-bar">
+          <div class="tabs lang-tabs" id="langTabs">
+            <button type="button" class="tab${lang === 'zh' ? ' is-on' : ''}" data-lang="zh">繁體</button>
+            <button type="button" class="tab${lang === 'en' ? ' is-on' : ''}" data-lang="en">English</button>
+          </div>
           <div class="tabs" id="tabs">
             ${types.map((t) => `
               <button type="button" class="tab${t.id === typeId ? ' is-on' : ''}" data-type="${esc(t.id)}">${esc(t.label)}</button>
@@ -327,18 +348,19 @@
       fitBoard();
       return;
     }
-    const ev = data.event;
+    const ev = view().event;
     const t = currentType();
     const name = t.nameLockedBlank ? '' : guestName.trim();
+    const greetEnd = t.greetingSuffix ?? '：';
     const greeting = t.greetingPrefix
-      ? `<p class="greeting">${esc(t.greetingPrefix)}<span class="greeting-name${name ? ' is-filled' : ' is-blank'}">${name ? esc(name) : ''}</span>：</p>`
+      ? `<p class="greeting">${esc(t.greetingPrefix)}<span class="greeting-name${name ? ' is-filled' : ' is-blank'}">${name ? esc(name) : ''}</span>${esc(greetEnd)}</p>`
       : '';
     const extra = t.closing ? `<p>${nl(t.closing)}</p>` : '';
     const note = t.note ? `<p class="note">${esc(t.note)}</p>` : '';
     const contact = renderYafangContact(t.contact);
 
     board.innerHTML = `
-      <div class="card">
+      <div class="card${lang === 'en' ? ' is-en' : ''}">
         <div class="card-bg"></div>
         <div class="card-photo">
           <span class="photo-tile"></span>
@@ -351,8 +373,8 @@
         <p class="card-mark" aria-hidden>幣安人生</p>
         <div class="card-inner">
           <div class="card-head">
-            <h1 class="card-title">${esc(ev.book)}書友會</h1>
-            <p class="card-sub">${esc(ev.meeting)}　${esc(ev.inviteSuffix || '邀請函')}</p>
+            <h1 class="card-title">${nl(ev.title || `${ev.book}書友會`)}</h1>
+            <p class="card-sub">${esc(ev.tagline || ev.meeting)}${lang === 'en' ? ' · ' : '　'}${esc(ev.inviteSuffix || '邀請函')}</p>
             ${greeting}
           </div>
           <div class="card-gap" aria-hidden="true"></div>
@@ -374,7 +396,6 @@
           <footer class="partners">
             ${renderPartnerMarks({ venue: false })}
             <div class="partners-foot">
-              ${renderEcoSupport()}
               <div class="qr-block">
                 <div class="qr-frame">
                   <img src="./assets/czlife-home-qr.png" alt="${esc(ev.qrUrl || SITE_URL)}" />
@@ -391,9 +412,9 @@
 
   function paintEventPoster(board) {
     if (!board) return;
-    const ev = data.event;
+    const ev = view().event;
     board.innerHTML = `
-      <div class="card is-poster">
+      <div class="card is-poster${lang === 'en' ? ' is-en' : ''}">
         <div class="card-bg"></div>
         <div class="card-photo is-cover"></div>
         <div class="card-veil blast-veil"></div>
@@ -402,8 +423,8 @@
         <canvas class="card-baked-bg" aria-hidden></canvas>
         <p class="card-mark" aria-hidden>幣安人生</p>
         <div class="poster-inner">
-          <p class="poster-brand">CZ LIFE · YOUNG FOUNDERS</p>
-          <h1 class="poster-title">《幣安人生》書友見面會</h1>
+          <p class="poster-brand">CZ LIFE · OXFORD DEBATING</p>
+          <h1 class="poster-title">${nl(ev.title || '《幣安人生》書友分享會')}</h1>
           <img class="poster-sign" src="${esc(inscriptionUrl)}" alt="幣安人生 Club" />
           <div class="poster-book">
             <div class="hero-book">
@@ -414,17 +435,17 @@
               </div>
             </div>
           </div>
-          <p class="poster-meta">${esc(ev.date)}　${esc(ev.venue)}</p>
+          <p class="poster-meta">${esc(ev.date)}${lang === 'en' ? ' · ' : '　'}${esc(ev.venue)}</p>
         </div>
       </div>
     `;
   }
 
   function paintBlastCard(board) {
-    const ev = data.event;
+    const ev = view().event;
     const t = currentType();
     board.innerHTML = `
-      <div class="card is-blast">
+      <div class="card is-blast${lang === 'en' ? ' is-en' : ''}">
         <div class="card-bg"></div>
         <div class="card-photo is-cover"></div>
         <div class="card-veil blast-veil"></div>
@@ -433,8 +454,8 @@
         <canvas class="card-baked-bg" aria-hidden></canvas>
         <div class="blast-inner">
           <div class="blast-copy">
-            <h1 class="blast-title">${esc(ev.book)}書友會</h1>
-            <p class="blast-sub">${esc(ev.meeting)}　${esc(ev.inviteSuffix || '邀請函')}</p>
+            <h1 class="blast-title">${nl(ev.title || `${ev.book}書友會`)}</h1>
+            <p class="blast-sub">${esc(ev.tagline || ev.meeting)}${lang === 'en' ? ' · ' : '　'}${esc(ev.inviteSuffix || '邀請函')}</p>
             <p class="blast-lead">${esc(t.lead)}</p>
             <p class="blast-body">${nl(t.body)}</p>
             <p class="blast-speakers">${esc(ev.speakers)}</p>
@@ -728,7 +749,7 @@
   }
 
   function renderEcoSupport(opts = {}) {
-    const ev = data.event;
+    const ev = view().event;
     const compact = Boolean(opts.compact);
     const venue = compact
       ? (data.blastVenuePartners || data.venuePartners || [])
@@ -748,27 +769,47 @@
   }
 
   function renderPartnerMarks(opts = {}) {
-    const ev = data.event;
+    const ev = view().event;
     const compact = Boolean(opts.compact);
     const main = compact
       ? (data.blastPartners || data.partners || [])
       : (data.partners || []);
-    const row1 = main.slice(0, 4);
-    const row2 = compact ? main.slice(4, 8) : main.slice(4, 7);
     const labelClass = compact ? 'blast-partners-label' : '';
     const gridExtra = compact ? ' is-compact' : '';
-    const showVenue = opts.venue !== false && !compact;
-    const venue = showVenue ? renderEcoSupport(opts) : '';
-    const row2Class = compact ? `logo-grid logo-grid-4${gridExtra}` : `logo-grid logo-grid-3${gridExtra}`;
+    const lead = !compact && main[0]?.id === 'oxford' ? main[0] : null;
+    const rest = lead ? main.slice(1) : main;
+    let rows = '';
+    if (lead) {
+      const top = rest.slice(0, 3);
+      const bottom = rest.slice(3);
+      rows = `
+        <div class="logo-grid logo-grid-oxford">${renderLogo(lead)}</div>
+        <div class="logo-grid logo-grid-3">${top.map(renderLogo).join('')}</div>
+        ${bottom.length ? `<div class="logo-grid logo-grid-rest">${bottom.map(renderLogo).join('')}</div>` : ''}
+      `;
+    } else {
+      const paired = !compact && rest.length === 6;
+      const row1 = paired ? rest.slice(0, 3) : rest.slice(0, 4);
+      const row2 = compact ? rest.slice(4, 8) : paired ? rest.slice(3, 6) : rest.slice(4, 7);
+      const row1Class = paired
+        ? `logo-grid logo-grid-3 logo-grid-lead${gridExtra}`
+        : `logo-grid logo-grid-4${gridExtra}`;
+      const row2Class = compact ? `logo-grid logo-grid-4${gridExtra}` : `logo-grid logo-grid-3${gridExtra}`;
+      rows = `
+        <div class="${row1Class}">${row1.map(renderLogo).join('')}</div>
+        ${row2.length ? `<div class="${row2Class}">${row2.map(renderLogo).join('')}</div>` : ''}
+      `;
+    }
     return `
       <h3 class="${labelClass}">${esc(ev.partnersLabel)}</h3>
-      <div class="logo-grid logo-grid-4${gridExtra}">${row1.map(renderLogo).join('')}</div>
-      ${row2.length ? `<div class="${row2Class}">${row2.map(renderLogo).join('')}</div>` : ''}
-      ${venue}
+      ${rows}
     `;
   }
 
   function renderLogo(p) {
+    if (p.id === 'oxford') {
+      return `<div class="logo-cell logo-cell-img" title="${esc(p.name)}"><img class="logo-img logo-img-oxford" src="./assets/oxford-union.png?v=gold" alt="${esc(p.name)}" /></div>`;
+    }
     if (p.id === 'bnb') {
       return `<div class="logo-cell logo-cell-img" title="${esc(p.name)}"><img class="logo-img logo-img-bnb" src="./assets/bnb-chain.png?v=gold" alt="${esc(p.name)}" /></div>`;
     }
@@ -818,16 +859,17 @@
   }
 
   function plainText() {
-    const ev = data.event;
+    const ev = view().event;
     const t = currentType();
     const name = t.nameLockedBlank ? '________' : (guestName.trim() || '________');
-    const lines = [ev.book + ev.meeting];
-    if (t.greetingPrefix) lines.push(`${t.greetingPrefix}${name}：`);
+    const lines = [String(ev.title || `${ev.book}${ev.meeting}`)];
+    const sep = lang === 'en' ? ': ' : '：';
+    if (t.greetingPrefix) lines.push(`${t.greetingPrefix}${name}${t.greetingSuffix ?? '：'}`);
     lines.push(t.lead, t.body);
     if (t.closing) lines.push(t.closing);
     if (typeId === 'blast') lines.push(ev.speakers);
     const venue = typeId === 'blast' ? (ev.blastVenue || ev.venue) : ev.venue;
-    lines.push(`日期：${ev.date}`, `時間：${ev.time}`, `地點：${venue}`, `形式：${t.format}`);
+    lines.push(`${ev.dateLabel}${sep}${ev.date}`, `${ev.timeLabel}${sep}${ev.time}`, `${ev.venueLabel}${sep}${venue}`, `${ev.formatLabel}${sep}${t.format}`);
     if (t.note) lines.push(t.note);
     if (t.contact) {
       lines.push(t.contact.title);
@@ -839,6 +881,21 @@
   }
 
   function bind() {
+    $('#langTabs')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-lang]');
+      if (!btn) return;
+      lang = btn.getAttribute('data-lang') === 'en' ? 'en' : 'zh';
+      document.documentElement.lang = lang === 'en' ? 'en' : 'zh-Hant';
+      document.querySelectorAll('#langTabs .tab').forEach((el) => {
+        el.classList.toggle('is-on', el.getAttribute('data-lang') === lang);
+      });
+      const url = new URL(window.location.href);
+      if (lang === 'en') url.searchParams.set('lang', 'en');
+      else url.searchParams.delete('lang');
+      history.replaceState(null, '', url);
+      paintCard();
+      syncNameField();
+    });
     $('#tabs')?.addEventListener('click', (e) => {
       const btn = e.target.closest('[data-type]');
       if (!btn) return;

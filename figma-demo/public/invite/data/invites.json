@@ -1,14 +1,16 @@
 {
   "event": {
     "book": "《幣安人生》",
-    "meeting": "書友線下見面會",
-    "date": "2026年8月27日",
-    "time": "09:30–11:00",
-    "venue": "香港中環交易廣場",
-    "blastVenue": "香港中環交易廣場第二座40樓4005–07室",
-    "speakers": "謝亞芳 × CZ",
-    "host": "《幣安人生》書友會 敬邀",
-    "detailsTitle": "線下書友見面會",
+    "meeting": "書友分享會",
+    "title": "《幣安人生》書友分享會\n暨歐洲社群成立儀式",
+    "tagline": "辯題：完全無現金的社會更為理想",
+    "date": "2026年11月3日（星期二）",
+    "time": "10:00–12:00（UTC+0）",
+    "venue": "牛津大學聖彼得學院 Dorfman Room",
+    "blastVenue": "Dorfman Room, St Peter's College, Oxford",
+    "speakers": "CZLife Book Club × Oxford Debating",
+    "host": "CZLife Book Club 敬邀",
+    "detailsTitle": "牛津書友分享會",
     "dateLabel": "日期",
     "timeLabel": "時間",
     "venueLabel": "地點",
@@ -28,9 +30,9 @@
       "nameLabel": "媒體／收件人",
       "namePlaceholder": "如：某某日報、王編輯",
       "greetingPrefix": "尊敬的",
-      "lead": "誠邀貴媒體出席《幣安人生》書友見面會，與CZ及書友們見面交流。",
-      "body": "《幣安人生》記錄了CZ一路走來的經歷與思考。本次見面會將圍繞「選擇、成長、創業與長期主義」，由資深媒體人謝亞芳與CZ展開對談，並與現場嘉賓和書友分享交流。",
-      "closing": "",
+      "lead": "誠邀貴媒體出席並報道本次牛津辯論與歐洲社群成立。",
+      "body": "正式辯論之後開放全場交流。",
+      "closing": "席位有限，須提前報名。",
       "format": "媒體定向邀請",
       "note": ""
     },
@@ -41,10 +43,10 @@
       "nameLabel": "嘉賓姓名",
       "namePlaceholder": "如：陳先生、Jason",
       "greetingPrefix": "尊敬的",
-      "lead": "誠邀閣下作為特邀嘉賓，出席《幣安人生》書友見面會，與CZ及書友們見面交流。",
-      "body": "《幣安人生》記錄了CZ一路走來的經歷與思考。本次見面會將圍繞「選擇、成長、創業與長期主義」，由資深媒體人謝亞芳與CZ展開對談，並與現場嘉賓和書友分享交流。",
-      "closing": "期待與您見面，共度一場真誠而有啟發的書友相聚。",
-      "format": "定向邀請｜閉門交流",
+      "lead": "誠邀閣下作為特邀嘉賓出席。",
+      "body": "正式辯論之後開放全場交流，並宣布 CZLife Book Club 歐洲社群成立。",
+      "closing": "建議商務休閒或正裝出席。席位有限，須提前報名。",
+      "format": "線下活動｜英語",
       "note": ""
     },
     "poster": {
@@ -107,25 +109,22 @@
       "nameLabel": "",
       "namePlaceholder": "",
       "greetingPrefix": "",
-      "lead": "從一本書，走近一段真實的人生。",
-      "body": "資深媒體人謝亞芳與CZ深度對談，從人生選擇、創業成長到長期主義，\n分享在變化與不確定中如何判斷、行動與堅持。",
+      "lead": "從香港到牛津，以一本書開啟一場辯論。",
+      "body": "辯題「完全無現金的社會更為理想」。正式辯論後開放全場交流，並宣布 CZLife Book Club 歐洲社群成立。",
       "closing": "",
-      "format": "定向邀請｜閉門交流",
+      "format": "線下活動｜英語",
       "note": ""
     }
   },
   "partners": [
+    { "id": "oxford", "name": "Oxford Union" },
     { "id": "press", "name": "商務印書館" },
-    { "id": "datadance", "name": "DataDance" },
-    { "id": "yafang", "name": "亞芳創變派" },
     { "id": "hash", "name": "HASH GLOBAL" },
+    { "id": "datadance", "name": "DDC" },
     { "id": "ipdex", "name": "IPDEX" },
-    { "id": "onebook", "name": "一本讀書會" },
-    { "id": "hku", "name": "香港大學創立方" }
+    { "id": "onebook", "name": "一本讀書會" }
   ],
-  "venuePartners": [
-    { "id": "bnb", "name": "BNB Chain" }
-  ],
+  "venuePartners": [],
   "blastPartners": [
     { "id": "press", "name": "商務印書館" },
     { "id": "bnb", "name": "BNB Chain" },
@@ -246,5 +245,50 @@
     "香港商報",
     "Bloomberg",
     "吳説"
-  ]
+  ],
+  "locales": {
+    "en": {
+      "event": {
+        "title": "Freedom of Money\nBook Discussion\n& European Chapter Launch",
+        "tagline": "Debate motion: a completely cashless society",
+        "date": "Tuesday, 3 November 2026",
+        "time": "10:00–12:00 (UTC+0)",
+        "venue": "Dorfman Room, St Peter's College",
+        "blastVenue": "Dorfman Room, St Peter's College, Oxford",
+        "dateLabel": "Date",
+        "timeLabel": "Time",
+        "venueLabel": "Venue",
+        "formatLabel": "Format",
+        "inviteSuffix": "Invitation",
+        "partnersLabel": "Supporters"
+      },
+      "types": {
+        "media": {
+          "nameLabel": "Outlet / recipient",
+          "namePlaceholder": "e.g. a newspaper, an editor",
+          "greetingPrefix": "Dear ",
+          "greetingSuffix": ",",
+          "lead": "You are invited to cover this Oxford debate and the launch of our European chapter.",
+          "body": "A formal debate will be followed by an open discussion.",
+          "closing": "Places are limited; please register in advance.",
+          "format": "Press invitation"
+        },
+        "guest": {
+          "nameLabel": "Guest name",
+          "namePlaceholder": "e.g. Jason",
+          "greetingPrefix": "Dear ",
+          "greetingSuffix": ",",
+          "lead": "You are invited to attend as our guest.",
+          "body": "A formal debate will be followed by an open discussion, and the launch of the CZLife Book Club European Chapter.",
+          "closing": "Smart or business attire is recommended. Places are limited; please register in advance.",
+          "format": "In person · English"
+        },
+        "blast": {
+          "lead": "From Hong Kong to Oxford, one book opens a debate.",
+          "body": "Motion: a completely cashless society. A formal debate, an open discussion, and the launch of the CZLife Book Club European Chapter.",
+          "format": "In person · English"
+        }
+      }
+    }
+  }
 }
