@@ -936,6 +936,10 @@ body { overflow-x: hidden; }
   aspect-ratio: 318 / 60;
 }
 
+.partners .logo-img-press {
+  height: 48px;
+}
+
 .logo-img-bnb {
   height: 56px;
   width: auto;
@@ -956,7 +960,7 @@ body { overflow-x: hidden; }
 }
 
 .partners .logo-img-hash {
-  width: 252px;
+  width: 280px;
   height: auto;
   max-width: none;
 }
