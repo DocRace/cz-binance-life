@@ -1168,7 +1168,7 @@
     const sh = hero.height * 0.56;
     const dw = Math.round(w * 1.04);
     const dh = dw * (sh / sw);
-    const dy = Math.round(h * 0.04);
+    const dy = Math.round(h * -0.065);
     const dx = (w - dw) / 2;
     const off = document.createElement('canvas');
     off.width = w;

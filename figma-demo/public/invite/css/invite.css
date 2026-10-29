@@ -2203,14 +2203,14 @@ body { overflow-x: hidden; }
   height: 1320px;
   pointer-events: none;
   opacity: 0.72;
-  background: url("/invite/assets/invite-hero.png") 50% 50% / 1180px auto no-repeat;
+  background: url("/invite/assets/invite-hero.png") 50% 84% / 1180px auto no-repeat;
   -webkit-mask-image:
-    linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.16) 16%, rgba(0, 0, 0, 0.72) 36%, rgba(0, 0, 0, 0.72) 42%, rgba(0, 0, 0, 0.36) 60%, rgba(0, 0, 0, 0.12) 76%, transparent 92%),
-    radial-gradient(ellipse 92% 140% at 50% 36%, #000 46%, rgba(0, 0, 0, 0.72) 82%, transparent 100%);
+    linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.16) 4%, rgba(0, 0, 0, 0.72) 22%, rgba(0, 0, 0, 0.72) 28%, rgba(0, 0, 0, 0.36) 46%, rgba(0, 0, 0, 0.12) 62%, transparent 76%),
+    radial-gradient(ellipse 92% 140% at 50% 22%, #000 46%, rgba(0, 0, 0, 0.72) 82%, transparent 100%);
   -webkit-mask-composite: source-in;
   mask-image:
-    linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.16) 16%, rgba(0, 0, 0, 0.72) 36%, rgba(0, 0, 0, 0.72) 42%, rgba(0, 0, 0, 0.36) 60%, rgba(0, 0, 0, 0.12) 76%, transparent 92%),
-    radial-gradient(ellipse 92% 140% at 50% 36%, #000 46%, rgba(0, 0, 0, 0.72) 82%, transparent 100%);
+    linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.16) 4%, rgba(0, 0, 0, 0.72) 22%, rgba(0, 0, 0, 0.72) 28%, rgba(0, 0, 0, 0.36) 46%, rgba(0, 0, 0, 0.12) 62%, transparent 76%),
+    radial-gradient(ellipse 92% 140% at 50% 22%, #000 46%, rgba(0, 0, 0, 0.72) 82%, transparent 100%);
   mask-composite: intersect;
 }
 
