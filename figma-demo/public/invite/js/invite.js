@@ -1,10 +1,10 @@
 (() => {
-  const DATA_URL = './data/invites.json?v=49';
+  const DATA_URL = './data/invites.json?v=50';
   const TELEGRAM_QR_SRC = './assets/telegram-czlifeclub-qr.png';
   const SITE_QR_SRC = './assets/czlife-home-qr.png';
   const CHRONICLE_QR_SRC = './assets/czlife-chronicle-qr.png';
   const PPT_CORNER = '《幣安人生》書友會';
-  const PORTRAIT = { w: 1080, h: 2200 };
+  const PORTRAIT = { w: 1080, h: 1920 };
   const POSTER = { w: 1080, h: 1170 };
   const WIDE = { w: 1920, h: 1080 };
   const BACKDROP_CENTRE = { w: 2048, h: 1152 };
@@ -210,7 +210,7 @@
         <p class="studio-kicker">Invitation</p>
         <p class="studio-brand">BINANCE LIFE BOOK CLUB  ×  DATADANCE</p>
         <h1 class="studio-title">牛津書友分享會邀請函</h1>
-        <p class="studio-lead">媒體／嘉賓為 21:9 手機豎版；郵件推送為 16:9 橫版。「活動海報」為 /event 右側用圖，1080×1170，可先下載再替換。「背景板」含現場三塊屏、16:9 整幅與 16:9 簽名。「PPT」為現場簡報六頁，可一鍵下載 PPTX，也可逐頁下載 1920×1080。「亞芳對外」為人名留空模板。</p>
+        <p class="studio-lead">媒體／嘉賓為 9:16 豎版邀請函。「活動海報」為 /event 右側用圖，1080×1170，可先下載再替換。「背景板」含現場三塊屏、16:9 整幅與 16:9 簽名。「PPT」為現場簡報六頁，可一鍵下載 PPTX，也可逐頁下載 1920×1080。「亞芳對外」為人名留空模板。郵件推送為 16:9 橫版。</p>
         <div class="studio-bar">
           <div class="tabs lang-tabs" id="langTabs">
             <button type="button" class="tab${lang === 'zh' ? ' is-on' : ''}" data-lang="zh">繁體</button>
@@ -360,41 +360,35 @@
     const contact = renderYafangContact(t.contact);
 
     board.innerHTML = `
-      <div class="card${lang === 'en' ? ' is-en' : ''}">
+      <div class="card is-formal${lang === 'en' ? ' is-en' : ''}">
         <div class="card-bg"></div>
-        <div class="card-photo">
-          <span class="photo-tile"></span>
-          <span class="photo-tile"></span>
-        </div>
         <div class="card-veil"></div>
         <div class="card-gold"></div>
-        <div class="card-mesh"></div>
+        <div class="formal-hero" aria-hidden="true"></div>
         <canvas class="card-baked-bg" aria-hidden></canvas>
         <p class="card-mark" aria-hidden>幣安人生</p>
         <div class="card-inner">
-          <div class="card-head">
-            <h1 class="card-title">${nl(ev.title || `${ev.book}書友會`)}</h1>
-            <p class="card-sub">${esc(ev.tagline || ev.meeting)}${lang === 'en' ? ' · ' : '　'}${esc(ev.inviteSuffix || '邀請函')}</p>
-            ${greeting}
-          </div>
-          <div class="card-gap" aria-hidden="true"></div>
-          <div class="card-copy">
-            <div class="prose">
-              <p>${nl(t.lead)}</p>
-              <p>${nl(t.body)}</p>
-              ${extra}
+          <p class="formal-kicker"><span>${esc(ev.kicker || ev.book)}</span></p>
+          <h1 class="formal-title">${nl(ev.heroTitle || ev.title)}</h1>
+          <p class="formal-label"><span>${esc(ev.inviteWord || ev.inviteSuffix || '邀請函')}</span></p>
+          <div class="formal-hero-space" aria-hidden="true"></div>
+          ${greeting}
+          <p class="formal-lead">${nl(t.lead)}</p>
+          <p class="formal-debate"><strong>${esc(ev.debateLabel || '辯題')}</strong><span>${esc(ev.debate || '')}</span></p>
+          <div class="formal-facts">
+            <div class="formal-facts-rows">
+              <p><span>${esc(ev.dateLabel)}</span><b>${esc(ev.date)}</b></p>
+              <p><span>${esc(ev.timeLabel)}</span><b>${esc(ev.time)}</b></p>
+              <p><span>${esc(ev.hostLabel || '')}</span><b>${esc(ev.hostLine || ev.speakers || '')}</b></p>
             </div>
-            <div class="details">
-              <p><span>${esc(ev.dateLabel)}</span>${esc(ev.date)}</p>
-              <p><span>${esc(ev.timeLabel)}</span>${esc(ev.time)}</p>
-              <p><span>${esc(ev.venueLabel)}</span>${esc(ev.venue)}</p>
-              <p><span>${esc(ev.formatLabel)}</span>${esc(t.format)}</p>
-            </div>
-            ${note}
-            ${contact}
+            <img class="formal-crest" src="./assets/oxford-union.png?v=gold" alt="Oxford Union" />
           </div>
-          <footer class="partners">
-            ${renderPartnerMarks({ venue: false })}
+          <p class="formal-dress"><span>${esc(ev.dressLabel || '')}</span><b>${esc(ev.dress || '')}</b></p>
+          <p class="formal-venue">${esc(ev.venueBanner || ev.venue)}</p>
+          ${note}
+          ${contact}
+          <footer class="partners formal-partners">
+            ${renderFormalPartners()}
             <div class="partners-foot">
               <div class="qr-block">
                 <div class="qr-frame">
@@ -765,6 +759,26 @@
         <h3 class="${labelClass}">${esc(label)}</h3>
         <div class="logo-grid logo-grid-venue${gridExtra}">${venue.map(renderLogo).join('')}</div>
       </div>
+    `;
+  }
+
+  function renderFormalPartners() {
+    const ev = view().event;
+    const ids = ['press', 'hash', 'datadance', 'ipdex', 'onebook'];
+    const pool = [
+      ...(data.partners || []),
+      ...(data.blastPartners || []),
+      ...(data.backdropPartners || []),
+    ];
+    const findMark = (id) => pool.find((p) => p.id === id);
+    const marks = ids.map(findMark).filter(Boolean);
+    const bnb = findMark('bnb') || { id: 'bnb', name: 'BNB Chain' };
+    const top = marks.slice(0, 3);
+    const bottom = [...marks.slice(3), bnb];
+    return `
+      <h3>${esc(ev.backedBy || ev.partnersLabel)}</h3>
+      <div class="logo-grid logo-grid-3 formal-logo-row">${top.map(renderLogo).join('')}</div>
+      <div class="logo-grid logo-grid-3 formal-logo-row formal-logo-row-2">${bottom.map(renderLogo).join('')}</div>
     `;
   }
 
@@ -1146,6 +1160,46 @@
     ctx.drawImage(off, 0, y);
   }
 
+  async function drawFormalPortrait(ctx, w, h) {
+    const hero = await loadImage('/invite/assets/invite-hero.png');
+    const sx = hero.width * 0.02;
+    const sy = hero.height * 0.05;
+    const sw = hero.width * 0.96;
+    const sh = hero.height * 0.56;
+    const dw = Math.round(w * 1.04);
+    const dh = dw * (sh / sw);
+    const dy = Math.round(h * 0.04);
+    const dx = (w - dw) / 2;
+    const off = document.createElement('canvas');
+    off.width = w;
+    off.height = h;
+    const octx = off.getContext('2d');
+    octx.drawImage(hero, sx, sy, sw, sh, dx, dy, dw, dh);
+    octx.globalCompositeOperation = 'destination-in';
+    const side = octx.createLinearGradient(dx, 0, dx + dw, 0);
+    side.addColorStop(0, 'rgba(0,0,0,0)');
+    side.addColorStop(0.14, 'rgba(0,0,0,0.28)');
+    side.addColorStop(0.28, 'rgba(0,0,0,0.7)');
+    side.addColorStop(0.72, 'rgba(0,0,0,0.7)');
+    side.addColorStop(0.86, 'rgba(0,0,0,0.28)');
+    side.addColorStop(1, 'rgba(0,0,0,0)');
+    octx.fillStyle = side;
+    octx.fillRect(0, 0, w, h);
+    const top = Math.max(0, dy);
+    const bottom = Math.min(h, dy + dh);
+    const vert = octx.createLinearGradient(0, top, 0, bottom);
+    vert.addColorStop(0, 'rgba(0,0,0,0)');
+    vert.addColorStop(0.14, 'rgba(0,0,0,0.22)');
+    vert.addColorStop(0.32, 'rgba(0,0,0,0.7)');
+    vert.addColorStop(0.42, 'rgba(0,0,0,0.7)');
+    vert.addColorStop(0.64, 'rgba(0,0,0,28)');
+    vert.addColorStop(0.84, 'rgba(0,0,0,08)');
+    vert.addColorStop(1, 'rgba(0,0,0,0)');
+    octx.fillStyle = vert;
+    octx.fillRect(0, 0, w, h);
+    ctx.drawImage(off, 0, 0);
+  }
+
   async function bakeCardBackdrop(canvas, size = boardSize()) {
     const { w, h } = size;
     const dpr = 2;
@@ -1243,6 +1297,8 @@
       ctx.globalAlpha = 0.42;
       ctx.drawImage(cover, (w - dw) / 2 - w * 0.04, (h - dh) / 2, dw, dh);
       ctx.globalAlpha = 1;
+    } else if (typeId === 'guest' || typeId === 'media' || typeId === 'yafang') {
+      await drawFormalPortrait(ctx, w, h);
     } else if (!isBackdrop() && !isPpt()) {
       const hero = await loadImage('/invite/assets/invite-hero.png');
       const tileW = w;
@@ -1259,11 +1315,14 @@
     }
 
     const diag = ctx.createLinearGradient(0, 0, w, h * 0.28);
-    diag.addColorStop(0, 'rgba(26,23,20,0.72)');
-    diag.addColorStop(0.46, 'rgba(26,23,20,0.48)');
-    diag.addColorStop(1, 'rgba(26,23,20,0.28)');
-    ctx.fillStyle = diag;
-    ctx.fillRect(0, 0, w, h);
+    const formalCard = typeId === 'guest' || typeId === 'media' || typeId === 'yafang';
+    if (!formalCard) {
+      diag.addColorStop(0, 'rgba(26,23,20,0.72)');
+      diag.addColorStop(0.46, 'rgba(26,23,20,0.48)');
+      diag.addColorStop(1, 'rgba(26,23,20,0.28)');
+      ctx.fillStyle = diag;
+      ctx.fillRect(0, 0, w, h);
+    }
 
     const veil = ctx.createLinearGradient(0, 0, 0, h);
     if (isBackdrop() || isPpt()) {
@@ -1274,6 +1333,12 @@
       veil.addColorStop(0, 'rgba(26,23,20,0.55)');
       veil.addColorStop(0.42, 'rgba(26,23,20,0.72)');
       veil.addColorStop(1, 'rgba(26,23,20,0.88)');
+    } else if (formalCard) {
+      veil.addColorStop(0, 'rgba(22,16,12,0)');
+      veil.addColorStop(0.46, 'rgba(22,16,12,0)');
+      veil.addColorStop(0.64, 'rgba(22,16,12,0.22)');
+      veil.addColorStop(0.84, '#16110d');
+      veil.addColorStop(1, '#16110d');
     } else {
       veil.addColorStop(0, 'rgba(26,23,20,0.16)');
       veil.addColorStop(0.18, 'rgba(26,23,20,0.38)');
@@ -1285,6 +1350,7 @@
     ctx.fillStyle = veil;
     ctx.fillRect(0, 0, w, h);
 
+    if (!formalCard) {
     const goldTop = ctx.createRadialGradient(w * 0.5, h * 0.08, 0, w * 0.5, h * 0.08, w * 0.62);
     goldTop.addColorStop(0, 'rgba(201,167,106,0.22)');
     goldTop.addColorStop(0.58, 'rgba(201,167,106,0)');
@@ -1296,7 +1362,9 @@
     goldWash.addColorStop(0.36, 'rgba(201,167,106,0)');
     ctx.fillStyle = goldWash;
     ctx.fillRect(0, 0, w, h);
+    }
 
+    if (!formalCard) {
     ctx.save();
     const meshFade = ctx.createLinearGradient(0, 0, 0, h);
     meshFade.addColorStop(0, 'rgba(255,255,255,0.19)');
@@ -1317,6 +1385,7 @@
       ctx.stroke();
     }
     ctx.restore();
+    }
   }
 
   const PPT_LOGO_INK = '#edd59a';

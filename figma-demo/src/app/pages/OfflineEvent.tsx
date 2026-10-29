@@ -34,6 +34,11 @@ function asArray<T>(raw: unknown): T[] {
   return Array.isArray(raw) ? (raw as T[]) : [];
 }
 
+function debaterPhotoPosition(photo: string) {
+  if (photo.includes("rajiv-nandha")) return "object-[68%_center]";
+  return "object-center";
+}
+
 export default function OfflineEvent() {
   const { t } = useTranslation();
   const location = useLocation();
@@ -217,7 +222,7 @@ export default function OfflineEvent() {
                 <img
                   src={person.photo}
                   alt=""
-                  className="aspect-[4/5] w-full object-cover object-center"
+                  className={`aspect-[4/5] w-full object-cover ${debaterPhotoPosition(person.photo)}`}
                   loading="lazy"
                   decoding="async"
                 />

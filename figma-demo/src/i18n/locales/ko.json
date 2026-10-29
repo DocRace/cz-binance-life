@@ -160,22 +160,22 @@
       {
         "name": "Ms. Sunny Lu",
         "role": "롤스로이스 경영시스템 총괄",
-        "photo": "/debaters/sunny-lu.jpg?v=poster2"
+        "photo": "/debaters/sunny-lu.jpg?v=portrait"
       },
       {
         "name": "Mr. Rajiv Nandha",
         "role": "ThinkIN, Ltd. 공동창업자 겸 CEO",
-        "photo": "/debaters/rajiv-nandha.jpg?v=poster"
+        "photo": "/debaters/rajiv-nandha.jpg?v=portrait"
       },
       {
         "name": "Mr. Ethan Wang",
         "role": "루드비히 옥스퍼드 암 연구 DPhil",
-        "photo": "/debaters/ethan-wang.jpg?v=poster"
+        "photo": "/debaters/ethan-wang.jpg?v=portrait"
       },
       {
         "name": "Mr. Oliver Jones-Lyons",
         "role": "옥스퍼드 유니언 전 상임위원 겸 재무 디렉터",
-        "photo": "/debaters/oliver-jones-lyons.jpg?v=poster"
+        "photo": "/debaters/oliver-jones-lyons.jpg?v=portrait"
       }
     ]
   },

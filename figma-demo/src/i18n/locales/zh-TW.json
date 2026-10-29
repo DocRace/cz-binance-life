@@ -159,22 +159,22 @@
       {
         "name": "Ms. Sunny Lu",
         "role": "勞斯萊斯管理系統主管",
-        "photo": "/debaters/sunny-lu.jpg?v=poster2"
+        "photo": "/debaters/sunny-lu.jpg?v=portrait"
       },
       {
         "name": "Mr. Rajiv Nandha",
         "role": "ThinkIN, Ltd. 聯合創辦人兼行政總裁",
-        "photo": "/debaters/rajiv-nandha.jpg?v=poster"
+        "photo": "/debaters/rajiv-nandha.jpg?v=portrait"
       },
       {
         "name": "Mr. Ethan Wang",
         "role": "牛津路德維希研究所癌症博士研究員",
-        "photo": "/debaters/ethan-wang.jpg?v=poster"
+        "photo": "/debaters/ethan-wang.jpg?v=portrait"
       },
       {
         "name": "Mr. Oliver Jones-Lyons",
         "role": "牛津聯盟前常務委員兼財務總監",
-        "photo": "/debaters/oliver-jones-lyons.jpg?v=poster"
+        "photo": "/debaters/oliver-jones-lyons.jpg?v=portrait"
       }
     ]
   },
