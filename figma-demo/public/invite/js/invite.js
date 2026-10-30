@@ -29,6 +29,7 @@
   let yafangVariant = 'media';
   let backdropPanel = 'centre';
   let inscriptionUrl = INSCRIPTION_SRC;
+  let inscriptionFullUrl = INSCRIPTION_SRC;
 
   async function init() {
     const res = await fetch(DATA_URL);
@@ -43,7 +44,9 @@
     fitBoard();
     window.addEventListener('resize', fitBoard);
     prepareInscription().then(() => {
-      if (isBackdrop() || isPpt() || isEventPoster()) paintCard();
+      if (isBackdrop() || isPpt() || isEventPoster() || typeId === 'guest' || typeId === 'media' || typeId === 'yafang') {
+        paintCard();
+      }
     });
   }
 
@@ -763,22 +766,8 @@
   }
 
   function renderFormalPartners() {
-    const ev = view().event;
-    const ids = ['press', 'hash', 'datadance', 'ipdex', 'onebook'];
-    const pool = [
-      ...(data.partners || []),
-      ...(data.blastPartners || []),
-      ...(data.backdropPartners || []),
-    ];
-    const findMark = (id) => pool.find((p) => p.id === id);
-    const marks = ids.map(findMark).filter(Boolean);
-    const bnb = findMark('bnb') || { id: 'bnb', name: 'BNB Chain' };
-    const top = marks.slice(0, 3);
-    const bottom = [...marks.slice(3), bnb];
     return `
-      <h3>${esc(ev.backedBy || ev.partnersLabel)}</h3>
-      <div class="logo-grid logo-grid-3 formal-logo-row">${top.map(renderLogo).join('')}</div>
-      <div class="logo-grid logo-grid-3 formal-logo-row formal-logo-row-2">${bottom.map(renderLogo).join('')}</div>
+      <div class="formal-club"><img class="logo-img logo-img-club" src="${esc(inscriptionFullUrl)}" alt="幣安人生 Club · CZ" /></div>
     `;
   }
 
@@ -1127,8 +1116,15 @@
       }
       ctx.putImageData(data, 0, 0);
       const threshold = Math.max(8, Math.round(w * 0.004));
-      let y = h - 1;
-      while (y > 0 && rowInk[y] < threshold) y -= 1;
+      let bottom = h - 1;
+      while (bottom > 0 && rowInk[bottom] < threshold) bottom -= 1;
+      const fullH = Math.max(1, Math.min(h, bottom + 18));
+      const full = document.createElement('canvas');
+      full.width = w;
+      full.height = fullH;
+      full.getContext('2d').drawImage(src, 0, 0, w, fullH, 0, 0, w, fullH);
+      inscriptionFullUrl = full.toDataURL('image/png');
+      let y = bottom;
       while (y > 0 && rowInk[y] >= threshold) y -= 1;
       while (y > 0 && rowInk[y] < threshold) y -= 1;
       const cropH = Math.max(1, Math.min(h, y + 16));

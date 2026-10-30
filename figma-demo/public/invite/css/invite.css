@@ -2377,54 +2377,20 @@ body { overflow-x: hidden; }
   margin-top: 44px;
 }
 
-.card.is-formal .formal-partners h3 {
-  margin: 0 0 18px;
-  font-size: 18px;
-  letter-spacing: 0.34em;
-  text-transform: uppercase;
+.card.is-formal .formal-partners .formal-club {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
 }
 
-.card.is-formal .formal-partners .logo-grid-3 {
-  margin-top: 4px;
-  column-gap: 48px;
-}
-
-.card.is-formal .formal-partners .logo-grid-rest {
-  margin-top: 28px;
-  gap: 84px;
-}
-
-.card.is-formal .formal-partners .formal-logo-row-2 {
-  margin-top: 28px;
-}
-
-.card.is-formal .formal-partners .logo-img-press {
-  height: 42px;
-}
-
-.card.is-formal .formal-partners .logo-img-hash {
-  width: 268px;
+.card.is-formal .formal-partners .logo-img-club {
+  width: 560px;
+  max-width: 100%;
   height: auto;
-}
-
-.card.is-formal .formal-partners .logo-datadance {
-  width: 232px;
-  height: auto;
-}
-
-.card.is-formal .formal-partners .logo-img-ipdex,
-.card.is-formal .formal-partners .logo-img-onebook {
-  height: 48px;
-  width: auto;
-}
-
-.card.is-formal .formal-partners .logo-img-bnb {
-  height: 40px;
-  width: auto;
 }
 
 .card.is-formal .partners-foot {
-  margin-top: 48px;
+  margin-top: 32px;
 }
 
 .card.is-formal .partners-foot .qr-frame img {
