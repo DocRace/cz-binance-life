@@ -1197,7 +1197,7 @@
     const sx = hero.width * 0.02;
     const sy = hero.height * 0.05;
     const sw = hero.width * 0.96;
-    const sh = hero.height * 0.56;
+    const sh = hero.height * 0.86;
     const dw = Math.round(w * 1.04);
     const dh = dw * (sh / sw);
     const dy = Math.round(h * -0.065);
@@ -1221,11 +1221,13 @@
     const bottom = Math.min(h, dy + dh);
     const vert = octx.createLinearGradient(0, top, 0, bottom);
     vert.addColorStop(0, 'rgba(0,0,0,0)');
-    vert.addColorStop(0.14, 'rgba(0,0,0,0.22)');
-    vert.addColorStop(0.32, 'rgba(0,0,0,0.7)');
-    vert.addColorStop(0.42, 'rgba(0,0,0,0.7)');
-    vert.addColorStop(0.64, 'rgba(0,0,0,28)');
-    vert.addColorStop(0.84, 'rgba(0,0,0,08)');
+    vert.addColorStop(0.09, 'rgba(0,0,0,0.22)');
+    vert.addColorStop(0.2, 'rgba(0,0,0,0.7)');
+    vert.addColorStop(0.26, 'rgba(0,0,0,0.7)');
+    vert.addColorStop(0.42, 'rgba(0,0,0,0.28)');
+    vert.addColorStop(0.58, 'rgba(0,0,0,0.14)');
+    vert.addColorStop(0.76, 'rgba(0,0,0,0.07)');
+    vert.addColorStop(0.9, 'rgba(0,0,0,0.03)');
     vert.addColorStop(1, 'rgba(0,0,0,0)');
     octx.fillStyle = vert;
     octx.fillRect(0, 0, w, h);
@@ -1367,9 +1369,10 @@
       veil.addColorStop(1, 'rgba(26,23,20,0.88)');
     } else if (formalCard) {
       veil.addColorStop(0, 'rgba(22,16,12,0)');
-      veil.addColorStop(0.46, 'rgba(22,16,12,0)');
-      veil.addColorStop(0.64, 'rgba(22,16,12,0.22)');
-      veil.addColorStop(0.84, '#16110d');
+      veil.addColorStop(0.4, 'rgba(22,16,12,0)');
+      veil.addColorStop(0.58, 'rgba(22,16,12,0.16)');
+      veil.addColorStop(0.76, 'rgba(22,16,12,0.45)');
+      veil.addColorStop(0.96, '#16110d');
       veil.addColorStop(1, '#16110d');
     } else {
       veil.addColorStop(0, 'rgba(26,23,20,0.16)');

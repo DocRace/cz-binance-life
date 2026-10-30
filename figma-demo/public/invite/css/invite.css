@@ -2175,6 +2175,10 @@ body { overflow-x: hidden; }
   text-transform: uppercase;
 }
 
+.card.is-en .formal-label {
+  display: none;
+}
+
 .formal-label {
   margin-bottom: 22px;
   font-size: 16px;
@@ -2189,9 +2193,10 @@ body { overflow-x: hidden; }
   background: linear-gradient(
     180deg,
     transparent 0%,
-    transparent 46%,
-    rgba(22, 16, 12, 0.22) 64%,
-    #16110d 84%
+    transparent 40%,
+    rgba(22, 16, 12, 0.16) 58%,
+    rgba(22, 16, 12, 0.45) 76%,
+    #16110d 96%
   );
 }
 
@@ -2201,17 +2206,17 @@ body { overflow-x: hidden; }
   left: 0;
   right: 0;
   top: 0;
-  height: 1320px;
+  height: 1760px;
   pointer-events: none;
   opacity: 0.72;
-  background: url("/invite/assets/invite-hero.png") 50% 84% / 1180px auto no-repeat;
+  background: url("/invite/assets/invite-hero.png") 50% -477px / 1180px auto no-repeat;
   -webkit-mask-image:
-    linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.16) 4%, rgba(0, 0, 0, 0.72) 22%, rgba(0, 0, 0, 0.72) 28%, rgba(0, 0, 0, 0.36) 46%, rgba(0, 0, 0, 0.12) 62%, transparent 76%),
-    radial-gradient(ellipse 92% 140% at 50% 22%, #000 46%, rgba(0, 0, 0, 0.72) 82%, transparent 100%);
+    linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.16) 3%, rgba(0, 0, 0, 0.72) 16.5%, rgba(0, 0, 0, 0.72) 22%, rgba(0, 0, 0, 0.46) 30%, rgba(0, 0, 0, 0.16) 42%, rgba(0, 0, 0, 0.08) 56%, rgba(0, 0, 0, 0.045) 72%, rgba(0, 0, 0, 0.02) 88%, transparent 100%),
+    radial-gradient(ellipse 92% 210% at 50% 290px, #000 22%, rgba(0, 0, 0, 0.65) 68%, transparent 100%);
   -webkit-mask-composite: source-in;
   mask-image:
-    linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.16) 4%, rgba(0, 0, 0, 0.72) 22%, rgba(0, 0, 0, 0.72) 28%, rgba(0, 0, 0, 0.36) 46%, rgba(0, 0, 0, 0.12) 62%, transparent 76%),
-    radial-gradient(ellipse 92% 140% at 50% 22%, #000 46%, rgba(0, 0, 0, 0.72) 82%, transparent 100%);
+    linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.16) 3%, rgba(0, 0, 0, 0.72) 16.5%, rgba(0, 0, 0, 0.72) 22%, rgba(0, 0, 0, 0.46) 30%, rgba(0, 0, 0, 0.16) 42%, rgba(0, 0, 0, 0.08) 56%, rgba(0, 0, 0, 0.045) 72%, rgba(0, 0, 0, 0.02) 88%, transparent 100%),
+    radial-gradient(ellipse 92% 210% at 50% 290px, #000 22%, rgba(0, 0, 0, 0.65) 68%, transparent 100%);
   mask-composite: intersect;
 }
 
@@ -2220,7 +2225,7 @@ body { overflow-x: hidden; }
 }
 
 .card.is-en .formal-hero-space {
-  height: 640px;
+  height: 688px;
 }
 
 .formal-portrait {
