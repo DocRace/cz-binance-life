@@ -67,6 +67,11 @@ export default function OfflineEvent() {
     [t],
   );
 
+  const laterRows = useMemo(
+    () => asArray<AgendaRow>(t("offlineEvent.laterRows", { returnObjects: true })),
+    [t],
+  );
+
   const debaters = useMemo(
     () => asArray<Debater>(t("offlineEvent.debaters", { returnObjects: true })),
     [t],
@@ -252,6 +257,19 @@ export default function OfflineEvent() {
           colSegment={t("offlineEvent.agendaColSegment")}
           colContent={t("offlineEvent.agendaColContent")}
         />
+        {laterRows.length > 0 ? (
+          <div className="mt-10">
+            <h3 className="mb-4 font-display text-xl text-foreground md:text-2xl">
+              {t("offlineEvent.laterTitle")}
+            </h3>
+            <AgendaTable
+              rows={laterRows}
+              colTime={t("offlineEvent.agendaColTime")}
+              colSegment={t("offlineEvent.agendaColSegment")}
+              colContent={t("offlineEvent.agendaColContent")}
+            />
+          </div>
+        ) : null}
       </motion.section>
 
       <motion.section

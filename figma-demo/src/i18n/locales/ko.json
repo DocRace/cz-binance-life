@@ -145,6 +145,14 @@
         "content": "우세 측을 발표하고 Oxford Debating 심사위원이 총평. 유럽 커뮤니티 출범과 폐회식"
       }
     ],
+    "laterTitle": "당일 이후 별도 일정",
+    "laterRows": [
+      {
+        "time": "18:00",
+        "segment": "CZ, Oxford Union 강연",
+        "content": "Changpeng Zhao (CZ)가 Oxford Union에서 강연합니다. Oxford Union 회원과 University of Oxford, Oxford Brookes University 학생에게 개방됩니다. 입장 시 유효한 학생증 또는 Oxford Union 회원증이 필요합니다."
+      }
+    ],
     "scanTitle": "Telegram으로 신청",
     "scanHint": "북클럽 Telegram을 스캔해 신청하세요. 신청이 완료되면 확인은 커뮤니티로 전달됩니다.",
     "qrAlt": "Telegram 북클럽 입群 QR 코드",

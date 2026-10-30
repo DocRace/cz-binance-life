@@ -4,7 +4,7 @@
   const SITE_QR_SRC = './assets/czlife-home-qr.png';
   const CHRONICLE_QR_SRC = './assets/czlife-chronicle-qr.png';
   const PPT_CORNER = '《幣安人生》書友會';
-  const PORTRAIT = { w: 1080, h: 1920 };
+  const PORTRAIT = { w: 1080, h: 2160 };
   const POSTER = { w: 1080, h: 1170 };
   const WIDE = { w: 1920, h: 1080 };
   const BACKDROP_CENTRE = { w: 2048, h: 1152 };
@@ -30,6 +30,7 @@
   let backdropPanel = 'centre';
   let inscriptionUrl = INSCRIPTION_SRC;
   let inscriptionFullUrl = INSCRIPTION_SRC;
+  let qrTransparentUrl = SITE_QR_SRC;
 
   async function init() {
     const res = await fetch(DATA_URL);
@@ -43,7 +44,7 @@
     bind();
     fitBoard();
     window.addEventListener('resize', fitBoard);
-    prepareInscription().then(() => {
+    Promise.all([prepareInscription(), prepareQr()]).then(() => {
       if (isBackdrop() || isPpt() || isEventPoster() || typeId === 'guest' || typeId === 'media' || typeId === 'yafang') {
         paintCard();
       }
@@ -213,7 +214,7 @@
         <p class="studio-kicker">Invitation</p>
         <p class="studio-brand">BINANCE LIFE BOOK CLUB  ×  DATADANCE</p>
         <h1 class="studio-title">牛津書友分享會邀請函</h1>
-        <p class="studio-lead">媒體／嘉賓為 9:16 豎版邀請函。「活動海報」為 /event 右側用圖，1080×1170，可先下載再替換。「背景板」含現場三塊屏、16:9 整幅與 16:9 簽名。「PPT」為現場簡報六頁，可一鍵下載 PPTX，也可逐頁下載 1920×1080。「亞芳對外」為人名留空模板。郵件推送為 16:9 橫版。</p>
+        <p class="studio-lead">媒體／嘉賓為加長豎版邀請函，1080×2160。「活動海報」為 /event 右側用圖，1080×1170，可先下載再替換。「背景板」含現場三塊屏、16:9 整幅與 16:9 簽名。「PPT」為現場簡報六頁，可一鍵下載 PPTX，也可逐頁下載 1920×1080。「亞芳對外」為人名留空模板。郵件推送為 16:9 橫版。</p>
         <div class="studio-bar">
           <div class="tabs lang-tabs" id="langTabs">
             <button type="button" class="tab${lang === 'zh' ? ' is-on' : ''}" data-lang="zh">繁體</button>
@@ -362,6 +363,9 @@
     const note = t.note ? `<p class="note">${esc(t.note)}</p>` : '';
     const contact = renderYafangContact(t.contact);
 
+    const crest = `<img class="formal-crest" src="./assets/oxford-union.png?v=gold" alt="Oxford Union" />`;
+    const qrSrc = lang === 'en' ? qrTransparentUrl : SITE_QR_SRC;
+
     board.innerHTML = `
       <div class="card is-formal${lang === 'en' ? ' is-en' : ''}">
         <div class="card-bg"></div>
@@ -384,8 +388,9 @@
               <p><span>${esc(ev.timeLabel)}</span><b>${esc(ev.time)}</b></p>
               <p><span>${esc(ev.hostLabel || '')}</span><b>${esc(ev.hostLine || ev.speakers || '')}</b></p>
             </div>
-            <img class="formal-crest" src="./assets/oxford-union.png?v=gold" alt="Oxford Union" />
+            ${lang === 'en' ? '' : crest}
           </div>
+          ${lang === 'en' ? `<div class="formal-crest-row">${crest}</div>` : ''}
           <p class="formal-dress"><span>${esc(ev.dressLabel || '')}</span><b>${esc(ev.dress || '')}</b></p>
           <p class="formal-venue">${esc(ev.venueBanner || ev.venue)}</p>
           ${note}
@@ -394,8 +399,8 @@
             ${renderFormalPartners()}
             <div class="partners-foot">
               <div class="qr-block">
-                <div class="qr-frame">
-                  <img src="./assets/czlife-home-qr.png" alt="${esc(ev.qrUrl || SITE_URL)}" />
+                <div class="qr-frame${lang === 'en' ? ' is-clear' : ''}">
+                  <img src="${esc(qrSrc)}" alt="${esc(ev.qrUrl || SITE_URL)}" />
                 </div>
                 <p class="qr-url">${esc((ev.qrUrl || SITE_URL).replace(/^https?:\/\//, ''))}</p>
               </div>
@@ -1133,6 +1138,37 @@
       canvas.height = cropH;
       canvas.getContext('2d').drawImage(src, 0, 0, w, cropH, 0, 0, w, cropH);
       inscriptionUrl = canvas.toDataURL('image/png');
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
+  async function prepareQr() {
+    try {
+      const img = await loadImage(SITE_QR_SRC);
+      const w = img.naturalWidth;
+      const h = img.naturalHeight;
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      const data = ctx.getImageData(0, 0, w, h);
+      const px = data.data;
+      for (let i = 0; i < px.length; i += 4) {
+        const lum = (px[i] + px[i + 1] + px[i + 2]) / 3;
+        if (lum > 176) {
+          px[i + 3] = 0;
+          continue;
+        }
+        const ink = lum < 96 ? 1 : (176 - lum) / 80;
+        px[i] = 0xf3;
+        px[i + 1] = 0xe6;
+        px[i + 2] = 0xc4;
+        px[i + 3] = Math.round(255 * Math.min(1, ink));
+      }
+      ctx.putImageData(data, 0, 0);
+      qrTransparentUrl = canvas.toDataURL('image/png');
     } catch (err) {
       console.warn(err);
     }

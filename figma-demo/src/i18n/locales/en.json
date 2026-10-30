@@ -145,6 +145,14 @@
         "content": "The winning side is announced, followed by remarks from the Oxford Debating judge, the European Chapter launch and the ceremonial close"
       }
     ],
+    "laterTitle": "Also Happening Later That Day",
+    "laterRows": [
+      {
+        "time": "18:00",
+        "segment": "CZ at the Oxford Union",
+        "content": "Changpeng Zhao (CZ) will speak at the Oxford Union. Open to Oxford Union members and students of the University of Oxford and Oxford Brookes University. A valid student ID or Oxford Union membership card is required for entry."
+      }
+    ],
     "scanTitle": "Register on Telegram",
     "scanHint": "Scan to join the book-club Telegram and register. Confirmation is sent in the community after a successful application.",
     "qrAlt": "Telegram book club group QR code",

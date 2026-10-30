@@ -145,6 +145,14 @@
         "content": "勝敗を発表し、Oxford Debating の審査員が講評。欧州コミュニティ設立と閉会式"
       }
     ],
+    "laterTitle": "当日このあと",
+    "laterRows": [
+      {
+        "time": "18:00",
+        "segment": "CZ が Oxford Union で講演",
+        "content": "Changpeng Zhao (CZ) が Oxford Union で講演します。Oxford Union の会員、ならびに University of Oxford と Oxford Brookes University の学生が参加できます。入場には有効な学生証または Oxford Union の会員証が必要です。"
+      }
+    ],
     "scanTitle": "Telegram で登録",
     "scanHint": "書友会の Telegram を読み取り、そこから登録してください。完了後、確認はコミュニティでお知らせします。",
     "qrAlt": "Telegramブッククラブ入群QRコード",
