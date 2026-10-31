@@ -2225,7 +2225,7 @@ body { overflow-x: hidden; }
 }
 
 .card.is-en .formal-hero-space {
-  height: 688px;
+  height: 648px;
 }
 
 .formal-portrait {
@@ -2276,6 +2276,14 @@ body { overflow-x: hidden; }
 .formal-debate strong {
   font-weight: 700;
   letter-spacing: 0.08em;
+}
+
+.card.is-en .formal-debate {
+  flex-wrap: wrap;
+  max-width: 880px;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
 }
 
 .formal-facts {

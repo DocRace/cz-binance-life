@@ -1,5 +1,5 @@
 (() => {
-  const DATA_URL = './data/invites.json?v=50';
+  const DATA_URL = './data/invites.json?v=52';
   const TELEGRAM_QR_SRC = './assets/telegram-czlifeclub-qr.png';
   const SITE_QR_SRC = './assets/czlife-home-qr.png';
   const CHRONICLE_QR_SRC = './assets/czlife-chronicle-qr.png';
